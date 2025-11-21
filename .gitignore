@@ -1,0 +1,45 @@
+# Arquivo de ambiente (NUNCA COMMITE ESTE ARQUIVO!)
+.env
+
+# Arquivos Python
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+/static/
+/staticfiles/
+/media/
+
+# Ambientes virtuais
+venv/
+env/
+ENV/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Docker
+*.pid
+*.seed
+*.pid.lock
+
+# Backup files
+*.bak
+*.backup

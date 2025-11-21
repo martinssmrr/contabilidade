@@ -1,0 +1,36 @@
+{% extends 'services/abertura_empresa/base_wizard.html' %}
+
+{% block wizard_content %}
+<h2 class="form-section-title">🔐 Dados de Acesso a Portais</h2>
+
+<div class="alert alert-warning">
+    <i class="fas fa-shield-alt me-2"></i>
+    <strong>Segurança e Privacidade:</strong> Seus dados são criptografados e protegidos conforme a LGPD. Utilizamos essas informações apenas para processos obrigatórios de abertura de empresa.
+</div>
+
+<div class="form-group">
+    <label for="{{ form.gov_br_nivel.id_for_label }}" class="form-label required-field">Nível da Conta Gov.br</label>
+    {{ form.gov_br_nivel }}
+    <small class="help-text">Você precisa ter conta Gov.br nível Prata ou Ouro para abertura de empresa</small>
+    {% if form.gov_br_nivel.errors %}
+    <div class="text-danger mt-1">{{ form.gov_br_nivel.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.gov_br_cpf.id_for_label }}" class="form-label required-field">CPF cadastrado no Gov.br</label>
+    {{ form.gov_br_cpf }}
+    {% if form.gov_br_cpf.errors %}
+    <div class="text-danger mt-1">{{ form.gov_br_cpf.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.gov_br_senha.id_for_label }}" class="form-label required-field">Senha do Gov.br</label>
+    {{ form.gov_br_senha }}
+    <small class="help-text text-danger">⚠️ Seus dados são armazenados de forma segura e criptografada</small>
+    {% if form.gov_br_senha.errors %}
+    <div class="text-danger mt-1">{{ form.gov_br_senha.errors }}</div>
+    {% endif %}
+</div>
+{% endblock %}

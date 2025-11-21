@@ -1,0 +1,90 @@
+{% extends 'services/abertura_empresa/base_wizard.html' %}
+
+{% block wizard_content %}
+<h2 class="form-section-title">👥 Dados dos Sócios</h2>
+
+<div class="alert alert-info">
+    <i class="fas fa-info-circle me-2"></i>
+    <strong>Importante:</strong> Adicione todos os sócios da empresa. A soma das participações deve ser 100%.
+</div>
+
+{{ formset.management_form }}
+
+<div id="formset-container">
+    {% for form in formset %}
+    <div class="socio-form-item border rounded p-3 mb-3" style="background: #f8f9fa;">
+        <h4 class="h6 text-primary mb-3">Sócio {{ forloop.counter }}</h4>
+        
+        <div class="form-group">
+            <label class="form-label required-field">Nome Completo</label>
+            {{ form.nome_completo }}
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label class="form-label required-field">CPF</label>
+                {{ form.cpf }}
+            </div>
+            <div class="col-md-6 form-group">
+                <label class="form-label required-field">RG</label>
+                {{ form.rg }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label required-field">Estado Civil</label>
+            {{ form.estado_civil }}
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label required-field">Endereço Completo</label>
+            {{ form.endereco_completo }}
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label required-field">Percentual de Participação (%)</label>
+            {{ form.percentual_participacao }}
+        </div>
+        
+        {{ form.DELETE }}
+    </div>
+    {% endfor %}
+</div>
+
+<button type="button" class="btn btn-secondary" onclick="addForm()">
+    <i class="fas fa-plus me-2"></i>Adicionar Outro Sócio
+</button>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    function addForm() {
+        const formsetContainer = document.getElementById('formset-container');
+        const totalForms = document.getElementById('id_socios-TOTAL_FORMS');
+        const formNum = parseInt(totalForms.value);
+        
+        // Clonar o último formulário
+        const lastForm = formsetContainer.lastElementChild.cloneNode(true);
+        
+        // Atualizar IDs e names
+        lastForm.innerHTML = lastForm.innerHTML.replace(/socios-\d+-/g, `socios-${formNum}-`);
+        
+        // Limpar valores
+        lastForm.querySelectorAll('input, textarea, select').forEach(input => {
+            if (input.type !== 'hidden') {
+                input.value = '';
+            }
+        });
+        
+        // Atualizar título
+        lastForm.querySelector('.h6').textContent = `Sócio ${formNum + 1}`;
+        
+        // Adicionar ao container
+        formsetContainer.appendChild(lastForm);
+        
+        // Incrementar total
+        totalForms.value = formNum + 1;
+    }
+</script>
+{% endblock %}

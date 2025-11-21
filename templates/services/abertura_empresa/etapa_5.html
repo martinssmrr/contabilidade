@@ -1,0 +1,44 @@
+{% extends 'services/abertura_empresa/base_wizard.html' %}
+
+{% block wizard_content %}
+<h2 class="form-section-title">📄 Upload de Documentos</h2>
+
+<div class="alert alert-info">
+    <i class="fas fa-info-circle me-2"></i>
+    <strong>Importante:</strong> Envie documentos legíveis. Formatos aceitos: JPG, PNG, PDF.
+</div>
+
+<div class="form-group">
+    <label for="{{ form.doc_identidade_frente.id_for_label }}" class="form-label required-field">Documento de Identidade (Frente)</label>
+    {{ form.doc_identidade_frente }}
+    {% if form.doc_identidade_frente.errors %}
+    <div class="text-danger mt-1">{{ form.doc_identidade_frente.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.doc_identidade_verso.id_for_label }}" class="form-label required-field">Documento de Identidade (Verso)</label>
+    {{ form.doc_identidade_verso }}
+    {% if form.doc_identidade_verso.errors %}
+    <div class="text-danger mt-1">{{ form.doc_identidade_verso.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.comprovante_residencia.id_for_label }}" class="form-label required-field">Comprovante de Residência</label>
+    {{ form.comprovante_residencia }}
+    <small class="help-text">Conta de luz, água, telefone, etc. (últimos 3 meses)</small>
+    {% if form.comprovante_residencia.errors %}
+    <div class="text-danger mt-1">{{ form.comprovante_residencia.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.selfie_com_documento.id_for_label }}" class="form-label">Selfie com Documento</label>
+    {{ form.selfie_com_documento }}
+    <small class="help-text">Opcional - Tire uma selfie segurando seu documento</small>
+    {% if form.selfie_com_documento.errors %}
+    <div class="text-danger mt-1">{{ form.selfie_com_documento.errors }}</div>
+    {% endif %}
+</div>
+{% endblock %}

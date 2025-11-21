@@ -1,0 +1,111 @@
+Listagem de caminhos de pasta
+O número de série do volume é AC76-DD45
+C:.
+|   .env.example
+|   .gitignore
+|   ARQUITETURA.md
+|   docker-compose.yml
+|   Dockerfile
+|   ESTRUTURA_PROJETO.txt
+|   manage.py
+|   QUICKSTART.md
+|   README.md
+|   requirements.txt
+|   
++---apps
+|   |   __init__.py
+|   |   
+|   +---dashboard
+|   |   |   admin.py
+|   |   |   apps.py
+|   |   |   models.py
+|   |   |   tests.py
+|   |   |   urls.py
+|   |   |   views.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---migrations
+|   |           __init__.py
+|   |           
+|   +---documents
+|   |   |   admin.py
+|   |   |   apps.py
+|   |   |   models.py
+|   |   |   tests.py
+|   |   |   views.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---migrations
+|   |           __init__.py
+|   |           
+|   +---payments
+|   |   |   admin.py
+|   |   |   apps.py
+|   |   |   models.py
+|   |   |   tests.py
+|   |   |   views.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---migrations
+|   |           __init__.py
+|   |           
+|   +---services
+|   |   |   admin.py
+|   |   |   apps.py
+|   |   |   models.py
+|   |   |   tests.py
+|   |   |   views.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---migrations
+|   |           __init__.py
+|   |           
+|   +---support
+|   |   |   admin.py
+|   |   |   apps.py
+|   |   |   models.py
+|   |   |   tests.py
+|   |   |   views.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---migrations
+|   |           __init__.py
+|   |           
+|   \---users
+|       |   admin.py
+|       |   apps.py
+|       |   models.py
+|       |   tests.py
+|       |   views.py
+|       |   __init__.py
+|       |   
+|       \---migrations
+|               __init__.py
+|               
++---gestao360_project
+|   |   asgi.py
+|   |   settings.py
+|   |   urls.py
+|   |   wsgi.py
+|   |   __init__.py
+|   |   
+|   \---__pycache__
+|           settings.cpython-312.pyc
+|           __init__.cpython-312.pyc
+|           
++---media
++---static
+|   +---css
+|   |       style.css
+|   |       
+|   +---img
+|   \---js
+|           script.js
+|           
+\---templates
+    |   base.html
+    |   
+    \---partials
+            footer.html
+            navbar.html
+            

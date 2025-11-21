@@ -1,0 +1,40 @@
+{% extends 'services/abertura_empresa/base_wizard.html' %}
+
+{% block wizard_content %}
+<h2 class="form-section-title">💼 Informações Fiscais</h2>
+
+<div class="form-group">
+    <label for="{{ form.tipo_atividade.id_for_label }}" class="form-label required-field">Tipo de Atividade</label>
+    {{ form.tipo_atividade }}
+    {% if form.tipo_atividade.errors %}
+    <div class="text-danger mt-1">{{ form.tipo_atividade.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <div class="form-check">
+        {{ form.usa_nota_fiscal }}
+        <label class="form-check-label" for="{{ form.usa_nota_fiscal.id_for_label }}">
+            Precisa emitir Nota Fiscal?
+        </label>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="form-check">
+        {{ form.precisa_alvara }}
+        <label class="form-check-label" for="{{ form.precisa_alvara.id_for_label }}">
+            Precisa de Alvará de Funcionamento?
+        </label>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="form-check">
+        {{ form.deseja_conta_pj }}
+        <label class="form-check-label" for="{{ form.deseja_conta_pj.id_for_label }}">
+            Deseja abrir Conta PJ?
+        </label>
+    </div>
+</div>
+{% endblock %}

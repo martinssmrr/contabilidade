@@ -1,0 +1,65 @@
+{% extends 'services/abertura_empresa/base_wizard.html' %}
+
+{% block wizard_content %}
+<h2 class="form-section-title">✍️ Assinatura e Termos</h2>
+
+<div class="form-group">
+    <div class="form-check">
+        {{ form.aceite_termos }}
+        <label class="form-check-label" for="{{ form.aceite_termos.id_for_label }}">
+            Li e aceito os <a href="#" target="_blank">Termos de Uso</a> e a <a href="#" target="_blank">Política de Privacidade</a>
+        </label>
+    </div>
+    {% if form.aceite_termos.errors %}
+    <div class="text-danger mt-1">{{ form.aceite_termos.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <div class="form-check">
+        {{ form.declaracao_veracidade }}
+        <label class="form-check-label" for="{{ form.declaracao_veracidade.id_for_label }}">
+            Declaro que todas as informações fornecidas são verdadeiras
+        </label>
+    </div>
+    {% if form.declaracao_veracidade.errors %}
+    <div class="text-danger mt-1">{{ form.declaracao_veracidade.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group mt-4">
+    <label class="form-label required-field">Assinatura Digital</label>
+    <div class="border rounded p-3" style="background: #f8f9fa;">
+        <canvas id="signature-pad" class="w-100" style="border: 2px dashed #dee2e6; cursor: crosshair; background: white;" height="200"></canvas>
+        <div class="mt-2">
+            <button type="button" class="btn btn-sm btn-secondary" onclick="clearSignature()">Limpar Assinatura</button>
+        </div>
+    </div>
+    {{ form.assinatura_digital }}
+    {% if form.assinatura_digital.errors %}
+    <div class="text-danger mt-1">{{ form.assinatura_digital.errors }}</div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script>
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas);
+    
+    function clearSignature() {
+        signaturePad.clear();
+        document.getElementById('id_assinatura_digital').value = '';
+    }
+    
+    // Salvar assinatura antes de enviar o formulário
+    document.getElementById('wizardForm').addEventListener('submit', function(e) {
+        if (!signaturePad.isEmpty()) {
+            const dataURL = signaturePad.toDataURL();
+            document.getElementById('id_assinatura_digital').value = dataURL;
+        }
+    });
+</script>
+{% endblock %}

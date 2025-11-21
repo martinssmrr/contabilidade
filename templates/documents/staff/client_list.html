@@ -1,0 +1,106 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}Gerenciar Clientes - Painel Staff{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-users me-2"></i>Gerenciar Clientes</h1>
+        <a href="{% url 'admin:index' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar ao Admin
+        </a>
+    </div>
+
+    <!-- Barra de busca -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" action="" class="row g-3">
+                <div class="col-md-10">
+                    <input type="text" 
+                           name="search" 
+                           class="form-control" 
+                           placeholder="Buscar por nome, email ou username..." 
+                           value="{{ search_query }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-2"></i>Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Informações -->
+    <div class="alert alert-info mb-4">
+        <i class="fas fa-info-circle me-2"></i>
+        Total de <strong>{{ total_clientes }}</strong> cliente{{ total_clientes|pluralize:"s" }} cadastrado{{ total_clientes|pluralize:"s" }}.
+    </div>
+
+    <!-- Lista de Clientes -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if clientes %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Username</th>
+                                <th>Cadastro</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cliente in clientes %}
+                            <tr>
+                                <td><strong>#{{ cliente.id }}</strong></td>
+                                <td>
+                                    <i class="fas fa-user text-primary me-2"></i>
+                                    {{ cliente.get_full_name|default:"-" }}
+                                </td>
+                                <td>{{ cliente.email }}</td>
+                                <td>{{ cliente.username }}</td>
+                                <td>{{ cliente.date_joined|date:"d/m/Y" }}</td>
+                                <td class="text-center">
+                                    <a href="{% url 'documents:client_detail' cliente.pk %}" 
+                                       class="btn btn-sm btn-primary"
+                                       title="Ver detalhes e gerenciar notas fiscais">
+                                        <i class="fas fa-eye me-1"></i>Detalhes
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-users fa-4x text-muted mb-3"></i>
+                    <h3>Nenhum cliente encontrado</h3>
+                    <p class="text-muted">
+                        {% if search_query %}
+                            Não foram encontrados clientes com o termo "{{ search_query }}".
+                        {% else %}
+                            Ainda não há clientes cadastrados no sistema.
+                        {% endif %}
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.table > :not(caption) > * > * {
+    padding: 0.75rem;
+}
+
+.btn-sm {
+    font-size: 0.875rem;
+}
+</style>
+{% endblock %}

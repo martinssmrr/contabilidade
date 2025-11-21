@@ -1,0 +1,249 @@
+{% extends 'services/abertura_empresa/base_wizard.html' %}
+
+{% block wizard_content %}
+<h2 class="form-section-title">🏢 Dados da Empresa</h2>
+
+<div class="form-group">
+    <label for="{{ form.tipo_societario.id_for_label }}" class="form-label required-field">Tipo Societário</label>
+    {{ form.tipo_societario }}
+    <small class="help-text">Selecione o tipo de empresa que deseja abrir</small>
+    {% if form.tipo_societario.errors %}
+    <div class="text-danger mt-1">{{ form.tipo_societario.errors }}</div>
+    {% endif %}
+</div>
+
+<!-- Campos para MEI -->
+<div id="campos-mei" style="display: none;">
+    <h3 class="h5 text-secondary mt-4 mb-3">Dados do MEI</h3>
+    
+    <div class="form-group">
+        <label for="{{ form.nome_fantasia_mei.id_for_label }}" class="form-label required-field">Nome Fantasia</label>
+        {{ form.nome_fantasia_mei }}
+        {% if form.nome_fantasia_mei.errors %}
+        <div class="text-danger mt-1">{{ form.nome_fantasia_mei.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.area_atuacao_mei.id_for_label }}" class="form-label required-field">Área de Atuação</label>
+        {{ form.area_atuacao_mei }}
+        {% if form.area_atuacao_mei.errors %}
+        <div class="text-danger mt-1">{{ form.area_atuacao_mei.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.cnae_principal_mei.id_for_label }}" class="form-label required-field">CNAE Principal</label>
+        {{ form.cnae_principal_mei }}
+        {% if form.cnae_principal_mei.errors %}
+        <div class="text-danger mt-1">{{ form.cnae_principal_mei.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.cnaes_secundarios_mei.id_for_label }}" class="form-label">CNAEs Secundários</label>
+        {{ form.cnaes_secundarios_mei }}
+        <small class="help-text">Opcional - Separe por vírgula</small>
+        {% if form.cnaes_secundarios_mei.errors %}
+        <div class="text-danger mt-1">{{ form.cnaes_secundarios_mei.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label for="{{ form.forma_atuacao_mei.id_for_label }}" class="form-label required-field">Forma de Atuação</label>
+            {{ form.forma_atuacao_mei }}
+            {% if form.forma_atuacao_mei.errors %}
+            <div class="text-danger mt-1">{{ form.forma_atuacao_mei.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-6 form-group">
+            <label for="{{ form.local_empresa_mei.id_for_label }}" class="form-label required-field">Local da Empresa</label>
+            {{ form.local_empresa_mei }}
+            {% if form.local_empresa_mei.errors %}
+            <div class="text-danger mt-1">{{ form.local_empresa_mei.errors }}</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Campos para ME/EPP/LTDA -->
+<div id="campos-me-epp-ltda" style="display: none;">
+    <h3 class="h5 text-secondary mt-4 mb-3">Dados da Empresa</h3>
+    
+    <div class="form-group">
+        <label for="{{ form.razao_social.id_for_label }}" class="form-label">Razão Social</label>
+        {{ form.razao_social }}
+        <small class="help-text">Opcional - Deixe em branco para sugerirmos</small>
+        {% if form.razao_social.errors %}
+        <div class="text-danger mt-1">{{ form.razao_social.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.nome_fantasia_me.id_for_label }}" class="form-label required-field">Nome Fantasia</label>
+        {{ form.nome_fantasia_me }}
+        {% if form.nome_fantasia_me.errors %}
+        <div class="text-danger mt-1">{{ form.nome_fantasia_me.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.cnae_principal_me.id_for_label }}" class="form-label required-field">CNAE Principal</label>
+        {{ form.cnae_principal_me }}
+        {% if form.cnae_principal_me.errors %}
+        <div class="text-danger mt-1">{{ form.cnae_principal_me.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.cnaes_secundarios_me.id_for_label }}" class="form-label">CNAEs Secundários</label>
+        {{ form.cnaes_secundarios_me }}
+        <small class="help-text">Opcional - Separe por vírgula</small>
+        {% if form.cnaes_secundarios_me.errors %}
+        <div class="text-danger mt-1">{{ form.cnaes_secundarios_me.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label for="{{ form.capital_social.id_for_label }}" class="form-label required-field">Capital Social</label>
+            {{ form.capital_social }}
+            {% if form.capital_social.errors %}
+            <div class="text-danger mt-1">{{ form.capital_social.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-6 form-group">
+            <label for="{{ form.quantidade_socios.id_for_label }}" class="form-label required-field">Quantidade de Sócios</label>
+            {{ form.quantidade_socios }}
+            {% if form.quantidade_socios.errors %}
+            <div class="text-danger mt-1">{{ form.quantidade_socios.errors }}</div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.regime_tributario.id_for_label }}" class="form-label required-field">Regime Tributário</label>
+        {{ form.regime_tributario }}
+        {% if form.regime_tributario.errors %}
+        <div class="text-danger mt-1">{{ form.regime_tributario.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <div class="form-check">
+            {{ form.endereco_comercial_diferente }}
+            <label class="form-check-label" for="{{ form.endereco_comercial_diferente.id_for_label }}">
+                O endereço comercial é diferente do residencial?
+            </label>
+        </div>
+    </div>
+    
+    <!-- Endereço Comercial -->
+    <div id="campos-endereco-comercial" style="display: none;">
+        <h3 class="h5 text-secondary mt-4 mb-3">Endereço Comercial</h3>
+        
+        <div class="form-group">
+            <label for="{{ form.cep_comercial.id_for_label }}" class="form-label">CEP</label>
+            {{ form.cep_comercial }}
+            {% if form.cep_comercial.errors %}
+            <div class="text-danger mt-1">{{ form.cep_comercial.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.endereco_comercial.id_for_label }}" class="form-label">Endereço</label>
+            {{ form.endereco_comercial }}
+            {% if form.endereco_comercial.errors %}
+            <div class="text-danger mt-1">{{ form.endereco_comercial.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label for="{{ form.numero_comercial.id_for_label }}" class="form-label">Número</label>
+                {{ form.numero_comercial }}
+                {% if form.numero_comercial.errors %}
+                <div class="text-danger mt-1">{{ form.numero_comercial.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-8 form-group">
+                <label for="{{ form.complemento_comercial.id_for_label }}" class="form-label">Complemento</label>
+                {{ form.complemento_comercial }}
+                {% if form.complemento_comercial.errors %}
+                <div class="text-danger mt-1">{{ form.complemento_comercial.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.bairro_comercial.id_for_label }}" class="form-label">Bairro</label>
+            {{ form.bairro_comercial }}
+            {% if form.bairro_comercial.errors %}
+            <div class="text-danger mt-1">{{ form.bairro_comercial.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 form-group">
+                <label for="{{ form.cidade_comercial.id_for_label }}" class="form-label">Cidade</label>
+                {{ form.cidade_comercial }}
+                {% if form.cidade_comercial.errors %}
+                <div class="text-danger mt-1">{{ form.cidade_comercial.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-4 form-group">
+                <label for="{{ form.estado_comercial.id_for_label }}" class="form-label">Estado</label>
+                {{ form.estado_comercial }}
+                {% if form.estado_comercial.errors %}
+                <div class="text-danger mt-1">{{ form.estado_comercial.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    $(document).ready(function() {
+        // Controle de exibição de campos por tipo societário
+        function toggleCamposPorTipo() {
+            const tipo = $('#id_tipo_societario').val();
+            
+            if (tipo === 'MEI') {
+                $('#campos-mei').show();
+                $('#campos-me-epp-ltda').hide();
+            } else if (tipo === 'ME' || tipo === 'EPP' || tipo === 'LTDA') {
+                $('#campos-mei').hide();
+                $('#campos-me-epp-ltda').show();
+            } else {
+                $('#campos-mei').hide();
+                $('#campos-me-epp-ltda').hide();
+            }
+        }
+        
+        // Controle de endereço comercial
+        function toggleEnderecoComercial() {
+            if ($('#id_endereco_comercial_diferente').is(':checked')) {
+                $('#campos-endereco-comercial').show();
+            } else {
+                $('#campos-endereco-comercial').hide();
+            }
+        }
+        
+        // Inicializar
+        toggleCamposPorTipo();
+        toggleEnderecoComercial();
+        
+        // Eventos
+        $('#id_tipo_societario').on('change', toggleCamposPorTipo);
+        $('#id_endereco_comercial_diferente').on('change', toggleEnderecoComercial);
+    });
+</script>
+{% endblock %}

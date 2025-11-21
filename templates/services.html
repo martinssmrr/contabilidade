@@ -1,0 +1,450 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Nossos Serviços - Vetorial{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+    /* ===================================
+       ESTILOS CUSTOMIZADOS - PÁGINA DE SERVIÇOS
+       Design Moderno e Minimalista
+       =================================== */
+    
+    :root {
+        --primary-color: #3ef47c;
+        --primary-hover: #2ed66b;
+        --secondary-color: #0c63d1;
+        --text-primary: #212529;
+        --text-secondary: #6C757D;
+        --background-light: #F8F9FA;
+        --white: #FFFFFF;
+        --shadow-sm: 0 2px 8px rgba(62, 244, 124, 0.08);
+        --shadow-md: 0 4px 16px rgba(62, 244, 124, 0.12);
+        --shadow-lg: 0 8px 24px rgba(62, 244, 124, 0.16);
+    }
+    
+    body {
+        font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: var(--text-primary);
+        background-color: var(--white);
+        line-height: 1.7;
+    }
+    
+    /* Hero Section */
+    .services-hero {
+        background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
+        padding: 80px 0 60px;
+        margin-bottom: 80px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .services-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+        pointer-events: none;
+    }
+    
+    .services-hero .container {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .services-hero h1 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--white);
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.5px;
+    }
+    
+    .services-hero p {
+        font-size: 1.25rem;
+        color: rgba(255, 255, 255, 0.9);
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.8;
+    }
+    
+    /* Section Title */
+    .section-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    
+    .section-subtitle {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+        text-align: center;
+        margin-bottom: 4rem;
+        max-width: 650px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    /* Services Grid */
+    .services-section {
+        padding: 60px 0 80px;
+        background-color: var(--white);
+    }
+    
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2.5rem;
+        margin-bottom: 3rem;
+    }
+    
+    /* Service Card */
+    .service-card {
+        background: var(--white);
+        border: 1px solid rgba(62, 244, 124, 0.15);
+        border-radius: 16px;
+        padding: 2.5rem 2rem;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 0;
+        background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+        transition: height 0.4s ease;
+    }
+    
+    .service-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-lg);
+        border-color: rgba(62, 244, 124, 0.3);
+    }
+    
+    .service-card:hover::before {
+        height: 100%;
+    }
+    
+    /* Service Icon */
+    .service-icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 12px rgba(62, 244, 124, 0.3);
+        transition: transform 0.3s ease;
+    }
+    
+    .service-card:hover .service-icon {
+        transform: scale(1.05) rotate(-3deg);
+    }
+    
+    .service-icon svg {
+        width: 36px;
+        height: 36px;
+        color: var(--white);
+    }
+    
+    /* Service Content */
+    .service-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+        letter-spacing: -0.3px;
+    }
+    
+    .service-description {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        line-height: 1.8;
+        margin-bottom: 2rem;
+        flex-grow: 1;
+    }
+    
+    /* Service Button */
+    .service-btn {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: var(--white);
+        border: none;
+        border-radius: 10px;
+        padding: 14px 32px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(62, 244, 124, 0.3);
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+    
+    .service-btn:hover {
+        background: linear-gradient(135deg, var(--primary-hover) 0%, var(--secondary-color) 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(62, 244, 124, 0.4);
+        color: var(--white);
+    }
+    
+    .service-btn:active {
+        transform: translateY(0);
+    }
+    
+    /* CTA Section */
+    .cta-section {
+        background: var(--background-light);
+        padding: 80px 0;
+        margin-top: 60px;
+        text-align: center;
+    }
+    
+    .cta-section h2 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+    }
+    
+    .cta-section p {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+        margin-bottom: 2.5rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .cta-btn {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: var(--white);
+        border: none;
+        border-radius: 12px;
+        padding: 16px 48px;
+        font-weight: 700;
+        font-size: 1.125rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 20px rgba(62, 244, 124, 0.3);
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .cta-btn:hover {
+        background: linear-gradient(135deg, var(--primary-hover) 0%, var(--secondary-color) 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(62, 244, 124, 0.4);
+        color: var(--white);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .services-hero h1 {
+            font-size: 2.5rem;
+        }
+        
+        .services-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .services-hero {
+            padding: 60px 0 40px;
+            margin-bottom: 60px;
+        }
+        
+        .services-hero h1 {
+            font-size: 2rem;
+        }
+        
+        .services-hero p {
+            font-size: 1.125rem;
+        }
+        
+        .services-section {
+            padding: 40px 0 60px;
+        }
+        
+        .services-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        
+        .service-card {
+            padding: 2rem 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.75rem;
+        }
+        
+        .section-subtitle {
+            font-size: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .cta-section {
+            padding: 60px 0;
+        }
+        
+        .cta-section h2 {
+            font-size: 1.875rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .services-hero h1 {
+            font-size: 1.75rem;
+        }
+        
+        .service-btn,
+        .cta-btn {
+            width: 100%;
+        }
+    }
+    
+    /* Animações */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .service-card {
+        animation: fadeInUp 0.6s ease-out;
+        animation-fill-mode: both;
+    }
+    
+    .service-card:nth-child(1) { animation-delay: 0.1s; }
+    .service-card:nth-child(2) { animation-delay: 0.2s; }
+    .service-card:nth-child(3) { animation-delay: 0.3s; }
+    .service-card:nth-child(4) { animation-delay: 0.4s; }
+    .service-card:nth-child(5) { animation-delay: 0.5s; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="services-hero">
+    <div class="container">
+        <h1>Nossas Soluções Contábeis para seu Negócio</h1>
+        <p>Soluções completas e personalizadas para empresas de todos os portes. Simplifique sua gestão contábil e foque no que realmente importa: o crescimento do seu negócio.</p>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="services-section">
+    <div class="container">
+        <!-- Grid de Serviços -->
+        <div class="services-grid">
+            
+            <!-- Card 1: Abrir Empresa -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                </div>
+                <h3 class="service-title">Abrir Empresa</h3>
+                <p class="service-description">Damos vida ao seu negócio de forma rápida e sem burocracia. Cuidamos de todo o processo de registro para que você comece com o pé direito.</p>
+                <a href="#" class="service-btn">Saiba Mais</a>
+            </div>
+            
+            <!-- Card 2: Deixar de ser MEI -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </div>
+                <h3 class="service-title">Deixar de ser MEI</h3>
+                <p class="service-description">Sua empresa cresceu? Ajudamos você na transição de MEI para ME (Microempresa) de forma segura, garantindo a conformidade legal e fiscal.</p>
+                <a href="#" class="service-btn">Saiba Mais</a>
+            </div>
+            
+            <!-- Card 3: Trocar de Contador -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                </div>
+                <h3 class="service-title">Trocar de Contador</h3>
+                <p class="service-description">Migre sua contabilidade para a nossa plataforma de forma simples e organizada. Oferecemos um processo de transição tranquilo e sem interrupções.</p>
+                <a href="#" class="service-btn">Saiba Mais</a>
+            </div>
+            
+            <!-- Card 4: Contabilidade Completa -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <h3 class="service-title">Contabilidade Completa</h3>
+                <p class="service-description">Deixe a burocracia conosco. Gerenciamos todas as suas obrigações fiscais e contábeis para que você possa focar no crescimento do seu negócio.</p>
+                <a href="#" class="service-btn">Saiba Mais</a>
+            </div>
+            
+            <!-- Card 5: Assessoria Contábil -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                </div>
+                <h3 class="service-title">Assessoria Contábil</h3>
+                <p class="service-description">Consultoria especializada para suas decisões estratégicas. Obtenha análises e relatórios que impulsionam a saúde financeira da sua empresa.</p>
+                <a href="#" class="service-btn">Saiba Mais</a>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Pronto para Transformar sua Contabilidade?</h2>
+        <p>Entre em contato conosco e descubra como podemos ajudar seu negócio a crescer com segurança e eficiência.</p>
+        <a href="#" class="cta-btn" data-bs-toggle="modal" data-bs-target="#contactModal">Fale Conosco</a>
+    </div>
+</section>
+{% endblock %}
