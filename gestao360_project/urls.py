@@ -21,6 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from apps.testimonials.models import Testimonial
+from apps.services.views import calculadora_clt_pj
 
 # Customização do Admin
 admin.site.site_header = "Vetorial - Administração"
@@ -57,6 +58,7 @@ urlpatterns = [
     path("services/", include('apps.services.urls')),
     path("blog/", include('apps.blog.urls')),
     path("documents/", include('apps.documents.urls')),
+    path("recursos/calculadora-clt-pj/", calculadora_clt_pj, name='calculadora_clt_pj'),
     # path("payments/", include('apps.payments.urls')),
     # path("support/", include('apps.support.urls')),
 ]

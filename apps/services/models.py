@@ -326,3 +326,72 @@ class Subscription(models.Model):
     
     def __str__(self):
         return f"{self.cliente.username} - {self.plano.nome} ({self.status})"
+
+
+class CategoriaCNAE(models.Model):
+    """
+    Modelo para categorizar CNAEs por área de atuação
+    """
+    nome = models.CharField(
+        max_length=100, 
+        unique=True,
+        verbose_name='Nome da Categoria',
+        help_text='Ex: Consultoria, Software, Educação'
+    )
+    ordem = models.IntegerField(
+        default=0,
+        verbose_name='Ordem de Exibição',
+        help_text='Menor número aparece primeiro'
+    )
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
+    atualizado_em = models.DateTimeField(auto_now=True, verbose_name='Atualizado em')
+    
+    class Meta:
+        verbose_name = 'Categoria CNAE'
+        verbose_name_plural = 'Categorias CNAE'
+        ordering = ['ordem', 'nome']
+    
+    def __str__(self):
+        return self.nome
+    
+    def total_cnaes(self):
+        """Retorna o total de CNAEs nesta categoria"""
+        return self.cnaes.count()
+    total_cnaes.short_description = 'Total de CNAEs'
+
+
+class CNAE(models.Model):
+    """
+    Modelo para armazenar CNAEs (Classificação Nacional de Atividades Econômicas)
+    """
+    codigo = models.CharField(
+        max_length=20,
+        unique=True,
+        verbose_name='Código CNAE',
+        help_text='Ex: 6201-5/01, 8599-6/99'
+    )
+    descricao = models.TextField(
+        verbose_name='Descrição',
+        help_text='Descrição completa da atividade econômica'
+    )
+    categoria = models.ForeignKey(
+        CategoriaCNAE,
+        on_delete=models.CASCADE,
+        related_name='cnaes',
+        verbose_name='Categoria'
+    )
+    ativo = models.BooleanField(
+        default=True,
+        verbose_name='Ativo',
+        help_text='Se o CNAE está ativo para consulta'
+    )
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
+    atualizado_em = models.DateTimeField(auto_now=True, verbose_name='Atualizado em')
+    
+    class Meta:
+        verbose_name = 'CNAE'
+        verbose_name_plural = 'CNAEs'
+        ordering = ['categoria__ordem', 'categoria__nome', 'codigo']
+    
+    def __str__(self):
+        return f"{self.codigo} - {self.descricao[:50]}"

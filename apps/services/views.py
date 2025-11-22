@@ -230,3 +230,146 @@ def buscar_cep(request):
         })
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+
+def planos_view(request):
+    """
+    View para exibir os planos de abertura de empresa
+    """
+    from .models import Plano
+    
+    # Buscar planos ativos separados por categoria
+    planos_servicos = Plano.objects.filter(ativo=True, categoria='servicos').order_by('preco')
+    planos_comercio = Plano.objects.filter(ativo=True, categoria='comercio').order_by('preco')
+    
+    context = {
+        'planos_servicos': planos_servicos,
+        'planos_comercio': planos_comercio,
+    }
+    
+    return render(request, 'services/planos.html', context)
+
+
+def consulta_cnaes_view(request):
+    """
+    View para consulta de CNAEs organizados por categoria
+    """
+    from .models import CategoriaCNAE
+    
+    # Buscar todas as categorias com seus CNAEs
+    categorias = CategoriaCNAE.objects.prefetch_related('cnaes').all()
+    
+    # Organizar dados em dicionário para o template
+    categorias_com_cnaes = {}
+    for categoria in categorias:
+        cnaes_ativos = categoria.cnaes.filter(ativo=True)
+        if cnaes_ativos.exists():  # Só incluir categorias com CNAEs ativos
+            categorias_com_cnaes[categoria] = list(cnaes_ativos)
+    
+    context = {
+        'categorias_com_cnaes': categorias_com_cnaes,
+        'total_categorias': len(categorias_com_cnaes),
+        'total_cnaes': sum(len(cnaes) for cnaes in categorias_com_cnaes.values()),
+    }
+    
+    return render(request, 'services/consultar_cnaes.html', context)
+
+
+def calculadora_clt_pj(request):
+    """
+    Calculadora de Salário CLT vs. PJ
+    Compara o salário líquido entre os dois regimes
+    """
+    resultados = None
+    salario_bruto = None
+    
+    if request.method == 'POST':
+        try:
+            salario_bruto = float(request.POST.get('salario_bruto', 0))
+            
+            if salario_bruto <= 0:
+                messages.error(request, 'Por favor, informe um salário válido.')
+            else:
+                # ===== CÁLCULO CLT =====
+                # 1. INSS (2024)
+                inss = 0
+                if salario_bruto <= 1412.00:
+                    inss = salario_bruto * 0.075
+                elif salario_bruto <= 2666.68:
+                    inss = 1412.00 * 0.075 + (salario_bruto - 1412.00) * 0.09
+                elif salario_bruto <= 4000.03:
+                    inss = 1412.00 * 0.075 + (2666.68 - 1412.00) * 0.09 + (salario_bruto - 2666.68) * 0.12
+                else:
+                    inss = 1412.00 * 0.075 + (2666.68 - 1412.00) * 0.09 + (4000.03 - 2666.68) * 0.12 + (salario_bruto - 4000.03) * 0.14
+                    # Teto máximo do INSS
+                    inss = min(inss, 908.85)
+                
+                # 2. Base de cálculo do IRRF (salário - INSS)
+                base_irrf = salario_bruto - inss
+                
+                # 3. IRRF (2024) - considerando dedução padrão
+                deducao_dependentes = 0  # Simplificado: sem dependentes
+                base_irrf -= deducao_dependentes
+                
+                irrf = 0
+                if base_irrf <= 2259.20:
+                    irrf = 0
+                elif base_irrf <= 2826.65:
+                    irrf = base_irrf * 0.075 - 169.44
+                elif base_irrf <= 3751.05:
+                    irrf = base_irrf * 0.15 - 381.44
+                elif base_irrf <= 4664.68:
+                    irrf = base_irrf * 0.225 - 662.77
+                else:
+                    irrf = base_irrf * 0.275 - 896.00
+                
+                irrf = max(irrf, 0)
+                
+                # Salário líquido CLT
+                salario_liquido_clt = salario_bruto - inss - irrf
+                
+                # Benefícios CLT (não entram no líquido, mas são vantagens)
+                decimo_terceiro = salario_bruto
+                ferias = salario_bruto + (salario_bruto / 3)  # + 1/3
+                fgts_mensal = salario_bruto * 0.08
+                fgts_anual = fgts_mensal * 12
+                
+                # ===== CÁLCULO PJ (Simples Nacional - Anexo III) =====
+                # Alíquota inicial de 6% (simplificado)
+                aliquota_simples = 0.06
+                imposto_pj = salario_bruto * aliquota_simples
+                salario_liquido_pj = salario_bruto - imposto_pj
+                
+                # Diferença
+                diferenca = salario_liquido_pj - salario_liquido_clt
+                diferenca_percentual = (diferenca / salario_liquido_clt) * 100 if salario_liquido_clt > 0 else 0
+                
+                # Contexto de resultados
+                resultados = {
+                    'salario_bruto': salario_bruto,
+                    # CLT
+                    'clt_inss': inss,
+                    'clt_irrf': irrf,
+                    'clt_total_descontos': inss + irrf,
+                    'clt_salario_liquido': salario_liquido_clt,
+                    'clt_decimo_terceiro': decimo_terceiro,
+                    'clt_ferias': ferias,
+                    'clt_fgts_anual': fgts_anual,
+                    # PJ
+                    'pj_imposto': imposto_pj,
+                    'pj_aliquota': aliquota_simples * 100,
+                    'pj_salario_liquido': salario_liquido_pj,
+                    # Comparação
+                    'diferenca': diferenca,
+                    'diferenca_percentual': diferenca_percentual,
+                }
+                
+        except (ValueError, TypeError):
+            messages.error(request, 'Por favor, informe um valor numérico válido.')
+    
+    context = {
+        'resultados': resultados,
+        'salario_bruto': salario_bruto,
+    }
+    
+    return render(request, 'recursos/calculadora_clt_pj.html', context)

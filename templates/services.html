@@ -362,10 +362,37 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="services-hero">
-    <div class="container">
-        <h1>Nossas Soluções Contábeis para seu Negócio</h1>
-        <p>Soluções completas e personalizadas para empresas de todos os portes. Simplifique sua gestão contábil e foque no que realmente importa: o crescimento do seu negócio.</p>
+<section class="hero-section text-white position-relative" style="height: 650px; width: 100%; padding: 0;">
+    <div class="container-fluid" style="height: 100%;">
+        <div class="row align-items-center" style="height: 100%; padding-bottom: 1rem;">
+            <!-- Coluna Esquerda - Conteúdo -->
+            <div class="col-lg-6 col-12 animate-fade-in px-5">
+                <h1 class="display-3 fw-bold mb-4">Conheça Nossos Serviços</h1>
+                <p class="fs-5 mb-4">Abertura de empresas sem cobranças de honorários. <br> 
+                    Desenquadramento MEI e abertura de ME. <br>
+                    Troca de contador com responsabilidade agilidade e segurança. <br>
+                    Contabilidade completa para o crecimento da sua empresa. <br>
+                    Acessoria contabil e fiscal para o seu negócio
+                </p>
+                <div class="d-grid gap-3 d-sm-flex mb-4">
+                    <a href="/admin/" class="btn btn-light btn-lg px-5">Abra sua empresa agora</a>
+                    <a href="#servicos" class="btn btn-outline-light btn-lg px-5">Nossos Serviços</a>
+                </div>
+                <!-- Selos de Segurança -->
+                <!-- <div class="d-flex gap-3 align-items-center flex-wrap mt-3">
+                    <div class="selo-badge selo-ra1000">
+                        <img src="{% static 'img/SELO-RA1000.png' %}" alt="Selo RA1000" class="img-fluid">
+                    </div>
+                    <div class="selo-badge selo-google" style="width: 103.969px !important; height: 37.734px !important;">
+                        <img src="{% static 'img/googlesiteseguro.png' %}" alt="Google Site Seguro" style="width: 100%; height: 100%; object-fit: contain;">
+                    </div>
+                </div> -->
+            </div>
+            <!-- Coluna Direita - Vazia (imagem de fundo aparece aqui) -->
+            <div class="col-lg-6 d-none d-lg-block">
+                <!-- Espaço para a imagem de fundo aparecer -->
+            </div>
+        </div>
     </div>
 </section>
 

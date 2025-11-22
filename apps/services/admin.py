@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Service, Plan, Subscription, ProcessoAbertura, Socio, Plano
+from .models import Service, Plan, Subscription, ProcessoAbertura, Socio, Plano, CategoriaCNAE, CNAE
 
 # Register your models here.
 
@@ -104,3 +104,26 @@ class SubscriptionAdmin(admin.ModelAdmin):
     list_filter = ['status', 'data_inicio']
     search_fields = ['cliente__username', 'cliente__email', 'plano__nome']
     raw_id_fields = ['cliente', 'plano']
+
+
+@admin.register(CategoriaCNAE)
+class CategoriaCNAEAdmin(admin.ModelAdmin):
+    list_display = ['nome', 'ordem', 'total_cnaes', 'criado_em']
+    list_filter = ['criado_em']
+    search_fields = ['nome']
+    list_editable = ['ordem']
+    ordering = ['ordem', 'nome']
+
+
+@admin.register(CNAE)
+class CNAEAdmin(admin.ModelAdmin):
+    list_display = ['codigo', 'descricao_curta', 'categoria', 'ativo', 'criado_em']
+    list_filter = ['categoria', 'ativo', 'criado_em']
+    search_fields = ['codigo', 'descricao', 'categoria__nome']
+    list_editable = ['ativo']
+    ordering = ['categoria__ordem', 'categoria__nome', 'codigo']
+    
+    def descricao_curta(self, obj):
+        """Retorna descrição limitada a 60 caracteres"""
+        return obj.descricao[:60] + '...' if len(obj.descricao) > 60 else obj.descricao
+    descricao_curta.short_description = 'Descrição'
