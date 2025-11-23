@@ -35,8 +35,7 @@ python-decouple>=3.8  # Alternativa ao python-dotenv
 # flake8>=6.1.0
 
 # ==================================
-# PRODUÇÃO (OPCIONAL)
+# PRODUÇÃO
 # ==================================
-# gunicorn>=21.2.0
-# whitenoise>=6.6.0  # Para servir arquivos estáticos
-# sentry-sdk>=1.38.0  # Para monitoramento de erros
+gunicorn>=21.2.0
+whitenoise>=6.6.0

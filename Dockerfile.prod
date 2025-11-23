@@ -1,0 +1,65 @@
+# ==================================
+# DOCKERFILE DE PRODUÇÃO - VETORIAL
+# ==================================
+
+FROM python:3.11-slim
+
+# Argumentos de build
+ARG APP_USER=vetorial
+ARG APP_DIR=/app
+
+# Variáveis de ambiente
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    APP_USER=${APP_USER} \
+    APP_DIR=${APP_DIR}
+
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    postgresql-client \
+    gcc \
+    python3-dev \
+    musl-dev \
+    libpq-dev \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
+
+# Criar usuário não-root
+RUN useradd -m -s /bin/bash ${APP_USER}
+
+# Criar diretório da aplicação
+RUN mkdir -p ${APP_DIR} && chown ${APP_USER}:${APP_USER} ${APP_DIR}
+
+# Definir diretório de trabalho
+WORKDIR ${APP_DIR}
+
+# Copiar e instalar dependências Python
+COPY --chown=${APP_USER}:${APP_USER} requirements.txt ${APP_DIR}/
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt && \
+    pip install gunicorn
+
+# Copiar projeto
+COPY --chown=${APP_USER}:${APP_USER} . ${APP_DIR}/
+
+# Criar diretórios necessários
+RUN mkdir -p ${APP_DIR}/staticfiles ${APP_DIR}/media && \
+    chown -R ${APP_USER}:${APP_USER} ${APP_DIR}
+
+# Mudar para usuário não-root
+USER ${APP_USER}
+
+# Coletar arquivos estáticos (será sobrescrito pelo entrypoint)
+RUN python manage.py collectstatic --noinput || true
+
+# Expor porta
+EXPOSE 8000
+
+# Copiar e definir entrypoint
+COPY --chown=${APP_USER}:${APP_USER} entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Comando padrão
+CMD ["gunicorn", "vetorial_project.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
