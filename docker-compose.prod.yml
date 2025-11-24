@@ -53,13 +53,13 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./backups:/backups
     environment:
-      - POSTGRES_DB=${DB_NAME:-vetorial_db}
-      - POSTGRES_USER=${DB_USER:-vetorial_user}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME:-gestao360_db}
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
     networks:
       - vetorial_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-vetorial_user}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
       interval: 10s
       timeout: 5s
       retries: 5

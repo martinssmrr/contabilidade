@@ -110,21 +110,25 @@ echo "✅ Atualização rápida concluída!"
 
 ## 🆘 TROUBLESHOOTING:
 
-### ❌ ERRO: Porta 8080 já alocada (Evolution API):
+### ❌ ERRO 502 Bad Gateway:
 ```bash
-# Parar TODOS os containers (incluindo os antigos)
-docker stop $(docker ps -aq)
+# 1. Verificar se os containers estão rodando
+docker-compose ps
 
-# Remover containers parados
-docker rm $(docker ps -aq)
+# 2. Ver logs do container web
+docker-compose logs web
 
-# Subir novamente
+# 3. Se o container não estiver rodando, subir novamente
 docker-compose up -d
 
-# OU identificar e parar apenas o container na porta 8080:
-docker ps | grep 8080
-docker stop <container_id>
-docker-compose up -d
+# 4. Se o container estiver crashando, ver erro completo
+docker-compose logs --tail=50 web
+
+# 5. Verificar se o banco está acessível
+docker-compose exec web python manage.py check --deploy
+
+# 6. Restart completo se necessário
+docker-compose down && docker-compose up -d --build
 ```
 
 ### Ver logs do container web:
