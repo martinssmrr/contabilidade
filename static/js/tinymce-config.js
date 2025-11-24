@@ -2,9 +2,8 @@
 tinymce.init({
     selector: 'textarea.tinymce',
     
-    api_key: '4jflbxct8s4d4w36ycp1onm75pou65ujw0y7qokhl5omiesn',
+    api_key: '5bwylhfni2h04rqlhep1q7o7a09clfimci33xx8k1bdlbrbe',
     // Para obter uma chave gratuita: https://www.tiny.cloud/auth/signup/
-    // api_key: 'sua-api-key-aqui',
     
     height: 500,
     menubar: true,
