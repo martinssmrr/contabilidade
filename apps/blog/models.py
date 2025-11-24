@@ -6,6 +6,33 @@ from django.urls import reverse
 User = get_user_model()
 
 
+class Category(models.Model):
+    """Modelo para categorias do blog"""
+    
+    name = models.CharField('Nome', max_length=100, unique=True)
+    slug = models.SlugField('Slug', max_length=100, unique=True, blank=True)
+    description = models.TextField('Descrição', blank=True)
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'Categoria'
+        verbose_name_plural = 'Categorias'
+        ordering = ['name']
+    
+    def __str__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        """Gera slug automaticamente se não fornecido"""
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    
+    def get_absolute_url(self):
+        """Retorna a URL da categoria"""
+        return reverse('blog:category', kwargs={'slug': self.slug})
+
+
 class Post(models.Model):
     """Modelo para posts do blog"""
     
@@ -16,6 +43,14 @@ class Post(models.Model):
     
     title = models.CharField('Título', max_length=200)
     slug = models.SlugField('Slug', max_length=200, unique=True, blank=True)
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='posts',
+        verbose_name='Categoria'
+    )
     author = models.ForeignKey(
         User, 
         on_delete=models.CASCADE, 
@@ -30,6 +65,7 @@ class Post(models.Model):
         blank=True,
         null=True
     )
+    is_featured = models.BooleanField('Em Destaque', default=False, help_text='Marque para exibir na seção de destaques')
     status = models.CharField(
         'Status',
         max_length=10,

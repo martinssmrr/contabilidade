@@ -79,7 +79,6 @@ main {
 .hero-section {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, rgba(12, 99, 209, 0.75) 0%, rgba(10, 79, 163, 0.75) 100%), url('../img/herosection.png');
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
@@ -211,6 +210,18 @@ main {
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
     position: fixed;
     top: 0;
+}
+
+/* Navbar com menu aberto em mobile */
+@media (max-width: 991.98px) {
+    .navbar.transparent .navbar-collapse.show,
+    .navbar.transparent .navbar-collapse.collapsing {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 0.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
 }
 
 .navbar-brand {
@@ -661,7 +672,7 @@ footer {
 
 .popup-image {
     flex: 1;
-    background-image: url('../img/popup_home.png');
+    background-image: url('../img/popup_home1.png');
     background-size: cover;
     background-position: center;
     min-height: 500px;
@@ -738,11 +749,19 @@ footer {
     height: 40px;
     opacity: 1;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
 }
 
 .btn-close:hover {
     background: var(--danger-color);
     transform: rotate(90deg);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
 }
 
 /* Animações */
@@ -1358,7 +1377,8 @@ footer {
     justify-content: center;
     border-radius: 50%;
     background: linear-gradient(135deg, rgba(62, 244, 124, 0.1) 0%, rgba(12, 99, 209, 0.1) 100%);
-    padding: 2rem;
+    padding: 0;
+    overflow: hidden;
     transition: all 0.3s ease;
 }
 
@@ -1368,9 +1388,10 @@ footer {
 }
 
 .benefit-image {
-    max-width: 110px;
-    max-height: 110px;
-    object-fit: contain;
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .benefit-title {
@@ -1431,12 +1452,14 @@ footer {
         width: 130px;
         height: 130px;
         margin-bottom: 1rem;
-        padding: 1.5rem;
+        padding: 0;
     }
 
     .benefit-image {
-        max-width: 85px;
-        max-height: 85px;
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        object-fit: cover;
     }
 
     .benefit-title {
@@ -1464,12 +1487,14 @@ footer {
     .benefit-image-wrapper {
         width: 120px;
         height: 120px;
-        padding: 1.2rem;
+        padding: 0;
     }
 
     .benefit-image {
-        max-width: 75px;
-        max-height: 75px;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
     }
 
     .flip-card-back h5 {

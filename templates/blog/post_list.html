@@ -1,297 +1,681 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Blog - Vetorial{% endblock %}
-
-{% block extra_css %}
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-<style>
-    :root {
-        --primary-color: #3ef47c;
-        --primary-hover: #2ed66b;
-        --secondary-color: #0c63d1;
-        --text-primary: #212529;
-        --text-secondary: #6C757D;
-        --background-light: #F8F9FA;
-    }
-    
-    body {
-        font-family: 'Open Sans', sans-serif;
-        color: var(--text-primary);
-    }
-    
-    /* Hero Section */
-    .blog-hero {
-        background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
-        padding: 80px 0 60px;
-        margin-bottom: 60px;
-    }
-    
-    .blog-hero h1 {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 3rem;
-        font-weight: 800;
-        color: white;
-        margin-bottom: 1rem;
-    }
-    
-    .blog-hero p {
-        font-size: 1.25rem;
-        color: rgba(255, 255, 255, 0.9);
-        max-width: 700px;
-        margin: 0 auto;
-    }
-    
-    /* Post Cards */
-    .posts-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
-    }
-    
-    .post-card {
-        background: white;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(62, 244, 124, 0.08);
-        transition: all 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        border: 1px solid rgba(62, 244, 124, 0.15);
-    }
-    
-    .post-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 8px 24px rgba(62, 244, 124, 0.2);
-        border-color: rgba(62, 244, 124, 0.3);
-    }
-    
-    .post-card-image {
-        width: 100%;
-        height: 250px;
-        object-fit: cover;
-        background: linear-gradient(135deg, #3ef47c 0%, #0c63d1 100%);
-    }
-    
-    .post-card-body {
-        padding: 2rem;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .post-card-meta {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-        margin-bottom: 1rem;
-    }
-    
-    .post-card-title {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        margin-bottom: 1rem;
-        line-height: 1.3;
-    }
-    
-    .post-card-title a {
-        color: inherit;
-        text-decoration: none;
-        transition: color 0.2s ease;
-    }
-    
-    .post-card-title a:hover {
-        color: var(--primary-color);
-    }
-    
-    .post-card-excerpt {
-        color: var(--text-secondary);
-        margin-bottom: 1.5rem;
-        flex-grow: 1;
-        line-height: 1.7;
-    }
-    
-    .post-card-link {
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-        color: white;
-        padding: 12px 24px;
-        border-radius: 10px;
-        text-decoration: none;
-        font-weight: 600;
-        display: inline-block;
-        transition: all 0.3s ease;
-        text-align: center;
-        box-shadow: 0 4px 12px rgba(62, 244, 124, 0.3);
-    }
-    
-    .post-card-link:hover {
-        background: linear-gradient(135deg, var(--primary-hover) 0%, var(--secondary-color) 100%);
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(62, 244, 124, 0.4);
-    }
-    
-    /* Pagination */
-    .pagination {
-        justify-content: center;
-        margin-top: 3rem;
-    }
-    
-    .pagination .page-link {
-        color: var(--primary-color);
-        border-color: #dee2e6;
-        padding: 10px 18px;
-        margin: 0 5px;
-        border-radius: 8px;
-    }
-    
-    .pagination .page-link:hover {
-        background-color: var(--primary-color);
-        color: white;
-        border-color: var(--primary-color);
-    }
-    
-    .pagination .page-item.active .page-link {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-    }
-    
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 4rem 2rem;
-    }
-    
-    .empty-state h3 {
-        font-family: 'Montserrat', sans-serif;
-        color: var(--text-secondary);
-        margin-bottom: 1rem;
-    }
-    
-    @media (max-width: 768px) {
-        .blog-hero h1 {
-            font-size: 2rem;
-        }
-        
-        .posts-grid {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-    }
-</style>
-{% endblock %}
+{% block title %}Blog - Vetorial Contabilidade{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section text-white position-relative" style="height: 650px; width: 100%; padding: 0;">
-    <div class="container-fluid" style="height: 100%;">
-        <div class="row align-items-center" style="height: 100%; padding-bottom: 1rem;">
-            <!-- Coluna Esquerda - Conteúdo -->
-            <div class="col-lg-6 col-12 animate-fade-in px-5">
-                <h1 class="display-3 fw-bold mb-4">Blog Vetorial</h1>
-                <p class="fs-5 mb-4"> <strong>Conhecimento claro e direto.</strong><br> 
-                    <strong>Conteúdos para evoluir rápido.</strong> <br>
-                    <strong>Informação simples, sem rodeios.</strong> <br>
-                    <strong>Aprenda mais em poucos minutos.</strong> <br>
-                    <strong>Insights práticos para o dia a dia.</strong>
-                </p>
-                <div class="d-grid gap-3 d-sm-flex mb-4">
-                    <a href="/admin/" class="btn btn-light btn-lg px-5">Abra sua empresa agora</a>
-                    <a href="#servicos" class="btn btn-outline-light btn-lg px-5">Nossos Serviços</a>
+<main class="blog-page">
+    <!-- Seção de Destaques com Carrossel -->
+    {% if featured_posts %}
+    <section class="featured-section">
+        <div class="container">
+            <div class="featured-carousel">
+                <div class="carousel-track" id="carousel-track">
+                    {% for post in featured_posts %}
+                    <article class="featured-slide">
+                        <div class="featured-image-col">
+                            {% if post.featured_image %}
+                                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                            {% else %}
+                                <img src="{% static 'img/logo04.png' %}" alt="{{ post.title }}">
+                            {% endif %}
+                        </div>
+                        <div class="featured-info-col">
+                            <h3><a href="{% url 'blog:post_detail' post.slug %}">{{ post.title }}</a></h3>
+                            <span class="post-date">{{ post.created_at|date:"d/m/Y" }}</span>
+                            <span class="post-author">{{ post.author }}</span>
+                        </div>
+                    </article>
+                    {% endfor %}
                 </div>
-                <!-- Selos de Segurança -->
-                <!-- <div class="d-flex gap-3 align-items-center flex-wrap mt-3">
-                    <div class="selo-badge selo-ra1000">
-                        <img src="{% static 'img/SELO-RA1000.png' %}" alt="Selo RA1000" class="img-fluid">
-                    </div>
-                    <div class="selo-badge selo-google" style="width: 103.969px !important; height: 37.734px !important;">
-                        <img src="{% static 'img/googlesiteseguro.png' %}" alt="Google Site Seguro" style="width: 100%; height: 100%; object-fit: contain;">
-                    </div>
-                </div> -->
-            </div>
-            <!-- Coluna Direita - Vazia (imagem de fundo aparece aqui) -->
-            <div class="col-lg-6 d-none d-lg-block">
-                <!-- Espaço para a imagem de fundo aparecer -->
+                
+                {% if featured_posts|length > 1 %}
+                <button class="carousel-btn carousel-prev" id="carousel-prev">‹</button>
+                <button class="carousel-btn carousel-next" id="carousel-next">›</button>
+                <div class="carousel-dots" id="carousel-dots"></div>
+                {% endif %}
             </div>
         </div>
-    </div>
-</section>
+    </section>
+    {% endif %}
 
-<!-- Posts Grid -->
-<section class="py-5">
-    <div class="container">
-        {% if posts %}
-            <div class="posts-grid">
-                {% for post in posts %}
-                <article class="post-card">
-                    {% if post.featured_image %}
-                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="post-card-image">
-                    {% else %}
-                        <div class="post-card-image d-flex align-items-center justify-content-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="white" viewBox="0 0 24 24">
-                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                            </svg>
+    <!-- Seção Mais Recentes -->
+    {% if latest_post %}
+    <section class="recent-section">
+        <div class="container">
+            <h2 class="section-title">Mais Recentes</h2>
+            <div class="recent-grid">
+                <!-- Post Principal (mais recente) com imagem de fundo -->
+                <article class="recent-main">
+                    <a href="{% url 'blog:post_detail' latest_post.slug %}" class="recent-main-link">
+                        <div class="recent-image-bg" style="background-image: url('{% if latest_post.featured_image %}{{ latest_post.featured_image.url }}{% else %}{% static 'img/logo04.png' %}{% endif %}');">
+                            <div class="recent-overlay">
+                                <h3>{{ latest_post.title }}</h3>
+                            </div>
                         </div>
-                    {% endif %}
-                    
-                    <div class="post-card-body">
-                        <div class="post-card-meta">
-                            <span>Por {{ post.author.get_full_name|default:post.author.username }}</span>
-                            <span class="mx-2">•</span>
-                            <span>{{ post.created_at|date:"d/m/Y" }}</span>
-                        </div>
-                        
-                        <h2 class="post-card-title">
-                            <a href="{% url 'blog:post_detail' post.slug %}">{{ post.title }}</a>
-                        </h2>
-                        
-                        <p class="post-card-excerpt">{{ post.excerpt|striptags }}</p>
-                        
-                        <a href="{% url 'blog:post_detail' post.slug %}" class="post-card-link">
-                            Leia Mais →
-                        </a>
-                    </div>
+                    </a>
                 </article>
-                {% endfor %}
+
+                <!-- Outros posts recentes -->
+                <div class="recent-sidebar">
+                    {% for post in other_recent %}
+                    <article class="recent-small">
+                        <div class="recent-small-image">
+                            {% if post.featured_image %}
+                                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                            {% else %}
+                                <img src="{% static 'img/logo04.png' %}" alt="{{ post.title }}">
+                            {% endif %}
+                        </div>
+                        <div class="recent-small-content">
+                            {% if post.category %}
+                            <span class="post-category">{{ post.category.name }}</span>
+                            {% endif %}
+                            <h4><a href="{% url 'blog:post_detail' post.slug %}">{{ post.title|striptags }}</a></h4>
+                            <span class="post-date">{{ post.created_at|date:"d/m/Y" }}</span>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
             </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Listagem Principal de Artigos -->
+    <section class="posts-section">
+        <div class="container">
+            <h2 class="section-title">Todos os Artigos</h2>
             
-            <!-- Pagination -->
-            {% if is_paginated %}
-            <nav aria-label="Navegação de posts">
-                <ul class="pagination">
-                    {% if page_obj.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page=1">Primeira</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
-                        </li>
-                    {% endif %}
-                    
-                    <li class="page-item active">
-                        <span class="page-link">{{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
-                    </li>
-                    
-                    {% if page_obj.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
-            {% endif %}
-        {% else %}
-            <div class="empty-state">
-                <h3>Nenhum post publicado ainda</h3>
-                <p class="text-muted">Em breve teremos novos conteúdos por aqui!</p>
+            <div class="posts-grid" id="posts-grid">
+                {% include 'blog/partials/post_cards.html' %}
             </div>
-        {% endif %}
-    </div>
-</section>
+
+            <!-- Botão Ver Mais -->
+            {% if page_obj.has_next or posts.count == 8 %}
+            <div class="load-more-container">
+                <button class="btn-load-more" id="load-more-btn" data-page="2">
+                    Ver Mais
+                </button>
+                <div class="loading-spinner" id="loading-spinner" style="display: none;">
+                    Carregando...
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+</main>
+
+<style>
+/* Seção de Destaques com Carrossel */
+.featured-section {
+    padding: 120px 0 80px 0;
+    background: linear-gradient(135deg, #f6f6f8 0%, #f6f6f8 100%);
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    width: 100vw;
+    position: relative;
+}
+
+.featured-section .container {
+    max-width: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: #2c3e50;
+}
+
+.featured-carousel {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.featured-slide {
+    min-width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: white;
+    position: relative;
+}
+
+.featured-image-col {
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+}
+
+.featured-image-col img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.featured-info-col {
+    background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.featured-info-col::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.3; }
+}
+
+.featured-info-col h3 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    line-height: 1.3;
+    position: relative;
+    z-index: 1;
+}
+
+.featured-info-col h3 a {
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.featured-info-col h3 a:hover {
+    opacity: 0.9;
+}
+
+.featured-info-col .post-date {
+    color: rgba(255,255,255,0.9);
+    font-size: 1.1rem;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.95);
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 2rem;
+    color: #0c63d1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.carousel-btn:hover {
+    background: white;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-prev {
+    left: 20px;
+}
+
+.carousel-next {
+    right: 20px;
+}
+
+.carousel-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.carousel-dot.active {
+    background: white;
+    width: 30px;
+    border-radius: 6px;
+}
+
+/* Seção Mais Recentes */
+.recent-section {
+    padding: 80px 0;
+    background: #f6f6f8;
+}
+
+.recent-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.recent-main {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.recent-main-link {
+    display: block;
+    text-decoration: none;
+}
+
+.recent-image-bg {
+    width: 100%;
+    height: 350px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+}
+
+.recent-overlay {
+    width: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+    padding: 40px 30px;
+}
+
+.recent-overlay h3 {
+    color: white;
+    font-size: 1.8rem;
+    margin: 0;
+    line-height: 1.3;
+    font-weight: 700;
+}
+
+.recent-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.recent-small {
+    display: flex;
+    gap: 15px;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.recent-small:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.recent-small-image {
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.recent-small-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.post-category {
+    display: inline-block;
+    background: #3498db;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.recent-small-content {
+    flex: 1;
+}
+
+.recent-small-content h4 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+.recent-small-content h4 a {
+    color: #2c3e50;
+    text-decoration: none;
+}
+
+.recent-small-content h4 a:hover {
+    color: #3498db;
+}
+
+.post-date {
+    font-size: 0.875rem;
+    color: #95a5a6;
+}
+
+/* Posts Grid - 4 colunas com cards compactos */
+.posts-section {
+    padding: 80px 0;
+    background: #f6f6f8;
+}
+
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.post-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+}
+
+.post-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.post-card-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.post-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.post-card:hover .post-card-image img {
+    transform: scale(1.05);
+}
+
+.post-card-content {
+    padding: 20px;
+}
+
+.post-card-content h3 {
+    font-size: 1.1rem;
+    margin: 0;
+    line-height: 1.4;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* Botão Ver Mais */
+.load-more-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.btn-load-more {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.btn-load-more:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+}
+
+.btn-load-more:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.loading-spinner {
+    color: #3498db;
+    font-weight: 600;
+}
+
+/* Responsividade */
+@media (max-width: 1400px) {
+    .posts-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 1024px) {
+    .featured-slide {
+        grid-template-columns: 1fr;
+    }
+    
+    .featured-image-col {
+        height: 350px;
+    }
+    
+    .featured-info-col {
+        padding: 40px;
+    }
+    
+    .featured-info-col h3 {
+        font-size: 2rem;
+    }
+    
+    .recent-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .recent-sidebar {
+        flex-direction: row;
+    }
+    
+    .posts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .featured-image-col {
+        height: 250px;
+    }
+    
+    .featured-info-col {
+        padding: 30px;
+    }
+    
+    .featured-info-col h3 {
+        font-size: 1.5rem;
+    }
+    
+    .carousel-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+    }
+    
+    .carousel-prev {
+        left: 10px;
+    }
+    
+    .carousel-next {
+        right: 10px;
+    }
+    
+    .recent-image-bg {
+        height: 250px;
+    }
+    
+    .recent-overlay h3 {
+        font-size: 1.3rem;
+    }
+    
+    .recent-sidebar {
+        flex-direction: column;
+    }
+    
+    .posts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Carrossel de Destaques
+    const carouselTrack = document.getElementById('carousel-track');
+    const prevBtn = document.getElementById('carousel-prev');
+    const nextBtn = document.getElementById('carousel-next');
+    const dotsContainer = document.getElementById('carousel-dots');
+    
+    if (carouselTrack) {
+        const slides = carouselTrack.querySelectorAll('.featured-slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        
+        // Criar dots
+        if (totalSlides > 1 && dotsContainer) {
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('carousel-dot');
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(i));
+                dotsContainer.appendChild(dot);
+            }
+        }
+        
+        function updateCarousel() {
+            carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Atualizar dots
+            if (dotsContainer) {
+                const dots = dotsContainer.querySelectorAll('.carousel-dot');
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
+            }
+        }
+        
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarousel();
+        }
+        
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+        
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+        
+        if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+        if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+        
+        // Auto-play (opcional)
+        if (totalSlides > 1) {
+            setInterval(nextSlide, 5000);
+        }
+    }
+    
+    // Carregamento de Mais Posts
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const postsGrid = document.getElementById('posts-grid');
+    
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function() {
+            const page = this.getAttribute('data-page');
+            
+            // Mostrar loading
+            loadMoreBtn.style.display = 'none';
+            loadingSpinner.style.display = 'block';
+            
+            // Fazer requisição AJAX
+            fetch(`{% url 'blog:load_more' %}?page=${page}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Adicionar novos posts
+                    postsGrid.insertAdjacentHTML('beforeend', data.html);
+                    
+                    // Esconder loading
+                    loadingSpinner.style.display = 'none';
+                    
+                    if (data.has_more) {
+                        // Ainda há mais posts
+                        loadMoreBtn.style.display = 'inline-block';
+                        loadMoreBtn.setAttribute('data-page', data.next_page);
+                    } else {
+                        // Não há mais posts
+                        loadMoreBtn.remove();
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar mais posts:', error);
+                    loadingSpinner.style.display = 'none';
+                    loadMoreBtn.style.display = 'inline-block';
+                    alert('Erro ao carregar mais posts. Tente novamente.');
+                });
+        });
+    }
+});
+</script>
 {% endblock %}

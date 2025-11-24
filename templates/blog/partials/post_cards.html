@@ -1,0 +1,17 @@
+{% load static %}
+{% for post in posts %}
+<article class="post-card">
+    <a href="{% url 'blog:post_detail' post.slug %}" class="post-card-link">
+        <div class="post-card-image">
+            {% if post.featured_image %}
+                <img src="{{ post.featured_image.url }}" alt="{{ post.title|striptags }}">
+            {% else %}
+                <img src="{% static 'img/logo04.png' %}" alt="{{ post.title|striptags }}">
+            {% endif %}
+        </div>
+        <div class="post-card-content">
+            <h3>{{ post.title|striptags }}</h3>
+        </div>
+    </a>
+</article>
+{% endfor %}

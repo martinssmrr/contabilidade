@@ -12,7 +12,7 @@
 <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: black;"></button>
             <div class="modal-body">
                 <div class="popup-container">
                     <!-- Lado Esquerdo - Imagem -->
@@ -115,7 +115,7 @@
 </div>
 
 <!-- Hero Section -->
-<section class="hero-section text-white position-relative">
+<section class="hero-section text-white position-relative" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.75) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/herosection.png' %}');">
     <div class="container-fluid">
         <div class="row align-items-center" style="min-height: 75vh; padding-bottom: 1rem;">
             <!-- Coluna Esquerda - Conteúdo -->
@@ -534,18 +534,22 @@
 </section>
 
 <!-- CTA Section -->
-<section class="cta-section py-5">
-    <div class="container text-center text-white">
-        <h2 class="mb-4">Pronto para simplificar sua contabilidade?</h2>
-        <p class="lead mb-4">Entre em contato e descubra como podemos ajudar seu negócio a crescer</p>
-        <div class="d-grid gap-3 d-md-flex justify-content-md-center">
-            <a href="/admin/" class="btn btn-light btn-lg px-5">Acessar Sistema</a>
-            <a href="tel:1112345678" class="btn btn-outline-light btn-lg px-5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone me-2" viewBox="0 0 16 16">
-                    <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
-                </svg>
-                (11) 1234-5678
-            </a>
+<section class="py-5">
+    <div class="container">
+        <div class="card border-0 shadow-lg overflow-hidden" style="border-radius: 25px; background: url('{% static 'img/cta.png' %}'); background-size: cover; background-position: top center; background-repeat: no-repeat;">
+            <div class="card-body text-center text-white py-5">
+                <h2 class="mb-4">Pronto para simplificar sua contabilidade?</h2>
+                <p class="lead mb-4">Entre em contato e descubra como podemos ajudar seu negócio a crescer</p>
+                <div class="d-grid gap-3 d-md-flex justify-content-md-center">
+                    <a href="/admin/" class="btn btn-light btn-lg px-5">Acessar Sistema</a>
+                    <a href="tel:1112345678" class="btn btn-outline-light btn-lg px-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone me-2" viewBox="0 0 16 16">
+                            <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                        </svg>
+                        (11) 1234-5678
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -1014,7 +1018,7 @@
                 var contactModal = new bootstrap.Modal(document.getElementById('contactModal'));
                 contactModal.show();
                 sessionStorage.setItem('popupShown', 'true');
-            }, 2000); // Mostra após 2 segundos
+            }, 4000); // Mostra após 4 segundos
         }
     });
 
@@ -1053,7 +1057,7 @@
     }
 
     // Função para enviar por WhatsApp
-    function enviarWhatsApp() {
+    async function enviarWhatsApp() {
         if (!validarFormulario()) return;
 
         const nome = document.getElementById('nomeCompleto').value;
@@ -1061,40 +1065,93 @@
         const telefone = document.getElementById('telefone').value;
         const estado = document.getElementById('estado').value;
         const cidade = document.getElementById('cidade').value;
-        const servico = document.getElementById('servico').options[document.getElementById('servico').selectedIndex].text;
+        const servicoSelect = document.getElementById('servico');
+        const servicoValue = servicoSelect.value;
+        const servicoText = servicoSelect.options[servicoSelect.selectedIndex].text;
+
+        // Salvar lead no banco de dados
+        try {
+            const response = await fetch('/support/capturar-lead/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    nome_completo: nome,
+                    email: email,
+                    telefone: telefone,
+                    estado: estado,
+                    cidade: cidade,
+                    servico: servicoValue,
+                    origem: 'popup'
+                })
+            });
+
+            const result = await response.json();
+            console.log('Lead capturado:', result);
+        } catch (error) {
+            console.error('Erro ao capturar lead:', error);
+        }
 
         const mensagem = `Olá! Gostaria de solicitar informações sobre o serviço:\n\n` +
                         `Nome: ${nome}\n` +
                         `Email: ${email}\n` +
                         `Telefone: ${telefone}\n` +
                         `Localização: ${cidade} - ${estado}\n` +
-                        `Serviço: ${servico}`;
+                        `Serviço: ${servicoText}`;
 
-        const whatsappNumber = '5577999515837'; // Numero de whatsapp
+        const whatsappNumber = '5577999515837';
         const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(mensagem)}`;
         window.open(url, '_blank');
     }
 
     // Função para solicitar ligação
-    function enviarLigacao() {
+    async function enviarLigacao() {
         if (!validarFormulario()) return;
 
         const nome = document.getElementById('nomeCompleto').value;
+        const email = document.getElementById('email').value;
         const telefone = document.getElementById('telefone').value;
-        const servico = document.getElementById('servico').options[document.getElementById('servico').selectedIndex].text;
+        const estado = document.getElementById('estado').value;
+        const cidade = document.getElementById('cidade').value;
+        const servicoSelect = document.getElementById('servico');
+        const servicoValue = servicoSelect.value;
+        const servicoText = servicoSelect.options[servicoSelect.selectedIndex].text;
 
-        alert(`Obrigado, ${nome}!\n\nEntraremos em contato no número ${telefone} para falar sobre: ${servico}\n\nAguarde nosso retorno em breve!`);
+        // Salvar lead no banco de dados
+        try {
+            const response = await fetch('/support/capturar-lead/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    nome_completo: nome,
+                    email: email,
+                    telefone: telefone,
+                    estado: estado,
+                    cidade: cidade,
+                    servico: servicoValue,
+                    origem: 'popup'
+                })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert(`Obrigado, ${nome}!\n\nEntraremos em contato no número ${telefone} para falar sobre: ${servicoText}\n\nAguarde nosso retorno em breve!`);
+            }
+        } catch (error) {
+            console.error('Erro ao capturar lead:', error);
+            alert(`Obrigado, ${nome}!\n\nEntraremos em contato no número ${telefone} para falar sobre: ${servicoText}\n\nAguarde nosso retorno em breve!`);
+        }
         
         // Fechar o modal
         var contactModal = bootstrap.Modal.getInstance(document.getElementById('contactModal'));
         contactModal.hide();
-
-        // Aqui você pode adicionar código para enviar os dados para o backend
-        // Por exemplo, usando fetch() para uma API Django
     }
 
     // Formulário de contato da seção
-    document.getElementById('contactFormSection').addEventListener('submit', function(e) {
+    document.getElementById('contactFormSection').addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const nome = document.getElementById('nome').value;
@@ -1102,9 +1159,35 @@
         const telefone = document.getElementById('telefoneForm').value;
         const estado = document.getElementById('estadoForm').value;
         const cidade = document.getElementById('cidadeForm').value;
-        const servico = document.getElementById('servicoForm').options[document.getElementById('servicoForm').selectedIndex].text;
+        const servicoSelect = document.getElementById('servicoForm');
+        const servicoValue = servicoSelect.value;
+        const servicoText = servicoSelect.options[servicoSelect.selectedIndex].text;
         const tipoNegocio = document.getElementById('tipoNegocio').options[document.getElementById('tipoNegocio').selectedIndex].text;
         const preferencia = document.getElementById('preferenciaContato').value;
+
+        // Salvar lead no banco de dados
+        try {
+            const response = await fetch('/support/capturar-lead/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    nome_completo: nome,
+                    email: email,
+                    telefone: telefone,
+                    estado: estado,
+                    cidade: cidade,
+                    servico: servicoValue,
+                    origem: 'contato'
+                })
+            });
+
+            const result = await response.json();
+            console.log('Lead capturado:', result);
+        } catch (error) {
+            console.error('Erro ao capturar lead:', error);
+        }
         
         if (preferencia === 'whatsapp') {
             const mensagem = `Olá! Gostaria de falar com um especialista:\n\n` +
@@ -1112,14 +1195,14 @@
                             `Email: ${email}\n` +
                             `Telefone: ${telefone}\n` +
                             `Localização: ${cidade} - ${estado}\n` +
-                            `Serviço: ${servico}\n` +
+                            `Serviço: ${servicoText}\n` +
                             `Tipo de Negócio: ${tipoNegocio}`;
             
             const whatsappNumber = '5577999515837';
             const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(mensagem)}`;
             window.open(url, '_blank');
         } else {
-            alert(`Obrigado, ${nome}!\n\nEntraremos em contato via e-mail (${email}) em breve para falar sobre: ${servico}`);
+            alert(`Obrigado, ${nome}!\n\nEntraremos em contato via e-mail (${email}) em breve para falar sobre: ${servicoText}`);
         }
         
         // Limpar formulário

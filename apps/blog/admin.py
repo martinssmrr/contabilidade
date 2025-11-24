@@ -1,21 +1,30 @@
 from django.contrib import admin
 from django.db import models
 from django.forms import Textarea
-from .models import Post
+from .models import Post, Category
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'created_at')
+    search_fields = ('name', 'description')
+    prepopulated_fields = {'slug': ('name',)}
+    ordering = ('name',)
 
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'status', 'created_at', 'updated_at')
-    list_filter = ('status', 'created_at', 'author')
+    list_display = ('title', 'category', 'author', 'is_featured', 'status', 'created_at', 'updated_at')
+    list_filter = ('status', 'is_featured', 'category', 'created_at', 'author')
     search_fields = ('title', 'content')
     prepopulated_fields = {'slug': ('title',)}
     date_hierarchy = 'created_at'
     ordering = ('-created_at',)
+    list_editable = ('is_featured', 'status')
     
     fieldsets = (
         ('Informações Básicas', {
-            'fields': ('title', 'slug', 'author', 'status')
+            'fields': ('title', 'slug', 'category', 'author', 'status', 'is_featured')
         }),
         ('Conteúdo', {
             'fields': ('excerpt', 'content', 'featured_image')

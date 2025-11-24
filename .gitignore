@@ -14,9 +14,9 @@ build/
 *.log
 db.sqlite3
 db.sqlite3-journal
-# static/
-# staticfiles/
-# media/
+#static/
+#staticfiles/
+#/media/
 
 # Ambientes virtuais
 venv/

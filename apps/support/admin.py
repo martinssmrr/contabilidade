@@ -1,7 +1,29 @@
 from django.contrib import admin
-from .models import Ticket, TicketMessage, Duvida
+from .models import Lead, Ticket, TicketMessage, Duvida
 
 # Register your models here.
+
+@admin.register(Lead)
+class LeadAdmin(admin.ModelAdmin):
+    list_display = ['nome_completo', 'email', 'telefone', 'servico_interesse', 'origem', 'contatado', 'criado_em']
+    list_filter = ['origem', 'contatado', 'estado', 'criado_em']
+    search_fields = ['nome_completo', 'email', 'telefone', 'cidade']
+    list_editable = ['contatado']
+    readonly_fields = ['criado_em']
+    fieldsets = (
+        ('Informações do Lead', {
+            'fields': ('nome_completo', 'email', 'telefone')
+        }),
+        ('Localização', {
+            'fields': ('estado', 'cidade')
+        }),
+        ('Interesse', {
+            'fields': ('servico_interesse', 'origem')
+        }),
+        ('Acompanhamento', {
+            'fields': ('contatado', 'observacoes', 'criado_em')
+        }),
+    )
 
 class TicketMessageInline(admin.TabularInline):
     model = TicketMessage

@@ -25,6 +25,7 @@ django-environ>=0.11.2
 # ==================================
 Pillow>=10.0.0  # Para manipulação de imagens
 python-decouple>=3.8  # Alternativa ao python-dotenv
+requests>=2.31.0  # Para chamadas HTTP à Evolution API
 
 # ==================================
 # DESENVOLVIMENTO (OPCIONAL)

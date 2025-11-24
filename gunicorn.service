@@ -1,0 +1,20 @@
+[Unit]
+Description=Gunicorn daemon for Vetorial Contabilidade
+After=network.target
+
+[Service]
+User=seu_usuario
+Group=www-data
+WorkingDirectory=/home/seu_usuario/vetorial
+Environment="PATH=/home/seu_usuario/vetorial/venv/bin"
+EnvironmentFile=/home/seu_usuario/vetorial/.env
+ExecStart=/home/seu_usuario/vetorial/venv/bin/gunicorn \
+          --workers 3 \
+          --bind unix:/home/seu_usuario/vetorial/gunicorn.sock \
+          --access-logfile /home/seu_usuario/vetorial/logs/gunicorn-access.log \
+          --error-logfile /home/seu_usuario/vetorial/logs/gunicorn-error.log \
+          --log-level info \
+          gestao360_project.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

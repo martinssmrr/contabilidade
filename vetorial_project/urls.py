@@ -52,8 +52,25 @@ def home_view(request):
         'planos_comercio': planos_comercio,
     })
 
+def abrir_empresa_view(request):
+    from django.shortcuts import render
+    from apps.services.models import Plano
+    
+    testimonials = Testimonial.objects.filter(is_active=True)
+    
+    # Buscar planos ativos separados por categoria
+    planos_servicos = Plano.objects.filter(ativo=True, categoria='servicos').order_by('ordem', 'preco')
+    planos_comercio = Plano.objects.filter(ativo=True, categoria='comercio').order_by('ordem', 'preco')
+    
+    return render(request, 'abrir_empresa.html', {
+        'testimonials': testimonials,
+        'planos_servicos': planos_servicos,
+        'planos_comercio': planos_comercio,
+    })
+
 urlpatterns = [
     path("", home_view, name='home'),
+    path("abrir-empresa/", abrir_empresa_view, name='abrir_empresa'),
     path("admin/", admin.site.urls),
     path("dashboard/", include('apps.dashboard.urls')),
     # Adicionar mais URLs conforme necessário:

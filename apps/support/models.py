@@ -3,6 +3,36 @@ from django.conf import settings
 
 # Create your models here.
 
+class Lead(models.Model):
+    """
+    Modelo para captação de leads do site.
+    Armazena informações de potenciais clientes que preenchem formulários.
+    """
+    ORIGEM_CHOICES = [
+        ('popup', 'Popup da Home'),
+        ('contato', 'Seção de Contato'),
+    ]
+    
+    nome_completo = models.CharField(max_length=200, verbose_name='Nome Completo')
+    email = models.EmailField(verbose_name='E-mail')
+    telefone = models.CharField(max_length=20, verbose_name='Telefone')
+    estado = models.CharField(max_length=2, verbose_name='Estado')
+    cidade = models.CharField(max_length=100, verbose_name='Cidade')
+    servico_interesse = models.CharField(max_length=100, verbose_name='Serviço de Interesse')
+    origem = models.CharField(max_length=20, choices=ORIGEM_CHOICES, verbose_name='Origem')
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Data de Cadastro')
+    contatado = models.BooleanField(default=False, verbose_name='Foi Contatado?')
+    observacoes = models.TextField(blank=True, null=True, verbose_name='Observações')
+    
+    class Meta:
+        verbose_name = 'Lead'
+        verbose_name_plural = 'Leads'
+        ordering = ['-criado_em']
+    
+    def __str__(self):
+        return f"{self.nome_completo} - {self.email}"
+
+
 class Ticket(models.Model):
     """
     Modelo para sistema de tickets de suporte.
