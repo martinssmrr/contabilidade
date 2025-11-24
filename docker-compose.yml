@@ -43,79 +43,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      evolution-api:
-        condition: service_healthy
     environment:
       - DB_HOST=db
       - DB_PORT=5432
-      - EVOLUTION_API_URL=http://evolution-api:8080
-
-  # ==================================
-  # SERVIÇO EVOLUTION API (WhatsApp)
-  # ==================================
-  evolution-api:
-    image: atendai/evolution-api:latest
-    container_name: evolution_api
-    ports:
-      - "8080:8080"
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      # Configurações de Servidor
-      - SERVER_TYPE=http
-      - SERVER_PORT=8080
-      - SERVER_URL=http://localhost:8080
-      
-      # Configurações de Autenticação
-      - AUTHENTICATION_TYPE=apikey
-      - AUTHENTICATION_API_KEY=B6D711FCDE4D4FD5936544120E713976
-      - AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES=true
-      
-      # Configurações de Banco de Dados PostgreSQL
-      - DATABASE_ENABLED=true
-      - DATABASE_PROVIDER=postgresql
-      - DATABASE_CONNECTION_URI=postgresql://postgres:Marrequeiro3750%40@db:5432/evolution_db
-      - DATABASE_SAVE_DATA_INSTANCE=true
-      - DATABASE_SAVE_DATA_NEW_MESSAGE=true
-      
-      # Configurações do WhatsApp
-      - CONFIG_SESSION_PHONE_CLIENT=Gestao360
-      - CONFIG_SESSION_PHONE_NAME=Chrome (Linux)
-      - DATABASE_SAVE_MESSAGE_UPDATE=true
-      - DATABASE_SAVE_DATA_CONTACTS=true
-      - DATABASE_SAVE_DATA_CHATS=true
-      
-      # Configurações de Log
-      - LOG_LEVEL=ERROR
-      - LOG_COLOR=true
-      - LOG_BAILEYS=error
-      
-      # Configurações de QR Code
-      - QRCODE_LIMIT=30
-      - QRCODE_COLOR=#198754
-      
-      # Configurações de WebSocket
-      - WEBSOCKET_ENABLED=false
-      
-      # Configurações de RabbitMQ/Redis (desabilitado)
-      - RABBITMQ_ENABLED=false
-      - REDIS_ENABLED=false
-      
-      # Configurações de Webhook
-      - WEBHOOK_GLOBAL_ENABLED=false
-      
-      # Configurações de Chatwoot (desabilitado)
-      - CHATWOOT_ENABLED=false
-    volumes:
-      - evolution_data:/evolution/instances
-      - evolution_db:/evolution
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
 
 # ==================================
 # VOLUMES PERSISTENTES
@@ -126,8 +56,4 @@ volumes:
   static_volume:
     driver: local
   media_volume:
-    driver: local
-  evolution_data:
-    driver: local
-  evolution_db:
     driver: local

@@ -24,8 +24,10 @@ class EvolutionAPIService:
         self.instance_name = os.getenv('EVOLUTION_INSTANCE_NAME', '')
         self.sender_number = os.getenv('WHATSAPP_SENDER_NUMBER', '5561998311920')
         
+        # Evolution API removida do projeto - usando wa.me para WhatsApp
+        self.enabled = False
         if not all([self.base_url, self.api_key, self.instance_name]):
-            logger.warning('Evolution API não configurada corretamente. Verifique as variáveis de ambiente.')
+            logger.info('Evolution API desabilitada. WhatsApp via wa.me apenas.')
     
     def format_phone_number(self, phone):
         """
@@ -47,23 +49,24 @@ class EvolutionAPIService:
         # Adiciona @s.whatsapp.net (formato Evolution API)
         return f'{phone_digits}@s.whatsapp.net'
     
-    def send_welcome_message(self, phone, name):
+    def send_text(self, phone, name='Cliente'):
         """
-        Envia mensagem de boas-vindas para um novo lead.
+        Envia uma mensagem de texto de boas-vindas para o cliente.
+        DESABILITADO - Evolution API foi removida.
         
         Args:
             phone (str): Número de telefone do destinatário
             name (str): Nome do destinatário
         
         Returns:
-            dict: Resposta da API ou erro
+            dict: Erro informando que o serviço foi desabilitado
         """
-        if not all([self.base_url, self.api_key, self.instance_name]):
-            logger.error('Evolution API não configurada. Mensagem não enviada.')
-            return {
-                'success': False,
-                'error': 'API não configurada'
-            }
+        logger.info('WhatsApp API desabilitada. Use wa.me para contato direto.')
+        return {
+            'success': False,
+            'error': 'Serviço desabilitado',
+            'message': 'WhatsApp API foi removida. Use links wa.me para contato direto.'
+        }
         
         # Formata o número de telefone
         formatted_phone = self.format_phone_number(phone)
@@ -138,20 +141,21 @@ class EvolutionAPIService:
     def send_custom_message(self, phone, message):
         """
         Envia mensagem customizada para um número.
+        DESABILITADO - Evolution API foi removida.
         
         Args:
             phone (str): Número de telefone do destinatário
             message (str): Mensagem a ser enviada
         
         Returns:
-            dict: Resposta da API ou erro
+            dict: Erro informando que o serviço foi desabilitado
         """
-        if not all([self.base_url, self.api_key, self.instance_name]):
-            logger.error('Evolution API não configurada. Mensagem não enviada.')
-            return {
-                'success': False,
-                'error': 'API não configurada'
-            }
+        logger.info('WhatsApp API desabilitada. Use wa.me para contato direto.')
+        return {
+            'success': False,
+            'error': 'Serviço desabilitado',
+            'message': 'WhatsApp API foi removida. Use links wa.me para contato direto.'
+        }
         
         formatted_phone = self.format_phone_number(phone)
         url = f"{self.base_url}/message/sendText/{self.instance_name}"
@@ -193,15 +197,17 @@ class EvolutionAPIService:
     def check_connection(self):
         """
         Verifica se a conexão com a Evolution API está funcionando.
+        DESABILITADO - Evolution API foi removida.
         
         Returns:
-            dict: Status da conexão
+            dict: Erro informando que o serviço foi desabilitado
         """
-        if not all([self.base_url, self.api_key, self.instance_name]):
-            return {
-                'success': False,
-                'error': 'API não configurada'
-            }
+        logger.info('WhatsApp API desabilitada.')
+        return {
+            'success': False,
+            'error': 'Serviço desabilitado',
+            'message': 'WhatsApp API foi removida do projeto.'
+        }
         
         url = f"{self.base_url}/instance/connectionState/{self.instance_name}"
         

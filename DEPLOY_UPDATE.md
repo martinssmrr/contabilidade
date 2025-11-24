@@ -110,6 +110,23 @@ echo "✅ Atualização rápida concluída!"
 
 ## 🆘 TROUBLESHOOTING:
 
+### ❌ ERRO: Porta 8080 já alocada (Evolution API):
+```bash
+# Parar TODOS os containers (incluindo os antigos)
+docker stop $(docker ps -aq)
+
+# Remover containers parados
+docker rm $(docker ps -aq)
+
+# Subir novamente
+docker-compose up -d
+
+# OU identificar e parar apenas o container na porta 8080:
+docker ps | grep 8080
+docker stop <container_id>
+docker-compose up -d
+```
+
 ### Ver logs do container web:
 ```bash
 docker-compose logs -f web
@@ -153,3 +170,15 @@ docker ps
 ```bash
 docker stats
 ```
+
+
+
+
+
+
+
+docker-compose down && \
+docker-compose up -d --build && \
+docker-compose exec web python manage.py collectstatic --noinput && \
+docker-compose exec web python manage.py migrate && \
+docker-compose ps
