@@ -2,9 +2,12 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from .models import Post, Category
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')  # Cache por 15 minutos
 class PostListView(ListView):
     """View para listagem de posts do blog"""
     model = Post
@@ -19,10 +22,10 @@ class PostListView(ListView):
             status='published'
         ).order_by('-created_at').values_list('id', flat=True)[:3])
         
-        # Retornar posts excluindo os 3 mais recentes
+        # Retornar posts excluindo os 3 mais recentes com otimização
         return Post.objects.filter(
             status='published'
-        ).exclude(id__in=recent_ids).order_by('-created_at')
+        ).exclude(id__in=recent_ids).select_related('category', 'author').order_by('-created_at')
     
     def get_context_data(self, **kwargs):
         """Adiciona dados extras ao contexto"""
@@ -48,6 +51,7 @@ class PostListView(ListView):
         return context
 
 
+@method_decorator(cache_page(60 * 30), name='dispatch')  # Cache por 30 minutos
 class PostDetailView(DetailView):
     """View para detalhes de um post"""
     model = Post
@@ -55,8 +59,21 @@ class PostDetailView(DetailView):
     context_object_name = 'post'
     
     def get_queryset(self):
-        """Retorna apenas posts publicados"""
-        return Post.objects.filter(status='published')
+        """Retorna apenas posts publicados com otimização"""
+        return Post.objects.filter(status='published').select_related('category', 'author')
+    
+    def get_context_data(self, **kwargs):
+        """Adiciona posts relacionados ao contexto"""
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()
+        
+        # Posts relacionados da mesma categoria
+        context['related_posts'] = Post.objects.filter(
+            category=post.category,
+            status='published'
+        ).exclude(id=post.id).select_related('category')[:3]
+        
+        return context
 
 
 def load_more_posts(request):

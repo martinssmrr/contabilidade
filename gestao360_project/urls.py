@@ -20,8 +20,10 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.contrib.sitemaps.views import sitemap
 from apps.testimonials.models import Testimonial
 from apps.services.views import calculadora_clt_pj
+from apps.blog.sitemaps import StaticViewSitemap, BlogPostSitemap, ServicesSitemap, PlanosSitemap
 
 # Customização do Admin
 admin.site.site_header = "Vetorial - Administração"
@@ -66,10 +68,19 @@ def abrir_empresa_view(request):
         'planos_comercio': planos_comercio,
     })
 
+# Configuração dos Sitemaps
+sitemaps = {
+    'static': StaticViewSitemap,
+    'blog': BlogPostSitemap,
+    'services': ServicesSitemap,
+    'planos': PlanosSitemap,
+}
+
 urlpatterns = [
     path("", home_view, name='home'),
     path("abrir-empresa/", abrir_empresa_view, name='abrir_empresa'),
     path("admin/", admin.site.urls),
+    path("ckeditor5/", include('django_ckeditor_5.urls')),
     path("dashboard/", include('apps.dashboard.urls')),
     path("users/", include('apps.users.urls')),
     path("services/", include('apps.services.urls')),
@@ -78,6 +89,10 @@ urlpatterns = [
     path("recursos/calculadora-clt-pj/", calculadora_clt_pj, name='calculadora_clt_pj'),
     path("support/", include('apps.support.urls')),
     # path("payments/", include('apps.payments.urls')),
+    
+    # SEO - Sitemap e Robots
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
 ]
 
 # Servir arquivos de media em desenvolvimento

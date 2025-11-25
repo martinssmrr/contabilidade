@@ -2,6 +2,13 @@
 {% load i18n static %}
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}">
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KW8RP2LF');</script>
+    <!-- End Google Tag Manager -->
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
     {% block dark-mode-vars %}
@@ -22,7 +29,7 @@
     {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
     
     <!-- TinyMCE WYSIWYG Editor -->
-    <script src="https://cdn.tiny.cloud/1/5bwylhfni2h04rqlhep1q7o7a09clfimci33xx8k1bdlbrbe/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/4jflbxct8s4d4w36ycp1onm75pou65ujw0y7qokhl5omiesn/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="{% static 'js/tinymce-config.js' %}"></script>
 </head>
 

@@ -37,23 +37,6 @@ class PostAdmin(admin.ModelAdmin):
     
     readonly_fields = ('created_at', 'updated_at')
     
-    # Editor WYSIWYG usando TinyMCE via CDN
-    class Media:
-        js = (
-            'https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js',
-            'js/tinymce-config.js',
-        )
-    
-    formfield_overrides = {
-        models.TextField: {
-            'widget': Textarea(attrs={
-                'class': 'tinymce',
-                'rows': 20,
-                'cols': 80
-            })
-        },
-    }
-    
     def save_model(self, request, obj, form, change):
         """Define o autor como o usuário atual se não definido"""
         if not obj.pk:

@@ -115,7 +115,7 @@
 </div>
 
 <!-- Hero Section -->
-<section class="hero-section text-white position-relative" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.75) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/herosection.png' %}');">
+<section class="hero-section text-white position-relative" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.75) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/herosection.png' %}'); background-size: cover; background-position: center right;">
     <div class="container-fluid">
         <div class="row align-items-center" style="min-height: 75vh; padding-bottom: 1rem;">
             <!-- Coluna Esquerda - Conteúdo -->
@@ -123,7 +123,7 @@
                 <h1 class="display-3 fw-bold mb-4">Abertura de empresa online, rápida e sem burocracia</h1>
                 <p class="fs-5 mb-4">Abra sua empresa sem sair de casa e conte com o suporte de contadores especialistas que já ajudaram mais de 30 mil empreendedores a evitarem erros e conquistarem tranquilidade. Mais que contabilidade, é parceria.</p>
                 <div class="d-grid gap-3 d-sm-flex mb-4">
-                    <a href="/admin/" class="btn btn-light btn-lg px-5">Abra sua empresa agora</a>
+                    <button type="button" class="btn btn-light btn-lg px-5" data-bs-toggle="modal" data-bs-target="#contactModal">Abra sua empresa agora</button>
                     <a href="#servicos" class="btn btn-outline-light btn-lg px-5">Nossos Serviços</a>
                 </div>
                 <!-- Selos de Segurança -->
@@ -1071,10 +1071,21 @@
 
         // Salvar lead no banco de dados
         try {
+            console.log('Enviando lead:', {
+                nome_completo: nome,
+                email: email,
+                telefone: telefone,
+                estado: estado,
+                cidade: cidade,
+                servico_interesse: servicoValue,
+                origem: 'popup_home'
+            });
+            
             const response = await fetch('/support/capturar-lead/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
                 },
                 body: JSON.stringify({
                     nome_completo: nome,
@@ -1082,13 +1093,17 @@
                     telefone: telefone,
                     estado: estado,
                     cidade: cidade,
-                    servico: servicoValue,
-                    origem: 'popup'
+                    servico_interesse: servicoValue,
+                    origem: 'popup_home'
                 })
             });
 
             const result = await response.json();
-            console.log('Lead capturado:', result);
+            console.log('Resposta do servidor:', result);
+            
+            if (!result.success) {
+                console.error('Erro ao capturar lead:', result);
+            }
         } catch (error) {
             console.error('Erro ao capturar lead:', error);
         }
@@ -1124,6 +1139,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
                 },
                 body: JSON.stringify({
                     nome_completo: nome,
@@ -1131,8 +1147,8 @@
                     telefone: telefone,
                     estado: estado,
                     cidade: cidade,
-                    servico: servicoValue,
-                    origem: 'popup'
+                    servico_interesse: servicoValue,
+                    origem: 'popup_home'
                 })
             });
 

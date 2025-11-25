@@ -1,0 +1,32 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Vetorial Contabilidade",
+  "alternateName": "Vetorial",
+  "url": "https://contabilvetorial.com.br",
+  "logo": "https://contabilvetorial.com.br/static/img/logo.png",
+  "description": "Contabilidade online especializada em abertura de empresas, planejamento tributário e gestão contábil completa.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "BR",
+    "addressLocality": "Brasil"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+55-11-XXXXX-XXXX",
+    "contactType": "customer service",
+    "availableLanguage": ["Portuguese"]
+  },
+  "sameAs": [
+    "https://www.facebook.com/vetorialcontabilidade",
+    "https://www.instagram.com/vetorialcontabilidade",
+    "https://www.linkedin.com/company/vetorialcontabilidade"
+  ],
+  "areaServed": "BR",
+  "serviceType": [
+    "Contabilidade",
+    "Abertura de Empresas",
+    "Planejamento Tributário",
+    "Gestão Contábil"
+  ]
+}

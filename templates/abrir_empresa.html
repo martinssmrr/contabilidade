@@ -109,7 +109,7 @@
 </div>
 
 <!-- Hero Section -->
-<section class="hero-section text-white position-relative" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/abrirherosection.png' %}');">
+<section class="hero-section text-white position-relative" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/abrirherosection.png' %}'); background-size: cover; background-position: center right;">
     <div class="container-fluid">
         <div class="row align-items-center" style="min-height: 75vh; padding-bottom: 1rem;">
             <!-- Coluna Esquerda - Conteúdo -->
@@ -118,17 +118,17 @@
                 <p class="fs-5 mb-4">Abra sua empresa sem sair de casa e conte com o suporte de contadores especialistas que já ajudaram mais de 30 mil empreendedores a evitarem erros e conquistarem tranquilidade. Mais que contabilidade, é parceria.</p>
                 <div class="d-grid gap-3 d-sm-flex mb-4">
                     <button type="button" class="btn btn-light btn-lg px-5" data-bs-toggle="modal" data-bs-target="#contactModal">Abra sua empresa agora</button>
-                    <a href="#por-que-escolher" class="btn btn-outline-light btn-lg px-5">Saiba Mais</a>
+                    <a href="https://wa.me/5561998311920" target="_blank" class="btn btn-outline-light btn-lg px-5">Falar com um especialista</a>
                 </div>
                 <!-- Selos de Segurança -->
-                <div class="d-flex gap-3 align-items-center flex-wrap mt-3">
+                <!-- <div class="d-flex gap-3 align-items-center flex-wrap mt-3">
                     <div class="selo-badge selo-ra1000">
                         <img src="{% static 'img/SELO-RA1000.png' %}" alt="Selo RA1000" class="img-fluid">
                     </div>
                     <div class="selo-badge selo-google" style="width: 103.969px !important; height: 37.734px !important;">
                         <img src="{% static 'img/googlesiteseguro.png' %}" alt="Google Site Seguro" style="width: 100%; height: 100%; object-fit: contain;">
                     </div>
-                </div>
+                </div> -->
             </div>
             <!-- Coluna Direita - Vazia (imagem de fundo aparece aqui) -->
             <div class="col-lg-6 d-none d-lg-block">
@@ -376,8 +376,7 @@
 </section>
 
 <!-- Contact Section -->
-<section id="contato" class="contact-section position-relative py-5">
-    <div class="contact-bg"></div>
+<section id="contato" class="contact-section position-relative py-5" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/abrirempresactt.png' %}')">
     <div class="container position-relative">
         <div class="row justify-content-end align-items-center h-100">
             <!-- Coluna Esquerda - Vazia (background aparece) -->

@@ -172,15 +172,15 @@
                 {% else %}
                     <!-- Usuário Não Logado -->
                     <li class="nav-item me-2">
-                        <a class="nav-link fs-6 fw-semibold" href="{% url 'users:login' %}">
+                        <a class="btn btn-gradient-primary text-white px-4 py-2" href="{% url 'users:login' %}">
                             Login
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="btn btn-gradient-primary text-white px-4 py-2" href="{% url 'users:register' %}">
                             Cadastre-se
                         </a>
-                    </li>
+                    </li> -->
                 {% endif %}
             </ul>
         </div>

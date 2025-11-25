@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://contabilvetorial.com.br/sitemap.xml
+
+# Diretórios permitidos
+Allow: /blog/
+Allow: /services/
+Allow: /abrir-empresa/
+
+# Diretórios bloqueados
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /ckeditor5/
+Disallow: /media/uploads/
+Disallow: /static/
+
+# Arquivos bloqueados
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /backup_banco.sql
+
+# Crawl-delay
+Crawl-delay: 10

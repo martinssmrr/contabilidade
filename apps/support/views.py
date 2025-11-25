@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.serializers import serialize
 from django.forms.models import model_to_dict
+from django.core.cache import cache
 import json
 import logging
 from .models import Lead, Ticket
@@ -90,12 +91,17 @@ def api_leads_update(request, pk):
         lead.estado = data.get('estado', lead.estado)
         lead.cidade = data.get('cidade', lead.cidade)
         lead.servico_interesse = data.get('servico_interesse', lead.servico_interesse)
-        lead.contatado = data.get('contatado', lead.contatado)
+        contatado_val = data.get('contatado', lead.contatado)
+        # Converter para booleano se vier como string
+        if isinstance(contatado_val, str):
+            contatado_val = contatado_val.lower() in ['true', '1', 'on']
+        lead.contatado = bool(contatado_val)
         lead.observacoes = data.get('observacoes', lead.observacoes)
         
         lead.save()
         return JsonResponse({'success': True})
     except Exception as e:
+        logger.error(f'Erro ao atualizar lead {pk}: {str(e)} | Dados recebidos: {data}')
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
 @login_required
@@ -307,18 +313,29 @@ def capturar_lead(request):
     """
     View para capturar leads dos formulários do site (popup e seção de contato).
     Envia automaticamente uma mensagem de WhatsApp via Evolution API.
+    Limite: cada telefone pode solicitar atendimento até 5 vezes.
     """
     try:
         data = json.loads(request.body)
-        
+        telefone = data.get('telefone')
+        if not telefone:
+            return JsonResponse({'success': False, 'message': 'Telefone obrigatório.'}, status=400)
+
+        # Rate limiting: máximo 5 leads por telefone
+        cache_key = f"lead_attempts_{telefone}"
+        attempts = cache.get(cache_key, 0)
+        if attempts >= 5:
+            return JsonResponse({'success': False, 'message': 'Limite de solicitações atingido para este telefone.'}, status=429)
+        cache.set(cache_key, attempts + 1, 60 * 60 * 24)  # Limite por 24h
+
         # Cria o lead no banco de dados
         lead = Lead.objects.create(
             nome_completo=data.get('nome_completo'),
             email=data.get('email'),
-            telefone=data.get('telefone'),
+            telefone=telefone,
             estado=data.get('estado'),
             cidade=data.get('cidade'),
-            servico_interesse=data.get('servico'),
+            servico_interesse=data.get('servico_interesse') or data.get('servico'),
             origem=data.get('origem', 'popup')
         )
         

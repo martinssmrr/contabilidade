@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from django.urls import reverse
+from django_ckeditor_5.fields import CKEditor5Field
 
 User = get_user_model()
 
@@ -57,7 +58,7 @@ class Post(models.Model):
         related_name='blog_posts',
         verbose_name='Autor'
     )
-    content = models.TextField('Conteúdo')
+    content = CKEditor5Field('Conteúdo', config_name='extends')
     excerpt = models.TextField('Resumo', max_length=300, blank=True, help_text='Breve descrição do post (máx. 300 caracteres)')
     featured_image = models.ImageField(
         'Imagem de Destaque', 
