@@ -7,23 +7,21 @@ version: '3.8'
 
 services:
   # ==================================
-  # POSTGRESQL - Banco de Dados
+  # SERVIÇO DO BANCO DE DADOS POSTGRESQL
   # ==================================
   db:
     image: postgres:15-alpine
-    container_name: vetorial_db
-    restart: always
+    container_name: gestao360_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./backups:/backups
     environment:
       - POSTGRES_DB=${DB_NAME:-gestao360_db}
       - POSTGRES_USER=${DB_USER:-postgres}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
-    networks:
-      - vetorial_network
+    ports:
+      - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5

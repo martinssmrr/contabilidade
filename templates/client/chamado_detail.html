@@ -1,0 +1,75 @@
+{% extends 'base_dashboard.html' %}
+{% load support_tags %}
+
+{% block page_title %}Chamado #{{ chamado.pk }}{% endblock %}
+
+{% block content %}
+  <a href="{% url 'support:dashboard_cliente' %}" class="btn btn-secondary mb-3">Voltar</a>
+
+  <div class="card mb-3">
+    <div class="card-header">
+      <strong>{{ chamado.titulo }}</strong> — {{ chamado.get_status_display }}
+    </div>
+    <div class="card-body">
+      <p>{{ chamado.descricao|linebreaks }}</p>
+
+      {% if chamado.anexos.all %}
+        <div class="mt-3">
+          <h6>Anexos do chamado</h6>
+          <ul>
+            {% for a in chamado.anexos.all %}
+              <li><a href="{{ a.arquivo.url }}" target="_blank">{{ a.arquivo.name|basename }}</a> <small class="text-muted">({{ a.criado_em|date:'d/m/Y H:i' }})</small></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header">Conversas</div>
+    <div class="card-body">
+      {% if mensagens %}
+        {% for m in mensagens %}
+          <div class="mb-3">
+            <div><strong>{{ m.autor.get_full_name|default:m.autor.username }}</strong> <small class="text-muted">— {{ m.criado_em|date:'d/m/Y H:i' }}</small></div>
+            <div class="mt-1">{{ m.mensagem|linebreaks }}</div>
+            {% if m.anexo %}
+              <div class="mt-2"><a href="{{ m.anexo.url }}" target="_blank">Anexo: {{ m.anexo.name|basename }}</a></div>
+            {% endif %}
+            <hr />
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted">Sem respostas ainda.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Responder</div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data" action="{% url 'support:responder_chamado' chamado.pk %}">
+        {% csrf_token %}
+        {{ form.mensagem.label_tag }}
+        {{ form.mensagem }}
+        {% for err in form.mensagem.errors %}
+          <div class="text-danger small">{{ err }}</div>
+        {% endfor %}
+
+        <div class="mt-2">
+          {{ form.anexo.label_tag }}
+          {{ form.anexo }}
+          {% for err in form.anexo.errors %}
+            <div class="text-danger small">{{ err }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="mt-3 text-end">
+          <button class="btn btn-primary" type="submit">Enviar resposta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

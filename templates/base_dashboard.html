@@ -332,10 +332,18 @@
                     <i class="fas fa-folder-open"></i>
                     Documentos
                 </a>
+                <a href="{% url 'support:dashboard_cliente' %}" class="sidebar-nav-item {% if request.resolver_match.url_name == 'dashboard_cliente' %}active{% endif %}">
+                    <i class="fas fa-ticket-alt"></i>
+                    Meus Chamados
+                </a>
                 <a href="{% url 'users:contabilidade' %}" class="sidebar-nav-item {% if request.resolver_match.url_name == 'contabilidade' %}active{% endif %}">
                     <i class="fas fa-calculator"></i>
                     Contabilidade
                 </a>
+                    <a href="{% url 'support:abrir_chamado' %}" class="sidebar-nav-item {% if request.resolver_match.url_name == 'abrir_chamado' %}active{% endif %}">
+                        <i class="fas fa-plus-square"></i>
+                        Abrir Chamado
+                    </a>
                 <a href="{% url 'users:meu_plano' %}" class="sidebar-nav-item {% if request.resolver_match.url_name == 'meu_plano' %}active{% endif %}">
                     <i class="fas fa-star"></i>
                     Meu Plano
@@ -377,6 +385,13 @@
 
             <!-- Content -->
             <div class="content-card">
+                {% if messages %}
+                    <div class="mb-3">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} mb-2">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
                 {% block content %}
                 <div class="content-placeholder">
                     <i class="fas fa-box-open"></i>

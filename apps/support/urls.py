@@ -31,4 +31,9 @@ urlpatterns = [
     
     # API Endpoints - Documents
     path('api/documents/', views.api_documents_list, name='api_documents_list'),
+    # Área do Cliente
+    path('cliente/dashboard/', views.dashboard_cliente, name='dashboard_cliente'),
+    path('cliente/abrir-chamado/', views.abrir_chamado, name='abrir_chamado'),
+    path('cliente/chamado/<int:pk>/', views.chamado_detail, name='chamado_detail'),
+    path('cliente/chamado/<int:pk>/responder/', views.responder_chamado, name='responder_chamado'),
 ]

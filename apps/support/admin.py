@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Lead, Ticket, TicketMessage, Duvida
+from .models import Lead, Ticket, TicketMessage, Duvida, Cliente, Chamado
+from .models import ChamadoAttachment, ChamadoMessage
 
 # Register your models here.
 
@@ -56,3 +57,32 @@ class DuvidaAdmin(admin.ModelAdmin):
     search_fields = ['titulo', 'descricao']
     list_editable = ['ordem', 'ativo']
     ordering = ['ordem', '-criado_em']
+
+
+@admin.register(Cliente)
+class ClienteAdmin(admin.ModelAdmin):
+    """Admin para perfis de cliente."""
+    list_display = ['user', 'contador_responsavel']
+    search_fields = ['user__username', 'user__first_name', 'user__last_name', 'user__email']
+    raw_id_fields = ['user', 'contador_responsavel']
+
+
+@admin.register(Chamado)
+class ChamadoAdmin(admin.ModelAdmin):
+    """Admin para Chamado com listagem e filtros solicitados."""
+    list_display = ['cliente', 'titulo', 'tipo_solicitacao', 'status', 'data_criacao']
+    list_filter = ['status', 'tipo_solicitacao']
+    search_fields = ['titulo', 'descricao', 'cliente__user__username', 'cliente__user__first_name', 'cliente__user__last_name']
+    raw_id_fields = ['cliente']
+    
+    class ChamadoAttachmentInline(admin.TabularInline):
+        model = ChamadoAttachment
+        extra = 0
+        readonly_fields = ['uploaded_by', 'criado_em']
+
+    class ChamadoMessageInline(admin.StackedInline):
+        model = ChamadoMessage
+        extra = 0
+        readonly_fields = ['criado_em']
+
+    inlines = [ChamadoAttachmentInline, ChamadoMessageInline]

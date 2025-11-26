@@ -1,0 +1,45 @@
+{% extends 'base_dashboard.html' %}
+
+{% block page_title %}Meus Chamados{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h5">{% if request.user.first_name %}Bem-vindo, {{ request.user.first_name }}{% else %}Bem-vindo, {{ request.user.username }}{% endif %}</h2>
+    <a href="{% url 'support:abrir_chamado' %}" class="btn btn-primary">Abrir Novo Chamado</a>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Histórico de Chamados</div>
+    <div class="card-body p-0">
+      {% if chamados and chamados.exists %}
+        <div class="table-responsive">
+          <table class="table table-striped mb-0">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Tipo</th>
+                <th>Data</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for c in chamados %}
+                <tr>
+                  <td><a href="{% url 'support:chamado_detail' c.pk %}">{{ c.titulo }}</a></td>
+                  <td>{{ c.get_tipo_solicitacao_display }}</td>
+                  <td>{{ c.data_criacao|date:'d/m/Y H:i' }}</td>
+                  <td>{{ c.get_status_display }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="p-4">
+          <p class="mb-0">Você ainda não tem chamados. Clique em <strong>Abrir Novo Chamado</strong> para solicitar um serviço.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock %}

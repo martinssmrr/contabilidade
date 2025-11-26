@@ -3,12 +3,15 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
 from django.core.serializers import serialize
 from django.forms.models import model_to_dict
 from django.core.cache import cache
 import json
 import logging
-from .models import Lead, Ticket
+from .models import Lead, Ticket, Cliente, Chamado, ChamadoAttachment, ChamadoMessage
+from .forms import ChamadoForm, ChamadoMessageForm
+from django.shortcuts import redirect
 from apps.blog.models import Post, Category
 from apps.testimonials.models import Testimonial
 from apps.services.models import Plano
@@ -365,3 +368,97 @@ def capturar_lead(request):
             'success': False,
             'message': f'Erro ao capturar lead: {str(e)}'
         }, status=400)
+
+
+# ------------------ Área do Cliente ------------------
+
+
+@login_required
+def dashboard_cliente(request):
+    """Painel do cliente: lista chamados do cliente autenticado."""
+    # Garante que exista um perfil Cliente para o usuário autenticado.
+    perfil, _created = Cliente.objects.get_or_create(user=request.user)
+    if _created:
+        messages.info(request, 'Perfil de cliente criado automaticamente.')
+    chamados = perfil.chamados.all().order_by('-data_criacao')
+
+    return render(request, 'client/dashboard_cliente.html', {
+        'perfil': perfil,
+        'chamados': chamados,
+    })
+
+
+@login_required
+def abrir_chamado(request):
+    """View para abrir novo chamado pelo cliente autenticado."""
+    # Cria o perfil Cliente se não existir, evitando erro para usuários que ainda não tenham sido vinculados.
+    perfil, _created = Cliente.objects.get_or_create(user=request.user)
+    if _created:
+        messages.info(request, 'Perfil de cliente criado automaticamente.')
+
+    if request.method == 'POST':
+        form = ChamadoForm(request.POST, request.FILES)
+        if form.is_valid():
+            chamado = form.save(commit=False)
+            chamado.cliente = perfil
+            chamado.save()
+
+            # salvar anexos enviados na criação do chamado
+            anexos = request.FILES.getlist('anexos')
+            from .models import ChamadoAttachment
+            for f in anexos:
+                ChamadoAttachment.objects.create(chamado=chamado, arquivo=f, uploaded_by=request.user)
+
+            messages.success(request, 'Chamado criado com sucesso.')
+            return redirect('support:dashboard_cliente')
+    else:
+        form = ChamadoForm()
+
+    return render(request, 'client/abrir_chamado.html', {'form': form})
+
+
+@login_required
+def chamado_detail(request, pk):
+    """Exibe um chamado (thread de mensagens) e permite resposta do cliente."""
+    chamado = get_object_or_404(Chamado, pk=pk)
+
+    # Permitir apenas dono do chamado ou staff
+    if not (request.user.is_staff or chamado.cliente.user == request.user):
+        return JsonResponse({'success': False, 'error': 'Acesso negado.'}, status=403)
+
+    form = ChamadoMessageForm()
+    mensagens = chamado.mensagens.all().order_by('criado_em')
+
+    return render(request, 'client/chamado_detail.html', {
+        'chamado': chamado,
+        'mensagens': mensagens,
+        'form': form,
+    })
+
+
+@login_required
+def responder_chamado(request, pk):
+    """Permite que o cliente responda um chamado com texto e anexo opcional."""
+    chamado = get_object_or_404(Chamado, pk=pk)
+    # somente dono ou staff
+    if not (request.user.is_staff or chamado.cliente.user == request.user):
+        return JsonResponse({'success': False, 'error': 'Acesso negado.'}, status=403)
+
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Método inválido.'}, status=405)
+
+    form = ChamadoMessageForm(request.POST, request.FILES)
+    if form.is_valid():
+        mensagem_text = form.cleaned_data['mensagem']
+        anexo = form.cleaned_data.get('anexo')
+        msg = ChamadoMessage.objects.create(
+            chamado=chamado,
+            autor=request.user,
+            mensagem=mensagem_text,
+            anexo=anexo if anexo else None
+        )
+        messages.success(request, 'Resposta enviada com sucesso.')
+        return redirect('support:chamado_detail', pk=chamado.pk)
+
+    mensagens = chamado.mensagens.all().order_by('criado_em')
+    return render(request, 'client/chamado_detail.html', {'chamado': chamado, 'mensagens': mensagens, 'form': form})

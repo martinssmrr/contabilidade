@@ -120,3 +120,109 @@ class Duvida(models.Model):
     
     def __str__(self):
         return self.titulo
+
+
+class Cliente(models.Model):
+    """
+    Perfil do cliente vinculado ao User padrão do Django.
+    Cada cliente pode ter um contador_responsavel (staff) associado.
+    """
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='cliente_profile'
+    )
+    contador_responsavel = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='clientes_atendidos'
+    )
+
+    class Meta:
+        verbose_name = 'Cliente'
+        verbose_name_plural = 'Clientes'
+
+    def __str__(self):
+        return self.user.get_full_name() or self.user.username
+
+
+class Chamado(models.Model):
+    """Modelo de Chamado (ticket) para clientes."""
+    TIPO_CHOICES = [
+        ('nota_fiscal', 'Emissão de Notas Fiscais'),
+        ('documentos', 'Documentos da Empresa'),
+        ('boleto', 'Boleto Bancário'),
+        ('outros', 'Outros'),
+    ]
+
+    STATUS_CHOICES = [
+        ('aberto', 'Aberto'),
+        ('em_andamento', 'Em Andamento'),
+        ('resolvido', 'Resolvido'),
+        ('fechado', 'Fechado'),
+    ]
+
+    cliente = models.ForeignKey(
+        'support.Cliente',
+        on_delete=models.CASCADE,
+        related_name='chamados'
+    )
+    titulo = models.CharField(max_length=200)
+    tipo_solicitacao = models.CharField(max_length=30, choices=TIPO_CHOICES)
+    descricao = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='aberto')
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Chamado'
+        verbose_name_plural = 'Chamados'
+        ordering = ['-data_criacao']
+
+    def __str__(self):
+        return f"#{self.pk} - {self.titulo} ({self.get_status_display()})"
+
+
+class ChamadoAttachment(models.Model):
+    """Arquivos anexados diretamente a um Chamado (enviados na criação)."""
+    chamado = models.ForeignKey(
+        'support.Chamado', on_delete=models.CASCADE, related_name='anexos'
+    )
+    arquivo = models.FileField(upload_to='chamados/anexos/%Y/%m/%d/')
+    uploaded_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Anexo de Chamado'
+        verbose_name_plural = 'Anexos de Chamados'
+
+    def __str__(self):
+        return f"Anexo #{self.pk} para Chamado #{self.chamado.pk}"
+
+
+class ChamadoMessage(models.Model):
+    """Mensagens/Respostas dentro de um Chamado.
+
+    Permite que tanto o cliente quanto o staff/admin respondam com texto e um anexo opcional.
+    """
+    chamado = models.ForeignKey(
+        Chamado, on_delete=models.CASCADE, related_name='mensagens'
+    )
+    autor = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    mensagem = models.TextField()
+    anexo = models.FileField(upload_to='chamados/mensagens/%Y/%m/%d/', null=True, blank=True)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Mensagem de Chamado'
+        verbose_name_plural = 'Mensagens de Chamados'
+        ordering = ['criado_em']
+
+    def __str__(self):
+        autor = self.autor.get_full_name() if self.autor else 'Sistema'
+        return f"Mensagem de {autor} em Chamado #{self.chamado.pk}"
