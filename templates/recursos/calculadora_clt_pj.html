@@ -4,299 +4,7 @@
 {% block title %}Calculadora CLT vs. PJ - Vetorial{% endblock %}
 
 {% block extra_css %}
-<style>
-    .calculadora-section {
-        padding: 120px 0 80px 0;
-        background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
-        min-height: 100vh;
-    }
-    
-    .calculadora-header {
-        text-align: center;
-        margin-bottom: 3rem;
-    }
-    
-    .calculadora-header h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 1rem;
-    }
-    
-    .calculadora-header p {
-        font-size: 1.1rem;
-        color: #6b7280;
-        max-width: 700px;
-        margin: 0 auto;
-    }
-    
-    .calculadora-card {
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-        padding: 2.5rem;
-        margin-bottom: 2rem;
-        transition: all 0.3s ease;
-    }
-    
-    .calculadora-card:hover {
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-    }
-    
-    .form-label {
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 0.5rem;
-    }
-    
-    .form-control {
-        border: 2px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 0.75rem 1rem;
-        font-size: 1.1rem;
-        transition: all 0.3s ease;
-    }
-    
-    .form-control:focus {
-        border-color: #3ef47c;
-        box-shadow: 0 0 0 3px rgba(62, 244, 124, 0.1);
-    }
-    
-    .btn-calcular {
-        background: linear-gradient(135deg, #3ef47c 0%, #2ed66b 100%);
-        color: white;
-        border: none;
-        padding: 1rem 3rem;
-        font-size: 1.1rem;
-        font-weight: 600;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        width: 100%;
-        margin-top: 1rem;
-    }
-    
-    .btn-calcular:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(62, 244, 124, 0.3);
-    }
-    
-    .resultado-header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    
-    .resultado-header h2 {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 0.5rem;
-    }
-    
-    .resultado-card {
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-        padding: 2rem;
-        height: 100%;
-        transition: all 0.3s ease;
-        border: 3px solid transparent;
-    }
-    
-    .resultado-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
-    }
-    
-    .resultado-card.clt {
-        border-color: #0c63d1;
-    }
-    
-    .resultado-card.pj {
-        border-color: #3ef47c;
-    }
-    
-    .regime-badge {
-        display: inline-block;
-        padding: 0.5rem 1.5rem;
-        border-radius: 50px;
-        font-weight: 700;
-        font-size: 1.1rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .regime-badge.clt {
-        background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
-        color: white;
-    }
-    
-    .regime-badge.pj {
-        background: linear-gradient(135deg, #3ef47c 0%, #2ed66b 100%);
-        color: white;
-    }
-    
-    .salario-bruto {
-        font-size: 0.9rem;
-        color: #6b7280;
-        margin-bottom: 1rem;
-    }
-    
-    .desconto-item {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #e5e7eb;
-    }
-    
-    .desconto-item:last-child {
-        border-bottom: none;
-    }
-    
-    .desconto-label {
-        font-weight: 500;
-        color: #374151;
-    }
-    
-    .desconto-valor {
-        font-weight: 600;
-        color: #ef4444;
-    }
-    
-    .desconto-valor.positivo {
-        color: #10b981;
-    }
-    
-    .total-descontos {
-        background: #fef2f2;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-    }
-    
-    .total-descontos.pj {
-        background: #fef3f2;
-    }
-    
-    .salario-liquido {
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-        padding: 1.5rem;
-        border-radius: 12px;
-        margin: 1.5rem 0;
-        text-align: center;
-    }
-    
-    .salario-liquido-label {
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: #166534;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
-    .salario-liquido-valor {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: #15803d;
-        margin-top: 0.5rem;
-    }
-    
-    .beneficios-section {
-        background: #eff6ff;
-        padding: 1.5rem;
-        border-radius: 12px;
-        margin-top: 1.5rem;
-    }
-    
-    .beneficios-title {
-        font-weight: 700;
-        color: #1e40af;
-        margin-bottom: 1rem;
-        font-size: 1rem;
-    }
-    
-    .beneficio-item {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.5rem 0;
-        font-size: 0.95rem;
-    }
-    
-    .comparacao-final {
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-        padding: 2rem;
-        margin-top: 2rem;
-        text-align: center;
-    }
-    
-    .comparacao-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 1.5rem;
-    }
-    
-    .diferenca-valor {
-        font-size: 2rem;
-        font-weight: 800;
-        margin: 1rem 0;
-    }
-    
-    .diferenca-valor.positiva {
-        color: #10b981;
-    }
-    
-    .diferenca-valor.negativa {
-        color: #ef4444;
-    }
-    
-    .diferenca-percentual {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #6b7280;
-    }
-    
-    .aviso-importante {
-        background: #fffbeb;
-        border-left: 4px solid #f59e0b;
-        padding: 1.5rem;
-        border-radius: 8px;
-        margin-top: 2rem;
-    }
-    
-    .aviso-importante h6 {
-        color: #92400e;
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .aviso-importante ul {
-        margin: 0;
-        padding-left: 1.5rem;
-        color: #78350f;
-    }
-    
-    .aviso-importante li {
-        margin-bottom: 0.5rem;
-    }
-    
-    @media (max-width: 768px) {
-        .calculadora-header h1 {
-            font-size: 1.8rem;
-        }
-        
-        .salario-liquido-valor {
-            font-size: 2rem;
-        }
-        
-        .diferenca-valor {
-            font-size: 1.5rem;
-        }
-    }
-</style>
+    <link rel="stylesheet" href="{% static 'css/calculadora.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -316,7 +24,7 @@
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="salario_bruto" class="form-label">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16" style="vertical-align: middle;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2 svg-inline" viewBox="0 0 16 16">
                                     <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/>
                                 </svg>
                                 Salário Bruto Mensal
@@ -336,7 +44,7 @@
                         </div>
                         
                         <button type="submit" class="btn-calcular">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16" style="vertical-align: middle;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2 svg-inline" viewBox="0 0 16 16">
                                 <path d="M6 13.5A1.5 1.5 0 0 1 7.5 12h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1A1.5 1.5 0 0 1 6 14.5v-1zM2.5 3A1.5 1.5 0 0 1 4 1.5h8A1.5 1.5 0 0 1 13.5 3v8a1.5 1.5 0 0 1-1.5 1.5H4A1.5 1.5 0 0 1 2.5 11V3zM4 2.5a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5H4z"/>
                             </svg>
                             Calcular
@@ -366,7 +74,7 @@
                             Salário Bruto: <strong>R$ {{ resultados.salario_bruto|floatformat:2 }}</strong>
                         </div>
                         
-                        <h5 class="mb-3" style="color: #374151; font-weight: 700;">Descontos:</h5>
+                        <h5 class="mb-3 h5-strong">Descontos:</h5>
                         
                         <div class="desconto-item">
                             <span class="desconto-label">INSS</span>
@@ -396,15 +104,15 @@
                             </div>
                             <div class="beneficio-item">
                                 <span>13º Salário</span>
-                                <strong style="color: #1e40af;">R$ {{ resultados.clt_decimo_terceiro|floatformat:2 }}</strong>
+                                <strong class="text-accent-clt">R$ {{ resultados.clt_decimo_terceiro|floatformat:2 }}</strong>
                             </div>
                             <div class="beneficio-item">
                                 <span>Férias + 1/3</span>
-                                <strong style="color: #1e40af;">R$ {{ resultados.clt_ferias|floatformat:2 }}</strong>
+                                <strong class="text-accent-clt">R$ {{ resultados.clt_ferias|floatformat:2 }}</strong>
                             </div>
                             <div class="beneficio-item">
                                 <span>FGTS (8% ao ano)</span>
-                                <strong style="color: #1e40af;">R$ {{ resultados.clt_fgts_anual|floatformat:2 }}</strong>
+                                <strong class="text-accent-clt">R$ {{ resultados.clt_fgts_anual|floatformat:2 }}</strong>
                             </div>
                         </div>
                     </div>
@@ -421,7 +129,7 @@
                             Faturamento Bruto: <strong>R$ {{ resultados.salario_bruto|floatformat:2 }}</strong>
                         </div>
                         
-                        <h5 class="mb-3" style="color: #374151; font-weight: 700;">Impostos:</h5>
+                        <h5 class="mb-3 h5-strong">Impostos:</h5>
                         
                         <div class="desconto-item">
                             <span class="desconto-label">Simples Nacional ({{ resultados.pj_aliquota }}%)</span>
@@ -440,11 +148,11 @@
                             <div class="salario-liquido-valor">R$ {{ resultados.pj_salario_liquido|floatformat:2 }}</div>
                         </div>
                         
-                        <div class="beneficios-section" style="background: #fef3f2; margin-top: 2.9rem;">
-                            <div class="beneficios-title" style="color: #991b1b;">
+                        <div class="beneficios-section beneficios-pj" style="margin-top: 2.9rem;">
+                            <div class="beneficios-title">
                                 ⚠️ Importante para PJ
                             </div>
-                            <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.9rem; color: #7f1d1d;">
+                            <ul class="list-beneficios-pj">
                                 <li>Sem 13º salário</li>
                                 <li>Sem férias remuneradas</li>
                                 <li>Sem FGTS</li>
@@ -461,8 +169,8 @@
                 <div class="comparacao-title">🎯 Diferença Mensal</div>
                 
                 {% if resultados.diferenca > 0 %}
-                    <p style="color: #6b7280; font-size: 1.1rem;">
-                        Como <strong style="color: #3ef47c;">PJ</strong>, você receberia:
+                    <p class="text-muted-small">
+                        Como <strong class="text-accent-pj">PJ</strong>, você receberia:
                     </p>
                     <div class="diferenca-valor positiva">
                         + R$ {{ resultados.diferenca|floatformat:2 }}
@@ -471,8 +179,8 @@
                         ({{ resultados.diferenca_percentual|floatformat:1 }}% a mais por mês)
                     </div>
                 {% else %}
-                    <p style="color: #6b7280; font-size: 1.1rem;">
-                        Como <strong style="color: #0c63d1;">CLT</strong>, você receberia:
+                    <p class="text-muted-small">
+                        Como <strong class="text-accent-clt">CLT</strong>, você receberia:
                     </p>
                     <div class="diferenca-valor negativa">
                         R$ {{ resultados.diferenca|floatformat:2 }}

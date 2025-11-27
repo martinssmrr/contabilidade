@@ -68,6 +68,23 @@ def abrir_empresa_view(request):
         'planos_comercio': planos_comercio,
     })
 
+def deixar_mei_view(request):
+    """Renderiza a página 'deixar_mei.html' separadamente para permitir edição independente."""
+    from django.shortcuts import render
+    from apps.services.models import Plano
+
+    testimonials = Testimonial.objects.filter(is_active=True)
+
+    # Buscar planos ativos separados por categoria
+    planos_servicos = Plano.objects.filter(ativo=True, categoria='servicos').order_by('ordem', 'preco')
+    planos_comercio = Plano.objects.filter(ativo=True, categoria='comercio').order_by('ordem', 'preco')
+
+    return render(request, 'deixar_mei.html', {
+        'testimonials': testimonials,
+        'planos_servicos': planos_servicos,
+        'planos_comercio': planos_comercio,
+    })
+
 # Configuração dos Sitemaps
 sitemaps = {
     'static': StaticViewSitemap,
@@ -79,6 +96,7 @@ sitemaps = {
 urlpatterns = [
     path("", home_view, name='home'),
     path("abrir-empresa/", abrir_empresa_view, name='abrir_empresa'),
+    path("deixar-mei/", deixar_mei_view, name='deixar_mei'),
     # Páginas institucionais estáticas
     path('sobre/', TemplateView.as_view(template_name='pages/sobre.html'), name='sobre'),
     path('termos-de-uso/', TemplateView.as_view(template_name='pages/termos_de_uso.html'), name='termos_de_uso'),

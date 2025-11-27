@@ -1,0 +1,53 @@
+/* Styles moved from template: Calculadora CLT vs PJ */
+.calculadora-section {
+    padding: 120px 0 80px 0;
+    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    min-height: 100vh;
+}
+
+.calculadora-header { text-align: center; margin-bottom: 2.5rem; }
+.calculadora-header h1 { font-size: 2.25rem; font-weight:700; color: #1f2937; margin-bottom:.5rem }
+.calculadora-header p { color:#6b7280; max-width:700px; margin:0 auto }
+
+.calculadora-card, .resultado-card, .comparacao-final { background: white; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.06); padding:1.75rem; }
+.calculadora-card { padding:2rem }
+
+.form-label{ font-weight:600; color:#374151 }
+.form-control{ border:2px solid #e5e7eb; border-radius:8px; padding:.75rem 1rem; font-size:1.05rem }
+.form-control:focus{ border-color:var(--primary-color); box-shadow:0 0 0 3px rgba(62,244,124,0.08) }
+
+.btn-calcular{ background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); color:#fff; border:none; padding:0.9rem 1.25rem; font-weight:700; border-radius:8px }
+
+.regime-badge{ display:inline-block; padding:.5rem 1rem; border-radius:999px; font-weight:700 }
+.regime-badge.clt{ background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%); color:#fff }
+.regime-badge.pj{ background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); color:#fff }
+
+.desconto-item{ display:flex; justify-content:space-between; padding:.5rem 0; border-bottom:1px solid #eef2f7 }
+.desconto-label{ color:#374151 }
+.desconto-valor{ font-weight:700 }
+
+.salario-liquido{ padding:1.25rem; border-radius:8px; text-align:center }
+.salario-liquido-label{ font-size:.85rem; font-weight:700; color:#166534; text-transform:uppercase }
+.salario-liquido-valor{ font-size:2rem; font-weight:800; color:#15803d }
+
+.beneficios-section{ background:#f8fafc; padding:1rem; border-radius:8px; margin-top:1rem }
+.beneficios-title{ font-weight:700; color:#1e40af; margin-bottom:.5rem }
+
+.comparacao-final{ text-align:center; margin-top:1.5rem }
+.diferenca-valor{ font-size:1.75rem; font-weight:800 }
+.diferenca-valor.positiva{ color:var(--primary-color) }
+.diferenca-valor.negativa{ color: #0c63d1 }
+
+.aviso-importante{ background:#fffbeb; border-left:4px solid #f59e0b; padding:1rem; border-radius:8px; margin-top:1.25rem }
+
+/* Utility classes to replace inline styles */
+.svg-inline{ vertical-align: middle; }
+.text-muted-small{ color: #6b7280; font-size: 1.05rem }
+.text-accent-clt{ color: var(--secondary-color) }
+.text-accent-pj{ color: var(--primary-color) }
+.beneficios-pj{ background: #fef3f2 }
+.beneficios-pj .beneficios-title{ color: #991b1b }
+.list-beneficios-pj{ margin:0; padding-left:1.5rem; font-size:0.9rem; color:#7f1d1d }
+.h5-strong{ color:#374151; font-weight:700 }
+
+@media (max-width:768px){ .calculadora-section{ padding:80px 0 } .calculadora-header h1{ font-size:1.6rem } .salario-liquido-valor{ font-size:1.6rem } }
