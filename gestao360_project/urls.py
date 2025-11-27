@@ -79,6 +79,10 @@ sitemaps = {
 urlpatterns = [
     path("", home_view, name='home'),
     path("abrir-empresa/", abrir_empresa_view, name='abrir_empresa'),
+    # Páginas institucionais estáticas
+    path('sobre/', TemplateView.as_view(template_name='pages/sobre.html'), name='sobre'),
+    path('termos-de-uso/', TemplateView.as_view(template_name='pages/termos_de_uso.html'), name='termos_de_uso'),
+    path('politica-de-privacidade/', TemplateView.as_view(template_name='pages/politica_de_privacidade.html'), name='politica_de_privacidade'),
     path("admin/", admin.site.urls),
     path("ckeditor5/", include('django_ckeditor_5.urls')),
     path("dashboard/", include('apps.dashboard.urls')),

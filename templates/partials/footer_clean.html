@@ -1,0 +1,58 @@
+{% load static %}
+<footer class="bg-dark text-white py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <h5>{{ site_name|default:'Vetorial' }}</h5>
+                <p>Sua contabilidade online simplificada e eficiente.</p>
+            </div>
+            <div class="col-md-3">
+                <h5>Links Rápidos</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/sobre/" class="text-white text-decoration-none small">Sobre Nós</a></li>
+                    <li><a href="/termos-de-uso/" class="text-white text-decoration-none small">Termos de Uso</a></li>
+                    <li><a href="/politica-de-privacidade/" class="text-white text-decoration-none small">Política de Privacidade</a></li>
+                    <li><a href="{% url 'blog:post_list' %}" class="text-white text-decoration-none small">Blog</a></li>
+                </ul>
+                                <!-- links rápidos integrados na lista acima; uso a classe `small` para reduzir visual -->
+            </div>
+            <div class="col-md-3">
+                <h5>Contato</h5>
+                <p>
+                    Email: contato@vetorial.com.br<br>
+                    Telefone: (11) 4002-8922<br>
+                    WhatsApp: (77) 99951-5837
+                </p>
+            </div>
+            <div class="col-md-3">
+                <h5>Segurança e Pagamentos</h5>
+                <div class="footer-seals">
+                    <img src="{% static 'img/SELO-RA1000.png' %}" alt="Selo RA1000" class="footer-seal">
+                    <img src="{% static 'img/avaliação-google.png' %}" alt="Avaliação Google" class="footer-seal">
+                    <img src="{% static 'img/googlesiteseguro.png' %}" alt="Google Site Seguro" class="footer-seal">
+                    <img src="{% static 'img/ssl.png' %}" alt="SSL" class="footer-seal">
+                    <img src="{% static 'img/mercadopago.png' %}" alt="Mercado Pago" class="footer-seal">
+                    <img src="{% static 'img/pix.png' %}" alt="Pix" class="footer-seal">
+                    <img src="{% static 'img/boleto.png' %}" alt="Boleto" class="footer-seal">
+                </div>
+            </div>
+        </div>
+        <hr style="border:0; height:1px; background-color: rgba(255,255,255,0.06); margin:0.5rem 0;">
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                <p class="mb-0">&copy; {% now "Y" %} {{ site_name|default:"Prisma Dev" }}. Todos os direitos reservados.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <div class="social-media-links">
+                    {% if social_media %}
+                        {% for social in social_media %}
+                        <a href="{{ social.url }}" target="_blank" rel="noopener noreferrer" class="social-icon" title="{{ social.get_platform_display }}">
+                            <!-- ícone por plataforma (SVG) -->
+                        </a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
