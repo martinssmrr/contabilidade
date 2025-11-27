@@ -1158,6 +1158,62 @@ footer {
     background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
 }
 
+/* Partners / Trusted logos marquee */
+.partners-section {
+    background: transparent;
+    color: inherit;
+}
+.partners-marquee {
+    overflow: hidden;
+    position: relative;
+    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.partners-track {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    min-width: 200vw; /* ensure duplicated logos cover at least twice viewport for seamless loop */
+    animation: partners-scroll 17.6s linear infinite;
+    padding: 0 1rem;
+    justify-content: flex-start;
+}
+.partners-item img {
+    width: 88px; /* slightly smaller to better fit full width */
+    height: auto;
+    opacity: 0.95;
+    filter: grayscale(0%);
+    object-fit: contain;
+}
+.partners-item { flex: 0 0 auto; }
+/* keep animation running on hover (no pause) */
+
+@keyframes partners-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 768px) {
+    .partners-item img { width: 64px; }
+    /* original mobile 18s reduced by 20% => 14.4s */
+    .partners-track { gap: 1.25rem; animation-duration: 14.4s; }
+}
+
+/* Remove gap between contact section and footer without changing section height */
+footer {
+    margin-top: 0 !important;
+}
+
+/* Make footer divider subtle/transparent so no white band appears */
+footer hr {
+    border: 0 none !important;
+    height: 1px !important;
+    background-color: rgba(255,255,255,0.06) !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
 .testimonials-section .lead {
     max-width: 900px;
     margin: 0 auto;

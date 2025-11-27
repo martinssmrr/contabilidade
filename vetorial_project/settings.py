@@ -85,6 +85,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # Certidões alert
+                "apps.users.context_processors.certidoes_alert",
             ],
         },
     },
@@ -180,3 +182,8 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
+
+# Configurações para uploads de movimentações financeiras
+MOVIMENTACAO_ALLOWED_EXTENSIONS = ['pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx']
+# 10 MB por arquivo por padrão
+MOVIMENTACAO_MAX_UPLOAD_SIZE = 10 * 1024 * 1024

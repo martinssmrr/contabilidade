@@ -96,13 +96,15 @@ class ExtratoBancarioUploadForm(forms.ModelForm):
     
     class Meta:
         model = ExtratoBancario
-        fields = ['mes_ano', 'arquivo', 'observacoes']
+        fields = ['start_date', 'end_date', 'arquivo', 'observacoes']
         widgets = {
-            'mes_ano': forms.TextInput(attrs={
+            'start_date': forms.DateInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'MM/AAAA (ex: 11/2024)',
-                'pattern': '(0[1-9]|1[0-2])/[0-9]{4}',
-                'title': 'Digite no formato MM/AAAA (ex: 11/2024)'
+                'type': 'date'
+            }),
+            'end_date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type': 'date'
             }),
             'arquivo': forms.FileInput(attrs={
                 'class': 'form-control',
@@ -114,35 +116,24 @@ class ExtratoBancarioUploadForm(forms.ModelForm):
             }),
         }
         labels = {
-            'mes_ano': 'Mês/Ano do Extrato',
+            'start_date': 'Data Inicial',
+            'end_date': 'Data Final',
             'arquivo': 'Arquivo do Extrato',
             'observacoes': 'Observações'
         }
     
-    def clean_mes_ano(self):
-        """Valida o formato do mês/ano."""
-        mes_ano = self.cleaned_data.get('mes_ano')
-        
-        if mes_ano:
-            import re
-            if not re.match(r'^(0[1-9]|1[0-2])/\d{4}$', mes_ano):
-                raise forms.ValidationError('Digite no formato MM/AAAA (ex: 11/2024)')
-            
-            # Valida se o mês é válido
-            try:
-                mes, ano = mes_ano.split('/')
-                mes = int(mes)
-                ano = int(ano)
-                
-                if mes < 1 or mes > 12:
-                    raise forms.ValidationError('Mês inválido. Digite um valor entre 01 e 12.')
-                
-                if ano < 2000 or ano > 2100:
-                    raise forms.ValidationError('Ano inválido.')
-            except ValueError:
-                raise forms.ValidationError('Formato inválido. Use MM/AAAA.')
-        
-        return mes_ano
+    def clean(self):
+        cleaned = super().clean()
+        start = cleaned.get('start_date')
+        end = cleaned.get('end_date')
+
+        if not start or not end:
+            raise forms.ValidationError('Preencha as datas inicial e final do período.')
+
+        if start > end:
+            raise forms.ValidationError('A data inicial não pode ser posterior à data final.')
+
+        return cleaned
     
     def clean_arquivo(self):
         """Valida o tamanho do arquivo."""

@@ -5,6 +5,16 @@
 
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* FAQ expand/collapse */
+.faq-item { border-bottom: 1px solid rgba(0,0,0,0.06); }
+.faq-question { background: transparent; border: 0; width: 100%; text-align: left; padding: 1rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+.faq-item.open .faq-answer { /* when open, max-height updated by JS to scrollHeight for smooth animation */ }
+.faq-answer-content { padding: 0 1rem 1rem; }
+.faq-icon { display: inline-flex; align-items: center; transition: transform 0.25s ease; }
+.faq-item.open .faq-icon { transform: rotate(180deg); }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -137,6 +147,57 @@
         </div>
     </div>
 </section>
+
+
+<!-- Rolagem de logos -->
+<section id="partners" class="partners-section py-4 bg-white">
+    <div class="container-fluid px-0">
+        <div class="text-center mb-3">
+            <h2 class="display-5 fw-bold">Empresas que confiam em nosso trabalho</h2>
+        </div>
+
+        <div class="partners-marquee mt-3">
+            <div class="partners-track">
+                {% comment %} first copy of logos 1..8 {% endcomment %}
+                <div class="partners-item"><img src="{% static 'img/1.png' %}" alt="logo 1"></div>
+                <div class="partners-item"><img src="{% static 'img/2.png' %}" alt="logo 2"></div>
+                <div class="partners-item"><img src="{% static 'img/3.png' %}" alt="logo 3"></div>
+                <div class="partners-item"><img src="{% static 'img/4.png' %}" alt="logo 4"></div>
+                <div class="partners-item"><img src="{% static 'img/5.png' %}" alt="logo 5"></div>
+                <div class="partners-item"><img src="{% static 'img/6.png' %}" alt="logo 6"></div>
+                <div class="partners-item"><img src="{% static 'img/7.png' %}" alt="logo 7"></div>
+                <div class="partners-item"><img src="{% static 'img/8.png' %}" alt="logo 8"></div>
+                <div class="partners-item"><img src="{% static 'img/1.png' %}" alt="logo 1"></div>
+                <div class="partners-item"><img src="{% static 'img/2.png' %}" alt="logo 2"></div>
+                <div class="partners-item"><img src="{% static 'img/3.png' %}" alt="logo 3"></div>
+                <div class="partners-item"><img src="{% static 'img/4.png' %}" alt="logo 4"></div>
+                <div class="partners-item"><img src="{% static 'img/5.png' %}" alt="logo 5"></div>
+                <div class="partners-item"><img src="{% static 'img/6.png' %}" alt="logo 6"></div>
+                <div class="partners-item"><img src="{% static 'img/7.png' %}" alt="logo 7"></div>
+                <div class="partners-item"><img src="{% static 'img/8.png' %}" alt="logo 8"></div>
+
+                {% comment %} duplicate sequence to create seamless loop {% endcomment %}
+                <div class="partners-item"><img src="{% static 'img/1.png' %}" alt="logo 1"></div>
+                <div class="partners-item"><img src="{% static 'img/2.png' %}" alt="logo 2"></div>
+                <div class="partners-item"><img src="{% static 'img/3.png' %}" alt="logo 3"></div>
+                <div class="partners-item"><img src="{% static 'img/4.png' %}" alt="logo 4"></div>
+                <div class="partners-item"><img src="{% static 'img/5.png' %}" alt="logo 5"></div>
+                <div class="partners-item"><img src="{% static 'img/6.png' %}" alt="logo 6"></div>
+                <div class="partners-item"><img src="{% static 'img/7.png' %}" alt="logo 7"></div>
+                <div class="partners-item"><img src="{% static 'img/8.png' %}" alt="logo 8"></div>
+                <div class="partners-item"><img src="{% static 'img/1.png' %}" alt="logo 1"></div>
+                <div class="partners-item"><img src="{% static 'img/2.png' %}" alt="logo 2"></div>
+                <div class="partners-item"><img src="{% static 'img/3.png' %}" alt="logo 3"></div>
+                <div class="partners-item"><img src="{% static 'img/4.png' %}" alt="logo 4"></div>
+                <div class="partners-item"><img src="{% static 'img/5.png' %}" alt="logo 5"></div>
+                <div class="partners-item"><img src="{% static 'img/6.png' %}" alt="logo 6"></div>
+                <div class="partners-item"><img src="{% static 'img/7.png' %}" alt="logo 7"></div>
+                <div class="partners-item"><img src="{% static 'img/8.png' %}" alt="logo 8"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
 
 <!-- Por que escolher a Vetorial Section -->
 <section id="por-que-escolher" class="features-section py-5 bg-light">
@@ -471,10 +532,156 @@
     </div>
 </section>
 
+<!-- FAQ Section -->
+<section class="faq-section py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); min-height: 400px;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Dúvidas Frequentes sobre os Planos</h2>
+            <p class="lead text-muted">Tire suas principais dúvidas sobre nossos planos</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="faq-accordion">
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">O que é necessário para abrir uma empresa?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Você precisa dos seus documentos pessoais, endereço, atividade da empresa e informações sobre sócios, quando houver.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Quanto tempo demora para abrir uma empresa?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>O processo para abrir uma empresa geralmente leva de 7 a 15 dias úteis, dependendo da complexidade do negócio e da rapidez na entrega dos documentos necessários.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Quanto custa abrir uma empresa?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Os custos para abrir uma empresa variam conforme o tipo de empresa e a localidade, incluindo taxas de registro, honorários contábeis e outros custos administrativos.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Posso usar meu endereço residencial?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Sim, você pode usar seu endereço residencial para abrir a empresa, desde que esteja de acordo com as normas municipais e o tipo de atividade exercida.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">É obrigatório ter contador?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Sim, é obrigatório ter um contador para a maioria dos tipos de empresa, pois ele é responsável pela escrituração contábil, cumprimento das obrigações fiscais e orientação financeira.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">É possível abrir empresa online?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Sim. Hoje o processo é 100% digital em quase todos os estados.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
+// Função para abrir/fechar FAQ
+function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    if (!item) return;
+    const answer = item.querySelector('.faq-answer');
+    if (!answer) return;
+
+    const isOpen = item.classList.contains('open');
+    if (isOpen) {
+        // fechar
+        answer.style.maxHeight = null;
+        item.classList.remove('open');
+    } else {
+        // fechar outros abertos
+        document.querySelectorAll('.faq-item.open').forEach(el => {
+            el.classList.remove('open');
+            const a = el.querySelector('.faq-answer');
+            if (a) a.style.maxHeight = null;
+        });
+
+        // abrir este
+        item.classList.add('open');
+        // forçar maxHeight para permitir transição suave
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+}
+
+// Garantir que todas as respostas iniciem fechadas ao carregar
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.faq-answer').forEach(a => {
+        a.style.maxHeight = null;
+    });
+});
+
 // JavaScript da home.html necessário para toggle de planos
 document.addEventListener('DOMContentLoaded', function() {
     // Toggle entre planos

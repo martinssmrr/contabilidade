@@ -265,8 +265,16 @@ def extrato_bancario_upload_path(instance, filename):
     Define o caminho de upload dos extratos bancários.
     Organiza por cliente e mês/ano.
     """
-    mes_ano = instance.mes_ano.replace('/', '_')
-    return f'extratos_bancarios/cliente_{instance.cliente.id}/{mes_ano}/{filename}'
+    # Preferir usar período (start/end) quando disponível
+    if getattr(instance, 'start_date', None) and getattr(instance, 'end_date', None):
+        s = instance.start_date.strftime('%Y%m%d')
+        e = instance.end_date.strftime('%Y%m%d')
+        folder = f'{s}_{e}'
+    else:
+        mes_ano = (getattr(instance, 'mes_ano', '') or '').replace('/', '_')
+        folder = mes_ano or 'sem_periodo'
+
+    return f'extratos_bancarios/cliente_{instance.cliente.id}/{folder}/{filename}'
 
 
 class ExtratoBancario(models.Model):
@@ -287,6 +295,9 @@ class ExtratoBancario(models.Model):
         verbose_name='Mês/Ano',
         help_text='Mês e ano do extrato (ex: 01/2025, 11/2024)'
     )
+    # Período opcional: data inicial e final
+    start_date = models.DateField(blank=True, null=True, verbose_name='Data inicial do período')
+    end_date = models.DateField(blank=True, null=True, verbose_name='Data final do período')
     
     arquivo = models.FileField(
         upload_to=extrato_bancario_upload_path,

@@ -1,11 +1,372 @@
 {% extends 'base_dashboard.html' %}
+{% load static %}
 
-{% block page_title %}Contabilidade{% endblock %}
+{% block title %}Contabilidade - Meus Lançamentos{% endblock %}
 
 {% block content %}
-<div class="content-placeholder">
-    <i class="fas fa-calculator"></i>
-    <h2>Contabilidade</h2>
-    <p>Em breve, as informações contábeis da sua empresa estarão disponíveis aqui.</p>
+<div class="container py-4">
+    <style>
+        /* Ajustes visuais finais para contabilidade */
+        #summary-chart { max-height: 220px; width: 100%; }
+        #transmissao-chart { max-height: 280px; width: 100%; }
+        #months-list .list-group-item { cursor: pointer; margin-bottom: 6px; }
+        #drafts-table td, #drafts-table th { vertical-align: middle; }
+    </style>
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-3">Contabilidade</h2>
+        </div>
+    </div>
+
+        <div class="row mb-3">
+                <div class="col-md-4">
+                        <label for="select-month" class="form-label">Selecione o mês</label>
+                        <div class="d-flex gap-2">
+                                <input type="month" id="select-month" class="form-control">
+                                <button id="btn-select-month" class="btn btn-primary">Abrir</button>
+                        </div>
+                        <small class="text-muted">Escolha o mês/ano para lançar suas movimentações.</small>
+                </div>
+                <div class="col-md-8 d-flex align-items-end">
+                        <div id="month-message" class="text-muted">Selecione um mês para começar.</div>
+                </div>
+        </div>
+
+        <div id="work-area" class="d-none">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Resumo Mensal</h5>
+                            <canvas id="summary-chart" height="120"></canvas>
+                            <div class="mt-3 d-flex justify-content-between align-items-center">
+                                <div>Receitas: <strong id="total-receitas">R$ 0,00</strong></div>
+                                <div>Despesas: <strong id="total-despesas">R$ 0,00</strong></div>
+                                <div>Resultado: <strong id="resultado-mes">R$ 0,00</strong></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Lançamentos do mês <span id="current-month-label"></span></h5>
+
+                            <form id="mov-form">
+                                {% csrf_token %}
+                                <input type="hidden" id="mov-id" name="mov_id" value="">
+                                <input type="hidden" id="current-month" name="current_month" value="">
+
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label">Tipo</label>
+                                        <select class="form-select" id="tipo" name="tipo">
+                                            <option value="receita">Receita</option>
+                                            <option value="despesa">Despesa</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-8 mb-2">
+                                        <label class="form-label">Nome / Descrição</label>
+                                        <input class="form-control" id="nome" name="nome" required>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label">Data</label>
+                                        <input class="form-control" id="data" name="data" type="date" required>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label">Valor (R$)</label>
+                                        <input class="form-control" id="valor" name="valor" type="number" step="0.01" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Anexar Documento (opcional)</label>
+                                    <input class="form-control" id="anexo" name="anexo" type="file">
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button id="btn-save" class="btn btn-primary" type="submit">Adicionar</button>
+                                    <button id="btn-reset" class="btn btn-outline-secondary" type="button">Limpar</button>
+                                </div>
+                            </form>
+
+                            <hr class="my-3">
+
+                            <div class="table-responsive">
+                                <table class="table table-sm" id="drafts-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo</th>
+                                            <th>Descrição</th>
+                                            <th>Data</th>
+                                            <th class="text-end">Valor</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- preenchido por JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="mt-3">
+                                <button id="btn-transmit" class="btn btn-success">Transmitir Lançamentos do Mês</button>
+                                <small class="d-block text-muted mt-1">Ao transmitir, seus lançamentos serão enviados para análise pelo nosso time.</small>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Histórico de Transmissões</h5>
+                            <div id="months-list">
+                                <!-- preenchido por JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 </div>
+
+<!-- Modal para detalhes do mês transmitido -->
+<div class="modal fade" id="monthDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes da Transmissão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+                    <div class="modal-body">
+                        <div id="transmissao-info" class="mb-3"></div>
+                        <div class="mb-3">
+                            <canvas id="transmissao-chart" height="100"></canvas>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm" id="transmissao-items">
+                                <thead>
+                                    <tr><th>Tipo</th><th>Descrição</th><th>Competência</th><th>Status</th><th class="text-end">Valor</th></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function(){
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    function q(sel, ctx=document){ return ctx.querySelector(sel); }
+    function qa(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
+
+    const state = { month: null, drafts: [], totals: {receitas: 0, despesas: 0} };
+
+    function money(v){
+        try{ return Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }catch(e){ return v; }
+    }
+
+    function showWorkAreaFor(month){
+        state.month = month;
+        q('#current-month').value = month;
+        q('#current-month-label').textContent = month;
+        q('#month-message').textContent = `Editando lançamentos para ${month}`;
+        q('#work-area').classList.remove('d-none');
+        loadDrafts(month);
+        loadMonthsList();
+    }
+
+    // chart setup
+    const ctx = document.getElementById('summary-chart').getContext('2d');
+    const summaryChart = new Chart(ctx, {
+        type: 'bar',
+        data: { labels: ['Receitas','Despesas'], datasets: [{ label: 'Total', data: [0,0], backgroundColor: ['#198754','#dc3545'] }] },
+        options: { responsive:true, scales:{ y: { beginAtZero:true } }, plugins:{ legend:{ display:false } } }
+    });
+
+    function updateSummary(totals){
+        const r = Number(totals.receitas || 0);
+        const d = Number(totals.despesas || 0);
+        summaryChart.data.datasets[0].data = [r, d];
+        summaryChart.update();
+        q('#total-receitas').textContent = 'R$ ' + money(r);
+        q('#total-despesas').textContent = 'R$ ' + money(d);
+        const res = r - d;
+        const el = q('#resultado-mes');
+        el.textContent = 'R$ ' + money(res);
+        el.style.color = res>0 ? '#198754' : res<0 ? '#dc3545' : '#6c757d';
+    }
+
+    function rowFromMov(mov){
+        const tr = document.createElement('tr');
+        tr.setAttribute('data-id', mov.id);
+        tr.innerHTML = `
+            <td>${mov.tipo_display}</td>
+            <td>${mov.nome}</td>
+            <td>${mov.competencia}</td>
+            <td class="text-end">R$ ${money(mov.valor)}</td>
+            <td class="text-end">
+                <button class="btn btn-sm btn-link edit-mov">Editar</button>
+                <button class="btn btn-sm btn-link text-danger delete-mov">Excluir</button>
+            </td>
+        `;
+        return tr;
+    }
+
+    function loadDrafts(month){
+        fetch(`/users/contabilidade/drafts/?month=${encodeURIComponent(month)}`, {headers:{'X-CSRFToken': csrftoken}})
+        .then(r=>r.json()).then(data=>{
+            if(!data.success){ alert(data.error||'Erro'); return; }
+            state.drafts = data.items || [];
+            state.totals = { receitas: data.totals.receitas || 0, despesas: data.totals.despesas || 0 };
+            const tbody = q('#drafts-table tbody'); tbody.innerHTML = '';
+            if(state.drafts.length===0){ tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum rascunho.</td></tr>'; }
+            state.drafts.forEach(m=> tbody.appendChild(rowFromMov(m)) );
+            updateSummary(state.totals);
+        }).catch(err=>{ console.error(err); alert('Erro de rede'); });
+    }
+
+    // months list
+    function loadMonthsList(){
+        fetch('/users/contabilidade/months/', {headers:{'X-CSRFToken': csrftoken}})
+        .then(r=>r.json()).then(data=>{
+            if(!data.success) return;
+            const wrap = q('#months-list'); wrap.innerHTML = '';
+            if(!data.items || data.items.length===0){ wrap.innerHTML = '<div class="text-muted">Nenhuma transmissão anterior.</div>'; return; }
+            data.items.forEach(it=>{
+                const btn = document.createElement('button');
+                btn.className = 'list-group-item list-group-item-action';
+                btn.textContent = `${it.competencia} - Transmitido (${it.count})`;
+                btn.addEventListener('click', ()=> loadMonthDetail(it.id));
+                wrap.appendChild(btn);
+            });
+        }).catch(err=>{ console.error(err); });
+    }
+
+    let transmissaoChart = null;
+    function loadMonthDetail(pk){
+        fetch(`/users/contabilidade/month/${pk}/`, {headers:{'X-CSRFToken': csrftoken}})
+        .then(r=>r.json()).then(data=>{
+            if(!data.success){ alert(data.error||'Erro'); return; }
+            q('#transmissao-info').textContent = `Competência: ${data.transmissao.competencia} • Transmitido em: ${new Date(data.transmissao.transmitted_at).toLocaleString()}`;
+            const tbody = q('#transmissao-items tbody'); tbody.innerHTML = '';
+
+            // calcular totais por tipo para o gráfico
+            let totalR = 0, totalD = 0;
+            data.items.forEach(it=>{
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${it.tipo_display}</td><td>${it.nome}</td><td>${it.competencia}</td><td>${it.status_display}</td><td class="text-end">R$ ${money(it.valor)}</td>`;
+                tbody.appendChild(tr);
+                if(it.tipo === 'receita') totalR += Number(it.valor);
+                if(it.tipo === 'despesa') totalD += Number(it.valor);
+            });
+
+            // renderizar gráfico de colunas (Receitas x Despesas)
+            const canvas = document.getElementById('transmissao-chart');
+            if(transmissaoChart){ transmissaoChart.destroy(); transmissaoChart = null; }
+            const ctx2 = canvas.getContext('2d');
+            transmissaoChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Receitas','Despesas'],
+                    datasets: [{
+                        label: 'Total (R$)',
+                        data: [totalR, totalD],
+                        backgroundColor: ['#198754', '#dc3545'],
+                        borderColor: ['#155e3b', '#a71d2a'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, ticks: { callback: function(value){ return value.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); } } } }
+                }
+            });
+
+            const modalEl = document.getElementById('monthDetailModal');
+            const bsModal = new bootstrap.Modal(modalEl);
+            bsModal.show();
+        }).catch(err=>{ console.error(err); alert('Erro de rede'); });
+    }
+
+    // select month
+    q('#btn-select-month').addEventListener('click', function(){
+        const m = q('#select-month').value;
+        if(!m){ alert('Selecione um mês.'); return; }
+        showWorkAreaFor(m);
+    });
+
+    // form submit add/edit
+    q('#mov-form').addEventListener('submit', function(e){
+        e.preventDefault();
+        const movId = q('#mov-id').value;
+        const fd = new FormData();
+        fd.append('tipo', q('#tipo').value);
+        fd.append('nome', q('#nome').value);
+        // use selected month as competencia
+        fd.append('competencia', q('#current-month').value);
+        fd.append('valor', q('#valor').value);
+        const file = q('#anexo').files[0]; if(file) fd.append('anexo', file);
+
+        const url = movId ? `/users/contabilidade/edit/${movId}/` : '/users/contabilidade/add/';
+        fetch(url, { method:'POST', headers:{'X-CSRFToken': csrftoken}, body: fd }).then(r=>r.json()).then(data=>{
+            if(!data.success){ alert(data.error||'Erro'); return; }
+            // refresh drafts
+            loadDrafts(state.month);
+            q('#mov-form').reset(); q('#mov-id').value = '';
+        }).catch(err=>{ console.error(err); alert('Erro de rede'); });
+    });
+
+    q('#btn-reset').addEventListener('click', function(){ q('#mov-form').reset(); q('#mov-id').value = ''; });
+
+    // delegate edit/delete
+    q('#drafts-table').addEventListener('click', function(e){
+        const tr = e.target.closest('tr'); if(!tr) return; const id = tr.getAttribute('data-id');
+        if(e.target.classList.contains('edit-mov')){
+            // populate form with data from state
+            const mov = state.drafts.find(x=>String(x.id)===String(id)); if(!mov) return;
+            q('#mov-id').value = mov.id; q('#tipo').value = mov.tipo; q('#nome').value = mov.nome; q('#valor').value = mov.valor; q('#data').value = mov.competencia+'-01'; // approximate
+            window.scrollTo({top:0, behavior:'smooth'});
+        }
+        if(e.target.classList.contains('delete-mov')){
+            if(!confirm('Excluir este rascunho?')) return;
+            fetch(`/users/contabilidade/delete/${id}/`, { method:'POST', headers:{'X-CSRFToken': csrftoken} }).then(r=>r.json()).then(data=>{
+                if(!data.success){ alert(data.error||'Erro'); return; }
+                loadDrafts(state.month);
+            }).catch(err=>{ console.error(err); alert('Erro de rede'); });
+        }
+    });
+
+    q('#btn-transmit').addEventListener('click', function(){
+        if(!confirm('Transmitir todos os rascunhos deste mês para a contabilidade?')) return;
+        const fd = new FormData(); fd.append('month', state.month);
+        fetch('/users/contabilidade/transmit/', { method:'POST', headers:{'X-CSRFToken': csrftoken}, body: fd }).then(r=>r.json()).then(data=>{
+            if(!data.success){ alert(data.error||'Erro'); return; }
+            alert(`${data.transmitted} lançamentos transmitidos.`);
+            loadDrafts(state.month); loadMonthsList();
+        }).catch(err=>{ console.error(err); alert('Erro de rede'); });
+    });
+
+    // initial load of months
+    loadMonthsList();
+
+})();
+</script>
 {% endblock %}

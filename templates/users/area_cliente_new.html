@@ -3,13 +3,114 @@
 {% block page_title %}Painel de Controle{% endblock %}
 
 {% block content %}
-<div class="content-placeholder">
-    <i class="fas fa-tachometer-alt"></i>
-    <h2>Painel de Controle</h2>
-    <p>Em breve, as informações do seu painel estarão aqui.</p>
-    
-    <div class="mt-4">
-        <p class="text-muted">Bem-vindo(a), <strong>{{ user.first_name|default:user.username }}</strong>!</p>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-tachometer-alt me-2"></i>Painel de Controle</h1>
+        <div class="text-muted">Bem-vindo(a), <strong>{{ user.first_name|default:user.username }}</strong></div>
     </div>
+
+    <div class="row g-3">
+        <!-- Card: Resumo Contábil -->
+        <div class="col-md-6">
+            <a href="{% url 'users:contabilidade' %}" class="text-decoration-none text-reset">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="card-title">Resumo Contábil</h5>
+                            <p class="mb-1 text-muted">Resultado do mês atual</p>
+                            <h3 id="dash-resultado" class="mb-2">R$ 0,00</h3>
+                            <div id="dash-transmissao" class="text-muted small">Nenhuma transmissão encontrada</div>
+                        </div>
+                        <div class="text-end">
+                            <i class="fas fa-calculator fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <button class="btn btn-sm btn-outline-primary">Acessar Contabilidade</button>
+                </div>
+            </div>
+            </a>
+        </div>
+
+        <!-- Card: Certidões Negativas -->
+        <div class="col-md-6">
+            <a href="{% url 'users:pendencias' %}" class="text-decoration-none text-reset">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="card-title">Status das Certidões</h5>
+                            <div id="dash-cert-alert" class="mb-2 d-none">
+                                <div class="alert alert-danger py-1 mb-0">Atenção: Existem pendências!</div>
+                            </div>
+                            <div id="dash-cert-list" class="small text-muted">
+                                <!-- preenchido por JS -->
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <i class="fas fa-file-contract fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <button class="btn btn-sm btn-outline-primary">Ver Detalhes das Certidões</button>
+                </div>
+            </div>
+            </a>
+        </div>
+    </div>
+
 </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]') ? document.querySelector('[name=csrfmiddlewaretoken]').value : '';
+
+    function money(v){
+        try{ return Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }catch(e){ return v; }
+    }
+
+    // carregar resumo contábil
+    fetch('/users/api/contabilidade/summary/', {headers: {'X-CSRFToken': csrftoken}})
+    .then(r=>r.json()).then(data=>{
+        if(!data.success) return;
+        const res = Number(data.resultado || 0);
+        const el = document.getElementById('dash-resultado');
+        if(res>0){ el.textContent = 'Lucro de R$ ' + money(res); el.classList.remove('text-danger'); el.classList.add('text-success'); }
+        else if(res<0){ el.textContent = 'Prejuízo de R$ ' + money(Math.abs(res)); el.classList.remove('text-success'); el.classList.add('text-danger'); }
+        else { el.textContent = 'R$ 0,00'; }
+
+        if(data.last_transmissao){
+            const t = data.last_transmissao;
+            document.getElementById('dash-transmissao').textContent = `Transmissão de ${t.competencia}: ${t.count} lançamentos`;
+        }
+    }).catch(console.error);
+
+    // carregar status de certidões
+    fetch('/users/api/certidoes/status/', {headers: {'X-CSRFToken': csrftoken}})
+    .then(r=>r.json()).then(data=>{
+        if(!data.success) return;
+        const wrap = document.getElementById('dash-cert-list');
+        wrap.innerHTML = '';
+        data.items.forEach(it=>{
+            const span = document.createElement('div');
+            let icon = '';
+            if(it.status === 'negativa') icon = '<span class="text-success">✔️</span>';
+            else if(it.status === 'positiva') icon = '<span class="text-warning">⚠️</span>';
+            else if(it.status === 'indisponivel') icon = '<span class="text-danger">❌</span>';
+            else icon = '<span class="text-muted">—</span>';
+            span.innerHTML = `${icon} <strong>${it.label}</strong> — <small class="text-muted">${it.status_display || 'Sem Registro'}</small>`;
+            wrap.appendChild(span);
+        });
+        if(data.has_indisponivel){
+            document.getElementById('dash-cert-alert').classList.remove('d-none');
+        }
+    }).catch(console.error);
+});
+</script>
 {% endblock %}
