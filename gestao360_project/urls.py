@@ -85,6 +85,58 @@ def deixar_mei_view(request):
         'planos_comercio': planos_comercio,
     })
 
+def trocar_contador_view(request):
+    """Renderiza a página 'trocar-contador.html' separadamente para permitir edição independente."""
+    from django.shortcuts import render
+    from apps.services.models import Plano
+
+    testimonials = Testimonial.objects.filter(is_active=True)
+
+    # Buscar planos ativos separados por categoria
+    planos_servicos = Plano.objects.filter(ativo=True, categoria='servicos').order_by('ordem', 'preco')
+    planos_comercio = Plano.objects.filter(ativo=True, categoria='comercio').order_by('ordem', 'preco')
+
+    return render(request, 'trocar-contador.html', {
+        'testimonials': testimonials,
+        'planos_servicos': planos_servicos,
+        'planos_comercio': planos_comercio,
+    })
+
+def contabilidade_completa_view(request):
+    """Renderiza a página 'contabilidade-completa.html' separadamente para permitir edição independente."""
+    from django.shortcuts import render
+    from apps.services.models import Plano
+
+    testimonials = Testimonial.objects.filter(is_active=True)
+
+    # Buscar planos ativos separados por categoria
+    planos_servicos = Plano.objects.filter(ativo=True, categoria='servicos').order_by('ordem', 'preco')
+    planos_comercio = Plano.objects.filter(ativo=True, categoria='comercio').order_by('ordem', 'preco')
+
+    return render(request, 'contabilidade-completa.html', {
+        'testimonials': testimonials,
+        'planos_servicos': planos_servicos,
+        'planos_comercio': planos_comercio,
+    })
+
+def assessoria_view(request):
+    """Renderiza a página 'assessoria.html' separadamente para permitir edição independente."""
+    from django.shortcuts import render
+    from apps.services.models import Plano
+
+    testimonials = Testimonial.objects.filter(is_active=True)
+
+    # Buscar planos ativos separados por categoria
+    planos_servicos = Plano.objects.filter(ativo=True, categoria='servicos').order_by('ordem', 'preco')
+    planos_comercio = Plano.objects.filter(ativo=True, categoria='comercio').order_by('ordem', 'preco')
+
+    return render(request, 'assessoria.html', {
+        'testimonials': testimonials,
+        'planos_servicos': planos_servicos,
+        'planos_comercio': planos_comercio,
+    })
+    
+
 # Configuração dos Sitemaps
 sitemaps = {
     'static': StaticViewSitemap,
@@ -97,6 +149,9 @@ urlpatterns = [
     path("", home_view, name='home'),
     path("abrir-empresa/", abrir_empresa_view, name='abrir_empresa'),
     path("deixar-mei/", deixar_mei_view, name='deixar_mei'),
+    path("trocar-contador/", trocar_contador_view, name='trocar_contador'),
+    path("contabilidade-completa/", contabilidade_completa_view, name='contabilidade_completa'),
+    path("assessoria/", assessoria_view, name='assessoria'),
     # Páginas institucionais estáticas
     path('sobre/', TemplateView.as_view(template_name='pages/sobre.html'), name='sobre'),
     path('termos-de-uso/', TemplateView.as_view(template_name='pages/termos_de_uso.html'), name='termos_de_uso'),
