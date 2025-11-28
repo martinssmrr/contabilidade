@@ -2724,3 +2724,91 @@ footer hr {
     .process-icon svg { width: 30px; height: 30px; }
 }
 
+/* Recent posts (used in abrir_empresa) */
+.recent-posts-section {
+    /* Background atualizado conforme solicitado */
+    background-color: #eceef1;
+}
+.recent-posts-section .container {
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.recent-posts-section .blog-grid {
+    display: grid;
+    /* Make each card wider while remaining responsive: three comfortable columns on desktop */
+    grid-template-columns: repeat(3, minmax(320px, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+}
+.recent-posts-section .blog-card .card-img-top {
+    height: 180px;
+    object-fit: cover;
+}
+.recent-posts-section .blog-card .card-body {
+    padding: 1rem;
+}
+.recent-posts-section .blog-card .card-title a {
+    color: var(--dark-color);
+    text-decoration: none;
+}
+.recent-posts-section .blog-card .card-title a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+.recent-posts-section .card-footer {
+    padding: 0.75rem 1rem;
+}
+
+@media (max-width: 992px) {
+    .recent-posts-section .blog-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .recent-posts-section .blog-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Mostrar apenas imagem e título nos cards de posts recentes */
+.recent-posts-section .blog-card .card-text,
+.recent-posts-section .blog-card .card-footer {
+    display: none !important;
+}
+.recent-posts-section .blog-card .card-body {
+    padding: 0.6rem 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.recent-posts-section .blog-card .card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-align: center;
+    margin: 0;
+    color: var(--dark-color);
+}
+.recent-posts-section .blog-card .card-img-top {
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+}
+.recent-posts-section .blog-card {
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+/* Override para a seção de depoimentos */
+section.testimonials-section {
+    background-color: #eceef1 !important;
+}
+
+/* Regra de alta especificidade para garantir aplicação do background solicitado */
+section.recent-posts-section {
+    background-color: #eceef1 !important;
+}
+
+
+

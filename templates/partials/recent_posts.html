@@ -1,0 +1,28 @@
+{% load static %}
+<section class="recent-posts-section py-5" style="background-color: #eceef1;">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h3 class="h4 fw-bold">Últimos artigos sobre abrir empresa</h3>
+            <p class="text-muted small">Dicas e orientações para abrir sua empresa com segurança</p>
+        </div>
+
+        <div class="blog-grid">
+            {% for post in recent_posts %}
+            <div>
+                <article class="card blog-card h-100 border-0 shadow-sm">
+                    {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title h6 mb-2"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h5>
+                        <p class="card-text text-muted small">{{ post.excerpt|striptags|truncatewords:22 }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <a href="{{ post.get_absolute_url }}" class="btn btn-sm btn-outline-primary">Ler mais</a>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
