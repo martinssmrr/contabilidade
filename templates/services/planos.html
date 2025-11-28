@@ -39,6 +39,115 @@
     </div>
 </section>
 
+<!-- Por que escolher a Vetorial Section -->
+<section id="por-que-escolher" class="features-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Por que escolher a Vetorial?</h2>
+        </div>
+        <div class="row g-4">
+            <!-- Card 1 - Atendimento em todo o brasil -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/brasil.png' %}" alt="Brasil" class="img-fluid">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Atendimento em todo o brasil</h5>
+                        <p class="card-text text-muted">Somos uma contabilidade online pronta para atender a sua empresa, em qualquer cidade brasileira.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 2 - Totalmente online -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/online.png' %}" alt="Online" class="img-fluid">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Totalmente online</h5>
+                        <p class="card-text text-muted">Todo o atendimento e fluxo de documentos para a contabilidade se dá através do nosso sistema, basta ter acesso à internet.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 3 - Baixo Custo -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/custo.png' %}" alt="Baixo Custo" class="img-fluid">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Baixo Custo</h5>
+                        <p class="card-text text-muted">Economize recursos para aplicar no seu negócio, tecnologia de ponta e contadores de primeira trazem para você o melhor custo benefício.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 4 - Atendimento Humanizado -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/atendimento.png' %}" alt="Atendimento Humanizado" class="img-fluid">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Atendimento Humanizado</h5>
+                        <p class="card-text text-muted">Tenha um contador online pronto para atender e te ajudar na tomada de decisão do seu negócio.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Stats Section -->
+<section class="stats-section py-5 bg-light stats-animated" aria-hidden="false">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span class="counter" data-target="5000">0</span>+
+                        </h2>
+                        <p class="text-muted mb-0">Clientes Ativos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span class="counter" data-target="8">0</span>+
+                        </h2>
+                        <p class="text-muted mb-0">Anos de Experiência</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">24/7</h2>
+                        <p class="text-muted mb-0">Suporte Disponível</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span class="counter" data-target="100">0</span>%
+                        </h2>
+                        <p class="text-muted mb-0">Satisfação</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section id="planos" class="pricing-section py-5 bg-light" style="margin-top: 80px;">
     <div class="container">
         <div class="text-center mb-5">
@@ -162,6 +271,53 @@
                 {% endfor %}
             </div>
         </div>
+    </div>
+</section>
+
+<!-- Seção de Serviços Contábeis (inserida abaixo da seção Planos) -->
+<section class="svc-section" aria-labelledby="svc-title">
+    <div class="svc-inner">
+        <h2 id="svc-title" class="svc-title">Conte com um especialista contábil para facilitar sua rotina</h2>
+
+        <p class="svc-lead">
+            Conheça a Vetorial Contabilidade sua solução completa que oferece um <strong>assessor contábil dedicado (Gerente de Conta)</strong> para acompanhar suas operações, otimizar processos e reduzir riscos fiscais. Conte com orientação estratégica e execução prática para sua empresa.
+        </p>
+
+        <div class="svc-center">
+            <div class="svc-media">
+                <div class="svc-image-wrap" role="img" aria-label="Profissional contábil">
+                    <img src="{% static 'img/midcta.jpg' %}" alt="Profissional contábil" class="svc-image">
+                </div>
+                <a href="https://wa.me/5577999515837" target="_blank" rel="noopener noreferrer" class="svc-cta-bottom-btn" role="button">Quero ser Vetorial</a>
+            </div>
+
+            <div class="svc-box box-a">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">Emissão de notas fiscais</div>
+            </div>
+
+            <div class="svc-box box-b">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">Conciliação financeira</div>
+            </div>
+
+            <!-- <div class="svc-box box-c">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">Declaração de IRPF</div>
+            </div> -->
+
+            <div class="svc-box box-d">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">Economia de impostos</div>
+            </div>
+
+            <div class="svc-box box-e">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">Suporte exclusivo para decisões mais assertivas</div>
+            </div>
+        </div>
+
+        <p class="svc-close">Mude para uma contabilidade que entrega resultados com <strong>parceria!</strong></p>
     </div>
 </section>
 
@@ -328,5 +484,46 @@
             icon.style.transform = 'rotate(180deg)';
         }
     }
+</script>
+<script>
+// Stats animation: IntersectionObserver to trigger count + entrance animation
+document.addEventListener('DOMContentLoaded', function() {
+    const statsSection = document.querySelector('.stats-animated');
+    if (!statsSection) return;
+
+    const counters = statsSection.querySelectorAll('.counter');
+
+    function animateCounters() {
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target')) || 0;
+            const duration = 1400;
+            let start = 0;
+            let startTime = null;
+
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = Math.min((timestamp - startTime) / duration, 1);
+                const value = Math.floor(progress * (target - start) + start);
+                counter.textContent = value;
+                if (progress < 1) requestAnimationFrame(step);
+                else counter.textContent = target; // ensure final
+            }
+
+            requestAnimationFrame(step);
+        });
+    }
+
+    const io = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                statsSection.classList.add('in-view');
+                animateCounters();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.25 });
+
+    io.observe(statsSection);
+});
 </script>
 {% endblock %}

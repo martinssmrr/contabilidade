@@ -5,16 +5,6 @@
 
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-/* FAQ expand/collapse */
-.faq-item { border-bottom: 1px solid rgba(0,0,0,0.06); }
-.faq-question { background: transparent; border: 0; width: 100%; text-align: left; padding: 1rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
-.faq-item.open .faq-answer { /* when open, max-height updated by JS to scrollHeight for smooth animation */ }
-.faq-answer-content { padding: 0 1rem 1rem; }
-.faq-icon { display: inline-flex; align-items: center; transition: transform 0.25s ease; }
-.faq-item.open .faq-icon { transform: rotate(180deg); }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -119,24 +109,24 @@
 </div>
 
 <!-- Hero Section -->
-<section class="hero-section text-white position-relative" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/abrirherosection.png' %}'); background-size: cover; background-position: center right;">
+<section class="hero-section text-white position-relative trocar-hero">
     <div class="container-fluid">
-        <div class="row align-items-center" style="min-height: 75vh; padding-bottom: 1rem;">
+        <div class="row align-items-center hero-inner-trocar">
             <!-- Coluna Esquerda - Conteúdo -->
             <div class="col-lg-6 col-12 animate-fade-in px-5">
-                <h1 class="display-3 fw-bold mb-4">Trocar contador</h1>
-                <p class="fs-5 mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio deleniti magni id in aliquid hic eveniet sequi tenetur provident itaque non deserunt adipisci vel, ex exercitationem mollitia soluta culpa aliquam.</p>
+                <h1 class="display-3 fw-bold mb-4">A Mudança Contábil Que Sua Empresa Merece</h1>
+                <p class="fs-5 mb-4">Assuma o controle da sua gestão com uma contabilidade moderna e eficiente. Nós realizamos a troca completa do contador e acompanhamos você em cada etapa. <br>Torne sua rotina mais simples com um serviço de transição contábil rápido, organizado e sem riscos. Trazemos sua empresa para nossa contabilidade em poucos dias.</p>
                 <div class="d-grid gap-3 d-sm-flex mb-4">
                     <button type="button" class="btn btn-light btn-lg px-5" data-bs-toggle="modal" data-bs-target="#contactModal">Abra sua empresa agora</button>
-                    <a href="https://wa.me/5561998311920" target="_blank" class="btn btn-outline-light btn-lg px-5">Falar com um especialista</a>
+                    <a href="https://wa.me/5561998311920" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light btn-lg px-5">Falar com um especialista</a>
                 </div>
                 <!-- Selos de Segurança -->
                 <!-- <div class="d-flex gap-3 align-items-center flex-wrap mt-3">
                     <div class="selo-badge selo-ra1000">
                         <img src="{% static 'img/SELO-RA1000.png' %}" alt="Selo RA1000" class="img-fluid">
                     </div>
-                    <div class="selo-badge selo-google" style="width: 103.969px !important; height: 37.734px !important;">
-                        <img src="{% static 'img/googlesiteseguro.png' %}" alt="Google Site Seguro" style="width: 100%; height: 100%; object-fit: contain;">
+                    <div class="selo-badge selo-google">
+                        <img src="{% static 'img/googlesiteseguro.png' %}" alt="Google Site Seguro">
                     </div>
                 </div> -->
             </div>
@@ -150,7 +140,7 @@
 
 
 <!-- Rolagem de logos -->
-<section id="partners" class="partners-section py-4 bg-white">
+<section id="partners" class="partners-section py-4 bg-white partners-bg">
     <div class="container-fluid px-0">
         <div class="text-center mb-3">
             <h2 class="display-5 fw-bold">Empresas que confiam em nosso trabalho</h2>
@@ -198,6 +188,68 @@
     </div>
 </section>
 
+
+<!-- Por que escolher a Vetorial Section -->
+<section id="por-que-escolher" class="features-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Por que escolher a Vetorial?</h2>
+        </div>
+        <div class="row g-4">
+            <!-- Card 1 - Atendimento em todo o brasil -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/brasil.png' %}" alt="Brasil" class="img-fluid">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Atendimento em todo o brasil</h5>
+                        <p class="card-text text-muted">Somos uma contabilidade online pronta para atender a sua empresa, em qualquer cidade brasileira.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 2 - Totalmente online -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/online.png' %}" alt="Online" class="img-fluid">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Totalmente online</h5>
+                        <p class="card-text text-muted">Todo o atendimento e fluxo de documentos para a contabilidade se dá através do nosso sistema, basta ter acesso à internet.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 3 - Baixo Custo -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/custo.png' %}" alt="Baixo Custo" class="img-fluid">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Baixo Custo</h5>
+                        <p class="card-text text-muted">Economize recursos para aplicar no seu negócio, tecnologia de ponta e contadores de primeira trazem para você o melhor custo benefício.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 4 - Atendimento Humanizado -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/atendimento.png' %}" alt="Atendimento Humanizado" class="img-fluid">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Atendimento Humanizado</h5>
+                        <p class="card-text text-muted">Tenha um contador online pronto para atender e te ajudar na tomada de decisão do seu negócio.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- Por que escolher a Vetorial Section -->
 <section id="por-que-escolher" class="features-section py-5 bg-light">
@@ -258,6 +310,104 @@
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section py-5 bg-light">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span class="counter" data-target="5000">0</span>+
+                        </h2>
+                        <p class="text-muted mb-0">Clientes Ativos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span class="counter" data-target="8">0</span>+
+                        </h2>
+                        <p class="text-muted mb-0">Anos de Experiência</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">24/7</h2>
+                        <p class="text-muted mb-0">Suporte Disponível</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span class="counter" data-target="100">0</span>%
+                        </h2>
+                        <p class="text-muted mb-0">Satisfação</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Como é feita a troca de contabilidade -->
+<section id="como-trocar-contabilidade" class="process-magazine">
+    <div class="process-inner">
+        <div class="process-content">
+            <h2 class="process-title">Como é feita a troca de contabilidade para a Vetorial?</h2>
+
+            <div class="features-mag">
+                <div class="mag-card js-reveal" data-delay="0ms">
+                    <div class="mag-icon">🔎</div>
+                    <div class="mag-body">
+                        <div class="mag-title">Diagnóstico Completo</div>
+                        <div class="mag-desc">Analisamos seu histórico, documentos e pendências para um plano de transição sem surpresas.</div>
+                    </div>
+                </div>
+
+                <div class="mag-card js-reveal" data-delay="80ms">
+                    <div class="mag-icon">📁</div>
+                    <div class="mag-body">
+                        <div class="mag-title">Migração de Documentos</div>
+                        <div class="mag-desc">Organizamos e transferimos todos os arquivos e escrituração para nosso sistema integrado.</div>
+                    </div>
+                </div>
+
+                <div class="mag-card js-reveal" data-delay="160ms">
+                    <div class="mag-icon">⚙️</div>
+                    <div class="mag-body">
+                        <div class="mag-title">Integração Contínua</div>
+                        <div class="mag-desc">Conectamos suas notas, conciliações e obrigações para automatizar processos fiscais.</div>
+                    </div>
+                </div>
+
+                <div class="mag-card js-reveal" data-delay="240ms">
+                    <div class="mag-icon">🤝</div>
+                    <div class="mag-body">
+                        <div class="mag-title">Acompanhamento Dedicado</div>
+                        <div class="mag-desc">Um gerente de conta acompanha mês a mês e entrega relatórios com ações práticas.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-cta">
+                <a href="#contato" class="btn-mag-primary">Quero trocar agora</a>
+                <a href="#contato" class="btn-mag-ghost">Falar com especialista</a>
+            </div>
+
+            <p class="fst-italic text-white small mt-3">Você não precisa finalizar o ano fiscal para realizar a troca de contabilidade.</p>
+        </div>
+
+        <!-- imagem removida conforme solicitado: agora a seção exibe apenas os cards -->
     </div>
 </section>
 
@@ -339,7 +489,7 @@
         </div>
 
         <!-- Planos de COMÉRCIO (DINÂMICO) -->
-        <div class="pricing-cards-container" id="planos-comercio" style="display: none;">
+        <div class="pricing-cards-container" id="planos-comercio">
             <div class="row g-4 justify-content-center">
                 {% for plano in planos_comercio %}
                 <div class="col-lg-4 col-md-6">
@@ -388,13 +538,60 @@
     </div>
 </section>
 
+<!-- Seção de Serviços Contábeis (inserida abaixo da seção Planos) -->
+<section class="svc-section" aria-labelledby="svc-title">
+    <div class="svc-inner">
+        <h2 id="svc-title" class="svc-title">Conte com um especialista contábil para facilitar sua rotina</h2>
+
+        <p class="svc-lead">
+            Conheça a Vetorial Contabilidade sua solução completa que oferece um <strong>assessor contábil dedicado (Gerente de Conta)</strong> para acompanhar suas operações, otimizar processos e reduzir riscos fiscais. Conte com orientação estratégica e execução prática para sua empresa.
+        </p>
+
+        <div class="svc-center">
+            <div class="svc-media">
+                <div class="svc-image-wrap" role="img" aria-label="Profissional contábil">
+                    <img src="{% static 'img/midcta.jpg' %}" alt="Profissional contábil" class="svc-image">
+                </div>
+                <a href="https://wa.me/5577999515837" target="_blank" rel="noopener noreferrer" class="svc-cta-bottom-btn" role="button">Quero ser Vetorial</a>
+            </div>
+
+            <div class="svc-box box-a">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">Emissão de notas fiscais</div>
+            </div>
+
+            <div class="svc-box box-b">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">Conciliação financeira</div>
+            </div>
+
+            <!-- <div class="svc-box box-c">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">Declaração de IRPF</div>
+            </div> -->
+
+            <div class="svc-box box-d">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">Economia de impostos</div>
+            </div>
+
+            <div class="svc-box box-e">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">Suporte exclusivo para decisões mais assertivas</div>
+            </div>
+        </div>
+
+        <p class="svc-close">Mude para uma contabilidade que entrega resultados com <strong>parceria!</strong></p>
+    </div>
+</section>
+
 <!-- Testimonials Section -->
 <section class="testimonials-section py-5 bg-light">
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="display-5 fw-bold mb-3">Depoimentos que reforçam o nosso compromisso!</h2>
             <p class="lead text-muted mb-4">Faça como os mais de 30 mil empreendedores que confiam na Agilize e que descobriram um novo jeito de lidar com a contabilidade, de forma simples, eficiente e humanizada.</p>
-            <img src="{% static 'img/avaliação-google.png' %}" alt="Avaliação Google" class="img-fluid" style="max-width: 300px;">
+            <img src="{% static 'img/avaliação-google.png' %}" alt="Avaliação Google" class="img-fluid evaluation-google">
         </div>
         
         <div class="testimonials-scroll-container">
@@ -437,7 +634,7 @@
 </section>
 
 <!-- Contact Section -->
-<section id="contato" class="contact-section position-relative py-5" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/abrirempresactt.png' %}')">
+<section id="contato" class="contact-section position-relative py-5">
     <div class="container position-relative">
         <div class="row justify-content-end align-items-center h-100">
             <!-- Coluna Esquerda - Vazia (background aparece) -->
@@ -533,7 +730,7 @@
 </section>
 
 <!-- FAQ Section -->
-<section class="faq-section py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); min-height: 400px;">
+<section class="faq-section py-5">
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="display-5 fw-bold mb-3">Dúvidas Frequentes sobre os Planos</h2>
@@ -889,5 +1086,34 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Counter animation for stats
+document.addEventListener('DOMContentLoaded', function() {
+    const counters = document.querySelectorAll('.counter');
+    if (!counters || counters.length === 0) return;
+
+    counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-target')) || 0;
+        const duration = 1600; // ms
+        const start = 0;
+        let startTime = null;
+
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / duration, 1);
+            const value = Math.floor(progress * (target - start) + start);
+            counter.textContent = value;
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                counter.textContent = target; // ensure exact
+            }
+        }
+
+        // small delay for smoother sequencing
+        requestAnimationFrame(step);
+    });
+});
+
 </script>
 {% endblock %}
