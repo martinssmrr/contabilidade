@@ -53,6 +53,7 @@ def home_view(request):
     })
 
 def abrir_empresa_view(request):
+    print("DEBUG: Acessando abrir_empresa_view")
     from django.shortcuts import render
     from apps.services.models import Plano
     
