@@ -28,7 +28,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', "django-insecure-k6a%y-a)m#2g#ir)y$rob$c4u-$ctq*at#p9_#y^)ak_$*+h$-")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+# DEBUG = os.getenv('DEBUG', 'True') == 'True'
+DEBUG = True  # FORÇADO PARA DEBUG - REMOVER DEPOIS!
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else []
 
@@ -60,14 +61,14 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "gestao360_project.middleware.DebugExceptionMiddleware",  # Debug middleware - PRIMEIRO
-    "django.middleware.security.SecurityMiddleware",
+    # "django.middleware.security.SecurityMiddleware",  # DESABILITADO PARA DEBUG
     # "whitenoise.middleware.WhiteNoiseMiddleware",  # TEMPORARIAMENTE DESABILITADO
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware",  # DESABILITADO PARA DEBUG
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # "django.middleware.clickjacking.XFrameOptionsMiddleware",  # DESABILITADO PARA DEBUG
 ]
 
 ROOT_URLCONF = "gestao360_project.urls"
