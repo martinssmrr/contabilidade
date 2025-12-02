@@ -31,6 +31,17 @@ urlpatterns = [
     
     # API Endpoints - Documents
     path('api/documents/', views.api_documents_list, name='api_documents_list'),
+    
+    # API Endpoints - Chamados (Staff)
+    path('api/chamados/', views.api_chamados_list, name='api_chamados_list'),
+    path('api/chamados/<int:pk>/', views.api_chamado_detail, name='api_chamado_detail'),
+    path('api/chamados/<int:pk>/respond/', views.api_chamado_respond, name='api_chamado_respond'),
+    path('api/chamados/<int:pk>/update-status/', views.api_chamado_update_status, name='api_chamado_update_status'),
+    
+    # API Endpoints - Notas Fiscais (Staff)
+    path('api/clientes/', views.api_clientes_list, name='api_clientes_list'),
+    path('api/notas-fiscais/enviar/', views.api_nota_fiscal_enviar, name='api_nota_fiscal_enviar'),
+    
     # Área do Cliente
     path('cliente/dashboard/', views.dashboard_cliente, name='dashboard_cliente'),
     path('cliente/abrir-chamado/', views.abrir_chamado, name='abrir_chamado'),

@@ -29,9 +29,9 @@ def is_staff_user(user):
 @user_passes_test(is_staff_user)
 def staff_dashboard(request):
     """
-    Dashboard administrativa para gerenciamento de leads e outros recursos.
+    Dashboard administrativa para gerenciamento de leads, tickets e envio de notas fiscais.
     """
-    return render(request, 'staff/dashboard.html')
+    return render(request, 'staff/dashboard_new.html')
 
 # ==================== LEADS API ====================
 
@@ -462,3 +462,209 @@ def responder_chamado(request, pk):
 
     mensagens = chamado.mensagens.all().order_by('criado_em')
     return render(request, 'client/chamado_detail.html', {'chamado': chamado, 'mensagens': mensagens, 'form': form})
+
+
+# ==================== CHAMADOS API (STAFF) ====================
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_chamados_list(request):
+    """Lista todos os chamados para o dashboard staff"""
+    from django.utils import timezone
+    chamados = Chamado.objects.all().select_related('cliente__user').prefetch_related('mensagens').order_by('-data_criacao')
+    data = []
+    for chamado in chamados:
+        data.append({
+            'id': chamado.id,
+            'protocolo': f"#{chamado.id:05d}",
+            'titulo': chamado.titulo,
+            'cliente': chamado.cliente.user.get_full_name() or chamado.cliente.user.username,
+            'cliente_email': chamado.cliente.user.email,
+            'status': chamado.get_status_display(),
+            'status_value': chamado.status,
+            'prioridade': chamado.get_prioridade_display(),
+            'prioridade_value': chamado.prioridade,
+            'mensagens_count': chamado.mensagens.count(),
+            'data_criacao': chamado.data_criacao.strftime('%d/%m/%Y %H:%M'),
+            'data_atualizacao': chamado.data_atualizacao.strftime('%d/%m/%Y %H:%M')
+        })
+    return JsonResponse({'success': True, 'data': data})
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_chamado_detail(request, pk):
+    """Retorna detalhes de um chamado específico incluindo mensagens"""
+    chamado = get_object_or_404(Chamado, pk=pk)
+    mensagens = chamado.mensagens.all().order_by('criado_em')
+    
+    mensagens_data = []
+    for msg in mensagens:
+        mensagens_data.append({
+            'id': msg.id,
+            'autor': msg.autor.get_full_name() or msg.autor.username,
+            'autor_is_staff': msg.autor.is_staff,
+            'mensagem': msg.mensagem,
+            'anexo_url': msg.anexo.url if msg.anexo else None,
+            'criado_em': msg.criado_em.strftime('%d/%m/%Y %H:%M')
+        })
+    
+    data = {
+        'id': chamado.id,
+        'protocolo': f"#{chamado.id:05d}",
+        'titulo': chamado.titulo,
+        'descricao': chamado.descricao,
+        'cliente': chamado.cliente.user.get_full_name() or chamado.cliente.user.username,
+        'cliente_email': chamado.cliente.user.email,
+        'status': chamado.get_status_display(),
+        'status_value': chamado.status,
+        'prioridade': chamado.get_prioridade_display(),
+        'prioridade_value': chamado.prioridade,
+        'data_criacao': chamado.data_criacao.strftime('%d/%m/%Y %H:%M'),
+        'data_atualizacao': chamado.data_atualizacao.strftime('%d/%m/%Y %H:%M'),
+        'mensagens': mensagens_data
+    }
+    
+    return JsonResponse({'success': True, 'data': data})
+
+
+@login_required
+@user_passes_test(is_staff_user)
+@require_http_methods(["POST"])
+def api_chamado_respond(request, pk):
+    """Permite que o staff responda um chamado"""
+    from django.utils import timezone
+    chamado = get_object_or_404(Chamado, pk=pk)
+    
+    try:
+        data = json.loads(request.body)
+        mensagem_text = data.get('mensagem', '').strip()
+        
+        if not mensagem_text:
+            return JsonResponse({'success': False, 'error': 'Mensagem não pode estar vazia.'}, status=400)
+        
+        # Criar mensagem de resposta
+        msg = ChamadoMessage.objects.create(
+            chamado=chamado,
+            autor=request.user,
+            mensagem=mensagem_text
+        )
+        
+        # Atualizar timestamp do chamado
+        chamado.data_atualizacao = timezone.now()
+        chamado.save()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Resposta enviada com sucesso!',
+            'data': {
+                'id': msg.id,
+                'autor': msg.autor.get_full_name() or msg.autor.username,
+                'mensagem': msg.mensagem,
+                'criado_em': msg.criado_em.strftime('%d/%m/%Y %H:%M')
+            }
+        })
+        
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+@login_required
+@user_passes_test(is_staff_user)
+@require_http_methods(["POST"])
+def api_chamado_update_status(request, pk):
+    """Atualiza o status de um chamado"""
+    from django.utils import timezone
+    chamado = get_object_or_404(Chamado, pk=pk)
+    
+    try:
+        data = json.loads(request.body)
+        novo_status = data.get('status')
+        
+        if novo_status not in dict(Chamado.STATUS_CHOICES).keys():
+            return JsonResponse({'success': False, 'error': 'Status inválido.'}, status=400)
+        
+        chamado.status = novo_status
+        chamado.data_atualizacao = timezone.now()
+        chamado.save()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Status atualizado com sucesso!',
+            'status_display': chamado.get_status_display()
+        })
+        
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+# ==================== NOTAS FISCAIS API (STAFF) ====================
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_clientes_list(request):
+    """Lista todos os clientes para seleção no envio de NF"""
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    
+    clientes = User.objects.filter(is_staff=False, is_active=True).order_by('first_name', 'username')
+    data = []
+    for cliente in clientes:
+        data.append({
+            'id': cliente.id,
+            'nome': cliente.get_full_name() or cliente.username,
+            'email': cliente.email,
+            'username': cliente.username
+        })
+    return JsonResponse({'success': True, 'data': data})
+
+
+@login_required
+@user_passes_test(is_staff_user)
+@require_http_methods(["POST"])
+def api_nota_fiscal_enviar(request):
+    """Envia uma nota fiscal para um cliente"""
+    from apps.documents.models import NotaFiscal
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    
+    try:
+        cliente_id = request.POST.get('cliente_id')
+        arquivo = request.FILES.get('arquivo')
+        observacoes = request.POST.get('observacoes', '')
+        
+        if not cliente_id or not arquivo:
+            return JsonResponse({'success': False, 'error': 'Cliente e arquivo são obrigatórios.'}, status=400)
+        
+        cliente = get_object_or_404(User, pk=cliente_id, is_staff=False)
+        
+        # Validar tipo de arquivo
+        valid_extensions = ['.pdf', '.xml', '.zip']
+        file_ext = arquivo.name[arquivo.name.rfind('.'):].lower()
+        if file_ext not in valid_extensions:
+            return JsonResponse({'success': False, 'error': 'Tipo de arquivo inválido. Use PDF, XML ou ZIP.'}, status=400)
+        
+        # Criar nota fiscal
+        nota_fiscal = NotaFiscal.objects.create(
+            cliente=cliente,
+            enviado_por=request.user,
+            arquivo_pdf=arquivo,
+            observacoes=observacoes
+        )
+        
+        logger.info(f"Nota fiscal enviada para {cliente.get_full_name()} por {request.user.get_full_name()}")
+        
+        return JsonResponse({
+            'success': True,
+            'message': f'Nota fiscal enviada com sucesso para {cliente.get_full_name() or cliente.username}!',
+            'data': {
+                'id': nota_fiscal.id,
+                'cliente': cliente.get_full_name() or cliente.username,
+                'arquivo': nota_fiscal.nome_arquivo,
+                'data_envio': nota_fiscal.data_upload.strftime('%d/%m/%Y %H:%M')
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Erro ao enviar nota fiscal: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)

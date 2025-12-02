@@ -1,0 +1,1291 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Staff - Vetorial</title>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    :root {
+        --primary-color: #3B82F6;
+        --primary-hover: #2563EB;
+        --sidebar-bg: #1F2937;
+        --sidebar-text: #D1D5DB;
+        --content-bg: #F9FAFB;
+        --card-bg: #FFFFFF;
+        --text-primary: #111827;
+        --text-secondary: #6B7280;
+        --border-color: #E5E7EB;
+        --success-color: #10B981;
+        --danger-color: #EF4444;
+        --warning-color: #F59E0B;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: var(--content-bg);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* Layout Principal */
+    .staff-dashboard {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 280px;
+        background: var(--sidebar-bg);
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        overflow-y: auto;
+        z-index: 100;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-header {
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-logo {
+        height: 45px;
+        width: auto;
+        margin-bottom: 8px;
+    }
+
+    .sidebar-title {
+        color: white;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .sidebar-subtitle {
+        color: var(--sidebar-text);
+        font-size: 0.875rem;
+    }
+
+    .sidebar-menu {
+        padding: 16px 0;
+    }
+
+    .menu-section {
+        margin-bottom: 24px;
+    }
+
+    .menu-section-title {
+        color: var(--sidebar-text);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 8px 20px;
+        margin-bottom: 8px;
+    }
+
+    .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        color: var(--sidebar-text);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .menu-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+    }
+
+    .menu-item.active {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary-color);
+        border-right: 3px solid var(--primary-color);
+    }
+
+    .menu-item-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+
+    .menu-item-text {
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    .menu-item-badge {
+        margin-left: auto;
+        background: var(--danger-color);
+        color: white;
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    /* Área de Conteúdo */
+    .content-area {
+        margin-left: 280px;
+        flex: 1;
+        padding: 32px;
+        transition: all 0.3s ease;
+    }
+
+    .content-header {
+        margin-bottom: 32px;
+    }
+
+    .content-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 8px 0;
+    }
+
+    .content-subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+    }
+
+    /* Barra de Ações */
+    .actions-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 300px;
+        max-width: 500px;
+        position: relative;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 12px 16px 12px 44px;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        width: 18px;
+        height: 18px;
+    }
+
+    .btn-primary {
+        background: var(--primary-color);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Card de Dados */
+    .data-card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    /* Tabela */
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table thead {
+        background: #F9FAFB;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .data-table th {
+        padding: 16px 20px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .data-table tbody tr {
+        border-bottom: 1px solid var(--border-color);
+        transition: background 0.2s ease;
+    }
+
+    .data-table tbody tr:hover {
+        background: #F9FAFB;
+    }
+
+    .data-table td {
+        padding: 16px 20px;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+    }
+
+    /* Status Badges */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        gap: 6px;
+        white-space: nowrap;
+    }
+
+    .badge-success {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-color);
+    }
+
+    .badge-warning {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning-color);
+    }
+
+    .badge-danger {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger-color);
+    }
+
+    .badge-info {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary-color);
+    }
+
+    /* Botões de Ação */
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+    }
+
+    .btn-edit {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary-color);
+    }
+
+    .btn-edit:hover {
+        background: rgba(59, 130, 246, 0.2);
+    }
+
+    .btn-delete {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger-color);
+    }
+
+    .btn-delete:hover {
+        background: rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-whatsapp {
+        background: rgba(37, 211, 102, 0.1);
+        color: #25D366;
+    }
+
+    .btn-whatsapp:hover {
+        background: rgba(37, 211, 102, 0.2);
+    }
+
+    .btn-view {
+        background: rgba(99, 102, 241, 0.1);
+        color: #6366F1;
+    }
+
+    .btn-view:hover {
+        background: rgba(99, 102, 241, 0.2);
+    }
+
+    /* Modal */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 16px;
+        max-width: 700px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-header {
+        padding: 24px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        color: var(--text-secondary);
+        transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+        background: #F3F4F6;
+        color: var(--text-primary);
+    }
+
+    .modal-body {
+        padding: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        font-family: inherit;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .modal-footer {
+        padding: 24px;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+    .btn-secondary {
+        background: #F3F4F6;
+        color: var(--text-primary);
+        padding: 12px 24px;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+        background: #E5E7EB;
+    }
+
+    /* Chat de Chamados */
+    .chat-container {
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 16px;
+        background: #F9FAFB;
+        border-radius: 12px;
+        margin-bottom: 16px;
+    }
+
+    .chat-message {
+        margin-bottom: 16px;
+        display: flex;
+        gap: 12px;
+    }
+
+    .message-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.875rem;
+        flex-shrink: 0;
+    }
+
+    .message-avatar.staff {
+        background: var(--success-color);
+    }
+
+    .message-content {
+        flex: 1;
+    }
+
+    .message-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 4px;
+    }
+
+    .message-author {
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: var(--text-primary);
+    }
+
+    .message-time {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+    .message-text {
+        background: white;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: var(--text-primary);
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 64px 32px;
+    }
+
+    .empty-state-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 24px;
+        opacity: 0.3;
+    }
+
+    .empty-state-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+
+    .empty-state-text {
+        color: var(--text-secondary);
+        margin-bottom: 24px;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .content-area {
+            margin-left: 0;
+        }
+
+        .actions-bar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .search-box {
+            min-width: 100%;
+            max-width: 100%;
+        }
+
+        .data-table {
+            font-size: 0.875rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 16px;
+        }
+    }
+
+    /* Alert */
+    .alert {
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .alert-success {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-color);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .alert-error {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger-color);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+</style>
+</head>
+<body>
+<div class="staff-dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="{% static 'img/logo04.png' %}" alt="Vetorial Logo" class="sidebar-logo">
+            <h2 class="sidebar-title">Dashboard Staff</h2>
+            <p class="sidebar-subtitle">Gerenciamento Administrativo</p>
+        </div>
+
+        <nav class="sidebar-menu">
+            <div class="menu-section">
+                <div class="menu-section-title">Principal</div>
+                <a href="#" class="menu-item active" data-model="leads">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span class="menu-item-text">Leads</span>
+                    <span class="menu-item-badge" id="leads-count">0</span>
+                </a>
+                <a href="#" class="menu-item" data-model="chamados">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                    </svg>
+                    <span class="menu-item-text">Tickets de Suporte</span>
+                    <span class="menu-item-badge" id="chamados-count">0</span>
+                </a>
+                <a href="#" class="menu-item" data-model="testimonials">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                    </svg>
+                    <span class="menu-item-text">Depoimentos</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-section-title">Blog</div>
+                <a href="#" class="menu-item" data-model="posts">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                    </svg>
+                    <span class="menu-item-text">Posts</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-section-title">Serviços</div>
+                <a href="#" class="menu-item" data-model="planos">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="menu-item-text">Planos</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-section-title">Documentos</div>
+                <a href="#" class="menu-item" data-model="documents">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                    <span class="menu-item-text">Documentos</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Área de Conteúdo -->
+    <main class="content-area">
+        <div id="alertContainer"></div>
+
+        <div class="content-header">
+            <h1 class="content-title" id="content-title">Leads</h1>
+            <p class="content-subtitle" id="content-subtitle">Gerencie todos os leads capturados do site</p>
+        </div>
+
+        <div class="actions-bar">
+            <div class="search-box">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Buscar...">
+            </div>
+            <button class="btn-primary" id="btnAddNew">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                <span id="btnAddNewText">Adicionar Novo</span>
+            </button>
+        </div>
+
+        <div class="data-card" id="dataCard">
+            <table class="data-table" id="dataTable">
+                <thead id="tableHead">
+                    <!-- Headers serão carregados dinamicamente -->
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Dados serão carregados aqui via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<!-- Modal de Chamado Detalhes -->
+<div class="modal-overlay" id="chamadoModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="chamadoTitle"></h3>
+            <button class="modal-close" onclick="closeChamadoModal()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="chamadoInfo" style="margin-bottom: 24px;">
+                <!-- Informações do chamado -->
+            </div>
+            
+            <div class="chat-container" id="chatContainer">
+                <!-- Mensagens serão carregadas aqui -->
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="respondMessage">Responder ao Cliente</label>
+                <textarea class="form-control" id="respondMessage" rows="4" placeholder="Digite sua resposta..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeChamadoModal()">Fechar</button>
+            <button class="btn-primary" onclick="sendResponse()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                </svg>
+                Enviar Resposta
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Enviar Nota Fiscal -->
+<div class="modal-overlay" id="nfModal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Enviar Nota Fiscal</h3>
+            <button class="modal-close" onclick="closeNFModal()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <form id="nfForm" enctype="multipart/form-data">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="nfCliente">Cliente *</label>
+                    <select class="form-control" id="nfCliente" required>
+                        <option value="">Selecione um cliente...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="nfArquivo">Arquivo da Nota Fiscal * (PDF, XML ou ZIP)</label>
+                    <input type="file" class="form-control" id="nfArquivo" accept=".pdf,.xml,.zip" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="nfObservacoes">Observações (opcional)</label>
+                    <textarea class="form-control" id="nfObservacoes" rows="3" placeholder="Informações adicionais sobre a nota fiscal..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeNFModal()">Cancelar</button>
+                <button type="submit" class="btn-primary">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                    Enviar Nota Fiscal
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let currentModel = 'leads';
+    let currentData = [];
+    let currentChamadoId = null;
+    const API_BASE = '/support/api';
+
+    // Função para obter o CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    // Mostrar alert
+    function showAlert(message, type = 'success') {
+        const alertContainer = document.getElementById('alertContainer');
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.innerHTML = `
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${type === 'success' ? 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' : 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'}"/>
+            </svg>
+            <span>${message}</span>
+        `;
+        alertContainer.appendChild(alertDiv);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+
+    // Navegação do Menu
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            currentModel = this.dataset.model;
+            loadModelData(currentModel);
+        });
+    });
+
+    // Configurações dos modelos
+    const modelConfig = {
+        leads: {
+            title: 'Leads',
+            subtitle: 'Gerencie todos os leads capturados do site',
+            endpoint: `${API_BASE}/leads/`,
+            btnText: 'Adicionar Novo Lead',
+            headers: ['Nome', 'Email', 'Telefone', 'Cidade/Estado', 'Serviço', 'Origem', 'Status', 'Data', 'Ações']
+        },
+        chamados: {
+            title: 'Tickets de Suporte',
+            subtitle: 'Gerencie os tickets de suporte dos clientes',
+            endpoint: `${API_BASE}/chamados/`,
+            btnText: 'Enviar Nota Fiscal',
+            headers: ['Protocolo', 'Cliente', 'Assunto', 'Status', 'Prioridade', 'Mensagens', 'Data', 'Ações']
+        },
+        testimonials: {
+            title: 'Depoimentos',
+            subtitle: 'Gerencie os depoimentos dos clientes',
+            endpoint: `${API_BASE}/testimonials/`,
+            btnText: 'Adicionar Depoimento',
+            headers: ['Nome', 'Cargo', 'Conteúdo', 'Status', 'Ordem', 'Ações']
+        },
+        posts: {
+            title: 'Posts do Blog',
+            subtitle: 'Gerencie os artigos do blog',
+            endpoint: `${API_BASE}/posts/`,
+            btnText: 'Adicionar Post',
+            headers: ['Título', 'Categoria', 'Autor', 'Status', 'Destaque', 'Data', 'Ações']
+        },
+        planos: {
+            title: 'Planos',
+            subtitle: 'Gerencie os planos de serviço',
+            endpoint: `${API_BASE}/planos/`,
+            btnText: 'Adicionar Plano',
+            headers: ['Nome', 'Categoria', 'Preço', 'Preço Antigo', 'Status', 'Destaque', 'Ações']
+        },
+        documents: {
+            title: 'Documentos',
+            subtitle: 'Gerencie os documentos dos clientes',
+            endpoint: `${API_BASE}/documents/`,
+            btnText: 'Enviar Documento',
+            headers: ['Título', 'Cliente', 'Categoria', 'Visível', 'Data', 'Ações']
+        }
+    };
+
+    // Carregar dados do modelo
+    async function loadModelData(model) {
+        const config = modelConfig[model];
+        if (!config) return;
+
+        document.getElementById('content-title').textContent = config.title;
+        document.getElementById('content-subtitle').textContent = config.subtitle;
+        document.getElementById('btnAddNewText').textContent = config.btnText;
+
+        // Configurar botão de ação
+        const btnAddNew = document.getElementById('btnAddNew');
+        if (model === 'chamados') {
+            btnAddNew.onclick = openNFModal;
+        } else {
+            btnAddNew.onclick = () => alert('Funcionalidade em desenvolvimento');
+        }
+
+        // Renderizar headers
+        const thead = document.getElementById('tableHead');
+        thead.innerHTML = `<tr>${config.headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+
+        try {
+            const response = await fetch(config.endpoint);
+            const result = await response.json();
+            if (result.success) {
+                currentData = result.data;
+                renderTable();
+                updateCounts();
+            }
+        } catch (error) {
+            console.error('Erro ao carregar dados:', error);
+            currentData = [];
+            renderTable();
+        }
+    }
+
+    // Renderizar tabela
+    function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        const config = modelConfig[currentModel];
+        
+        if (currentData.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="${config.headers.length}">
+                        <div class="empty-state">
+                            <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                            </svg>
+                            <h3 class="empty-state-title">Nenhum registro encontrado</h3>
+                            <p class="empty-state-text">Clique em "${config.btnText}" para criar o primeiro registro</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        // Renderizar baseado no modelo atual
+        if (currentModel === 'leads') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td>${item.nome_completo}</td>
+                    <td>${item.email}</td>
+                    <td>${item.telefone}</td>
+                    <td>${item.cidade}/${item.estado}</td>
+                    <td>${item.servico_interesse}</td>
+                    <td><span class="badge badge-info">${item.origem}</span></td>
+                    <td>
+                        ${item.contatado 
+                            ? '<span class="badge badge-success">Contatado</span>' 
+                            : '<span class="badge badge-warning">Pendente</span>'
+                        }
+                    </td>
+                    <td>${new Date(item.criado_em).toLocaleDateString('pt-BR')}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-whatsapp" onclick="sendWhatsApp('${item.nome_completo}', '${item.telefone}', '${item.servico_interesse}')" title="Abrir WhatsApp Web">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        } else if (currentModel === 'chamados') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td><strong>${item.protocolo}</strong></td>
+                    <td>
+                        <div><strong>${item.cliente}</strong></div>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary);">${item.cliente_email}</div>
+                    </td>
+                    <td>${item.titulo}</td>
+                    <td><span class="badge badge-info">${item.status}</span></td>
+                    <td><span class="badge badge-warning">${item.prioridade}</span></td>
+                    <td><span class="badge badge-success">${item.mensagens_count}</span></td>
+                    <td>${item.data_criacao}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-view" onclick="viewChamado(${item.id})">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                Ver Detalhes
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        } else if (currentModel === 'posts') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td>${item.title}</td>
+                    <td>${item.category}</td>
+                    <td>${item.author}</td>
+                    <td><span class="badge badge-info">${item.status}</span></td>
+                    <td>${item.is_featured ? '<span class="badge badge-success">Sim</span>' : 'Não'}</td>
+                    <td>${new Date(item.created_at).toLocaleDateString('pt-BR')}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-edit">Editar</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        } else if (currentModel === 'testimonials') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.position}</td>
+                    <td>${item.content}</td>
+                    <td>${item.is_active ? '<span class="badge badge-success">Ativo</span>' : '<span class="badge badge-danger">Inativo</span>'}</td>
+                    <td>${item.order}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-edit">Editar</button>
+                            <button class="btn-action btn-delete">Excluir</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        } else if (currentModel === 'planos') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td>${item.nome}</td>
+                    <td>${item.categoria}</td>
+                    <td>R$ ${item.preco}</td>
+                    <td>${item.preco_antigo ? 'R$ ' + item.preco_antigo : 'N/A'}</td>
+                    <td>${item.ativo ? '<span class="badge badge-success">Ativo</span>' : '<span class="badge badge-danger">Inativo</span>'}</td>
+                    <td>${item.destaque ? '<span class="badge badge-warning">Sim</span>' : 'Não'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-edit">Editar</button>
+                            <button class="btn-action btn-delete">Excluir</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        } else if (currentModel === 'documents') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td>${item.titulo}</td>
+                    <td>${item.usuario}</td>
+                    <td><span class="badge badge-info">${item.categoria}</span></td>
+                    <td>${item.visivel_para_cliente ? '<span class="badge badge-success">Sim</span>' : 'Não'}</td>
+                    <td>${new Date(item.criado_em).toLocaleDateString('pt-BR')}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-view">Ver</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+    }
+
+    // Atualizar contadores
+    function updateCounts() {
+        if (currentModel === 'leads') {
+            const pendingLeads = currentData.filter(l => !l.contatado).length;
+            document.getElementById('leads-count').textContent = pendingLeads;
+        } else if (currentModel === 'chamados') {
+            document.getElementById('chamados-count').textContent = currentData.length;
+        }
+    }
+
+    // Enviar mensagem via WhatsApp
+    function sendWhatsApp(leadName, leadPhone, servicoInteresse) {
+        const phone = leadPhone.replace(/\D/g, '');
+        const message = `Olá ${leadName}! 👋\n\nSomos da Vetorial Contabilidade e vimos que você demonstrou interesse em nossos serviços de ${servicoInteresse}.\n\nEstamos à disposição para esclarecer qualquer dúvida e apresentar nossas soluções personalizadas para o seu negócio.\n\nPodemos agendar uma conversa?`;
+        const whatsappUrl = `https://wa.me/55${phone}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    }
+
+    // Ver detalhes do chamado
+    async function viewChamado(id) {
+        currentChamadoId = id;
+        try {
+            const response = await fetch(`${API_BASE}/chamados/${id}/`);
+            const result = await response.json();
+            
+            if (result.success) {
+                const chamado = result.data;
+                
+                // Preencher título e informações
+                document.getElementById('chamadoTitle').textContent = `${chamado.protocolo} - ${chamado.titulo}`;
+                document.getElementById('chamadoInfo').innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 16px; background: #F9FAFB; border-radius: 12px;">
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 4px;">Cliente</div>
+                            <div style="font-weight: 600;">${chamado.cliente}</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">${chamado.cliente_email}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 4px;">Status</div>
+                            <span class="badge badge-info">${chamado.status}</span>
+                            <span class="badge badge-warning">${chamado.prioridade}</span>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 4px;">Data de Abertura</div>
+                            <div>${chamado.data_criacao}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 4px;">Última Atualização</div>
+                            <div>${chamado.data_atualizacao}</div>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 4px;">Descrição</div>
+                            <div style="line-height: 1.5;">${chamado.descricao}</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Renderizar mensagens
+                const chatContainer = document.getElementById('chatContainer');
+                chatContainer.innerHTML = chamado.mensagens.map(msg => `
+                    <div class="chat-message">
+                        <div class="message-avatar ${msg.autor_is_staff ? 'staff' : ''}">
+                            ${msg.autor.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="message-author">${msg.autor}</span>
+                                ${msg.autor_is_staff ? '<span class="badge badge-success" style="font-size: 0.7rem;">Staff</span>' : ''}
+                                <span class="message-time">${msg.criado_em}</span>
+                            </div>
+                            <div class="message-text">${msg.mensagem}</div>
+                            ${msg.anexo_url ? `<a href="${msg.anexo_url}" target="_blank" style="font-size: 0.875rem; color: var(--primary-color);">📎 Anexo</a>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Scroll para o fim
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                // Abrir modal
+                document.getElementById('chamadoModal').classList.add('active');
+            }
+        } catch (error) {
+            console.error('Erro ao carregar chamado:', error);
+            showAlert('Erro ao carregar detalhes do chamado', 'error');
+        }
+    }
+
+    // Enviar resposta
+    async function sendResponse() {
+        const message = document.getElementById('respondMessage').value.trim();
+        
+        if (!message) {
+            showAlert('Digite uma mensagem antes de enviar', 'error');
+            return;
+        }
+        
+        if (!currentChamadoId) return;
+        
+        try {
+            const response = await fetch(`${API_BASE}/chamados/${currentChamadoId}/respond/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({ mensagem: message })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showAlert('Resposta enviada com sucesso!');
+                document.getElementById('respondMessage').value = '';
+                
+                // Recarregar mensagens
+                viewChamado(currentChamadoId);
+            } else {
+                showAlert(result.error || 'Erro ao enviar resposta', 'error');
+            }
+        } catch (error) {
+            console.error('Erro ao enviar resposta:', error);
+            showAlert('Erro ao enviar resposta', 'error');
+        }
+    }
+
+    // Fechar modal de chamado
+    function closeChamadoModal() {
+        document.getElementById('chamadoModal').classList.remove('active');
+        currentChamadoId = null;
+        document.getElementById('respondMessage').value = '';
+    }
+
+    // Abrir modal de NF
+    async function openNFModal() {
+        // Carregar lista de clientes
+        try {
+            const response = await fetch(`${API_BASE}/clientes/`);
+            const result = await response.json();
+            
+            if (result.success) {
+                const select = document.getElementById('nfCliente');
+                select.innerHTML = '<option value="">Selecione um cliente...</option>' + 
+                    result.data.map(c => `<option value="${c.id}">${c.nome} (${c.email})</option>`).join('');
+                
+                document.getElementById('nfModal').classList.add('active');
+            }
+        } catch (error) {
+            console.error('Erro ao carregar clientes:', error);
+            showAlert('Erro ao carregar lista de clientes', 'error');
+        }
+    }
+
+    // Fechar modal de NF
+    function closeNFModal() {
+        document.getElementById('nfModal').classList.remove('active');
+        document.getElementById('nfForm').reset();
+    }
+
+    // Enviar nota fiscal
+    document.getElementById('nfForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData();
+        formData.append('cliente_id', document.getElementById('nfCliente').value);
+        formData.append('arquivo', document.getElementById('nfArquivo').files[0]);
+        formData.append('observacoes', document.getElementById('nfObservacoes').value);
+        
+        try {
+            const response = await fetch(`${API_BASE}/notas-fiscais/enviar/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showAlert(result.message);
+                closeNFModal();
+            } else {
+                showAlert(result.error || 'Erro ao enviar nota fiscal', 'error');
+            }
+        } catch (error) {
+            console.error('Erro ao enviar NF:', error);
+            showAlert('Erro ao enviar nota fiscal', 'error');
+        }
+    });
+
+    // Carregar dados iniciais
+    loadModelData('leads');
+</script>
+</body>
+</html>
