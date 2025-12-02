@@ -56,7 +56,7 @@ services:
       dockerfile: Dockerfile.prod
     container_name: vetorial_web
     restart: always
-    command: gunicorn gestao360_project.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120 --forwarded-allow-ips="*" --capture-output --error-logfile - --access-logfile -
+    command: gunicorn gestao360_project.wsgi:application --bind 0.0.0.0:8080 --workers 3 --timeout 120 --forwarded-allow-ips="*" --capture-output --error-logfile - --access-logfile -
     volumes:
       - .:/app
       - static_volume:/app/staticfiles
@@ -64,7 +64,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8000:8000"
+      - "8080:8080"
     depends_on:
       db:
         condition: service_healthy
