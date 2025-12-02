@@ -61,7 +61,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "gestao360_project.middleware.DebugExceptionMiddleware",  # Debug middleware - PRIMEIRO
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    # "whitenoise.middleware.WhiteNoiseMiddleware",  # TEMPORARIAMENTE DESABILITADO
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -249,9 +249,10 @@ CACHES = {
     }
 }
 
-# Cache de sessões no Redis
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = 'default'
+# Cache de sessões no Redis (TEMPORARIAMENTE DESABILITADO PARA DEBUG)
+# SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+# SESSION_CACHE_ALIAS = 'default'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # Configurações do Mercado Pago
 MERCADO_PAGO_PUBLIC_KEY = os.getenv('MP_PUBLIC_KEY', '')
