@@ -59,7 +59,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
+    # "django.middleware.security.SecurityMiddleware",  # Temporariamente desabilitado - causa redirect HTTPS
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
