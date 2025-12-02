@@ -668,3 +668,138 @@ def api_nota_fiscal_enviar(request):
     except Exception as e:
         logger.error(f"Erro ao enviar nota fiscal: {str(e)}")
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_notas_fiscais_list(request):
+    """Lista todas as notas fiscais enviadas"""
+    from apps.documents.models import NotaFiscal
+    
+    notas = NotaFiscal.objects.all().select_related('cliente', 'enviado_por').order_by('-data_upload')
+    data = []
+    for nota in notas:
+        data.append({
+            'id': nota.id,
+            'cliente': nota.cliente.get_full_name() or nota.cliente.username,
+            'cliente_email': nota.cliente.email,
+            'arquivo': nota.nome_arquivo,
+            'observacoes': nota.observacoes or '',
+            'enviado_por': nota.enviado_por.get_full_name() if nota.enviado_por else 'Sistema',
+            'data_upload': nota.data_upload.strftime('%d/%m/%Y %H:%M')
+        })
+    return JsonResponse({'success': True, 'data': data})
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_contabilidade_clientes(request):
+    """Lista clientes que possuem movimentações financeiras"""
+    from apps.users.models import MovimentacaoFinanceira
+    from django.contrib.auth import get_user_model
+    from django.db.models import Count
+    
+    User = get_user_model()
+    
+    # Buscar clientes com movimentações
+    clientes_com_mov = User.objects.filter(
+        movimentacoes__isnull=False
+    ).annotate(
+        total_movimentacoes=Count('movimentacoes')
+    ).distinct().order_by('first_name', 'last_name')
+    
+    data = []
+    for cliente in clientes_com_mov:
+        data.append({
+            'id': cliente.id,
+            'nome': cliente.get_full_name() or cliente.username,
+            'email': cliente.email,
+            'cpf_cnpj': cliente.cpf_cnpj or 'Não informado',
+            'total_movimentacoes': cliente.total_movimentacoes
+        })
+    
+    return JsonResponse({'success': True, 'data': data})
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_contabilidade_movimentacoes(request, cliente_id):
+    """Lista movimentações financeiras de um cliente específico, agrupadas por mês"""
+    from apps.users.models import MovimentacaoFinanceira
+    from django.contrib.auth import get_user_model
+    from collections import defaultdict
+    from datetime import datetime
+    
+    User = get_user_model()
+    
+    cliente = get_object_or_404(User, pk=cliente_id)
+    
+    # Buscar todas as movimentações do cliente
+    movimentacoes = MovimentacaoFinanceira.objects.filter(
+        user=cliente
+    ).order_by('-competencia', '-created_at')
+    
+    # Agrupar por mês/ano
+    movimentacoes_por_mes = defaultdict(list)
+    
+    for mov in movimentacoes:
+        mes_ano = mov.competencia.strftime('%Y-%m')
+        mes_ano_formatado = mov.competencia.strftime('%B de %Y')
+        
+        # Traduzir mês para português
+        meses_pt = {
+            'January': 'Janeiro', 'February': 'Fevereiro', 'March': 'Março',
+            'April': 'Abril', 'May': 'Maio', 'June': 'Junho',
+            'July': 'Julho', 'August': 'Agosto', 'September': 'Setembro',
+            'October': 'Outubro', 'November': 'Novembro', 'December': 'Dezembro'
+        }
+        
+        for eng, pt in meses_pt.items():
+            mes_ano_formatado = mes_ano_formatado.replace(eng, pt)
+        
+        movimentacoes_por_mes[mes_ano].append({
+            'id': mov.id,
+            'tipo': mov.get_tipo_display(),
+            'tipo_raw': mov.tipo,
+            'nome': mov.nome,
+            'valor': float(mov.valor),
+            'valor_formatado': f'R$ {mov.valor:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.'),
+            'status': mov.get_status_display(),
+            'status_raw': mov.status,
+            'anexo_url': mov.anexo.url if mov.anexo else None,
+            'data_criacao': mov.created_at.strftime('%d/%m/%Y %H:%M'),
+            'mes_ano_formatado': mes_ano_formatado
+        })
+    
+    # Converter para lista ordenada
+    data = []
+    for mes_ano in sorted(movimentacoes_por_mes.keys(), reverse=True):
+        movs = movimentacoes_por_mes[mes_ano]
+        
+        # Calcular totais
+        total_receitas = sum(m['valor'] for m in movs if m['tipo_raw'] == 'receita')
+        total_despesas = sum(m['valor'] for m in movs if m['tipo_raw'] == 'despesa')
+        saldo = total_receitas - total_despesas
+        
+        data.append({
+            'mes_ano': mes_ano,
+            'mes_ano_formatado': movs[0]['mes_ano_formatado'],
+            'movimentacoes': movs,
+            'total_receitas': total_receitas,
+            'total_despesas': total_despesas,
+            'saldo': saldo,
+            'total_receitas_formatado': f'R$ {total_receitas:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.'),
+            'total_despesas_formatado': f'R$ {total_despesas:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.'),
+            'saldo_formatado': f'R$ {saldo:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
+        })
+    
+    return JsonResponse({
+        'success': True,
+        'cliente': {
+            'id': cliente.id,
+            'nome': cliente.get_full_name() or cliente.username,
+            'email': cliente.email,
+            'cpf_cnpj': cliente.cpf_cnpj or 'Não informado'
+        },
+        'data': data
+    })

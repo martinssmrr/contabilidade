@@ -40,7 +40,12 @@ urlpatterns = [
     
     # API Endpoints - Notas Fiscais (Staff)
     path('api/clientes/', views.api_clientes_list, name='api_clientes_list'),
+    path('api/notas-fiscais/', views.api_notas_fiscais_list, name='api_notas_fiscais_list'),
     path('api/notas-fiscais/enviar/', views.api_nota_fiscal_enviar, name='api_nota_fiscal_enviar'),
+    
+    # API Endpoints - Contabilidade (Staff)
+    path('api/contabilidade/clientes/', views.api_contabilidade_clientes, name='api_contabilidade_clientes'),
+    path('api/contabilidade/clientes/<int:cliente_id>/movimentacoes/', views.api_contabilidade_movimentacoes, name='api_contabilidade_movimentacoes'),
     
     # Área do Cliente
     path('cliente/dashboard/', views.dashboard_cliente, name='dashboard_cliente'),

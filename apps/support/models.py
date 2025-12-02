@@ -173,7 +173,17 @@ class Chamado(models.Model):
     tipo_solicitacao = models.CharField(max_length=30, choices=TIPO_CHOICES)
     descricao = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='aberto')
+    
+    PRIORIDADE_CHOICES = [
+        ('baixa', 'Baixa'),
+        ('media', 'Média'),
+        ('alta', 'Alta'),
+        ('urgente', 'Urgente'),
+    ]
+    
+    prioridade = models.CharField(max_length=20, choices=PRIORIDADE_CHOICES, default='media')
     data_criacao = models.DateTimeField(auto_now_add=True)
+    data_atualizacao = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = 'Chamado'
