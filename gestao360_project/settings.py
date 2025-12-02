@@ -257,9 +257,10 @@ MERCADO_PAGO_PUBLIC_KEY = os.getenv('MP_PUBLIC_KEY', '')
 MERCADO_PAGO_ACCESS_TOKEN = os.getenv('MP_ACCESS_TOKEN', '')
 
 # Configurações de segurança (produção)
+# Nota: Nginx já cuida do SSL/HTTPS, não precisamos de redirect no Django
 if not DEBUG:
-    SECURE_SSL_REDIRECT = False  # Nginx já faz o redirect para HTTPS
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    # Não usar SECURE_SSL_REDIRECT - Nginx já faz o redirect
+    # Não usar SECURE_PROXY_SSL_HEADER - causa problemas com Gunicorn
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
