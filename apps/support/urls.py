@@ -47,6 +47,18 @@ urlpatterns = [
     path('api/contabilidade/clientes/', views.api_contabilidade_clientes, name='api_contabilidade_clientes'),
     path('api/contabilidade/clientes/<int:cliente_id>/movimentacoes/', views.api_contabilidade_movimentacoes, name='api_contabilidade_movimentacoes'),
     
+    # API Endpoints - Certidões Negativas (Staff)
+    path('api/certidoes/', views.api_certidoes_list, name='api_certidoes_list'),
+    path('api/certidoes/enviar/', views.api_certidao_enviar, name='api_certidao_enviar'),
+    
+    # API Endpoints - Documentos da Empresa (Staff)
+    path('api/documentos-empresa/', views.api_documentos_empresa_list, name='api_documentos_empresa_list'),
+    path('api/documentos-empresa/enviar/', views.api_documento_empresa_enviar, name='api_documento_empresa_enviar'),
+    
+    # API Endpoints - Extratos Bancários (Staff)
+    path('api/extratos-bancarios/clientes/', views.api_clientes_com_extratos, name='api_clientes_com_extratos'),
+    path('api/extratos-bancarios/clientes/<int:cliente_id>/', views.api_extratos_bancarios_cliente, name='api_extratos_bancarios_cliente'),
+    
     # Área do Cliente
     path('cliente/dashboard/', views.dashboard_cliente, name='dashboard_cliente'),
     path('cliente/abrir-chamado/', views.abrir_chamado, name='abrir_chamado'),

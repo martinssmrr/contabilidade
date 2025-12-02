@@ -671,6 +671,24 @@
                     </svg>
                     <span class="menu-item-text">Contabilidade</span>
                 </a>
+                <a href="#" class="menu-item" data-model="certidoes">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    <span class="menu-item-text">Certidões Negativas</span>
+                </a>
+                <a href="#" class="menu-item" data-model="documentos-empresa">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
+                    </svg>
+                    <span class="menu-item-text">Documentos da Empresa</span>
+                </a>
+                <a href="#" class="menu-item" data-model="extratos-bancarios">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                    <span class="menu-item-text">Extratos Bancários</span>
+                </a>
                 <a href="#" class="menu-item" data-model="testimonials">
                     <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
@@ -828,6 +846,129 @@
     </div>
 </div>
 
+<!-- Modal de Documento da Empresa -->
+<div class="modal-overlay" id="documentoEmpresaModal">
+    <div class="modal-content" style="max-width: 550px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Enviar Documento da Empresa</h3>
+            <button class="modal-close" onclick="closeDocumentoEmpresaModal()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <form id="documentoEmpresaForm" enctype="multipart/form-data">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="docEmpresaCliente">Cliente *</label>
+                    <select class="form-control" id="docEmpresaCliente" required>
+                        <option value="">Selecione um cliente...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="docEmpresaTitulo">Título do Documento *</label>
+                    <input type="text" class="form-control" id="docEmpresaTitulo" placeholder="Ex: Contrato Social da Empresa" required>
+                    <small style="color: var(--text-secondary); font-size: 0.875rem;">Nome descritivo do documento</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="docEmpresaCategoria">Categoria *</label>
+                    <select class="form-control" id="docEmpresaCategoria" required>
+                        <option value="">Selecione a categoria...</option>
+                        <option value="contrato_social">📋 Contrato Social</option>
+                        <option value="alvara">🏢 Alvará</option>
+                        <option value="certidao">📜 Certidão</option>
+                        <option value="procuracao">✍️ Procuração</option>
+                        <option value="registro">📝 Registro</option>
+                        <option value="declaracao">📄 Declaração</option>
+                        <option value="relatorio">📊 Relatório</option>
+                        <option value="outros">📁 Outros</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="docEmpresaArquivo">Arquivo *</label>
+                    <input type="file" class="form-control" id="docEmpresaArquivo" required>
+                    <small style="color: var(--text-secondary); font-size: 0.875rem;">Aceita PDF, DOC, DOCX, XLS, XLSX, ZIP</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="docEmpresaDescricao">Descrição (opcional)</label>
+                    <textarea class="form-control" id="docEmpresaDescricao" rows="2" placeholder="Informações adicionais sobre o documento..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeDocumentoEmpresaModal()">Cancelar</button>
+                <button type="submit" class="btn-primary">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                    Enviar Documento
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal de Certidão Negativa -->
+<div class="modal-overlay" id="certidaoModal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Enviar Certidão Negativa</h3>
+            <button class="modal-close" onclick="closeCertidaoModal()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <form id="certidaoForm" enctype="multipart/form-data">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="certidaoCliente">Cliente *</label>
+                    <select class="form-control" id="certidaoCliente" required>
+                        <option value="">Selecione um cliente...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="certidaoTipo">Tipo de Certidão *</label>
+                    <select class="form-control" id="certidaoTipo" required>
+                        <option value="">Selecione o tipo...</option>
+                        <option value="federal">🏛️ Certidão Federal</option>
+                        <option value="estadual">🏢 Certidão Estadual</option>
+                        <option value="trabalhista">👷 Certidão Trabalhista</option>
+                        <option value="fgts">💼 Certidão FGTS</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="certidaoStatus">Status da Certidão *</label>
+                    <select class="form-control" id="certidaoStatus" required>
+                        <option value="negativa">✅ Negativa (Sem débitos)</option>
+                        <option value="positiva">⚠️ Positiva (Com débitos)</option>
+                        <option value="indisponivel">❌ Indisponível</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="certidaoArquivo">Arquivo da Certidão * (PDF ou ZIP)</label>
+                    <input type="file" class="form-control" id="certidaoArquivo" accept=".pdf,.zip" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeCertidaoModal()">Cancelar</button>
+                <button type="submit" class="btn-primary">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    Enviar Certidão
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     let currentModel = 'leads';
     let currentData = [];
@@ -910,6 +1051,27 @@
             btnText: null,
             headers: []
         },
+        certidoes: {
+            title: 'Certidões Negativas',
+            subtitle: 'Envie certidões negativas para os clientes',
+            endpoint: null,
+            btnText: 'Enviar Nova Certidão',
+            headers: []
+        },
+        'documentos-empresa': {
+            title: 'Documentos da Empresa',
+            subtitle: 'Envie documentos da empresa para os clientes',
+            endpoint: null,
+            btnText: 'Enviar Novo Documento',
+            headers: []
+        },
+        'extratos-bancarios': {
+            title: 'Extratos Bancários',
+            subtitle: 'Visualize os extratos bancários enviados pelos clientes',
+            endpoint: null,
+            btnText: null,
+            headers: []
+        },
         testimonials: {
             title: 'Depoimentos',
             subtitle: 'Gerencie os depoimentos dos clientes',
@@ -957,6 +1119,10 @@
             
             if (model === 'notas-fiscais') {
                 btnAddNew.onclick = openNFModal;
+            } else if (model === 'certidoes') {
+                btnAddNew.onclick = openCertidaoModal;
+            } else if (model === 'documentos-empresa') {
+                btnAddNew.onclick = openDocumentoEmpresaModal;
             } else {
                 btnAddNew.onclick = () => alert('Funcionalidade em desenvolvimento');
             }
@@ -973,6 +1139,24 @@
         // Para contabilidade, mostrar interface customizada
         if (model === 'contabilidade') {
             renderContabilidadeInterface();
+            return;
+        }
+        
+        // Para certidões, mostrar interface customizada
+        if (model === 'certidoes') {
+            renderCertidoesInterface();
+            return;
+        }
+        
+        // Para documentos da empresa, mostrar interface customizada
+        if (model === 'documentos-empresa') {
+            renderDocumentosEmpresaInterface();
+            return;
+        }
+        
+        // Para extratos bancários, mostrar interface customizada
+        if (model === 'extratos-bancarios') {
+            renderExtratosBancariosInterface();
             return;
         }
 
@@ -1347,6 +1531,376 @@
         }
     }
 
+    // Renderizar interface de Extratos Bancários
+    function renderExtratosBancariosInterface() {
+        const dataCard = document.getElementById('dataCard');
+        
+        // Buscar clientes com extratos
+        fetch('/support/api/extratos-bancarios/clientes/')
+            .then(response => response.json())
+            .then(result => {
+                const clientes = result.data || [];
+                
+                dataCard.innerHTML = `
+                    <div style="padding: 32px;">
+                        <!-- Card de Seleção de Cliente -->
+                        <div style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); border-radius: 16px; padding: 32px; margin-bottom: 32px; color: white;">
+                            <div style="display: flex; align-items: center; gap: 24px;">
+                                <svg width="80" height="80" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0; opacity: 0.9;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                </svg>
+                                <div style="flex: 1;">
+                                    <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px;">Extratos Bancários dos Clientes</h3>
+                                    <p style="opacity: 0.95; line-height: 1.6; margin-bottom: 24px;">Selecione um cliente abaixo para visualizar todos os extratos bancários que ele enviou.</p>
+                                    
+                                    <select id="clienteExtrato" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: none; font-size: 1rem; color: #1F2937;">
+                                        <option value="">Selecione um cliente...</option>
+                                        ${clientes.map(c => `<option value="${c.id}">${c.nome} - ${c.email} (${c.total_extratos} extrato${c.total_extratos !== 1 ? 's' : ''})</option>`).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Área de Extratos -->
+                        <div id="extratosArea"></div>
+                    </div>
+                `;
+                
+                // Adicionar evento de mudança no select
+                document.getElementById('clienteExtrato').addEventListener('change', function() {
+                    const clienteId = this.value;
+                    if (clienteId) {
+                        carregarExtratos(clienteId);
+                    } else {
+                        document.getElementById('extratosArea').innerHTML = '';
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao carregar clientes:', error);
+                dataCard.innerHTML = `
+                    <div style="padding: 48px; text-align: center;">
+                        <p style="color: var(--danger-color);">Erro ao carregar lista de clientes</p>
+                    </div>
+                `;
+            });
+    }
+
+    // Carregar extratos de um cliente
+    function carregarExtratos(clienteId) {
+        const extratosArea = document.getElementById('extratosArea');
+        extratosArea.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="spinner"></div><p style="margin-top: 16px; color: var(--text-secondary);">Carregando extratos...</p></div>';
+        
+        fetch(`/support/api/extratos-bancarios/clientes/${clienteId}/`)
+            .then(response => response.json())
+            .then(result => {
+                if (!result.success) {
+                    extratosArea.innerHTML = '<p style="color: var(--danger-color); text-align: center;">Erro ao carregar extratos</p>';
+                    return;
+                }
+                
+                const cliente = result.cliente;
+                const extratos = result.data;
+                
+                if (extratos.length === 0) {
+                    extratosArea.innerHTML = `
+                        <div style="text-align: center; padding: 48px; background: white; border-radius: 12px;">
+                            <svg width="80" height="80" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin: 0 auto 16px; opacity: 0.2;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                            </svg>
+                            <p style="color: var(--text-secondary); font-size: 1.125rem;">Nenhum extrato bancário enviado por este cliente</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Renderizar extratos
+                extratosArea.innerHTML = `
+                    <!-- Informações do Cliente -->
+                    <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary);">
+                            👤 ${cliente.nome}
+                        </h3>
+                        <div style="display: flex; gap: 32px; color: var(--text-secondary);">
+                            <div><strong>Email:</strong> ${cliente.email}</div>
+                            <div><strong>Total de Extratos:</strong> ${extratos.length}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Lista de Extratos -->
+                    <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
+                            💳 Extratos Bancários Enviados
+                        </h4>
+                        
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid var(--border-color);">
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Data Upload</th>
+                                        <th style="padding: 12px; text-align: center; font-weight: 600; color: var(--text-secondary);">Mês/Ano</th>
+                                        <th style="padding: 12px; text-align: center; font-weight: 600; color: var(--text-secondary);">Período</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Arquivo</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Observações</th>
+                                        <th style="padding: 12px; text-align: center; font-weight: 600; color: var(--text-secondary);">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${extratos.map(extrato => `
+                                        <tr style="border-bottom: 1px solid var(--border-color);">
+                                            <td style="padding: 12px; color: var(--text-primary);">
+                                                <strong>${extrato.data_upload}</strong>
+                                            </td>
+                                            <td style="padding: 12px; text-align: center;">
+                                                <span class="badge badge-info" style="font-size: 0.875rem;">${extrato.mes_ano}</span>
+                                            </td>
+                                            <td style="padding: 12px; text-align: center; font-size: 0.875rem; color: var(--text-secondary);">
+                                                ${extrato.start_date && extrato.end_date 
+                                                    ? `${extrato.start_date} a ${extrato.end_date}` 
+                                                    : '-'
+                                                }
+                                            </td>
+                                            <td style="padding: 12px;">
+                                                <div style="display: flex; align-items: center; gap: 8px;">
+                                                    <span class="badge badge-secondary" style="font-size: 0.75rem;">${extrato.extensao}</span>
+                                                    <span style="font-size: 0.875rem; color: var(--text-primary);">${extrato.nome_arquivo}</span>
+                                                </div>
+                                                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">${extrato.tamanho}</div>
+                                            </td>
+                                            <td style="padding: 12px; font-size: 0.875rem; color: var(--text-secondary); max-width: 200px;">
+                                                ${extrato.observacoes || '<em style="color: var(--text-secondary);">Sem observações</em>'}
+                                            </td>
+                                            <td style="padding: 12px; text-align: center;">
+                                                ${extrato.arquivo_url ? `
+                                                    <a href="${extrato.arquivo_url}" target="_blank" 
+                                                       style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--primary-color); color: white; text-decoration: none; border-radius: 6px; font-size: 0.875rem;">
+                                                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                                        </svg>
+                                                        Visualizar
+                                                    </a>
+                                                    <a href="${extrato.arquivo_url}" download 
+                                                       style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--success-color); color: white; text-decoration: none; border-radius: 6px; font-size: 0.875rem; margin-left: 8px;">
+                                                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                        </svg>
+                                                        Baixar
+                                                    </a>
+                                                ` : '<span style="color: var(--text-secondary);">-</span>'}
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            })
+            .catch(error => {
+                console.error('Erro ao carregar extratos:', error);
+                extratosArea.innerHTML = '<p style="color: var(--danger-color); text-align: center;">Erro ao carregar extratos</p>';
+            });
+    }
+
+    // Renderizar interface de Documentos da Empresa
+    function renderDocumentosEmpresaInterface() {
+        const dataCard = document.getElementById('dataCard');
+        
+        // Buscar histórico de documentos
+        fetch('/support/api/documentos-empresa/')
+            .then(response => response.json())
+            .then(result => {
+                const documentos = result.data || [];
+                
+                dataCard.innerHTML = `
+                    <div style="padding: 32px;">
+                        <!-- Card de Instrução -->
+                        <div style="background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%); border-radius: 16px; padding: 32px; margin-bottom: 32px; color: white;">
+                            <div style="display: flex; align-items: center; gap: 24px;">
+                                <svg width="80" height="80" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0; opacity: 0.9;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
+                                </svg>
+                                <div>
+                                    <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px;">Gerenciar Documentos da Empresa</h3>
+                                    <p style="opacity: 0.95; line-height: 1.6;">Envie documentos importantes como Contratos, Alvarás, Certidões e outros para os clientes. Eles visualizam em "Minha Empresa".</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Histórico de Documentos -->
+                        <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
+                                📄 Histórico de Documentos Enviados
+                            </h4>
+                            
+                            ${documentos.length === 0 ? `
+                                <div style="text-align: center; padding: 48px 24px;">
+                                    <svg width="80" height="80" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin: 0 auto 16px; opacity: 0.2;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
+                                    </svg>
+                                    <p style="color: var(--text-secondary); font-size: 1.125rem;">Nenhum documento enviado ainda</p>
+                                </div>
+                            ` : `
+                                <div style="overflow-x: auto;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <thead>
+                                            <tr style="border-bottom: 2px solid var(--border-color);">
+                                                <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Data/Hora</th>
+                                                <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Cliente</th>
+                                                <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Título</th>
+                                                <th style="padding: 12px; text-align: center; font-weight: 600; color: var(--text-secondary);">Categoria</th>
+                                                <th style="padding: 12px; text-align: center; font-weight: 600; color: var(--text-secondary);">Arquivo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${documentos.map(doc => `
+                                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                                    <td style="padding: 12px; color: var(--text-primary);">
+                                                        <strong>${doc.data_upload}</strong>
+                                                    </td>
+                                                    <td style="padding: 12px;">
+                                                        <div><strong style="color: var(--text-primary);">${doc.cliente}</strong></div>
+                                                        <div style="font-size: 0.875rem; color: var(--text-secondary);">${doc.cliente_email}</div>
+                                                    </td>
+                                                    <td style="padding: 12px;">
+                                                        <div style="font-weight: 600; color: var(--text-primary);">${doc.titulo}</div>
+                                                        ${doc.descricao ? `<div style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 4px;">${doc.descricao}</div>` : ''}
+                                                    </td>
+                                                    <td style="padding: 12px; text-align: center;">
+                                                        <span class="badge badge-info">${doc.categoria}</span>
+                                                    </td>
+                                                    <td style="padding: 12px; text-align: center;">
+                                                        <div style="margin-bottom: 4px;">
+                                                            <span style="background: #F3F4F6; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-family: monospace;">
+                                                                ${doc.nome_arquivo}
+                                                            </span>
+                                                        </div>
+                                                        <div style="font-size: 0.75rem; color: var(--text-secondary);">${doc.tamanho}</div>
+                                                        ${doc.arquivo_url ? `<a href="${doc.arquivo_url}" target="_blank" style="color: var(--primary-color); text-decoration: none; font-size: 0.875rem;">📥 Baixar</a>` : ''}
+                                                    </td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                `;
+            })
+            .catch(error => {
+                console.error('Erro ao carregar histórico de documentos:', error);
+                dataCard.innerHTML = `
+                    <div style="padding: 48px; text-align: center;">
+                        <p style="color: var(--danger-color);">Erro ao carregar histórico de documentos</p>
+                    </div>
+                `;
+            });
+    }
+
+    // Renderizar interface de Certidões Negativas
+    function renderCertidoesInterface() {
+        const dataCard = document.getElementById('dataCard');
+        
+        // Buscar histórico de certidões
+        fetch('/support/api/certidoes/')
+            .then(response => response.json())
+            .then(result => {
+                const certidoes = result.data || [];
+                
+                dataCard.innerHTML = `
+                    <div style="padding: 32px;">
+                        <!-- Card de Instrução -->
+                        <div style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); border-radius: 16px; padding: 32px; margin-bottom: 32px; color: white;">
+                            <div style="display: flex; align-items: center; gap: 24px;">
+                                <svg width="80" height="80" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0; opacity: 0.9;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                </svg>
+                                <div>
+                                    <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px;">Gerenciar Certidões Negativas</h3>
+                                    <p style="opacity: 0.95; line-height: 1.6;">Clique em "Enviar Nova Certidão" para selecionar um cliente e enviar uma certidão (Federal, Estadual, Trabalhista ou FGTS). Os clientes visualizam as certidões em sua área de pendências.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Histórico de Certidões -->
+                        <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
+                                🛡️ Histórico de Certidões Enviadas
+                            </h4>
+                            
+                            ${certidoes.length === 0 ? `
+                                <div style="text-align: center; padding: 48px 24px;">
+                                    <svg width="80" height="80" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin: 0 auto 16px; opacity: 0.2;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                    </svg>
+                                    <p style="color: var(--text-secondary); font-size: 1.125rem;">Nenhuma certidão enviada ainda</p>
+                                </div>
+                            ` : `
+                                <div style="overflow-x: auto;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <thead>
+                                            <tr style="border-bottom: 2px solid var(--border-color);">
+                                                <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Data/Hora</th>
+                                                <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Cliente</th>
+                                                <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Tipo de Certidão</th>
+                                                <th style="padding: 12px; text-align: center; font-weight: 600; color: var(--text-secondary);">Status</th>
+                                                <th style="padding: 12px; text-align: center; font-weight: 600; color: var(--text-secondary);">Arquivo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${certidoes.map(cert => `
+                                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                                    <td style="padding: 12px; color: var(--text-primary);">
+                                                        <strong>${cert.data_envio}</strong>
+                                                    </td>
+                                                    <td style="padding: 12px;">
+                                                        <div><strong style="color: var(--text-primary);">${cert.cliente}</strong></div>
+                                                        <div style="font-size: 0.875rem; color: var(--text-secondary);">${cert.cliente_email}</div>
+                                                    </td>
+                                                    <td style="padding: 12px;">
+                                                        <span class="badge ${
+                                                            cert.tipo_raw === 'federal' ? 'badge-primary' : 
+                                                            cert.tipo_raw === 'estadual' ? 'badge-info' :
+                                                            cert.tipo_raw === 'trabalhista' ? 'badge-warning' :
+                                                            'badge-success'
+                                                        }">
+                                                            ${cert.tipo}
+                                                        </span>
+                                                    </td>
+                                                    <td style="padding: 12px; text-align: center;">
+                                                        <span class="badge ${
+                                                            cert.status_raw === 'negativa' ? 'badge-success' :
+                                                            cert.status_raw === 'positiva' ? 'badge-danger' :
+                                                            'badge-secondary'
+                                                        }">
+                                                            ${cert.status}
+                                                        </span>
+                                                    </td>
+                                                    <td style="padding: 12px; text-align: center;">
+                                                        ${cert.arquivo_url ? `<a href="${cert.arquivo_url}" target="_blank" style="color: var(--primary-color); text-decoration: none;">📄 Baixar</a>` : '-'}
+                                                    </td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                `;
+            })
+            .catch(error => {
+                console.error('Erro ao carregar histórico de certidões:', error);
+                dataCard.innerHTML = `
+                    <div style="padding: 48px; text-align: center;">
+                        <p style="color: var(--danger-color);">Erro ao carregar histórico de certidões</p>
+                    </div>
+                `;
+            });
+    }
+
     // Renderizar tabela
     function renderTable() {
         const tbody = document.getElementById('tableBody');
@@ -1715,6 +2269,133 @@
         } catch (error) {
             console.error('Erro ao enviar NF:', error);
             showAlert('Erro ao enviar nota fiscal', 'error');
+        }
+    });
+
+    // Abrir modal de Documento da Empresa
+    async function openDocumentoEmpresaModal() {
+        // Carregar lista de clientes
+        try {
+            const response = await fetch(`${API_BASE}/clientes/`);
+            const result = await response.json();
+            
+            if (result.success) {
+                const select = document.getElementById('docEmpresaCliente');
+                select.innerHTML = '<option value="">Selecione um cliente...</option>' + 
+                    result.data.map(c => `<option value="${c.id}">${c.nome} (${c.email})</option>`).join('');
+                
+                document.getElementById('documentoEmpresaModal').classList.add('active');
+            }
+        } catch (error) {
+            console.error('Erro ao carregar clientes:', error);
+            showAlert('Erro ao carregar lista de clientes', 'error');
+        }
+    }
+
+    // Fechar modal de Documento da Empresa
+    function closeDocumentoEmpresaModal() {
+        document.getElementById('documentoEmpresaModal').classList.remove('active');
+        document.getElementById('documentoEmpresaForm').reset();
+    }
+
+    // Enviar documento da empresa
+    document.getElementById('documentoEmpresaForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData();
+        formData.append('cliente_id', document.getElementById('docEmpresaCliente').value);
+        formData.append('titulo', document.getElementById('docEmpresaTitulo').value);
+        formData.append('categoria', document.getElementById('docEmpresaCategoria').value);
+        formData.append('arquivo', document.getElementById('docEmpresaArquivo').files[0]);
+        formData.append('descricao', document.getElementById('docEmpresaDescricao').value);
+        
+        try {
+            const response = await fetch(`${API_BASE}/documentos-empresa/enviar/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showAlert(result.message);
+                closeDocumentoEmpresaModal();
+                // Recarregar a interface de documentos
+                if (currentModel === 'documentos-empresa') {
+                    renderDocumentosEmpresaInterface();
+                }
+            } else {
+                showAlert(result.error || 'Erro ao enviar documento', 'error');
+            }
+        } catch (error) {
+            console.error('Erro ao enviar documento:', error);
+            showAlert('Erro ao enviar documento', 'error');
+        }
+    });
+
+    // Abrir modal de Certidão
+    async function openCertidaoModal() {
+        // Carregar lista de clientes
+        try {
+            const response = await fetch(`${API_BASE}/clientes/`);
+            const result = await response.json();
+            
+            if (result.success) {
+                const select = document.getElementById('certidaoCliente');
+                select.innerHTML = '<option value="">Selecione um cliente...</option>' + 
+                    result.data.map(c => `<option value="${c.id}">${c.nome} (${c.email})</option>`).join('');
+                
+                document.getElementById('certidaoModal').classList.add('active');
+            }
+        } catch (error) {
+            console.error('Erro ao carregar clientes:', error);
+            showAlert('Erro ao carregar lista de clientes', 'error');
+        }
+    }
+
+    // Fechar modal de Certidão
+    function closeCertidaoModal() {
+        document.getElementById('certidaoModal').classList.remove('active');
+        document.getElementById('certidaoForm').reset();
+    }
+
+    // Enviar certidão
+    document.getElementById('certidaoForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData();
+        formData.append('cliente_id', document.getElementById('certidaoCliente').value);
+        formData.append('tipo_certidao', document.getElementById('certidaoTipo').value);
+        formData.append('status', document.getElementById('certidaoStatus').value);
+        formData.append('arquivo', document.getElementById('certidaoArquivo').files[0]);
+        
+        try {
+            const response = await fetch(`${API_BASE}/certidoes/enviar/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showAlert(result.message);
+                closeCertidaoModal();
+                // Recarregar a interface de certidões
+                if (currentModel === 'certidoes') {
+                    renderCertidoesInterface();
+                }
+            } else {
+                showAlert(result.error || 'Erro ao enviar certidão', 'error');
+            }
+        } catch (error) {
+            console.error('Erro ao enviar certidão:', error);
+            showAlert('Erro ao enviar certidão', 'error');
         }
     });
 

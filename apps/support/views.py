@@ -723,6 +723,260 @@ def api_contabilidade_clientes(request):
 
 @login_required
 @user_passes_test(is_staff_user)
+@require_http_methods(["POST"])
+def api_certidao_enviar(request):
+    """Envia uma certidão negativa para um cliente"""
+    from apps.users.models import CertidaoNegativa
+    from django.contrib.auth import get_user_model
+    
+    User = get_user_model()
+    
+    try:
+        cliente_id = request.POST.get('cliente_id')
+        tipo_certidao = request.POST.get('tipo_certidao')
+        arquivo = request.FILES.get('arquivo')
+        status_certidao = request.POST.get('status', 'negativa')
+        
+        if not cliente_id or not tipo_certidao or not arquivo:
+            return JsonResponse({'success': False, 'error': 'Cliente, tipo e arquivo são obrigatórios.'}, status=400)
+        
+        cliente = get_object_or_404(User, pk=cliente_id, is_staff=False)
+        
+        # Validar tipo de arquivo
+        valid_extensions = ['.pdf', '.zip']
+        file_ext = arquivo.name[arquivo.name.rfind('.'):].lower()
+        if file_ext not in valid_extensions:
+            return JsonResponse({'success': False, 'error': 'Tipo de arquivo inválido. Use PDF ou ZIP.'}, status=400)
+        
+        # Validar tipo de certidão
+        tipos_validos = ['federal', 'estadual', 'trabalhista', 'fgts']
+        if tipo_certidao not in tipos_validos:
+            return JsonResponse({'success': False, 'error': 'Tipo de certidão inválido.'}, status=400)
+        
+        # Criar certidão
+        certidao = CertidaoNegativa.objects.create(
+            cliente=cliente,
+            tipo=tipo_certidao,
+            status=status_certidao,
+            arquivo_pdf=arquivo
+        )
+        
+        logger.info(f"Certidão {tipo_certidao} enviada para {cliente.get_full_name()} por {request.user.get_full_name()}")
+        
+        return JsonResponse({
+            'success': True,
+            'message': f'Certidão {certidao.get_tipo_display()} enviada com sucesso para {cliente.get_full_name() or cliente.username}!',
+            'data': {
+                'id': certidao.id,
+                'tipo': certidao.get_tipo_display(),
+                'cliente': cliente.get_full_name() or cliente.username,
+                'data_envio': certidao.data_envio.strftime('%d/%m/%Y %H:%M')
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Erro ao enviar certidão: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_certidoes_list(request):
+    """Lista todas as certidões negativas enviadas"""
+    from apps.users.models import CertidaoNegativa
+    
+    certidoes = CertidaoNegativa.objects.all().select_related('cliente').order_by('-data_envio')
+    data = []
+    for cert in certidoes:
+        data.append({
+            'id': cert.id,
+            'cliente': cert.cliente.get_full_name() or cert.cliente.username,
+            'cliente_email': cert.cliente.email,
+            'tipo': cert.get_tipo_display(),
+            'tipo_raw': cert.tipo,
+            'status': cert.get_status_display(),
+            'status_raw': cert.status,
+            'arquivo_url': cert.arquivo_pdf.url if cert.arquivo_pdf else None,
+            'data_envio': cert.data_envio.strftime('%d/%m/%Y %H:%M')
+        })
+    return JsonResponse({'success': True, 'data': data})
+
+
+@login_required
+@user_passes_test(is_staff_user)
+@require_http_methods(["POST"])
+def api_documento_empresa_enviar(request):
+    """Envia um documento da empresa para um cliente"""
+    from apps.documents.models import DocumentoEmpresa
+    from django.contrib.auth import get_user_model
+    
+    User = get_user_model()
+    
+    try:
+        cliente_id = request.POST.get('cliente_id')
+        titulo = request.POST.get('titulo')
+        categoria = request.POST.get('categoria')
+        arquivo = request.FILES.get('arquivo')
+        descricao = request.POST.get('descricao', '')
+        
+        if not cliente_id or not titulo or not categoria or not arquivo:
+            return JsonResponse({'success': False, 'error': 'Cliente, título, categoria e arquivo são obrigatórios.'}, status=400)
+        
+        cliente = get_object_or_404(User, pk=cliente_id, is_staff=False)
+        
+        # Validar categoria
+        categorias_validas = ['contrato_social', 'alvara', 'certidao', 'procuracao', 'registro', 'declaracao', 'relatorio', 'outros']
+        if categoria not in categorias_validas:
+            return JsonResponse({'success': False, 'error': 'Categoria inválida.'}, status=400)
+        
+        # Criar documento
+        documento = DocumentoEmpresa.objects.create(
+            cliente=cliente,
+            titulo=titulo,
+            categoria=categoria,
+            arquivo=arquivo,
+            descricao=descricao
+        )
+        
+        logger.info(f"Documento '{titulo}' enviado para {cliente.get_full_name()} por {request.user.get_full_name()}")
+        
+        return JsonResponse({
+            'success': True,
+            'message': f'Documento "{titulo}" enviado com sucesso para {cliente.get_full_name() or cliente.username}!',
+            'data': {
+                'id': documento.id,
+                'titulo': documento.titulo,
+                'categoria': documento.get_categoria_display(),
+                'cliente': cliente.get_full_name() or cliente.username,
+                'data_upload': documento.data_upload.strftime('%d/%m/%Y %H:%M')
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Erro ao enviar documento: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_documentos_empresa_list(request):
+    """Lista todos os documentos da empresa enviados"""
+    from apps.documents.models import DocumentoEmpresa
+    
+    documentos = DocumentoEmpresa.objects.all().select_related('cliente').order_by('-data_upload')
+    data = []
+    for doc in documentos:
+        data.append({
+            'id': doc.id,
+            'cliente': doc.cliente.get_full_name() or doc.cliente.username,
+            'cliente_email': doc.cliente.email,
+            'titulo': doc.titulo,
+            'categoria': doc.get_categoria_display(),
+            'categoria_raw': doc.categoria,
+            'descricao': doc.descricao or '',
+            'arquivo_url': doc.arquivo.url if doc.arquivo else None,
+            'nome_arquivo': doc.nome_arquivo,
+            'tamanho': doc.tamanho_arquivo,
+            'data_upload': doc.data_upload.strftime('%d/%m/%Y %H:%M')
+        })
+    return JsonResponse({'success': True, 'data': data})
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_extratos_bancarios_cliente(request, cliente_id):
+    """Lista todos os extratos bancários de um cliente específico"""
+    from apps.documents.models import ExtratoBancario
+    from django.contrib.auth import get_user_model
+    
+    User = get_user_model()
+    
+    cliente = get_object_or_404(User, pk=cliente_id)
+    
+    # Buscar todos os extratos do cliente
+    extratos = ExtratoBancario.objects.filter(cliente=cliente).order_by('-data_upload')
+    
+    data = []
+    for extrato in extratos:
+        # Calcular tamanho do arquivo
+        try:
+            tamanho_bytes = extrato.arquivo.size
+            if tamanho_bytes < 1024:
+                tamanho = f"{tamanho_bytes} B"
+            elif tamanho_bytes < 1024 * 1024:
+                tamanho = f"{tamanho_bytes / 1024:.1f} KB"
+            else:
+                tamanho = f"{tamanho_bytes / (1024 * 1024):.1f} MB"
+        except:
+            tamanho = "N/A"
+        
+        # Obter nome do arquivo
+        try:
+            nome_arquivo = extrato.arquivo.name.split('/')[-1]
+        except:
+            nome_arquivo = "Arquivo"
+        
+        # Obter extensão
+        try:
+            extensao = nome_arquivo.split('.')[-1].upper() if '.' in nome_arquivo else 'Arquivo'
+        except:
+            extensao = 'Arquivo'
+        
+        data.append({
+            'id': extrato.id,
+            'mes_ano': extrato.mes_ano,
+            'start_date': extrato.start_date.strftime('%d/%m/%Y') if extrato.start_date else None,
+            'end_date': extrato.end_date.strftime('%d/%m/%Y') if extrato.end_date else None,
+            'observacoes': extrato.observacoes or '',
+            'arquivo_url': extrato.arquivo.url if extrato.arquivo else None,
+            'nome_arquivo': nome_arquivo,
+            'extensao': extensao,
+            'tamanho': tamanho,
+            'data_upload': extrato.data_upload.strftime('%d/%m/%Y %H:%M')
+        })
+    
+    return JsonResponse({
+        'success': True,
+        'cliente': {
+            'id': cliente.id,
+            'nome': cliente.get_full_name() or cliente.username,
+            'email': cliente.email
+        },
+        'data': data
+    })
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_clientes_com_extratos(request):
+    """Lista clientes que possuem extratos bancários"""
+    from apps.documents.models import ExtratoBancario
+    from django.contrib.auth import get_user_model
+    from django.db.models import Count
+    
+    User = get_user_model()
+    
+    # Buscar clientes com extratos
+    clientes_com_extratos = User.objects.filter(
+        extratos_bancarios__isnull=False
+    ).annotate(
+        total_extratos=Count('extratos_bancarios')
+    ).distinct().order_by('first_name', 'last_name')
+    
+    data = []
+    for cliente in clientes_com_extratos:
+        data.append({
+            'id': cliente.id,
+            'nome': cliente.get_full_name() or cliente.username,
+            'email': cliente.email,
+            'total_extratos': cliente.total_extratos
+        })
+    
+    return JsonResponse({'success': True, 'data': data})
+
+
+@login_required
+@user_passes_test(is_staff_user)
 def api_contabilidade_movimentacoes(request, cliente_id):
     """Lista movimentações financeiras de um cliente específico, agrupadas por mês"""
     from apps.users.models import MovimentacaoFinanceira
