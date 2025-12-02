@@ -28,8 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', "django-insecure-k6a%y-a)m#2g#ir)y$rob$c4u-$ctq*at#p9_#y^)ak_$*+h$-")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = os.getenv('DEBUG', 'True') == 'True'
-DEBUG = True  # FORÇADO PARA DEBUG - REMOVER DEPOIS!
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else []
 
@@ -60,15 +59,14 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "gestao360_project.middleware.DebugExceptionMiddleware",  # Debug middleware - PRIMEIRO
-    # "django.middleware.security.SecurityMiddleware",  # DESABILITADO PARA DEBUG
-    # "whitenoise.middleware.WhiteNoiseMiddleware",  # TEMPORARIAMENTE DESABILITADO
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    # "django.middleware.csrf.CsrfViewMiddleware",  # DESABILITADO PARA DEBUG
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    # "django.middleware.clickjacking.XFrameOptionsMiddleware",  # DESABILITADO PARA DEBUG
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 ROOT_URLCONF = "gestao360_project.urls"
@@ -250,26 +248,25 @@ CACHES = {
     }
 }
 
-# Cache de sessões no Redis (TEMPORARIAMENTE DESABILITADO PARA DEBUG)
-# SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-# SESSION_CACHE_ALIAS = 'default'
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+# Cache de sessões no Redis
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
 
 # Configurações do Mercado Pago
 MERCADO_PAGO_PUBLIC_KEY = os.getenv('MP_PUBLIC_KEY', '')
 MERCADO_PAGO_ACCESS_TOKEN = os.getenv('MP_ACCESS_TOKEN', '')
 
-# Configurações de segurança (produção) - TUDO DESABILITADO PARA DEBUG
-# if not DEBUG:
-#     SECURE_SSL_REDIRECT = False  # Nginx já faz o redirect para HTTPS
-#     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Confiar no header do Nginx
-#     SESSION_COOKIE_SECURE = False
-#     CSRF_COOKIE_SECURE = False
-#     SECURE_BROWSER_XSS_FILTER = True
-#     SECURE_CONTENT_TYPE_NOSNIFF = True
-#     X_FRAME_OPTIONS = 'DENY'
+# Configurações de segurança (produção)
+if not DEBUG:
+    SECURE_SSL_REDIRECT = False  # Nginx já faz o redirect para HTTPS
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
 
-# Logging configuration - mostra erros detalhados
+# Logging configuration
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
