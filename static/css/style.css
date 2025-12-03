@@ -515,7 +515,7 @@ footer {
 
 /* Services Section Styles */
 .services-section {
-    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+    background: #ebeef1;
     position: relative;
     overflow: hidden;
 }
@@ -1178,7 +1178,7 @@ footer {
    Testimonials Section
    =================================== */
 .testimonials-section {
-    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    background: #ebeef1;
 }
 
 /* Partners / Trusted logos marquee */
@@ -1337,7 +1337,7 @@ footer hr {
    Growth Section
    =================================== */
 .growth-section {
-    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    background: #ebeef1;
 }
 
 .growth-section h2 {
@@ -1705,7 +1705,7 @@ footer hr {
    Features Section
    =================================== */
 .features-section {
-    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    background: #ebeef1;
 }
 
 .feature-card {
@@ -1988,7 +1988,7 @@ footer hr {
    =============================================== */
 
 .pricing-section {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: #ebeef1;
     position: relative;
     overflow: hidden;
 }
@@ -2402,7 +2402,7 @@ footer hr {
    FAQ Section
    =================================== */
 .faq-section {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: #ebeef1;
 }
 
 .faq-accordion {
@@ -2727,7 +2727,7 @@ footer hr {
 /* Recent posts (used in abrir_empresa) */
 .recent-posts-section {
     /* Background atualizado conforme solicitado */
-    background-color: #eceef1;
+    background-color: #ebeef1;
 }
 .recent-posts-section .container {
     max-width: 1300px;
@@ -2802,12 +2802,12 @@ footer hr {
 
 /* Override para a seção de depoimentos */
 section.testimonials-section {
-    background-color: #eceef1 !important;
+    background-color: #ebeef1 !important;
 }
 
 /* Regra de alta especificidade para garantir aplicação do background solicitado */
 section.recent-posts-section {
-    background-color: #eceef1 !important;
+    background-color: #ebeef1 !important;
 }
 
 
