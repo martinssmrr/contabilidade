@@ -1421,7 +1421,7 @@ footer hr {
 .svc-media { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 6; }
 .svc-top-label { color: #ffffff; font-weight: 700; margin-bottom: 16px; font-size: 1rem; display: block; }
 .svc-cta-bottom-btn { border-radius: 999px; padding: 10px 22px; font-weight: 700; color: #0c63d1; background: #ffffff; border: 0; box-shadow: 0 8px 22px rgba(2,6,23,0.12); margin-top: 12px; }
-.svc-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+.svc-image { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
 .svc-box { position: absolute; background: #ffffff; color: #111827; border-radius: 25px; padding: 14px 16px; width: 220px; box-shadow: 0 10px 30px rgba(2,6,23,0.12); display: flex; gap: 12px; align-items: center; z-index: 10; transition: transform 0.28s ease, box-shadow 0.28s ease; }
 .svc-box:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(2,6,23,0.18); }
 .box-check { width: 44px; height: 44px; flex: 0 0 44px; border-radius: 50%; display: inline-block; }
