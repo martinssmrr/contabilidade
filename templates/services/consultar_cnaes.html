@@ -1,10 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Consultar CNAEs - Vetorial{% endblock %}
+{% block title %}Consultar CNAEs - API IBGE - Vetorial{% endblock %}
 
 {% block extra_css %}
 <style>
+    :root {
+        --primary-color: #3ef47c;
+        --primary-dark: #2ed66b;
+        --secondary-color: #0c63d1;
+        --text-primary: #1f2937;
+        --text-secondary: #6b7280;
+        --border-color: #e5e7eb;
+        --danger-color: #ef4444;
+    }
+    
     .cnae-section {
         padding: 120px 0 80px 0;
         background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
@@ -49,7 +59,7 @@
     .stat-number {
         font-size: 2.5rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #3ef47c 0%, #2ed66b 100%);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -57,31 +67,67 @@
     
     .stat-label {
         font-size: 0.9rem;
-        color: #6b7280;
+        color: var(--text-secondary);
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         margin-top: 0.5rem;
     }
     
-    .accordion {
-        max-width: 1000px;
-        margin: 0 auto;
+    .search-box {
+        max-width: 800px;
+        margin: 0 auto 3rem;
+        position: relative;
     }
     
-    .accordion-item {
+    .search-input {
+        width: 100%;
+        padding: 16px 60px 16px 20px;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 4px 16px rgba(62, 244, 124, 0.15);
+    }
+    
+    .search-icon {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        pointer-events: none;
+    }
+    
+    .cnaes-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        gap: 1rem;
+    }
+    
+    .cnae-card {
         background: white;
         border: none;
-        border-radius: 12px !important;
-        margin-bottom: 1rem;
+        border-radius: 12px;
+        padding: 1.5rem;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-        overflow: hidden;
         transition: all 0.3s ease;
+        display: flex;
+        align-items: start;
+        gap: 1.5rem;
     }
     
-    .accordion-item:hover {
+    .cnae-card:hover {
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
         transform: translateY(-2px);
+        border-left: 4px solid var(--primary-color);
     }
     
     .accordion-header {
@@ -124,45 +170,65 @@
         margin: 0;
     }
     
-    .cnae-item {
-        background: white;
-        border-radius: 8px;
-        padding: 1.25rem 1.5rem;
-        margin-bottom: 0.75rem;
-        border-left: 4px solid #3ef47c;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: start;
-        gap: 1rem;
-    }
-    
-    .cnae-item:hover {
-        transform: translateX(5px);
-        box-shadow: 0 4px 12px rgba(62, 244, 124, 0.2);
-    }
-    
-    .cnae-item:last-child {
-        margin-bottom: 0;
-    }
-    
     .cnae-codigo {
-        background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #0a4fa3 100%);
         color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
+        padding: 0.75rem 1.25rem;
+        border-radius: 8px;
         font-weight: 700;
-        font-size: 0.9rem;
+        font-size: 1rem;
         font-family: 'Courier New', monospace;
-        min-width: 120px;
+        min-width: 140px;
         text-align: center;
         flex-shrink: 0;
     }
     
-    .cnae-descricao {
-        color: #374151;
-        font-size: 1rem;
-        line-height: 1.6;
+    .cnae-content {
         flex-grow: 1;
+    }
+    
+    .cnae-descricao {
+        color: var(--text-primary);
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+    }
+    
+    .cnae-observacoes {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        line-height: 1.5;
+        margin-top: 0.5rem;
+    }
+    
+    .loading-spinner {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .spinner {
+        border: 4px solid rgba(62, 244, 124, 0.2);
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .error-box {
+        background: #fee;
+        border-left: 4px solid var(--danger-color);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        color: #991;
     }
     
     .categoria-badge {
@@ -229,6 +295,46 @@
         line-height: 1.6;
     }
     
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .empty-state svg {
+        opacity: 0.2;
+        margin-bottom: 16px;
+    }
+    
+    .empty-state p {
+        color: var(--text-secondary);
+        font-size: 1.125rem;
+        margin-top: 16px;
+    }
+    
+    .footer-info {
+        text-align: center;
+        margin-top: 3rem;
+    }
+    
+    .footer-info p {
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+    }
+    
+    .footer-info a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 700;
+    }
+    
+    .footer-info a:hover {
+        text-decoration: underline;
+    }
+    
+    .hidden {
+        display: none;
+    }
+    
     @media (max-width: 768px) {
         .cnae-header h1 {
             font-size: 1.8rem;
@@ -239,18 +345,13 @@
             align-items: center;
         }
         
-        .cnae-item {
+        .cnae-card {
             flex-direction: column;
             align-items: start;
         }
         
         .cnae-codigo {
             min-width: auto;
-        }
-        
-        .accordion-button {
-            font-size: 1rem;
-            padding: 1.25rem 1.5rem;
         }
     }
 </style>
@@ -261,21 +362,23 @@
     <div class="container">
         <!-- Header -->
         <div class="cnae-header">
-            <h1>📋 Consultar CNAEs</h1>
-            <p>Explore a Classificação Nacional de Atividades Econômicas organizadas por categoria. Encontre o CNAE ideal para o seu negócio.</p>
+            <h1>📋 Consultar CNAEs - API IBGE</h1>
+            <p>Explore a Classificação Nacional de Atividades Econômicas diretamente da base oficial do IBGE. Encontre o CNAE ideal para o seu negócio.</p>
         </div>
         
         <!-- Estatísticas -->
-        <!-- <div class="stats-cards">
-            <div class="stat-card">
-                <div class="stat-number">{{ total_categorias }}</div>
-                <div class="stat-label">Categorias</div>
-            </div>
+        {% if total_cnaes %}
+        <div class="stats-cards">
             <div class="stat-card">
                 <div class="stat-number">{{ total_cnaes }}</div>
-                <div class="stat-label">CNAEs</div>
+                <div class="stat-label">CNAEs Disponíveis</div>
             </div>
-        </div> -->
+            <div class="stat-card">
+                <div class="stat-number">IBGE</div>
+                <div class="stat-label">Fonte Oficial</div>
+            </div>
+        </div>
+        {% endif %}
         
         <!-- Info Box -->
         <div class="info-box">
@@ -286,79 +389,104 @@
                 </svg>
                 O que é CNAE?
             </h6>
-            <p>A CNAE (Classificação Nacional de Atividades Econômicas) é um código que identifica a atividade principal da sua empresa. É obrigatório para abertura de CNPJ e define impostos, obrigações e benefícios fiscais.</p>
+            <p>A CNAE (Classificação Nacional de Atividades Econômicas) é um código que identifica a atividade principal da sua empresa. É obrigatório para abertura de CNPJ e define impostos, obrigações e benefícios fiscais. Os dados são atualizados diretamente da API oficial do IBGE.</p>
         </div>
         
-        <!-- Accordion de Categorias -->
-        <div class="accordion" id="cnaesAccordion">
-            {% for categoria, cnaes in categorias_com_cnaes.items %}
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="heading{{ forloop.counter }}">
-                    <button 
-                        class="accordion-button collapsed" 
-                        type="button" 
-                        data-bs-toggle="collapse" 
-                        data-bs-target="#collapse{{ forloop.counter }}" 
-                        aria-expanded="false" 
-                        aria-controls="collapse{{ forloop.counter }}"
-                    >
-                        <div class="categoria-titulo">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
-                            </svg>
-                            <span>{{ categoria.nome }}</span>
-                        </div>
-                        <span class="categoria-badge">
-                            <span class="categoria-count">{{ cnaes|length }} CNAEs</span>
-                        </span>
-                    </button>
-                </h2>
-                <div 
-                    id="collapse{{ forloop.counter }}" 
-                    class="accordion-collapse collapse" 
-                    aria-labelledby="heading{{ forloop.counter }}" 
-                    data-bs-parent="#cnaesAccordion"
-                >
-                    <div class="accordion-body">
-                        {% if cnaes %}
-                        <ul class="cnae-list">
-                            {% for cnae in cnaes %}
-                            <li class="cnae-item">
-                                <div class="cnae-codigo">{{ cnae.codigo }}</div>
-                                <div class="cnae-descricao">{{ cnae.descricao }}</div>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                        {% else %}
-                        <div class="empty-category">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="mb-3" viewBox="0 0 16 16">
-                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                            </svg>
-                            <p>Nenhum CNAE cadastrado nesta categoria.</p>
-                        </div>
-                        {% endif %}
+        <!-- Mensagem de Erro -->
+        {% if error_message %}
+        <div class="error-box">
+            <h6>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                </svg>
+                Erro ao carregar CNAEs
+            </h6>
+            <p>{{ error_message }}</p>
+        </div>
+        {% endif %}
+        
+        <!-- Busca -->
+        <div class="search-box">
+            <input 
+                type="text" 
+                id="searchInput" 
+                class="search-input" 
+                placeholder="Digite para buscar por código ou descrição..." 
+                autocomplete="off"
+            >
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
+        </div>
+        
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="loading-spinner hidden">
+            <div class="spinner"></div>
+            <p>Carregando CNAEs da API do IBGE...</p>
+        </div>
+        
+        <!-- Lista de CNAEs -->
+        <div class="cnaes-grid" id="cnaesGrid">
+            {% for cnae in cnaes %}
+            <div class="cnae-card" data-cnae-id="{{ cnae.id }}" data-cnae-desc="{{ cnae.descricao|lower }}">
+                <div class="cnae-codigo">{{ cnae.id }}</div>
+                <div class="cnae-content">
+                    <div class="cnae-descricao">{{ cnae.descricao }}</div>
+                    {% if cnae.observacoes %}
+                    <div class="cnae-observacoes">
+                        <strong>Observações:</strong> {{ cnae.observacoes }}
                     </div>
+                    {% endif %}
                 </div>
             </div>
             {% empty %}
-            <div class="text-center py-5">
-                <p class="text-muted">Nenhuma categoria de CNAE disponível no momento.</p>
-                <small>Execute o comando <code>python manage.py popular_cnaes</code> para popular o banco de dados.</small>
+            {% if not error_message %}
+            <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                </svg>
+                <p>Nenhum CNAE encontrado</p>
             </div>
+            {% endif %}
             {% endfor %}
         </div>
         
         <!-- Rodapé informativo -->
-        <div class="text-center mt-5">
-            <p class="text-muted">
-                💡 <strong>Dica:</strong> Clique em uma categoria para ver todos os CNAEs disponíveis nela.
+        <div class="footer-info">
+            <p>
+                💡 <strong>Dica:</strong> Use a busca acima para filtrar os CNAEs por código ou descrição.
             </p>
-            <p class="text-muted">
+            <p>
                 Precisa de ajuda para escolher o CNAE ideal? 
-                <a href="{% url 'services:services_list' %}" class="text-decoration-none fw-bold" style="color: #3ef47c;">Entre em contato conosco</a>
+                <a href="{% url 'services:services_list' %}">Entre em contato conosco</a>
             </p>
         </div>
     </div>
 </section>
+
+<script>
+    // Busca em tempo real
+    const searchInput = document.getElementById('searchInput');
+    const cnaesGrid = document.getElementById('cnaesGrid');
+    const cnaeCards = document.querySelectorAll('.cnae-card');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            
+            cnaeCards.forEach(card => {
+                const codigo = card.dataset.cnaeId.toLowerCase();
+                const descricao = card.dataset.cnaeDesc;
+                
+                if (codigo.includes(searchTerm) || descricao.includes(searchTerm)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+</script>
 {% endblock %}

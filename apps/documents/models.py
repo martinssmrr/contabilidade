@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
+from typing import Optional
 import os
 
 # Create your models here.
@@ -350,3 +352,183 @@ class ExtratoBancario(models.Model):
         if self.arquivo:
             return os.path.splitext(self.arquivo.name)[1].lower().replace('.', '')
         return None
+
+
+def documento_cliente_upload_path(instance, filename):
+    """
+    Define o caminho de upload dos documentos de clientes.
+    Organiza por ano/mês do envio e ID do cliente.
+    """
+    now = timezone.now()
+    return f'documentos_clientes/{now.year}/{now.month:02d}/cliente_{instance.cliente.id}/{filename}'
+
+
+class DocumentoCliente(models.Model):
+    """
+    Modelo para gerenciamento de documentos enviados pelo staff aos clientes.
+    Com notificação automática por e-mail (sem anexar o documento - LGPD).
+    """
+    
+    TIPO_DOCUMENTO_CHOICES = [
+        ('contrato_social', 'Contrato Social'),
+        ('alteracao_contratual', 'Alteração Contratual'),
+        ('certidao_negativa', 'Certidão Negativa'),
+        ('guia_impostos', 'Guia de Impostos'),
+        ('balanco_patrimonial', 'Balanço Patrimonial'),
+        ('dre', 'DRE - Demonstração do Resultado'),
+        ('folha_pagamento', 'Folha de Pagamento'),
+        ('declaracao_ir', 'Declaração de IR'),
+        ('alvara', 'Alvará'),
+        ('licenca', 'Licença'),
+        ('procuracao', 'Procuração'),
+        ('relatorio_contabil', 'Relatório Contábil'),
+        ('documento_fiscal', 'Documento Fiscal'),
+        ('outros', 'Outros'),
+    ]
+    
+    cliente = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='documentos_recebidos',
+        verbose_name='Cliente',
+        help_text='Cliente que receberá este documento',
+        limit_choices_to={'is_staff': False},
+    )
+    
+    arquivo = models.FileField(
+        upload_to=documento_cliente_upload_path,
+        verbose_name='Arquivo',
+        help_text='Arquivo do documento (PDF, DOC, DOCX, XLS, etc.)',
+        max_length=500,
+    )
+    
+    tipo_documento = models.CharField(
+        max_length=30,
+        choices=TIPO_DOCUMENTO_CHOICES,
+        verbose_name='Tipo de Documento',
+        help_text='Categoria/tipo do documento',
+        db_index=True,
+    )
+    
+    titulo = models.CharField(
+        max_length=255,
+        verbose_name='Título',
+        help_text='Título descritivo do documento',
+    )
+    
+    descricao = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Descrição',
+        help_text='Descrição adicional ou observações sobre o documento (opcional)',
+    )
+    
+    enviado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='documentos_enviados_clientes',
+        limit_choices_to={'is_staff': True},
+        verbose_name='Enviado por',
+        help_text='Membro da equipe que fez o upload',
+    )
+    
+    data_envio = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Data de Envio',
+        db_index=True,
+    )
+    
+    visualizado = models.BooleanField(
+        default=False,
+        verbose_name='Visualizado',
+        help_text='Indica se o cliente já visualizou este documento',
+    )
+    
+    data_visualizacao = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name='Data de Visualização',
+    )
+    
+    notificacao_enviada = models.BooleanField(
+        default=False,
+        verbose_name='Notificação Enviada',
+        help_text='Indica se o e-mail de notificação foi enviado com sucesso',
+    )
+    
+    data_notificacao = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name='Data da Notificação',
+    )
+    
+    class Meta:
+        verbose_name = 'Documento do Cliente'
+        verbose_name_plural = 'Documentos dos Clientes'
+        ordering = ['-data_envio']
+        indexes = [
+            models.Index(fields=['cliente', '-data_envio']),
+            models.Index(fields=['tipo_documento', '-data_envio']),
+            models.Index(fields=['notificacao_enviada']),
+        ]
+    
+    def __str__(self):
+        cliente_nome = self.cliente.get_full_name() or self.cliente.username
+        return f"{self.titulo} - {cliente_nome}"
+    
+    @property
+    def nome_arquivo(self):
+        """Retorna apenas o nome do arquivo sem o caminho."""
+        if self.arquivo:
+            return os.path.basename(self.arquivo.name)
+        return "Sem arquivo"
+    
+    @property
+    def tamanho_arquivo(self):
+        """Retorna o tamanho do arquivo em formato legível."""
+        if self.arquivo:
+            size = float(self.arquivo.size)
+            for unit in ['B', 'KB', 'MB', 'GB']:
+                if size < 1024.0:
+                    return f"{size:.1f} {unit}"
+                size /= 1024.0
+        return "0 B"
+    
+    @property
+    def extensao_arquivo(self):
+        """Retorna a extensão do arquivo."""
+        if self.arquivo:
+            _, ext = os.path.splitext(self.arquivo.name)
+            return ext.lower().replace('.', '') if ext else None
+        return None
+    
+    @property
+    def tipo_documento_display(self):
+        """Retorna o nome legível do tipo de documento."""
+        return dict(self.TIPO_DOCUMENTO_CHOICES).get(self.tipo_documento, 'Desconhecido')
+    
+    @property
+    def dias_desde_envio(self):
+        """Calcula quantos dias se passaram desde o envio."""
+        if self.data_envio:
+            delta = timezone.now() - self.data_envio
+            return delta.days
+        return 0
+    
+    def marcar_como_visualizado(self):
+        """Marca o documento como visualizado pelo cliente."""
+        if not self.visualizado:
+            self.visualizado = True
+            self.data_visualizacao = timezone.now()
+            self.save(update_fields=['visualizado', 'data_visualizacao'])
+    
+    def marcar_notificacao_enviada(self):
+        """Marca que a notificação por e-mail foi enviada com sucesso."""
+        self.notificacao_enviada = True
+        self.data_notificacao = timezone.now()
+        self.save(update_fields=['notificacao_enviada', 'data_notificacao'])
+    
+    def get_absolute_url(self):
+        """Retorna a URL para visualizar este documento."""
+        return f"/usuarios/documentos/{self.id}/"

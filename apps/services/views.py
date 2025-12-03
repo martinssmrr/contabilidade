@@ -252,24 +252,41 @@ def planos_view(request):
 
 def consulta_cnaes_view(request):
     """
-    View para consulta de CNAEs organizados por categoria
+    View para consulta de CNAEs usando a API do IBGE
     """
-    from .models import CategoriaCNAE
+    import requests
     
-    # Buscar todas as categorias com seus CNAEs
-    categorias = CategoriaCNAE.objects.prefetch_related('cnaes').all()
+    cnaes_data = []
+    error_message = None
     
-    # Organizar dados em dicionário para o template
-    categorias_com_cnaes = {}
-    for categoria in categorias:
-        cnaes_ativos = categoria.cnaes.filter(ativo=True)
-        if cnaes_ativos.exists():  # Só incluir categorias com CNAEs ativos
-            categorias_com_cnaes[categoria] = list(cnaes_ativos)
+    try:
+        # Buscar CNAEs da API do IBGE
+        response = requests.get('https://servicodados.ibge.gov.br/api/v2/cnae/classes', timeout=10)
+        
+        if response.status_code == 200:
+            cnaes_api = response.json()
+            
+            # Processar e organizar os dados
+            for cnae in cnaes_api:
+                cnaes_data.append({
+                    'id': cnae.get('id'),
+                    'descricao': cnae.get('descricao', 'Sem descrição'),
+                    'observacoes': cnae.get('observacoes', ''),
+                })
+        else:
+            error_message = f'Erro ao buscar CNAEs: Status {response.status_code}'
+            
+    except requests.exceptions.Timeout:
+        error_message = 'Tempo esgotado ao conectar com a API do IBGE. Tente novamente.'
+    except requests.exceptions.RequestException as e:
+        error_message = f'Erro ao conectar com a API do IBGE: {str(e)}'
+    except Exception as e:
+        error_message = f'Erro inesperado: {str(e)}'
     
     context = {
-        'categorias_com_cnaes': categorias_com_cnaes,
-        'total_categorias': len(categorias_com_cnaes),
-        'total_cnaes': sum(len(cnaes) for cnaes in categorias_com_cnaes.values()),
+        'cnaes': cnaes_data,
+        'total_cnaes': len(cnaes_data),
+        'error_message': error_message,
     }
     
     return render(request, 'services/consultar_cnaes.html', context)

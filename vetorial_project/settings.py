@@ -187,3 +187,133 @@ if not DEBUG:
 MOVIMENTACAO_ALLOWED_EXTENSIONS = ['pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx']
 # 10 MB por arquivo por padrão
 MOVIMENTACAO_MAX_UPLOAD_SIZE = 10 * 1024 * 1024
+
+# ============================================================================
+# CONFIGURAÇÕES DE E-MAIL
+# ============================================================================
+
+# Backend de e-mail (usar SMTP)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# Configurações do servidor SMTP (Hotmail/Outlook)
+EMAIL_HOST = 'smtp-mail.outlook.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'contabilidadevetorial@hotmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')  # Usar variável de ambiente
+
+# Remetente padrão
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+
+# URL base do site (para links nos e-mails)
+SITE_URL = os.getenv('SITE_URL', 'http://localhost:8000')
+
+# ============================================================================
+# CONFIGURAÇÕES DO CELERY (Tarefas Assíncronas)
+# ============================================================================
+
+# Broker URL (usar Redis em produção, ou RabbitMQ)
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+
+# Backend de resultados (opcional, para tasks que retornam valores)
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+
+# Aceitar conteúdo em JSON
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# Timezone do Celery (deve ser o mesmo do Django)
+CELERY_TIMEZONE = TIME_ZONE
+
+# Configurações de retry
+CELERY_TASK_ACKS_LATE = True  # Task só é marcada como concluída após execução
+CELERY_TASK_REJECT_ON_WORKER_LOST = True  # Re-enfileira task se worker cair
+
+# Timeout de tasks (10 minutos)
+CELERY_TASK_TIME_LIMIT = 600
+
+# Prefetch: quantas tasks cada worker pega de uma vez
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+
+# ============================================================================
+# CONFIGURAÇÕES DE LOGGING
+# ============================================================================
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] {asctime} {name} {message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+            'maxBytes': 10485760,  # 10 MB
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+        'email_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR / 'logs' / 'emails.log',
+            'maxBytes': 5242880,  # 5 MB
+            'backupCount': 3,
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'apps.services.email_service': {
+            'handlers': ['console', 'email_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'apps.documents.tasks': {
+            'handlers': ['console', 'email_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'apps.documents.signals': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+# Criar diretório de logs se não existir
+import os
+logs_dir = BASE_DIR / 'logs'
+if not os.path.exists(logs_dir):
+    os.makedirs(logs_dir)
+
+# ============================================================================
+# CONFIGURAÇÕES DE LGPD E SEGURANÇA
+# ============================================================================
+
+# Nunca anexar documentos em e-mails (apenas notificação)
+EMAIL_ATTACH_DOCUMENTS = False
+
+# Tempo de retenção de logs de notificação (em dias)
+NOTIFICATION_LOG_RETENTION_DAYS = 90
+
+# Limite de tamanho para documentos (20 MB)
+DOCUMENTO_MAX_UPLOAD_SIZE = 20 * 1024 * 1024

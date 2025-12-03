@@ -31,6 +31,13 @@ redis>=5.0.0  # Cliente Redis para cache
 django-redis>=5.4.0  # Backend de cache Redis para Django
 
 # ==================================
+# CELERY - TASKS ASSÍNCRONAS
+# ==================================
+celery>=5.3.0  # Task queue assíncrono
+celery[redis]>=5.3.0  # Suporte Redis para Celery
+flower>=2.0.0  # Monitoramento web do Celery
+
+# ==================================
 # DESENVOLVIMENTO (OPCIONAL)
 # ==================================
 # django-debug-toolbar>=4.2.0
