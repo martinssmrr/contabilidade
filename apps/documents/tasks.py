@@ -183,3 +183,198 @@ def limpar_logs_antigos() -> int:
     except Exception as e:
         logger.error(f"Erro ao limpar logs: {str(e)}")
         return 0
+
+
+@shared_task(
+    bind=True,
+    max_retries=3,
+    default_retry_delay=60,
+    autoretry_for=(Exception,),
+    retry_backoff=True
+)
+def enviar_email_nota_fiscal(self, nota_fiscal_id: int) -> bool:
+    """
+    Task assíncrona para enviar notificação de Nota Fiscal.
+    
+    Integração com painel do staff - dispara automaticamente quando
+    o staff envia uma NF via /support/dashboard/.
+    
+    Args:
+        nota_fiscal_id: ID da NotaFiscal criada
+        
+    Returns:
+        bool: True se enviou com sucesso
+    """
+    try:
+        from apps.documents.models import NotaFiscal
+        from apps.services.email_service import EmailService
+        
+        nota_fiscal = NotaFiscal.objects.select_related('cliente', 'enviado_por').get(id=nota_fiscal_id)
+        
+        cliente = nota_fiscal.cliente
+        cliente_nome = cliente.get_full_name() or cliente.username
+        cliente_email = cliente.email
+        
+        if not cliente_email:
+            logger.error(f"Cliente {cliente.username} não possui e-mail")
+            return False
+        
+        # Enviar e-mail
+        email_service = EmailService()
+        sucesso = email_service.enviar_email_com_template(
+            destinatario=cliente_email,
+            assunto='📄 Nova Nota Fiscal Disponível',
+            template_html='emails/notificacao_documento.html',
+            contexto={
+                'cliente_nome': cliente_nome,
+                'tipo_documento': 'Nota Fiscal',
+                'titulo_documento': f'Nota Fiscal - {nota_fiscal.data_upload.strftime("%d/%m/%Y")}',
+                'data_envio': nota_fiscal.data_upload.strftime('%d/%m/%Y às %H:%M'),
+                'descricao': nota_fiscal.observacoes or 'Sua nota fiscal está disponível para visualização.',
+                'url_documentos': f'{email_service.url_login}/documentos/',
+                'url_login': email_service.url_login,
+                'email_suporte': email_service.email_suporte,
+            }
+        )
+        
+        if sucesso:
+            logger.info(f"Notificação de NF enviada para {cliente_email}")
+        else:
+            logger.error(f"Falha ao enviar notificação de NF para {cliente_email}")
+            raise Exception("Falha no envio do e-mail")
+        
+        return sucesso
+        
+    except Exception as e:
+        logger.error(f"Erro na task de notificação de NF: {str(e)}")
+        raise
+
+
+@shared_task(
+    bind=True,
+    max_retries=3,
+    default_retry_delay=60,
+    autoretry_for=(Exception,),
+    retry_backoff=True
+)
+def enviar_email_documento_empresa(self, documento_id: int) -> bool:
+    """
+    Task assíncrona para enviar notificação de Documento da Empresa.
+    
+    Integração com painel do staff - dispara automaticamente quando
+    o staff envia um documento via /support/dashboard/.
+    
+    Args:
+        documento_id: ID do DocumentoEmpresa criado
+        
+    Returns:
+        bool: True se enviou com sucesso
+    """
+    try:
+        from apps.documents.models import DocumentoEmpresa
+        from apps.services.email_service import EmailService
+        
+        documento = DocumentoEmpresa.objects.select_related('cliente', 'enviado_por').get(id=documento_id)
+        
+        cliente = documento.cliente
+        cliente_nome = cliente.get_full_name() or cliente.username
+        cliente_email = cliente.email
+        
+        if not cliente_email:
+            logger.error(f"Cliente {cliente.username} não possui e-mail")
+            return False
+        
+        # Enviar e-mail
+        email_service = EmailService()
+        sucesso = email_service.enviar_email_com_template(
+            destinatario=cliente_email,
+            assunto=f'📄 Novo Documento: {documento.titulo}',
+            template_html='emails/notificacao_documento.html',
+            contexto={
+                'cliente_nome': cliente_nome,
+                'tipo_documento': documento.get_categoria_display(),
+                'titulo_documento': documento.titulo,
+                'data_envio': documento.data_upload.strftime('%d/%m/%Y às %H:%M'),
+                'descricao': documento.descricao or f'Um novo documento ({documento.get_categoria_display()}) está disponível para você.',
+                'url_documentos': f'{email_service.url_login}/documentos/',
+                'url_login': email_service.url_login,
+                'email_suporte': email_service.email_suporte,
+            }
+        )
+        
+        if sucesso:
+            logger.info(f"Notificação de Documento Empresa enviada para {cliente_email}")
+        else:
+            logger.error(f"Falha ao enviar notificação de Documento Empresa para {cliente_email}")
+            raise Exception("Falha no envio do e-mail")
+        
+        return sucesso
+        
+    except Exception as e:
+        logger.error(f"Erro na task de notificação de Documento Empresa: {str(e)}")
+        raise
+
+
+@shared_task(
+    bind=True,
+    max_retries=3,
+    default_retry_delay=60,
+    autoretry_for=(Exception,),
+    retry_backoff=True
+)
+def enviar_email_certidao_negativa(self, certidao_id: int) -> bool:
+    """
+    Task assíncrona para enviar notificação de Certidão Negativa.
+    
+    Integração com painel do staff - dispara automaticamente quando
+    o staff envia uma certidão via /support/dashboard/.
+    
+    Args:
+        certidao_id: ID da CertidaoNegativa criada
+        
+    Returns:
+        bool: True se enviou com sucesso
+    """
+    try:
+        from apps.users.models import CertidaoNegativa
+        from apps.services.email_service import EmailService
+        
+        certidao = CertidaoNegativa.objects.select_related('cliente').get(id=certidao_id)
+        
+        cliente = certidao.cliente
+        cliente_nome = cliente.get_full_name() or cliente.username
+        cliente_email = cliente.email
+        
+        if not cliente_email:
+            logger.error(f"Cliente {cliente.username} não possui e-mail")
+            return False
+        
+        # Enviar e-mail
+        email_service = EmailService()
+        sucesso = email_service.enviar_email_com_template(
+            destinatario=cliente_email,
+            assunto=f'📄 Nova Certidão: {certidao.get_tipo_display()}',
+            template_html='emails/notificacao_documento.html',
+            contexto={
+                'cliente_nome': cliente_nome,
+                'tipo_documento': f'Certidão {certidao.get_tipo_display()}',
+                'titulo_documento': f'Certidão {certidao.get_tipo_display()} - Status: {certidao.get_status_display()}',
+                'data_envio': certidao.data_envio.strftime('%d/%m/%Y às %H:%M'),
+                'descricao': f'Sua certidão {certidao.get_tipo_display().lower()} está disponível para download.',
+                'url_documentos': f'{email_service.url_login}/documentos/',
+                'url_login': email_service.url_login,
+                'email_suporte': email_service.email_suporte,
+            }
+        )
+        
+        if sucesso:
+            logger.info(f"Notificação de Certidão enviada para {cliente_email}")
+        else:
+            logger.error(f"Falha ao enviar notificação de Certidão para {cliente_email}")
+            raise Exception("Falha no envio do e-mail")
+        
+        return sucesso
+        
+    except Exception as e:
+        logger.error(f"Erro na task de notificação de Certidão: {str(e)}")
+        raise

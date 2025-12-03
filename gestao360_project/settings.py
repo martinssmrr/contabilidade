@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     "apps.services",
     "apps.payments",
     "apps.support",
-    "apps.documents",
+    "apps.documents.apps.DocumentsConfig",  # Com AppConfig explícito para signals
     "apps.blog",
     "apps.testimonials",
 ]
