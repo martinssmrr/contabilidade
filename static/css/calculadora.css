@@ -1,53 +1,596 @@
-/* Styles moved from template: Calculadora CLT vs PJ */
+/* ===================================================================
+   CALCULADORA CLT vs PJ - Design Moderno Inspirado em Calculadora Física
+   =================================================================== */
+
+/* ===== SEÇÃO PRINCIPAL ===== */
 .calculadora-section {
     padding: 120px 0 80px 0;
-    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    background: #f5f5f7;
     min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.calculadora-header { text-align: center; margin-bottom: 2.5rem; }
-.calculadora-header h1 { font-size: 2.25rem; font-weight:700; color: #1f2937; margin-bottom:.5rem }
-.calculadora-header p { color:#6b7280; max-width:700px; margin:0 auto }
+/* ===== HEADER DA CALCULADORA ===== */
+.calculadora-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
 
-.calculadora-card, .resultado-card, .comparacao-final { background: white; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.06); padding:1.75rem; }
-.calculadora-card { padding:2rem }
+.calculadora-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+}
 
-.form-label{ font-weight:600; color:#374151 }
-.form-control{ border:2px solid #e5e7eb; border-radius:8px; padding:.75rem 1rem; font-size:1.05rem }
-.form-control:focus{ border-color:var(--primary-color); box-shadow:0 0 0 3px rgba(62,244,124,0.08) }
+.calculadora-header p {
+    color: #6e6e73;
+    font-size: 1.125rem;
+    max-width: 650px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
 
-.btn-calcular{ background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); color:#fff; border:none; padding:0.9rem 1.25rem; font-weight:700; border-radius:8px }
+/* ===== CONTAINER DA CALCULADORA (Corpo Físico) ===== */
+.calculadora-card {
+    background: linear-gradient(145deg, #ffffff 0%, #f9f9fb 100%);
+    border-radius: 24px;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    padding: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+}
 
-.regime-badge{ display:inline-block; padding:.5rem 1rem; border-radius:999px; font-weight:700 }
-.regime-badge.clt{ background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%); color:#fff }
-.regime-badge.pj{ background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); color:#fff }
+.calculadora-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    border-radius: 24px 24px 0 0;
+}
 
-.desconto-item{ display:flex; justify-content:space-between; padding:.5rem 0; border-bottom:1px solid #eef2f7 }
-.desconto-label{ color:#374151 }
-.desconto-valor{ font-weight:700 }
+/* ===== VISOR LCD (Área de Input) ===== */
+.form-label {
+    font-weight: 600;
+    color: #424245;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
 
-.salario-liquido{ padding:1.25rem; border-radius:8px; text-align:center }
-.salario-liquido-label{ font-size:.85rem; font-weight:700; color:#166534; text-transform:uppercase }
-.salario-liquido-valor{ font-size:2rem; font-weight:800; color:#15803d }
+.form-label svg {
+    margin-right: 8px;
+    opacity: 0.7;
+}
 
-.beneficios-section{ background:#f8fafc; padding:1rem; border-radius:8px; margin-top:1rem }
-.beneficios-title{ font-weight:700; color:#1e40af; margin-bottom:.5rem }
+.form-control {
+    background: #2c2c2e;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    font-size: 1.5rem;
+    color: #00ff9f;
+    font-family: 'Courier New', 'SF Mono', Monaco, monospace;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
 
-.comparacao-final{ text-align:center; margin-top:1.5rem }
-.diferenca-valor{ font-size:1.75rem; font-weight:800 }
-.diferenca-valor.positiva{ color:var(--primary-color) }
-.diferenca-valor.negativa{ color: #0c63d1 }
+.form-control::placeholder {
+    color: rgba(0, 255, 159, 0.3);
+    font-weight: 400;
+}
 
-.aviso-importante{ background:#fffbeb; border-left:4px solid #f59e0b; padding:1rem; border-radius:8px; margin-top:1.25rem }
+.form-control:focus {
+    outline: none;
+    background: #1c1c1e;
+    color: #00ffcc;
+    box-shadow: 
+        inset 0 2px 8px rgba(0, 0, 0, 0.4),
+        0 0 0 3px rgba(102, 126, 234, 0.3),
+        0 0 20px rgba(102, 126, 234, 0.2);
+}
 
-/* Utility classes to replace inline styles */
-.svg-inline{ vertical-align: middle; }
-.text-muted-small{ color: #6b7280; font-size: 1.05rem }
-.text-accent-clt{ color: var(--secondary-color) }
-.text-accent-pj{ color: var(--primary-color) }
-.beneficios-pj{ background: #fef3f2 }
-.beneficios-pj .beneficios-title{ color: #991b1b }
-.list-beneficios-pj{ margin:0; padding-left:1.5rem; font-size:0.9rem; color:#7f1d1d }
-.h5-strong{ color:#374151; font-weight:700 }
+.form-control:disabled {
+    background: #3a3a3c;
+    color: rgba(0, 255, 159, 0.4);
+}
 
-@media (max-width:768px){ .calculadora-section{ padding:80px 0 } .calculadora-header h1{ font-size:1.6rem } .salario-liquido-valor{ font-size:1.6rem } }
+/* Texto auxiliar abaixo do input */
+.text-muted, small.text-muted {
+    color: #86868b;
+    font-size: 0.813rem;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+/* ===== BOTÃO PRINCIPAL (Tecla de Ação) ===== */
+.btn-calcular {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 14px;
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    width: 100%;
+    margin-top: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 4px 12px rgba(102, 126, 234, 0.4),
+        0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-calcular::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-calcular:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(102, 126, 234, 0.5),
+        0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-calcular:hover::before {
+    left: 100%;
+}
+
+.btn-calcular:active {
+    transform: translateY(0);
+    box-shadow: 
+        0 2px 8px rgba(102, 126, 234, 0.4),
+        0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-calcular svg {
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+/* ===== ÁREA DE RESULTADOS ===== */
+.resultado-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #e5e5ea;
+}
+
+.resultado-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin-bottom: 0.5rem;
+}
+
+.resultado-header .text-muted {
+    color: #6e6e73;
+    font-size: 1rem;
+}
+
+/* ===== CARDS DE RESULTADO (Display LCD) ===== */
+.resultado-card {
+    background: linear-gradient(145deg, #ffffff 0%, #f9f9fb 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 
+        0 8px 30px rgba(0, 0, 0, 0.08),
+        0 2px 6px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.resultado-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.12),
+        0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Indicador de regime (CLT/PJ) */
+.regime-badge {
+    display: inline-block;
+    padding: 0.625rem 1.25rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.regime-badge.clt {
+    background: linear-gradient(135deg, #0c63d1 0%, #084a9e 100%);
+    color: #ffffff;
+}
+
+.regime-badge.pj {
+    background: linear-gradient(135deg, #3ef47c 0%, #2bc765 100%);
+    color: #1d1d1f;
+}
+
+/* Salário Bruto (Display Superior) */
+.salario-bruto {
+    background: #2c2c2e;
+    color: #00ff9f;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.salario-bruto strong {
+    font-size: 1.25rem;
+    color: #00ffcc;
+}
+
+/* Títulos de seção */
+.h5-strong {
+    color: #1d1d1f;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5e5ea;
+}
+
+/* Itens de desconto/imposto */
+.desconto-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f2;
+    transition: background-color 0.2s ease;
+}
+
+.desconto-item:hover {
+    background-color: #f9f9fb;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 6px;
+}
+
+.desconto-item:last-child {
+    border-bottom: none;
+}
+
+.desconto-label {
+    color: #424245;
+    font-weight: 500;
+    font-size: 0.938rem;
+}
+
+.desconto-valor {
+    font-weight: 700;
+    color: #d1345b;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+}
+
+/* Total de descontos (destaque) */
+.total-descontos {
+    background: linear-gradient(135deg, #fff5f7 0%, #ffe5ec 100%);
+    border-radius: 10px;
+    padding: 0.75rem;
+    margin: 1rem 0;
+    border: 1px solid #ffd6e0;
+}
+
+.total-descontos .desconto-item {
+    border-bottom: none;
+    padding: 0.5rem 0;
+}
+
+.total-descontos .desconto-label,
+.total-descontos .desconto-valor {
+    font-size: 1.063rem;
+}
+
+/* Valor líquido (Display Principal) */
+.salario-liquido {
+    background: linear-gradient(135deg, #d4f4dd 0%, #b8f2c3 100%);
+    padding: 1.75rem;
+    border-radius: 14px;
+    text-align: center;
+    margin-top: 1.5rem;
+    box-shadow: 
+        0 4px 16px rgba(21, 128, 61, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(21, 128, 61, 0.1);
+}
+
+.salario-liquido-label {
+    font-size: 0.813rem;
+    font-weight: 700;
+    color: #166534;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 0.5rem;
+}
+
+.salario-liquido-valor {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #15803d;
+    font-family: 'Courier New', monospace;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(21, 128, 61, 0.1);
+}
+
+/* Seção de benefícios */
+.beneficios-section {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    padding: 1.25rem;
+    border-radius: 12px;
+    margin-top: 1.5rem;
+    border: 1px solid #bae6fd;
+}
+
+.beneficios-title {
+    font-weight: 700;
+    color: #0369a1;
+    font-size: 0.938rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.beneficio-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.625rem 0;
+    border-bottom: 1px solid rgba(186, 230, 253, 0.5);
+    font-size: 0.938rem;
+}
+
+.beneficio-item:last-child {
+    border-bottom: none;
+}
+
+.beneficio-item span {
+    color: #075985;
+    font-weight: 500;
+}
+
+.beneficio-item strong {
+    font-family: 'Courier New', monospace;
+}
+
+/* Benefícios PJ (estilo alternativo) */
+.beneficios-pj {
+    background: linear-gradient(135deg, #fef3f2 0%, #fee2e2 100%);
+    border: 1px solid #fecdd3;
+}
+
+.beneficios-pj .beneficios-title {
+    color: #991b1b;
+}
+
+.list-beneficios-pj {
+    margin: 0;
+    padding-left: 1.5rem;
+    font-size: 0.875rem;
+    color: #7f1d1d;
+    list-style-type: disc;
+}
+
+.list-beneficios-pj li {
+    padding: 0.375rem 0;
+    font-weight: 500;
+}
+
+/* ===== COMPARAÇÃO FINAL ===== */
+.comparacao-final {
+    background: linear-gradient(145deg, #ffffff 0%, #f9f9fb 100%);
+    border-radius: 20px;
+    padding: 2.5rem;
+    text-align: center;
+    margin-top: 2rem;
+    box-shadow: 
+        0 8px 30px rgba(0, 0, 0, 0.08),
+        0 2px 6px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.comparacao-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin-bottom: 1rem;
+}
+
+.text-muted-small {
+    color: #6e6e73;
+    font-size: 1.063rem;
+    margin-bottom: 0.75rem;
+}
+
+.diferenca-valor {
+    font-size: 3rem;
+    font-weight: 800;
+    font-family: 'Courier New', monospace;
+    letter-spacing: -1px;
+    margin: 0.5rem 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.diferenca-valor.positiva {
+    color: #3ef47c;
+    animation: pulsePositive 2s ease-in-out infinite;
+}
+
+.diferenca-valor.negativa {
+    color: #0c63d1;
+}
+
+@keyframes pulsePositive {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+.diferenca-percentual {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #6e6e73;
+    margin-top: 0.5rem;
+}
+
+/* ===== AVISO IMPORTANTE ===== */
+.aviso-importante {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border-left: 4px solid #f59e0b;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+}
+
+.aviso-importante h6 {
+    color: #92400e;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.aviso-importante ul {
+    margin: 0;
+    padding-left: 1.5rem;
+    color: #78350f;
+    font-size: 0.938rem;
+    line-height: 1.7;
+}
+
+.aviso-importante li {
+    margin-bottom: 0.5rem;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.svg-inline {
+    vertical-align: middle;
+}
+
+.text-accent-clt {
+    color: #0c63d1;
+}
+
+.text-accent-pj {
+    color: #3ef47c;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 992px) {
+    .calculadora-section {
+        padding: 100px 0 60px 0;
+    }
+    
+    .calculadora-header h1 {
+        font-size: 2rem;
+    }
+    
+    .resultado-card {
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .calculadora-section {
+        padding: 80px 0 40px 0;
+    }
+    
+    .calculadora-header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .calculadora-header p {
+        font-size: 1rem;
+    }
+    
+    .calculadora-card {
+        padding: 1.75rem;
+    }
+    
+    .form-control {
+        font-size: 1.25rem;
+        padding: 0.875rem 1rem;
+    }
+    
+    .btn-calcular {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .salario-liquido-valor {
+        font-size: 2rem;
+    }
+    
+    .diferenca-valor {
+        font-size: 2.25rem;
+    }
+    
+    .resultado-card {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .calculadora-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .calculadora-card {
+        padding: 1.25rem;
+    }
+    
+    .form-control {
+        font-size: 1.125rem;
+        padding: 0.75rem 0.875rem;
+    }
+    
+    .salario-liquido-valor {
+        font-size: 1.75rem;
+    }
+    
+    .diferenca-valor {
+        font-size: 2rem;
+    }
+    
+    .comparacao-final {
+        padding: 1.75rem;
+    }
+}
