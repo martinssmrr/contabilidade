@@ -288,7 +288,7 @@
                 </a>
                 
                 {% if post.featured_image %}
-                <img src="{{ MEDIA_URL }}{{ post.featured_image }}" alt="{{ post.title }}" class="post-featured-image">
+                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="post-featured-image">
                 {% endif %}
                 
                 <div class="post-content">
