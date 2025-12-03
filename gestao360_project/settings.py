@@ -151,13 +151,13 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# Whitenoise configuration for production (usando StaticFilesStorage para evitar remoção de arquivos)
+# Whitenoise configuration for production
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "django.core.files.storage.StaticFilesStorage",
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
 
