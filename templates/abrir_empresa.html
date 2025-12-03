@@ -877,15 +877,16 @@ function enviarFormularioContato() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Obrigado! Entraremos em contato em breve.');
-            document.getElementById('contactFormSection').reset();
+            // Redirecionar para página de obrigado
+            window.location.href = '/obrigado/';
         } else {
             alert('Erro ao enviar formulário. Tente novamente.');
         }
     })
     .catch(error => {
         console.error('Erro:', error);
-        alert('Erro ao enviar formulário. Tente novamente.');
+        // Mesmo com erro, redirecionar para página de obrigado
+        window.location.href = '/obrigado/';
     });
 }
 
@@ -971,6 +972,14 @@ async function enviarWhatsApp() {
     const whatsappNumber = '5577999515837';
     const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(mensagem)}`;
     window.open(url, '_blank');
+    
+    // Fechar o modal e redirecionar para página de obrigado
+    var contactModal = bootstrap.Modal.getInstance(document.getElementById('contactModal'));
+    contactModal.hide();
+    
+    setTimeout(() => {
+        window.location.href = '/obrigado/';
+    }, 300);
 }
 
 async function enviarLigacao() {
@@ -1005,15 +1014,27 @@ async function enviarLigacao() {
 
         const result = await response.json();
         if (result.success) {
-            alert(`Obrigado, ${nome}!\n\nEntraremos em contato no número ${telefone} para falar sobre: ${servicoText}\n\nAguarde nosso retorno em breve!`);
+            // Fechar o modal e redirecionar para página de obrigado
+            var contactModal = bootstrap.Modal.getInstance(document.getElementById('contactModal'));
+            contactModal.hide();
+            
+            // Aguardar o modal fechar antes de redirecionar
+            setTimeout(() => {
+                window.location.href = '/obrigado/';
+            }, 300);
+            return;
         }
     } catch (error) {
         console.error('Erro ao capturar lead:', error);
-        alert(`Obrigado, ${nome}!\n\nEntraremos em contato no número ${telefone} para falar sobre: ${servicoText}\n\nAguarde nosso retorno em breve!`);
     }
     
+    // Se houve erro ou não conseguiu salvar, redirecionar mesmo assim
     var contactModal = bootstrap.Modal.getInstance(document.getElementById('contactModal'));
     contactModal.hide();
+    
+    setTimeout(() => {
+        window.location.href = '/obrigado/';
+    }, 300);
 }
 
 // Máscara para telefone

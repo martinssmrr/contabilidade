@@ -153,6 +153,7 @@ urlpatterns = [
     path("trocar-contador/", trocar_contador_view, name='trocar_contador'),
     path("contabilidade-completa/", contabilidade_completa_view, name='contabilidade_completa'),
     path("assessoria/", assessoria_view, name='assessoria'),
+    path("obrigado/", TemplateView.as_view(template_name='obrigado.html'), name='obrigado'),
     # Páginas institucionais estáticas
     path('sobre/', TemplateView.as_view(template_name='pages/sobre.html'), name='sobre'),
     path('termos-de-uso/', TemplateView.as_view(template_name='pages/termos_de_uso.html'), name='termos_de_uso'),
