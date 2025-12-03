@@ -15,9 +15,9 @@
                     <article class="featured-slide">
                         <div class="featured-image-col">
                             {% if post.featured_image %}
-                                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="recent-small-image">
                             {% else %}
-                                <img src="{% static 'img/logo04.png' %}" alt="{{ post.title }}">
+                                <img src="{% static 'img/logo.png' %}" alt="{{ post.title }}">
                             {% endif %}
                         </div>
                         <div class="featured-info-col">
