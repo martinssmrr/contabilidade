@@ -71,6 +71,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "vetorial_project.middleware.CacheControlMiddleware",
+    "vetorial_project.middleware.SecurityHeadersMiddleware",
 ]
 
 ROOT_URLCONF = "gestao360_project.urls"
@@ -106,6 +108,11 @@ DATABASES = {
         "PASSWORD": os.getenv('DB_PASSWORD', 'postgres'),
         "HOST": os.getenv('DB_HOST', 'localhost'),
         "PORT": os.getenv('DB_PORT', '5432'),
+        # Otimizações de conexão
+        "CONN_MAX_AGE": 600,  # Reutilizar conexões por 10 minutos
+        "OPTIONS": {
+            "connect_timeout": 10,
+        }
     }
 }
 
@@ -157,6 +164,11 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+# Configurações adicionais do WhiteNoise
+WHITENOISE_AUTOREFRESH = DEBUG  # Auto-refresh apenas em desenvolvimento
+WHITENOISE_USE_FINDERS = DEBUG  # Use finders apenas em desenvolvimento
+WHITENOISE_MAX_AGE = 31536000 if not DEBUG else 0  # Cache de 1 ano em produção
 
 # Media files (uploads)
 MEDIA_URL = "/media/"
@@ -304,6 +316,45 @@ import os
 logs_dir = BASE_DIR / 'logs'
 if not os.path.exists(logs_dir):
     os.makedirs(logs_dir)
+
+# ============================================================================
+# CONFIGURAÇÕES DE CACHE
+# ============================================================================
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'CONNECTION_POOL_KWARGS': {
+                'max_connections': 50,
+                'retry_on_timeout': True,
+            },
+            'SOCKET_CONNECT_TIMEOUT': 5,
+            'SOCKET_TIMEOUT': 5,
+        },
+        'KEY_PREFIX': 'vetorial',
+        'TIMEOUT': 300,  # 5 minutos padrão
+    }
+}
+
+# Cache de sessão
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+SESSION_CACHE_ALIAS = 'default'
+
+# ============================================================================
+# OTIMIZAÇÕES DE TEMPLATES
+# ============================================================================
+
+# Cache de templates em produção
+if not DEBUG:
+    TEMPLATES[0]['OPTIONS']['loaders'] = [
+        ('django.template.loaders.cached.Loader', [
+            'django.template.loaders.filesystem.Loader',
+            'django.template.loaders.app_directories.Loader',
+        ]),
+    ]
 
 # ============================================================================
 # CONFIGURAÇÕES DE LGPD E SEGURANÇA

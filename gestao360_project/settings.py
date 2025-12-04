@@ -75,6 +75,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "gestao360_project.middleware.CacheControlMiddleware",
+    "gestao360_project.middleware.SecurityHeadersMiddleware",
 ]
 
 ROOT_URLCONF = "gestao360_project.urls"
@@ -95,6 +97,16 @@ TEMPLATES = [
     },
 ]
 
+# Cache de templates em produção
+if not DEBUG:
+    TEMPLATES[0]['OPTIONS']['loaders'] = [
+        ('django.template.loaders.cached.Loader', [
+            'django.template.loaders.filesystem.Loader',
+            'django.template.loaders.app_directories.Loader',
+        ]),
+    ]
+    TEMPLATES[0]['APP_DIRS'] = False
+
 WSGI_APPLICATION = "gestao360_project.wsgi.application"
 
 
@@ -109,6 +121,10 @@ DATABASES = {
         "PASSWORD": os.getenv('DB_PASSWORD', 'postgres'),
         "HOST": os.getenv('DB_HOST', 'localhost'),
         "PORT": os.getenv('DB_PORT', '5432'),
+        "CONN_MAX_AGE": 600,  # Reutilizar conexões por 10 minutos
+        "OPTIONS": {
+            "connect_timeout": 10,
+        },
     }
 }
 
@@ -160,6 +176,11 @@ STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
+
+# WhiteNoise optimization settings
+WHITENOISE_AUTOREFRESH = DEBUG
+WHITENOISE_USE_FINDERS = DEBUG
+WHITENOISE_MAX_AGE = 31536000 if not DEBUG else 0  # 1 ano em produção
 
 # Media files (uploads)
 MEDIA_URL = "/media/"
