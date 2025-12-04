@@ -13,7 +13,7 @@
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "{{ post.title|escapejs }}",
-  "image": "{% if post.featured_image %}{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}{% endif %}",
+  "image": "{% if post.featured_image %}{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.webp' %}{% endif %}",
   "datePublished": "{{ post.created_at|date:'c' }}",
   "dateModified": "{{ post.updated_at|date:'c' }}",
   "author": {
@@ -25,7 +25,7 @@
     "name": "Vetorial Contabilidade",
     "logo": {
       "@type": "ImageObject",
-      "url": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}"
+      "url": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.webp' %}"
     }
   },
   "description": "{{ post.excerpt|default:post.content|striptags|truncatewords:30|escapejs }}",

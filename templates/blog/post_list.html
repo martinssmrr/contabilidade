@@ -17,7 +17,7 @@
                             {% if post.featured_image %}
                                 <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="recent-small-image">
                             {% else %}
-                                <img src="{% static 'img/logo.png' %}" alt="{{ post.title }}">
+                                <img src="{% static 'img/logo.webp' %}" alt="{{ post.title }}">
                             {% endif %}
                         </div>
                         <div class="featured-info-col">
@@ -48,7 +48,7 @@
                 <!-- Post Principal (mais recente) com imagem de fundo -->
                 <article class="recent-main">
                     <a href="{% url 'blog:post_detail' latest_post.slug %}" class="recent-main-link">
-                        <div class="recent-image-bg" style="background-image: url('{% if latest_post.featured_image %}{{ latest_post.featured_image.url }}{% else %}{% static 'img/logo04.png' %}{% endif %}');">
+                        <div class="recent-image-bg" style="background-image: url('{% if latest_post.featured_image %}{{ latest_post.featured_image.url }}{% else %}{% static 'img/logo04.webp' %}{% endif %}');">
                             <div class="recent-overlay">
                                 <h3>{{ latest_post.title }}</h3>
                             </div>
@@ -64,7 +64,7 @@
                             {% if post.featured_image %}
                                 <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
                             {% else %}
-                                <img src="{% static 'img/logo04.png' %}" alt="{{ post.title }}">
+                                <img src="{% static 'img/logo04.webp' %}" alt="{{ post.title }}">
                             {% endif %}
                         </div>
                         <div class="recent-small-content">
