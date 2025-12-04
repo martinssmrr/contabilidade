@@ -695,7 +695,7 @@ footer {
 
 .popup-image {
     flex: 1;
-    background-image: url('../img/popup_home1.png');
+    background-image: url('../img/popup_home1.webp');
     background-size: cover;
     background-position: center;
     min-height: 500px;
@@ -1093,7 +1093,7 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('../img/sectioncontact.png');
+    background-image: url('../img/sectioncontact.webp');
     background-size: cover;
     background-position: top center;
     background-repeat: no-repeat;
@@ -1492,11 +1492,11 @@ footer hr {
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 
 /* Moved inline backgrounds and helpers from template */
-.hero-section.trocar-hero { background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('../img/abrirherosection.png'); background-size: cover; background-position: center right; }
+.hero-section.trocar-hero { background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('../img/abrirherosection.webp'); background-size: cover; background-position: center right; }
 .partners-section.partners-bg { background: #f8f9fa; }
 #por-que-escolher { background: #f8f9fa; }
 #planos-comercio { display: none; }
-#contato.contact-section { background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('../img/abrirempresactt.png'); }
+#contato.contact-section { background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('../img/abrirempresactt.webp'); background-size: cover; background-position: center; }
 .faq-section { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); min-height: 400px; }
 
 /* Helpers for trocar-contador page */
