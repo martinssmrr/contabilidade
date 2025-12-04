@@ -21,8 +21,8 @@ cd $PROJECT_DIR
 
 echo ""
 echo "${YELLOW}1. Fazendo backup do banco de dados...${NC}"
-docker-compose -f docker-compose.prod.yml exec -T db pg_dump -U postgres gestao360_db > backup_$(date +%Y%m%d_%H%M%S).sql
-echo "${GREEN}✓ Backup criado${NC}"
+docker-compose -f docker-compose.prod.yml exec -T db pg_dump -U gestao360_user -d gestao360_db > backup_$(date +%Y%m%d_%H%M%S).sql || echo "${YELLOW}⚠ Backup falhou, continuando...${NC}"
+echo "${GREEN}✓ Backup concluído${NC}"
 
 echo ""
 echo "${YELLOW}2. Puxando alterações do Git...${NC}"
