@@ -10,7 +10,18 @@ class StaticViewSitemap(Sitemap):
     changefreq = 'monthly'
 
     def items(self):
-        return ['home', 'abrir_empresa', 'calculadora_clt_pj']
+        return [
+            'home',
+            'abrir_empresa',
+            'deixar_mei',
+            'trocar_contador',
+            'contabilidade_completa',
+            'assessoria',
+            'calculadora_clt_pj',
+            'sobre',
+            'termos_de_uso',
+            'politica_de_privacidade',
+        ]
 
     def location(self, item):
         return reverse(item)
