@@ -23,7 +23,7 @@ from django.views.generic import TemplateView
 from django.contrib.sitemaps.views import sitemap
 from apps.testimonials.models import Testimonial
 from apps.services.views import calculadora_clt_pj
-from apps.blog.sitemaps import StaticViewSitemap, BlogPostSitemap, ServicesSitemap, PlanosSitemap
+from apps.blog.sitemaps import StaticViewSitemap, BlogPostSitemap, ServicesSitemap
 
 # Customização do Admin
 admin.site.site_header = "Vetorial - Administração"
@@ -143,7 +143,6 @@ sitemaps = {
     'static': StaticViewSitemap,
     'blog': BlogPostSitemap,
     'services': ServicesSitemap,
-    'planos': PlanosSitemap,
 }
 
 urlpatterns = [

@@ -48,16 +48,13 @@ class ServicesSitemap(Sitemap):
     priority = 0.7
 
     def items(self):
-        return ['/services/planos/']
+        return ['/services/', '/services/planos/']
 
     def location(self, item):
         return item
 
 
-class PlanosSitemap(Sitemap):
-    """Sitemap para planos ativos"""
-    changefreq = 'monthly'
-    priority = 0.6
+# PlanosSitemap removido - URLs duplicadas com ServicesSitemap
 
     def items(self):
         return Plano.objects.filter(ativo=True)
