@@ -4,7 +4,7 @@
   "name": "Vetorial Contabilidade",
   "alternateName": "Vetorial",
   "url": "https://contabilvetorial.com.br",
-  "logo": "https://contabilvetorial.com.br/static/img/logo.webp",
+  "logo": "https://contabilvetorial.com.br/static/img/logo.png",
   "description": "Contabilidade online especializada em abertura de empresas, planejamento tributário e gestão contábil completa.",
   "address": {
     "@type": "PostalAddress",
@@ -13,7 +13,7 @@
   },
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+55-11-XXXXX-XXXX",
+    "telephone": "+55-61-99831-1920",
     "contactType": "customer service",
     "availableLanguage": ["Portuguese"]
   },
