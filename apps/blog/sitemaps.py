@@ -1,7 +1,6 @@
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 from apps.blog.models import Post
-from apps.services.models import Plano
 
 
 class StaticViewSitemap(Sitemap):
@@ -54,13 +53,16 @@ class ServicesSitemap(Sitemap):
         return item
 
 
-# PlanosSitemap removido - URLs duplicadas com ServicesSitemap
+class ImagesSitemap(Sitemap):
+    """Sitemap para imagens principais (logo, etc)"""
+    changefreq = 'yearly'
+    priority = 0.5
 
     def items(self):
-        return Plano.objects.filter(ativo=True)
+        return [
+            '/static/img/logo.webp',
+            '/static/img/logo.png',
+        ]
 
-    def lastmod(self, obj):
-        return obj.created_at if hasattr(obj, 'created_at') else None
-
-    def location(self, obj):
-        return '/services/planos/'
+    def location(self, item):
+        return item
