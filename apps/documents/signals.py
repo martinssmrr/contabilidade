@@ -36,8 +36,7 @@ def connect_signals():
     post_save.connect(notificar_cliente_documento_empresa, sender=DocumentoEmpresa)
     post_save.connect(notificar_cliente_certidao_negativa, sender=CertidaoNegativa)
     
-    print("🔗 Signals conectados aos modelos!")
-    logger.info("Signals conectados aos modelos!")
+    logger.info("Signals conectados aos modelos de documentos")
 
 
 # @receiver(post_save, sender='documents.DocumentoCliente')  # Removido decorator

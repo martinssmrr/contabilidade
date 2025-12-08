@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Sum
 from apps.services.models import Subscription
-from apps.payments.models import Payment
+from apps.payments.models import Pagamento
 from apps.support.models import Ticket
 from apps.documents.models import Document
 
@@ -24,7 +24,7 @@ def dashboard_index(request):
     if user.role == 'cliente':
         context.update({
             'assinaturas': Subscription.objects.filter(cliente=user),
-            'pagamentos': Payment.objects.filter(cliente=user).order_by('-criado_em')[:5],
+            'pagamentos': Pagamento.objects.filter(cliente=user).order_by('-criado_em')[:5],
             'tickets': Ticket.objects.filter(cliente=user).order_by('-criado_em')[:5],
             'documentos': Document.objects.filter(usuario=user).order_by('-criado_em')[:5],
         })

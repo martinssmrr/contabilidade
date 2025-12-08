@@ -69,11 +69,11 @@ class MovimentacaoFinanceira(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='movimentacoes')
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
     nome = models.CharField(max_length=255)
-    competencia = models.DateField(help_text='Use o primeiro dia do mês para representar competência (YYYY-MM-01)')
+    competencia = models.DateField(help_text='Use o primeiro dia do mês para representar competência (YYYY-MM-01)', db_index=True)
     valor = models.DecimalField(max_digits=12, decimal_places=2)
     anexo = models.FileField(upload_to='movimentacoes/%Y/%m', blank=True, null=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_RASCUNHO)
-    created_at = models.DateTimeField(default=timezone.now)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_RASCUNHO, db_index=True)
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

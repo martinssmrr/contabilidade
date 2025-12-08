@@ -21,6 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from django.contrib.sitemaps.views import sitemap
+from django.http import JsonResponse
 from apps.testimonials.models import Testimonial
 from apps.services.views import calculadora_clt_pj
 from apps.blog.sitemaps import StaticViewSitemap, BlogPostSitemap, ServicesSitemap, ImagesSitemap
@@ -29,6 +30,38 @@ from apps.blog.sitemaps import StaticViewSitemap, BlogPostSitemap, ServicesSitem
 admin.site.site_header = "Vetorial - Administração"
 admin.site.site_title = "Vetorial Admin"
 admin.site.index_title = "Painel de Controle"
+
+
+def health_check(request):
+    """Endpoint de health check para monitoramento e load balancers."""
+    from django.db import connection
+    
+    health = {
+        'status': 'healthy',
+        'database': 'ok',
+        'cache': 'ok',
+    }
+    
+    # Verifica conexão com banco de dados
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT 1')
+    except Exception as e:
+        health['status'] = 'unhealthy'
+        health['database'] = str(e)
+    
+    # Verifica conexão com cache (Redis)
+    try:
+        from django.core.cache import cache
+        cache.set('health_check', 'ok', 1)
+        if cache.get('health_check') != 'ok':
+            raise Exception('Cache read/write failed')
+    except Exception as e:
+        health['cache'] = str(e)
+        # Cache não é crítico, mantém healthy
+    
+    status_code = 200 if health['status'] == 'healthy' else 503
+    return JsonResponse(health, status=status_code)
 
 def home_view(request):
     from django.shortcuts import render
@@ -53,7 +86,6 @@ def home_view(request):
     })
 
 def abrir_empresa_view(request):
-    print("DEBUG: Acessando abrir_empresa_view")
     from django.shortcuts import render
     from apps.services.models import Plano
     
@@ -147,6 +179,7 @@ sitemaps = {
 }
 
 urlpatterns = [
+    path("health/", health_check, name='health_check'),
     path("", home_view, name='home'),
     path("abrir-empresa/", abrir_empresa_view, name='abrir_empresa'),
     path("deixar-mei/", deixar_mei_view, name='deixar_mei'),
@@ -165,6 +198,7 @@ urlpatterns = [
     path("services/", include('apps.services.urls')),
     path("blog/", include('apps.blog.urls')),
     path("documents/", include('apps.documents.urls')),
+    path("payments/", include('apps.payments.urls')),
     path("recursos/calculadora-clt-pj/", calculadora_clt_pj, name='calculadora_clt_pj'),
     path("support/", include('apps.support.urls')),
     # path("payments/", include('apps.payments.urls')),

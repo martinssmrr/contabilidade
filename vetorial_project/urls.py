@@ -39,12 +39,6 @@ def home_view(request):
     planos_servicos = Plano.objects.filter(ativo=True, categoria='servicos').order_by('ordem', 'preco')
     planos_comercio = Plano.objects.filter(ativo=True, categoria='comercio').order_by('ordem', 'preco')
     
-    # DEBUG
-    print(f"DEBUG HOME VIEW: planos_servicos count = {planos_servicos.count()}")
-    print(f"DEBUG HOME VIEW: planos_comercio count = {planos_comercio.count()}")
-    for p in planos_servicos:
-        print(f"  - {p.nome} ({p.categoria}) - R$ {p.preco}")
-    
     return render(request, 'home.html', {
         'testimonials': testimonials,
         'duvidas': duvidas,

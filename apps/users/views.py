@@ -61,8 +61,14 @@ def register_view(request):
             messages.error(request, 'As senhas não coincidem. Por favor, tente novamente.')
             return render(request, 'users/register.html')
         
-        if len(password) < 6:
-            messages.error(request, 'A senha deve ter pelo menos 6 caracteres.')
+        # Validar senha usando os validadores do Django
+        from django.contrib.auth.password_validation import validate_password
+        from django.core.exceptions import ValidationError as DjangoValidationError
+        try:
+            validate_password(password)
+        except DjangoValidationError as e:
+            for error in e.messages:
+                messages.error(request, error)
             return render(request, 'users/register.html')
         
         # Verificar se email já existe
@@ -183,7 +189,6 @@ def api_certidoes_status(request):
 
 
 @login_required
-@login_required
 def notas_fiscais(request):
     """
     View para o cliente visualizar suas próprias notas fiscais.
@@ -280,7 +285,6 @@ def financeiro(request):
     return render(request, 'users/financeiro.html', context)
 
 
-@login_required
 @login_required
 def minha_empresa(request):
     """

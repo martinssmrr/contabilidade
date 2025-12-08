@@ -20,8 +20,8 @@ class Lead(models.Model):
     cidade = models.CharField(max_length=100, verbose_name='Cidade')
     servico_interesse = models.CharField(max_length=100, verbose_name='Serviço de Interesse')
     origem = models.CharField(max_length=20, choices=ORIGEM_CHOICES, verbose_name='Origem')
-    criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Data de Cadastro')
-    contatado = models.BooleanField(default=False, verbose_name='Foi Contatado?')
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Data de Cadastro', db_index=True)
+    contatado = models.BooleanField(default=False, verbose_name='Foi Contatado?', db_index=True)
     observacoes = models.TextField(blank=True, null=True, verbose_name='Observações')
     
     class Meta:
