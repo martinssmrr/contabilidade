@@ -495,22 +495,26 @@ footer {
 .footer-seals {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
     justify-content: flex-start;
+    align-items: center;
 }
 
 .footer-seal {
-    width: 60px;
-    height: auto;
+    height: 45px;
+    width: auto;
+    max-width: 80px;
     object-fit: contain;
     background: white;
-    padding: 5px;
+    padding: 6px 8px;
     border-radius: 8px;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .footer-seal:hover {
-    transform: scale(1.1);
+    transform: scale(1.1) translateY(-2px);
+    box-shadow: 0 4px 12px rgba(62, 244, 124, 0.2);
 }
 
 /* Services Section Styles */
@@ -1033,27 +1037,40 @@ footer {
 }
 
 /* ===================================
-   Selos de Segurança
+   Selos de Segurança (Hero Section)
    =================================== */
 .selo-badge {
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .selo-ra1000 {
-    width: 120px;
+    width: 100px;
+}
+
+.selo-ra1000 img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    background: white;
+    padding: 8px;
+    transition: all 0.3s ease;
 }
 
 .selo-google {
-    width: 103.969px;
-    height: 37.734px;
+    width: 110px;
 }
 
-.selo-badge img {
-    border-radius: 12px;
+.selo-google img {
+    width: 110px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
     background: white;
-    padding: 8px;
+    padding: 6px 10px;
+    transition: all 0.3s ease;
 }
 
 .selo-badge:hover img {
@@ -1063,16 +1080,21 @@ footer {
 
 @media (max-width: 768px) {
     .selo-ra1000 {
-        width: 85px;
+        width: 80px;
+    }
+    
+    .selo-ra1000 img {
+        width: 80px;
+        height: 80px;
     }
     
     .selo-google {
-        width: 74px;
-        height: 27px;
+        width: 90px;
     }
 
-    .selo-badge img {
-        padding: 5px;
+    .selo-google img {
+        width: 90px;
+        padding: 5px 8px;
     }
 }
 
@@ -1203,12 +1225,19 @@ footer {
     justify-content: flex-start;
 }
 .partners-item img {
-    width: 88px; /* slightly smaller to better fit full width */
-    height: auto;
+    width: 100px;
+    height: 50px;
     opacity: 0.95;
     filter: grayscale(0%);
     object-fit: contain;
+    transition: all 0.3s ease;
 }
+
+.partners-item img:hover {
+    transform: scale(1.1);
+    opacity: 1;
+}
+
 .partners-item { flex: 0 0 auto; }
 /* keep animation running on hover (no pause) */
 
@@ -1218,8 +1247,10 @@ footer {
 }
 
 @media (max-width: 768px) {
-    .partners-item img { width: 64px; }
-    /* original mobile 18s reduced by 20% => 14.4s */
+    .partners-item img { 
+        width: 80px; 
+        height: 40px;
+    }
     .partners-track { gap: 1.25rem; animation-duration: 14.4s; }
 }
 
@@ -1564,29 +1595,36 @@ footer hr {
 }
 
 .benefit-image-wrapper {
-    width: 160px;
-    height: 160px;
+    width: 180px;
+    height: 180px;
     margin: 0 auto 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(62, 244, 124, 0.1) 0%, rgba(12, 99, 209, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(62, 244, 124, 0.15) 0%, rgba(12, 99, 209, 0.1) 100%);
     padding: 0;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
+    box-shadow: 0 8px 25px rgba(62, 244, 124, 0.15);
 }
 
 .flip-card:hover .benefit-image-wrapper {
-    background: linear-gradient(135deg, rgba(62, 244, 124, 0.2) 0%, rgba(12, 99, 209, 0.2) 100%);
-    transform: scale(1.05);
+    background: linear-gradient(135deg, rgba(62, 244, 124, 0.25) 0%, rgba(12, 99, 209, 0.2) 100%);
+    transform: scale(1.08);
+    box-shadow: 0 12px 35px rgba(62, 244, 124, 0.25);
 }
 
 .benefit-image {
-    width: 160px;
-    height: 160px;
+    width: 170px;
+    height: 170px;
     object-fit: cover;
     border-radius: 50%;
+    transition: transform 0.4s ease;
+}
+
+.flip-card:hover .benefit-image {
+    transform: scale(1.05);
 }
 
 .benefit-title {
@@ -1640,12 +1678,12 @@ footer hr {
 /* Responsividade para Benefits Section */
 @media (max-width: 768px) {
     .flip-card {
-        height: 380px;
+        height: 360px;
     }
 
     .benefit-image-wrapper {
-        width: 130px;
-        height: 130px;
+        width: 140px;
+        height: 140px;
         margin-bottom: 1rem;
         padding: 0;
     }
@@ -1740,27 +1778,35 @@ footer hr {
 }
 
 .feature-icon {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(62, 244, 124, 0.1) 0%, rgba(12, 99, 209, 0.1) 100%);
-    padding: 1rem;
-    transition: all 0.3s ease;
+    background: linear-gradient(135deg, rgba(62, 244, 124, 0.15) 0%, rgba(12, 99, 209, 0.1) 100%);
+    padding: 0;
+    transition: all 0.4s ease;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(62, 244, 124, 0.1);
 }
 
 .feature-card:hover .feature-icon {
-    background: linear-gradient(135deg, rgba(62, 244, 124, 0.2) 0%, rgba(12, 99, 209, 0.2) 100%);
-    transform: rotate(360deg);
+    background: linear-gradient(135deg, rgba(62, 244, 124, 0.25) 0%, rgba(12, 99, 209, 0.2) 100%);
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(62, 244, 124, 0.25);
 }
 
 .feature-icon img {
-    max-width: 50px;
-    max-height: 50px;
+    width: 55px;
+    height: 55px;
     object-fit: contain;
+    transition: transform 0.4s ease;
+}
+
+.feature-card:hover .feature-icon img {
+    transform: scale(1.1);
 }
 
 .feature-card .card-title {
@@ -1774,13 +1820,13 @@ footer hr {
 
 @media (max-width: 768px) {
     .feature-icon {
-        width: 70px;
-        height: 70px;
+        width: 80px;
+        height: 80px;
     }
 
     .feature-icon img {
-        max-width: 40px;
-        max-height: 40px;
+        width: 48px;
+        height: 48px;
     }
 }
 
