@@ -680,8 +680,18 @@
                         </div>
                         <div class="pricing-card-body">
                             <ul class="pricing-features">
-                                {% for feature in plano.features %}
-                                <li><i class="bi bi-check-circle-fill"></i> {{ feature }}</li>
+                                {% for item in plano.features %}
+                                    {% if item.included %}
+                                    <li class="feature-included">
+                                        <span class="feature-icon">✔</span>
+                                        <span>{{ item.feature }}</span>
+                                    </li>
+                                    {% else %}
+                                    <li class="feature-excluded">
+                                        <span class="feature-icon">✖</span>
+                                        <span>{{ item.feature }}</span>
+                                    </li>
+                                    {% endif %}
                                 {% endfor %}
                             </ul>
                         </div>
@@ -728,8 +738,18 @@
                         </div>
                         <div class="pricing-card-body">
                             <ul class="pricing-features">
-                                {% for feature in plano.features %}
-                                <li><i class="bi bi-check-circle-fill"></i> {{ feature }}</li>
+                                {% for item in plano.features %}
+                                    {% if item.included %}
+                                    <li class="feature-included">
+                                        <span class="feature-icon">✔</span>
+                                        <span>{{ item.feature }}</span>
+                                    </li>
+                                    {% else %}
+                                    <li class="feature-excluded">
+                                        <span class="feature-icon">✖</span>
+                                        <span>{{ item.feature }}</span>
+                                    </li>
+                                    {% endif %}
                                 {% endfor %}
                             </ul>
                         </div>

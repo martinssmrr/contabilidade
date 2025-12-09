@@ -18,9 +18,13 @@ class PlanoAdmin(admin.ModelAdmin):
         ('Preços', {
             'fields': ('preco', 'preco_antigo')
         }),
-        ('Características', {
-            'fields': ('features',),
-            'description': 'Adicione as características do plano em formato de lista JSON. Exemplo: ["Contabilidade completa", "Certificado digital incluído"]'
+        ('Recursos Incluídos ✅', {
+            'fields': ('features_included',),
+            'description': 'Adicione os recursos que ESTÃO incluídos neste plano. Formato: ["Item 1", "Item 2"]. Exemplo: ["Contabilidade Completa", "Certificado Digital", "Suporte WhatsApp"]'
+        }),
+        ('Recursos NÃO Incluídos ❌', {
+            'fields': ('features_excluded',),
+            'description': 'Adicione os recursos que NÃO estão incluídos neste plano. Formato: ["Item 1", "Item 2"]. Exemplo: ["Folha de Pagamentos", "Consultoria Tributária"]'
         }),
         ('Integração Mercado Pago', {
             'fields': ('mercadopago_price_id',),

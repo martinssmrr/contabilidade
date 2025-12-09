@@ -20,9 +20,17 @@ class Plano(models.Model):
     preco = models.DecimalField(max_digits=10, decimal_places=2, help_text="Preço mensal do plano")
     preco_antigo = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Preço anterior (para mostrar desconto)")
     descricao = models.TextField(help_text="Breve descrição do plano")
-    features = models.JSONField(
+    features_included = models.JSONField(
         default=list,
-        help_text="Lista de características/benefícios do plano. Ex: ['Contabilidade completa', 'Certificado digital']"
+        blank=True,
+        verbose_name="Recursos Incluídos ✅",
+        help_text='Lista de recursos INCLUÍDOS no plano. Exemplo: ["Contabilidade Completa", "Certificado Digital", "Suporte por WhatsApp"]'
+    )
+    features_excluded = models.JSONField(
+        default=list,
+        blank=True,
+        verbose_name="Recursos NÃO Incluídos ❌",
+        help_text='Lista de recursos NÃO incluídos no plano. Exemplo: ["Folha de Pagamentos", "Consultoria Tributária"]'
     )
     mercadopago_price_id = models.CharField(
         max_length=200,
@@ -47,6 +55,16 @@ class Plano(models.Model):
     def tem_desconto(self):
         """Verifica se o plano tem preço antigo configurado (está em promoção)"""
         return self.preco_antigo and self.preco_antigo > self.preco
+    
+    @property
+    def features(self):
+        """Combina features incluídas e excluídas em uma lista para o template"""
+        combined = []
+        for feature in (self.features_included or []):
+            combined.append({'feature': feature, 'included': True})
+        for feature in (self.features_excluded or []):
+            combined.append({'feature': feature, 'included': False})
+        return combined
     
     def percentual_desconto(self):
         """Calcula o percentual de desconto se houver"""

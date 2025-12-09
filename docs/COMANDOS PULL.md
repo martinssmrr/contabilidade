@@ -61,3 +61,6 @@ docker-compose -f docker-compose.prod.yml ps
 
 # 7. Verificar logs (opcional)
 docker-compose -f docker-compose.prod.yml logs --tail 50 web
+
+
+
