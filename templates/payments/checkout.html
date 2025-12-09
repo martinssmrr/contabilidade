@@ -392,6 +392,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Processar pagamento
                     console.log('Processando pagamento...', formData);
                     
+                    // Tentar capturar o nome do titular do cartão do DOM
+                    let cardholderName = '';
+                    const cardholderInput = document.querySelector('input[name="cardholderName"]') || 
+                                           document.querySelector('[data-cy="cardholderName"]') ||
+                                           document.querySelector('.card-holder-name input');
+                    if (cardholderInput) {
+                        cardholderName = cardholderInput.value;
+                    }
+                    
+                    // Dados do usuário logado como fallback
+                    const userFirstName = "{{ request.user.first_name|default:'' }}";
+                    const userLastName = "{{ request.user.last_name|default:'' }}";
+                    const userEmail = "{{ request.user.email|default:'' }}";
+                    
+                    // Adicionar dados extras ao formData
+                    const enrichedData = {
+                        ...formData,
+                        cardholderName: cardholderName,
+                        userInfo: {
+                            firstName: userFirstName,
+                            lastName: userLastName,
+                            email: userEmail,
+                        }
+                    };
+                    
                     try {
                         const response = await fetch("{% url 'payments:processar_pagamento' %}", {
                             method: 'POST',
@@ -400,7 +425,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             },
                             body: JSON.stringify({
                                 external_reference: externalReference,
-                                payment_data: formData,
+                                payment_data: enrichedData,
                             }),
                         });
                         

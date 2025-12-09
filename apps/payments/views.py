@@ -137,57 +137,81 @@ def processar_pagamento(request):
         issuer_id = form_data.get('issuer_id') or payment_data.get('issuer_id')
         payer_data = form_data.get('payer', {}) or payment_data.get('payer', {})
         
+        # Dados do usuário enviados pelo frontend
+        user_info = payment_data.get('userInfo', {})
+        
         # Log para debug dos dados do payer
         logger.info(f"payer_data recebido: {payer_data}")
-        logger.info(f"form_data completo: {form_data}")
+        logger.info(f"userInfo recebido: {user_info}")
+        logger.info(f"cardholderName recebido: {payment_data.get('cardholderName', '')}")
         
         # Obter email do payer
         payer_email = payer_data.get("email", "")
+        if not payer_email:
+            payer_email = user_info.get("email", "")
         if not payer_email and request.user.is_authenticated:
             payer_email = request.user.email
         if not payer_email:
             payer_email = "cliente@vetorial.com.br"
         
-        # Obter nome do payer - tentar várias formas de extração
-        # O Payment Brick pode enviar: firstName, first_name, name
-        payer_first_name = (
-            payer_data.get("firstName", "") or 
-            payer_data.get("first_name", "") or
-            payer_data.get("name", "").split()[0] if payer_data.get("name") else ""
-        )
-        payer_last_name = (
-            payer_data.get("lastName", "") or 
-            payer_data.get("last_name", "") or
-            " ".join(payer_data.get("name", "").split()[1:]) if payer_data.get("name") and len(payer_data.get("name", "").split()) > 1 else ""
-        )
+        # Obter nome do payer - prioridade:
+        # 1. cardholderName (nome no cartão)
+        # 2. payer_data (dados do Brick)
+        # 3. userInfo (dados do usuário logado enviados pelo frontend)
+        # 4. request.user (usuário logado no backend)
         
-        # Tentar extrair do identification se tiver (alguns bricks enviam assim)
-        identification = payer_data.get("identification", {})
+        payer_first_name = ""
+        payer_last_name = ""
         
-        # Se não tem nome no payer_data, tentar extrair do cardholderName (nome no cartão)
-        cardholder_name = form_data.get("cardholderName", "") or payment_data.get("cardholderName", "")
-        if not payer_first_name and cardholder_name:
+        # Tentar cardholderName primeiro (nome exato no cartão)
+        cardholder_name = payment_data.get("cardholderName", "") or form_data.get("cardholderName", "")
+        if cardholder_name and cardholder_name.strip():
             name_parts = cardholder_name.strip().split()
             if name_parts:
                 payer_first_name = name_parts[0]
                 payer_last_name = " ".join(name_parts[1:]) if len(name_parts) > 1 else ""
+                logger.info(f"Nome extraído do cardholderName: {payer_first_name} {payer_last_name}")
         
-        # Se ainda não tem nome, tentar extrair do usuário logado
+        # Tentar payer_data do Brick
+        if not payer_first_name:
+            payer_first_name = (
+                payer_data.get("firstName", "") or 
+                payer_data.get("first_name", "") or
+                payer_data.get("name", "").split()[0] if payer_data.get("name") else ""
+            )
+            payer_last_name = (
+                payer_data.get("lastName", "") or 
+                payer_data.get("last_name", "") or
+                " ".join(payer_data.get("name", "").split()[1:]) if payer_data.get("name") and len(payer_data.get("name", "").split()) > 1 else ""
+            )
+            if payer_first_name:
+                logger.info(f"Nome extraído do payer_data: {payer_first_name} {payer_last_name}")
+        
+        # Tentar userInfo do frontend (usuário logado)
+        if not payer_first_name:
+            payer_first_name = user_info.get("firstName", "") or user_info.get("first_name", "")
+            payer_last_name = user_info.get("lastName", "") or user_info.get("last_name", "")
+            if payer_first_name:
+                logger.info(f"Nome extraído do userInfo: {payer_first_name} {payer_last_name}")
+        
+        # Tentar request.user (backend)
         if not payer_first_name and request.user.is_authenticated:
             if request.user.first_name:
                 payer_first_name = request.user.first_name
                 payer_last_name = request.user.last_name or ""
+                logger.info(f"Nome extraído do request.user: {payer_first_name} {payer_last_name}")
             elif request.user.get_full_name():
                 name_parts = request.user.get_full_name().split()
                 payer_first_name = name_parts[0]
                 payer_last_name = " ".join(name_parts[1:]) if len(name_parts) > 1 else ""
+                logger.info(f"Nome extraído do get_full_name: {payer_first_name} {payer_last_name}")
         
-        # Último fallback - mas agora logamos para investigar
+        # Último fallback
         if not payer_first_name:
-            logger.warning(f"Nome do cliente não encontrado! payer_data: {payer_data}, form_data keys: {form_data.keys()}")
+            logger.warning(f"Nome do cliente não encontrado! Usando fallback.")
             payer_first_name = "Cliente"
         if not payer_last_name:
-            payer_last_name = "Vetorial"
+            payer_last_name = ""
         
         logger.info(f"Nome final do payer: {payer_first_name} {payer_last_name}")
         
