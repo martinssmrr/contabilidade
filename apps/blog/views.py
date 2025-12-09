@@ -2,12 +2,9 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from django.views.decorators.cache import cache_page
-from django.utils.decorators import method_decorator
 from .models import Post, Category
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')  # Cache por 15 minutos
 class PostListView(ListView):
     """View para listagem de posts do blog"""
     model = Post
@@ -51,7 +48,6 @@ class PostListView(ListView):
         return context
 
 
-@method_decorator(cache_page(60 * 30), name='dispatch')  # Cache por 30 minutos
 class PostDetailView(DetailView):
     """View para detalhes de um post"""
     model = Post
