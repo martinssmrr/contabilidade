@@ -10,6 +10,9 @@ urlpatterns = [
     # API para processar pagamento
     path('api/processar/', views.processar_pagamento, name='processar_pagamento'),
     
+    # API para verificar status (polling)
+    path('api/status/', views.verificar_status_pagamento, name='verificar_status'),
+    
     # Webhook do Mercado Pago
     path('webhook/mercadopago/', views.webhook_mercadopago, name='webhook_mercadopago'),
     
@@ -17,4 +20,6 @@ urlpatterns = [
     path('sucesso/', views.pagamento_sucesso, name='pagamento_sucesso'),
     path('erro/', views.pagamento_erro, name='pagamento_erro'),
     path('pendente/', views.pagamento_pendente, name='pagamento_pendente'),
+    path('pix/', views.pagamento_pix, name='pagamento_pix'),
+    path('boleto/', views.pagamento_boleto, name='pagamento_boleto'),
 ]

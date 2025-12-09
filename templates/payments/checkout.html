@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     creditCard: 'all',
                     debitCard: 'all',
                     ticket: 'all',
-                    bankTransfer: 'all',
+                    bankTransfer: ['pix'],
                     maxInstallments: 12,
                 }
             },
@@ -404,8 +404,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Pagamento aprovado - redirecionar
                             window.location.href = result.redirect_url || "{% url 'obrigado' %}";
                         } else if (result.status === 'pending' || result.status === 'in_process') {
-                            // Pagamento pendente
-                            window.location.href = "{% url 'payments:pagamento_pendente' %}?external_reference=" + externalReference;
+                            // Pagamento pendente - verificar se é PIX
+                            if (result.redirect_url) {
+                                window.location.href = result.redirect_url;
+                            } else if (result.payment_method_id === 'pix' && result.pix_data) {
+                                window.location.href = "{% url 'payments:pagamento_pix' %}?external_reference=" + externalReference;
+                            } else {
+                                window.location.href = "{% url 'payments:pagamento_pendente' %}?external_reference=" + externalReference;
+                            }
                         } else {
                             // Mostrar mensagem de erro amigável
                             const errorMessages = {

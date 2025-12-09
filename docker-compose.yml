@@ -69,6 +69,49 @@ services:
       - MP_PUBLIC_KEY=TEST-62b79051-b8a0-4c0d-b7a6-fb1a8e2c4ced
       - MP_ACCESS_TOKEN=TEST-1361191864693898-120612-f203f891a414ff90149efdaf9b606852-3015365699
 
+  # ==================================
+  # CELERY WORKER - PROCESSAMENTO ASSÍNCRONO
+  # ==================================
+  celery:
+    build: .
+    container_name: gestao360_celery
+    command: celery -A gestao360_project worker -l info
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/1
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+
+  # ==================================
+  # CELERY BEAT - TAREFAS AGENDADAS (OPCIONAL)
+  # ==================================
+  celery-beat:
+    build: .
+    container_name: gestao360_celery_beat
+    command: celery -A gestao360_project beat -l info
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - celery
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/1
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+
 # ==================================
 # VOLUMES PERSISTENTES
 # ==================================

@@ -34,3 +34,30 @@ ls -la /root/vetorial/staticfiles/img/logo.png
 
 # 6. Se necessário, reiniciar o Nginx
 nginx -t && systemctl reload nginx
+
+
+
+
+
+# 1. Fazer pull das alterações (se ainda não fez)
+cd /root/vetorial
+git pull origin master
+
+# 2. Reconstruir a imagem com as novas dependências (mercadopago SDK)
+docker-compose -f docker-compose.prod.yml build web
+
+# 3. Aplicar as migrações do banco de dados
+docker-compose -f docker-compose.prod.yml exec web python manage.py migrate
+
+# 4. Coletar arquivos estáticos (templates novos)
+docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --noinput
+
+# 5. Reiniciar os containers (web e celery)
+docker-compose -f docker-compose.prod.yml restart web
+docker-compose -f docker-compose.prod.yml restart celery
+
+# 6. Verificar se está rodando
+docker-compose -f docker-compose.prod.yml ps
+
+# 7. Verificar logs (opcional)
+docker-compose -f docker-compose.prod.yml logs --tail 50 web

@@ -1,0 +1,382 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pagamento PIX | Vetorial Contabilidade{% endblock %}
+
+{% block extra_css %}
+<style>
+    .pix-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .pix-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .pix-header {
+        margin-bottom: 2rem;
+    }
+    
+    .pix-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #32BCAD, #00A99D);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+    
+    .pix-icon svg {
+        width: 40px;
+        height: 40px;
+        fill: white;
+    }
+    
+    .pix-header h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+    
+    .pix-header p {
+        color: #6b7280;
+    }
+    
+    .pix-value {
+        background: #f3f4f6;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .pix-value span {
+        display: block;
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .pix-value strong {
+        font-size: 1.75rem;
+        color: #1f2937;
+    }
+    
+    .qr-code-container {
+        background: #fff;
+        border: 2px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+    }
+    
+    .qr-code-container img {
+        max-width: 200px;
+        height: auto;
+    }
+    
+    .pix-copy-paste {
+        margin-bottom: 1.5rem;
+    }
+    
+    .pix-copy-paste label {
+        display: block;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+    
+    .copy-input-group {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .copy-input-group input {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        background: #f9fafb;
+        color: #374151;
+    }
+    
+    .copy-btn {
+        padding: 0.75rem 1.5rem;
+        background: var(--secondary-color);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+    }
+    
+    .copy-btn:hover {
+        background: #4a2885;
+        transform: translateY(-1px);
+    }
+    
+    .copy-btn.copied {
+        background: #10b981;
+    }
+    
+    .timer-section {
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .timer-section .timer-icon {
+        color: #f59e0b;
+        margin-bottom: 0.5rem;
+    }
+    
+    .timer-section p {
+        color: #92400e;
+        margin: 0;
+        font-weight: 500;
+    }
+    
+    .timer-section .countdown {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #b45309;
+    }
+    
+    .status-check {
+        background: #ecfdf5;
+        border: 1px solid #10b981;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .status-check p {
+        color: #065f46;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .status-spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #d1fae5;
+        border-top-color: #10b981;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .instructions {
+        text-align: left;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e5e7eb;
+    }
+    
+    .instructions h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 1rem;
+    }
+    
+    .instructions ol {
+        padding-left: 1.25rem;
+        color: #4b5563;
+    }
+    
+    .instructions li {
+        margin-bottom: 0.75rem;
+        line-height: 1.5;
+    }
+    
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+        text-decoration: none;
+        margin-bottom: 1.5rem;
+        transition: color 0.2s;
+    }
+    
+    .back-link:hover {
+        color: var(--secondary-color);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="pix-page py-5 bg-light">
+    <div class="pix-container">
+        <a href="{% url 'services:planos' %}" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+            </svg>
+            Voltar aos planos
+        </a>
+        
+        <div class="pix-card">
+            <div class="pix-header">
+                <div class="pix-icon">
+                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M242.4 292.5C247.8 287.1 257.1 287.1 262.5 292.5L339.5 369.5C353.7 383.7 372.6 391.5 392.6 391.5H407.7L310.6 488.6C280.3 518.9 231.1 518.9 200.8 488.6L103.3 391.2H112.6C132.6 391.2 151.5 383.4 165.7 369.2L242.4 292.5zM262.5 218.9C257.1 224.4 247.9 224.5 242.4 218.9L165.7 142.2C151.5 128 132.6 120.2 112.6 120.2H103.3L200.6 22.9C230.9-7.4 280.1-7.4 310.4 22.9L407.7 120.2H392.5C372.5 120.2 353.6 128 339.4 142.2L262.5 218.9zM112.6 142.7C126.4 142.7 139.1 148.3 149.7 158.8L226.4 235.5C233.6 242.7 243.1 247.1 253 247.1C263 247.1 272.4 242.7 279.6 235.5L356.3 158.8C366.8 148.3 379.6 142.7 393.4 142.7H420.2L488.6 211.1C518.9 241.4 518.9 290.6 488.6 320.9L420.2 389.3H392.5C378.7 389.3 365.9 383.7 355.4 373.2L278.7 296.5C271.5 289.3 262 284.9 252 284.9C242 284.9 232.6 289.3 225.4 296.5L148.7 373.2C138.2 383.7 125.4 389.3 111.6 389.3H84.8L16.4 320.9C-13.9 290.6-13.9 241.4 16.4 211.1L84.8 142.7H112.6z"/>
+                    </svg>
+                </div>
+                <h1>Pagamento via PIX</h1>
+                <p>Escaneie o QR Code ou copie o código</p>
+            </div>
+            
+            {% if pagamento %}
+            <div class="pix-value">
+                <span>Valor a pagar</span>
+                <strong>R$ {{ pagamento.valor|floatformat:2 }}</strong>
+            </div>
+            {% endif %}
+            
+            {% if pix_data.qr_code_base64 %}
+            <div class="qr-code-container">
+                <img src="data:image/png;base64,{{ pix_data.qr_code_base64 }}" alt="QR Code PIX">
+            </div>
+            {% endif %}
+            
+            {% if pix_data.qr_code %}
+            <div class="pix-copy-paste">
+                <label>PIX Copia e Cola</label>
+                <div class="copy-input-group">
+                    <input type="text" id="pix-code" value="{{ pix_data.qr_code }}" readonly>
+                    <button type="button" class="copy-btn" onclick="copyPixCode()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                        </svg>
+                        <span id="copy-text">Copiar</span>
+                    </button>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="timer-section">
+                <div class="timer-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                    </svg>
+                </div>
+                <p>Este QR Code expira em <span class="countdown" id="countdown">30:00</span></p>
+            </div>
+            
+            <div class="status-check">
+                <p>
+                    <span class="status-spinner"></span>
+                    Aguardando confirmação do pagamento...
+                </p>
+            </div>
+            
+            <div class="instructions">
+                <h3>Como pagar com PIX:</h3>
+                <ol>
+                    <li>Abra o app do seu banco ou instituição financeira</li>
+                    <li>Escolha pagar com PIX usando QR Code ou Copia e Cola</li>
+                    <li>Escaneie o código ou cole o código copiado</li>
+                    <li>Confirme as informações e finalize o pagamento</li>
+                    <li>Pronto! A confirmação é instantânea</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Countdown timer (30 minutos)
+    let timeLeft = 30 * 60; // 30 minutos em segundos
+    const countdownEl = document.getElementById('countdown');
+    
+    const timer = setInterval(function() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        
+        countdownEl.textContent = 
+            String(minutes).padStart(2, '0') + ':' + 
+            String(seconds).padStart(2, '0');
+        
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            countdownEl.textContent = 'Expirado';
+            alert('O QR Code PIX expirou. Por favor, inicie um novo pagamento.');
+            window.location.href = "{% url 'services:planos' %}";
+        }
+        
+        timeLeft--;
+    }, 1000);
+    
+    // Polling para verificar status do pagamento
+    const externalReference = "{{ pagamento.external_reference }}";
+    
+    const checkPaymentStatus = async () => {
+        try {
+            const response = await fetch(`{% url 'payments:verificar_status' %}?external_reference=${externalReference}`);
+            const data = await response.json();
+            
+            if (data.approved) {
+                clearInterval(timer);
+                clearInterval(statusChecker);
+                window.location.href = data.redirect_url || "{% url 'obrigado' %}";
+            }
+        } catch (error) {
+            console.error('Erro ao verificar status:', error);
+        }
+    };
+    
+    // Verificar a cada 5 segundos
+    const statusChecker = setInterval(checkPaymentStatus, 5000);
+    
+    // Verificar imediatamente também
+    checkPaymentStatus();
+});
+
+function copyPixCode() {
+    const pixCode = document.getElementById('pix-code');
+    const copyBtn = document.querySelector('.copy-btn');
+    const copyText = document.getElementById('copy-text');
+    
+    pixCode.select();
+    pixCode.setSelectionRange(0, 99999);
+    
+    navigator.clipboard.writeText(pixCode.value).then(function() {
+        copyBtn.classList.add('copied');
+        copyText.textContent = 'Copiado!';
+        
+        setTimeout(function() {
+            copyBtn.classList.remove('copied');
+            copyText.textContent = 'Copiar';
+        }, 2000);
+    });
+}
+</script>
+{% endblock %}
