@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load blog_tags %}
 
-{% block title %}Abrir Empresa - Vetorial Contabilidade{% endblock %}
+{% block title %}Contabilidade Completa - Vetorial Contabilidade{% endblock %}
 
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -800,6 +801,9 @@
         </div>
     </div>
 </section>
+
+{# Seção de Artigos Relacionados #}
+{% show_recent_posts 'contabilidade-completa' 3 %}
 
 {% endblock %}
 

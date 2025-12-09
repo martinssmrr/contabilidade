@@ -2853,5 +2853,186 @@ section.recent-posts-section {
     background-color: #ebeef1 !important;
 }
 
+/* ==================================
+   Seção de Artigos Relacionados
+   Design Minimalista
+   ================================== */
+.related-articles-section {
+    padding: 80px 0;
+    background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+}
+
+.related-articles-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.related-articles-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background-color: rgba(12, 99, 209, 0.1);
+    color: var(--secondary-color);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+}
+
+.related-articles-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin-bottom: 12px;
+}
+
+.related-articles-subtitle {
+    font-size: 1rem;
+    color: var(--gray-color);
+    margin: 0;
+}
+
+.related-articles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.related-article-card {
+    display: block;
+    text-decoration: none;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+}
+
+.related-article-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.related-article-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background-color: #e5e7eb;
+}
+
+.related-article-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.related-article-card:hover .related-article-image img {
+    transform: scale(1.05);
+}
+
+.related-article-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+}
+
+.related-article-title {
+    padding: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    line-height: 1.4;
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+.related-article-card:hover .related-article-title {
+    color: var(--secondary-color);
+}
+
+.related-articles-cta {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.btn-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: transparent;
+    border: 2px solid var(--secondary-color);
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-view-all:hover {
+    background: var(--secondary-color);
+    color: #fff;
+    transform: translateX(4px);
+}
+
+.btn-view-all svg {
+    transition: transform 0.3s ease;
+}
+
+.btn-view-all:hover svg {
+    transform: translateX(4px);
+}
+
+/* Responsividade - Artigos Relacionados */
+@media (max-width: 992px) {
+    .related-articles-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .related-articles-section {
+        padding: 60px 0;
+    }
+    
+    .related-articles-title {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .related-articles-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 0 16px;
+    }
+    
+    .related-articles-section {
+        padding: 48px 0;
+    }
+    
+    .related-articles-title {
+        font-size: 1.5rem;
+    }
+    
+    .related-articles-header {
+        margin-bottom: 32px;
+        padding: 0 16px;
+    }
+    
+    .related-article-title {
+        font-size: 0.95rem;
+        padding: 16px;
+    }
+}
+
 
 
