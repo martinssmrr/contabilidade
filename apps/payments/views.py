@@ -215,12 +215,18 @@ def processar_pagamento(request):
         
         logger.info(f"Nome final do payer: {payer_first_name} {payer_last_name}")
         
-        # Base do payload de pagamento
+        # URL de notificação do webhook (OBRIGATÓRIO para todos os tipos)
+        site_url = settings.SITE_URL.rstrip('/')
+        notification_url = f"{site_url}/payments/webhook/mercadopago/"
+        
+        # Base do payload de pagamento - inclui campos obrigatórios e recomendados
         payment_create_data = {
             "transaction_amount": float(pagamento.valor),
             "description": f"Plano {pagamento.plano.nome} - Vetorial Contabilidade" if pagamento.plano else "Serviço Vetorial",
             "payment_method_id": payment_method_id,
             "external_reference": str(external_reference),
+            "statement_descriptor": "VETORIAL CONTAB",  # RECOMENDADO: aparece na fatura do cartão
+            "notification_url": notification_url,  # OBRIGATÓRIO: webhook de notificações
             "payer": {
                 "email": payer_email,
                 "first_name": payer_first_name,
@@ -242,10 +248,6 @@ def processar_pagamento(request):
             payment_create_data["payment_method_id"] = payment_method_id
         
         # Configuração específica por tipo de pagamento
-        # URL de notificação do webhook (OBRIGATÓRIO para todos os tipos)
-        site_url = settings.SITE_URL.rstrip('/')
-        notification_url = f"{site_url}/payments/webhook/mercadopago/"
-        
         if payment_method_id == 'pix' or payment_type == 'bank_transfer':
             # PIX - não precisa de token
             # Definir expiração do PIX (30 minutos)
@@ -253,8 +255,6 @@ def processar_pagamento(request):
             expiration = datetime.now() + timedelta(minutes=30)
             payment_create_data["date_of_expiration"] = expiration.strftime("%Y-%m-%dT%H:%M:%S.000-03:00")
             payment_create_data["payment_method_id"] = "pix"
-            payment_create_data["notification_url"] = notification_url
-            payment_create_data["statement_descriptor"] = "VETORIAL CONTAB"
             
         elif is_boleto:
             # Boleto - precisa de dados completos do payer incluindo endereço
@@ -272,10 +272,6 @@ def processar_pagamento(request):
                 "city": address_data.get("city", "") or "Sao Paulo",
                 "federal_unit": address_data.get("federalUnit", "") or address_data.get("federal_unit", "") or "SP",
             }
-            
-            # Adicionar notification_url e statement_descriptor para boleto
-            payment_create_data["notification_url"] = notification_url
-            payment_create_data["statement_descriptor"] = "VETORIAL CONTAB"
             
             logger.info(f"Boleto - payment_method_id: {payment_method_id}, payer: {payment_create_data['payer']}")
             
@@ -317,12 +313,6 @@ def processar_pagamento(request):
                     "last_name": payer_last_name,
                 },
             }
-            
-            # Statement descriptor (nome que aparece na fatura do cartão) - RECOMENDADO
-            payment_create_data["statement_descriptor"] = "VETORIAL CONTAB"
-            
-            # URL de notificação do webhook (OBRIGATÓRIO)
-            payment_create_data["notification_url"] = notification_url
             
             # Captura automática
             payment_create_data["capture"] = True
