@@ -355,13 +355,16 @@ def processar_pagamento(request):
         pagamento.mp_response_data = payment_result
         
         # Atualizar dados do cliente
+        # Usar os dados que já validamos (payer_email, payer_first_name, payer_last_name)
+        # pois o MP pode retornar null em alguns campos
+        pagamento.cliente_email = payer_email  # Já validado, nunca é null
+        pagamento.cliente_nome = f"{payer_first_name} {payer_last_name}".strip()
+        
+        # Tentar pegar CPF da resposta do MP ou dos dados enviados
         payer_info = payment_result.get("payer", {})
-        if payer_info:
-            pagamento.cliente_email = payer_info.get("email", "")
-            pagamento.cliente_nome = f"{payer_info.get('first_name', '')} {payer_info.get('last_name', '')}".strip()
-            identification = payer_info.get("identification", {})
-            if identification.get("type") == "CPF":
-                pagamento.cliente_cpf = identification.get("number", "")
+        identification = payer_info.get("identification", {}) or payer_data.get("identification", {})
+        if identification.get("type") == "CPF" and identification.get("number"):
+            pagamento.cliente_cpf = identification.get("number", "")
         
         # Mapear status do MP para status interno
         mp_status = payment_result.get("status", "")
