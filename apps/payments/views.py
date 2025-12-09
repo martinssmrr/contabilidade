@@ -358,6 +358,45 @@ def webhook_mercadopago(request):
     Atualiza o status dos pagamentos automaticamente.
     """
     try:
+        # Verificar assinatura do webhook (opcional mas recomendado)
+        webhook_secret = getattr(settings, 'MP_WEBHOOK_SECRET', None)
+        if webhook_secret:
+            import hmac
+            import hashlib
+            
+            # Obter headers de assinatura
+            x_signature = request.headers.get('x-signature', '')
+            x_request_id = request.headers.get('x-request-id', '')
+            
+            # Extrair ts e v1 do header x-signature
+            ts = None
+            v1 = None
+            for part in x_signature.split(','):
+                if '=' in part:
+                    key, value = part.split('=', 1)
+                    if key.strip() == 'ts':
+                        ts = value.strip()
+                    elif key.strip() == 'v1':
+                        v1 = value.strip()
+            
+            if ts and v1:
+                # Construir string para verificação
+                # Formato: id:[data.id];request-id:[x-request-id];ts:[ts];
+                data_id = request.GET.get('data.id', '')
+                manifest = f"id:{data_id};request-id:{x_request_id};ts:{ts};"
+                
+                # Calcular HMAC
+                calculated_signature = hmac.new(
+                    webhook_secret.encode(),
+                    manifest.encode(),
+                    hashlib.sha256
+                ).hexdigest()
+                
+                if not hmac.compare_digest(calculated_signature, v1):
+                    logger.warning(f"Webhook MP: assinatura inválida")
+                    # Continuar mesmo com assinatura inválida para não perder notificações
+                    # Em produção mais restrita, retornar 401 aqui
+        
         # Obter dados da notificação
         if request.content_type == 'application/json':
             data = json.loads(request.body)

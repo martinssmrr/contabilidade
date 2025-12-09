@@ -301,6 +301,7 @@ SESSION_CACHE_ALIAS = 'default'
 # Configurações do Mercado Pago
 MERCADO_PAGO_PUBLIC_KEY = os.getenv('MP_PUBLIC_KEY', '')
 MERCADO_PAGO_ACCESS_TOKEN = os.getenv('MP_ACCESS_TOKEN', '')
+MP_WEBHOOK_SECRET = os.getenv('MP_WEBHOOK_SECRET', '')
 
 # Configurações de segurança (produção)
 # Nota: Nginx cuida do SSL/HTTPS
