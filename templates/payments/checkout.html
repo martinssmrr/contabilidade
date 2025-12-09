@@ -355,6 +355,11 @@ document.addEventListener('DOMContentLoaded', function() {
             initialization: {
                 amount: amount,
                 preferenceId: preferenceId,
+                payer: {
+                    email: "{{ request.user.email|default:'' }}",
+                    firstName: "{{ request.user.first_name|default:'' }}",
+                    lastName: "{{ request.user.last_name|default:'' }}",
+                },
             },
             customization: {
                 visual: {
@@ -374,7 +379,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     ticket: 'all',
                     bankTransfer: ['pix'],
                     maxInstallments: 12,
-                }
+                },
+                // Habilitar coleta de dados do pagador
+                enablePayerData: true,
             },
             callbacks: {
                 onReady: () => {
