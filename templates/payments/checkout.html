@@ -350,16 +350,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Renderizar Payment Brick
     const bricksBuilder = mp.bricks();
     
+    // Dados do usuário logado (se existirem)
+    const userEmail = "{{ request.user.email|default:'' }}";
+    const userFirstName = "{{ request.user.first_name|default:'' }}";
+    const userLastName = "{{ request.user.last_name|default:'' }}";
+    
     const renderPaymentBrick = async () => {
+        // Configurar payer apenas com dados válidos
+        const payerConfig = {};
+        if (userEmail) payerConfig.email = userEmail;
+        if (userFirstName) payerConfig.firstName = userFirstName;
+        if (userLastName) payerConfig.lastName = userLastName;
+        // entityType deve ser 'individual' para pessoa física
+        payerConfig.entityType = 'individual';
+        
         const settings = {
             initialization: {
                 amount: amount,
                 preferenceId: preferenceId,
-                payer: {
-                    email: "{{ request.user.email|default:'' }}",
-                    firstName: "{{ request.user.first_name|default:'' }}",
-                    lastName: "{{ request.user.last_name|default:'' }}",
-                },
+                payer: payerConfig,
             },
             customization: {
                 visual: {
@@ -401,12 +410,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         cardholderName = cardholderInput.value;
                     }
                     
-                    // Dados do usuário logado como fallback
-                    const userFirstName = "{{ request.user.first_name|default:'' }}";
-                    const userLastName = "{{ request.user.last_name|default:'' }}";
-                    const userEmail = "{{ request.user.email|default:'' }}";
-                    
-                    // Adicionar dados extras ao formData
+                    // Adicionar dados extras ao formData (usando variáveis do escopo superior)
                     const enrichedData = {
                         ...formData,
                         cardholderName: cardholderName,
