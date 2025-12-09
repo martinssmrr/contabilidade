@@ -9,12 +9,96 @@ from django.views.decorators.http import require_POST, require_GET
 from django.conf import settings
 from django.utils import timezone
 from django.urls import reverse
+from django.contrib.auth import login, get_user_model
+from django.contrib import messages
 
 from apps.services.models import Plano
 from .models import Pagamento
 
 logger = logging.getLogger(__name__)
+User = get_user_model()
 
+
+def pre_checkout(request, plano_id):
+    """
+    Página de cadastro antes do checkout.
+    Se o usuário já está logado, redireciona direto para o checkout.
+    Se não está logado, exibe formulário de cadastro.
+    """
+    plano = get_object_or_404(Plano, id=plano_id, ativo=True)
+    
+    # Se já está logado, vai direto pro checkout
+    if request.user.is_authenticated:
+        return redirect('payments:checkout_plano', plano_id=plano_id)
+    
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        email = request.POST.get('email', '').strip().lower()
+        password = request.POST.get('password', '')
+        password_confirm = request.POST.get('password_confirm', '')
+        
+        errors = []
+        
+        # Validações
+        if not first_name:
+            errors.append('Primeiro nome é obrigatório.')
+        if not last_name:
+            errors.append('Sobrenome é obrigatório.')
+        if not email:
+            errors.append('E-mail é obrigatório.')
+        if not password:
+            errors.append('Senha é obrigatória.')
+        if password != password_confirm:
+            errors.append('As senhas não coincidem.')
+        
+        # Validar senha
+        if password and len(password) < 8:
+            errors.append('A senha deve ter pelo menos 8 caracteres.')
+        
+        # Verificar se email já existe
+        if email and User.objects.filter(email=email).exists():
+            errors.append('Este e-mail já está cadastrado. Faça login para continuar.')
+        
+        if errors:
+            for error in errors:
+                messages.error(request, error)
+            return render(request, 'payments/pre_checkout.html', {
+                'plano': plano,
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+            })
+        
+        try:
+            # Criar usuário
+            user = User.objects.create_user(
+                username=email,
+                email=email,
+                password=password,
+                first_name=first_name,
+                last_name=last_name,
+            )
+            
+            # Fazer login automático
+            login(request, user)
+            
+            messages.success(request, f'Bem-vindo(a), {first_name}! Sua conta foi criada com sucesso.')
+            
+            # Redirecionar para o checkout
+            return redirect('payments:checkout_plano', plano_id=plano_id)
+            
+        except Exception as e:
+            logger.error(f"Erro ao criar usuário: {e}")
+            messages.error(request, 'Erro ao criar conta. Por favor, tente novamente.')
+            return render(request, 'payments/pre_checkout.html', {
+                'plano': plano,
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+            })
+    
+    return render(request, 'payments/pre_checkout.html', {'plano': plano})
 
 def checkout_plano(request, plano_id):
     """

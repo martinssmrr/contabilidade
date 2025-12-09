@@ -1,0 +1,408 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Cadastro - {{ plano.nome }} | Vetorial Contabilidade{% endblock %}
+
+{% block extra_css %}
+<style>
+    .pre-checkout-section {
+        padding: 4rem 0;
+        min-height: calc(100vh - 200px);
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+    
+    .pre-checkout-container {
+        max-width: 900px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
+    }
+    
+    @media (max-width: 768px) {
+        .pre-checkout-container {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    .plan-summary {
+        background: #fff;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        position: sticky;
+        top: 100px;
+    }
+    
+    .plan-summary h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .plan-summary h2 svg {
+        color: var(--secondary-color, #0c63d1);
+    }
+    
+    .plan-card {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .plan-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--secondary-color, #0c63d1);
+        margin-bottom: 0.5rem;
+    }
+    
+    .plan-price {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1f2937;
+    }
+    
+    .plan-price small {
+        font-size: 1rem;
+        font-weight: 400;
+        color: #6b7280;
+    }
+    
+    .plan-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .plan-features li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+        color: #4b5563;
+        font-size: 0.9rem;
+    }
+    
+    .plan-features li svg {
+        color: #10b981;
+        flex-shrink: 0;
+    }
+    
+    .register-form {
+        background: #fff;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .register-form h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+    
+    .register-form .subtitle {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    @media (max-width: 500px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-group label {
+        display: block;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .form-group label .required {
+        color: #ef4444;
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
+    
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--secondary-color, #0c63d1);
+        box-shadow: 0 0 0 3px rgba(12, 99, 209, 0.1);
+    }
+    
+    .form-group input::placeholder {
+        color: #9ca3af;
+    }
+    
+    .password-hint {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+    
+    .btn-submit {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, var(--secondary-color, #0c63d1) 0%, #0a4da8 100%);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(12, 99, 209, 0.3);
+    }
+    
+    .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+    
+    .login-link a {
+        color: var(--secondary-color, #0c63d1);
+        font-weight: 600;
+        text-decoration: none;
+    }
+    
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+    
+    .security-badges {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+    }
+    
+    .security-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+        font-size: 0.8rem;
+    }
+    
+    .security-badge svg {
+        color: #10b981;
+    }
+    
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    
+    .alert-error {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #dc2626;
+    }
+    
+    .alert-success {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #16a34a;
+    }
+    
+    .alert svg {
+        flex-shrink: 0;
+        margin-top: 0.125rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="pre-checkout-section">
+    <div class="container">
+        <div class="pre-checkout-container">
+            <!-- Formulário de Cadastro -->
+            <div class="register-form">
+                <h2>Crie sua conta</h2>
+                <p class="subtitle">Preencha seus dados para continuar com a contratação</p>
+                
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}error{% else %}{{ message.tags }}{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            {% if message.tags == 'error' %}
+                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                            {% else %}
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                            {% endif %}
+                        </svg>
+                        <span>{{ message }}</span>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <form method="post" autocomplete="on">
+                    {% csrf_token %}
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first_name">Primeiro Nome <span class="required">*</span></label>
+                            <input type="text" id="first_name" name="first_name" 
+                                   value="{{ first_name|default:'' }}" 
+                                   placeholder="João" 
+                                   autocomplete="given-name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="last_name">Sobrenome <span class="required">*</span></label>
+                            <input type="text" id="last_name" name="last_name" 
+                                   value="{{ last_name|default:'' }}" 
+                                   placeholder="Silva" 
+                                   autocomplete="family-name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">E-mail <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" 
+                               value="{{ email|default:'' }}" 
+                               placeholder="seu@email.com" 
+                               autocomplete="email" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password">Senha <span class="required">*</span></label>
+                            <input type="password" id="password" name="password" 
+                                   placeholder="••••••••" 
+                                   autocomplete="new-password" required>
+                            <p class="password-hint">Mínimo 8 caracteres</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password_confirm">Confirmar Senha <span class="required">*</span></label>
+                            <input type="password" id="password_confirm" name="password_confirm" 
+                                   placeholder="••••••••" 
+                                   autocomplete="new-password" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+                        </svg>
+                        Continuar para Pagamento
+                    </button>
+                </form>
+                
+                <div class="login-link">
+                    Já tem uma conta? <a href="{% url 'users:login' %}?next={% url 'payments:checkout_plano' plano.id %}">Faça login</a>
+                </div>
+                
+                <div class="security-badges">
+                    <div class="security-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.777 11.777 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7.159 7.159 0 0 0 1.048-.625 11.775 11.775 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.541 1.541 0 0 0-1.044-1.263 62.467 62.467 0 0 0-2.887-.87C9.843.266 8.69 0 8 0zm0 5a1.5 1.5 0 0 1 .5 2.915l.385 1.99a.5.5 0 0 1-.491.595h-.788a.5.5 0 0 1-.49-.595l.384-1.99A1.5 1.5 0 0 1 8 5z"/>
+                        </svg>
+                        Dados Protegidos
+                    </div>
+                    <div class="security-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                        </svg>
+                        Conexão Segura
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resumo do Plano -->
+            <div class="plan-summary">
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v1.384l7.614 2.03a1.5 1.5 0 0 0 .772 0L16 5.884V4.5A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1h-3zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85v5.65z"/>
+                    </svg>
+                    Resumo do Pedido
+                </h2>
+                
+                <div class="plan-card">
+                    <div class="plan-name">Plano {{ plano.nome }}</div>
+                    <div class="plan-price">
+                        R$ {{ plano.preco|floatformat:2 }}
+                        <small>/mês</small>
+                    </div>
+                </div>
+                
+                {% if plano.descricao %}
+                <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">
+                    {{ plano.descricao|truncatewords:30 }}
+                </p>
+                {% endif %}
+                
+                {% if plano.features %}
+                <ul class="plan-features">
+                    {% for feature in plano.features %}
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                        </svg>
+                        {{ feature }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+                    <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem;">
+                        <span>Total</span>
+                        <span style="color: var(--secondary-color, #0c63d1);">R$ {{ plano.preco|floatformat:2 }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

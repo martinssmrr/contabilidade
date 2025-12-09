@@ -4,6 +4,9 @@ from . import views
 app_name = 'payments'
 
 urlpatterns = [
+    # Pré-checkout (cadastro antes do pagamento)
+    path('contratar/<int:plano_id>/', views.pre_checkout, name='pre_checkout'),
+    
     # Checkout
     path('checkout/<int:plano_id>/', views.checkout_plano, name='checkout_plano'),
     
