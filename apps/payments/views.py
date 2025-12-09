@@ -300,8 +300,17 @@ def processar_pagamento(request):
         logger.info(f"Nome final do payer: {payer_first_name} {payer_last_name}")
         
         # URL de notificação do webhook (OBRIGATÓRIO para todos os tipos)
-        site_url = settings.SITE_URL.rstrip('/')
-        notification_url = f"{site_url}/payments/webhook/mercadopago/"
+        site_url = settings.SITE_URL.rstrip('/') if settings.SITE_URL else ''
+        
+        # Validar e construir notification_url
+        if site_url and site_url.startswith(('http://', 'https://')):
+            notification_url = f"{site_url}/payments/webhook/mercadopago/"
+        else:
+            # Fallback para URL de produção se SITE_URL não estiver configurado
+            notification_url = "https://contabilvetorial.com.br/payments/webhook/mercadopago/"
+            logger.warning(f"SITE_URL não configurado ou inválido: '{settings.SITE_URL}'. Usando fallback: {notification_url}")
+        
+        logger.info(f"notification_url: {notification_url}")
         
         # Base do payload de pagamento - inclui campos obrigatórios e recomendados
         payment_create_data = {
@@ -339,6 +348,8 @@ def processar_pagamento(request):
             expiration = datetime.now() + timedelta(minutes=30)
             payment_create_data["date_of_expiration"] = expiration.strftime("%Y-%m-%dT%H:%M:%S.000-03:00")
             payment_create_data["payment_method_id"] = "pix"
+            # Atualizar a variável local também para uso posterior
+            payment_method_id = "pix"
             
         elif is_boleto:
             # Boleto - precisa de dados completos do payer incluindo endereço
@@ -456,25 +467,41 @@ def processar_pagamento(request):
         
         logger.info(f"Pagamento {pagamento.id} processado: {mp_status}")
         
+        # Verificar o tipo de pagamento real retornado pelo MP
+        mp_payment_method_id = payment_result.get("payment_method_id", payment_method_id)
+        mp_payment_type_id = payment_result.get("payment_type_id", "")
+        
         # Preparar resposta
         response_data = {
             'status': mp_status,
             'status_detail': payment_result.get("status_detail", ""),
             'payment_id': payment_result.get("id"),
-            'payment_method_id': payment_method_id,
+            'payment_method_id': mp_payment_method_id,
             'redirect_url': reverse('payments:pagamento_sucesso') + f"?external_reference={external_reference}" if mp_status == "approved" else None,
         }
         
         # Adicionar dados do PIX se for pagamento PIX
-        if payment_method_id == 'pix':
+        # Verificar tanto payment_method_id quanto payment_type_id
+        is_pix = mp_payment_method_id == 'pix' or mp_payment_type_id == 'bank_transfer' or payment_method_id == 'pix'
+        
+        logger.info(f"Verificação PIX: is_pix={is_pix}, mp_payment_method_id={mp_payment_method_id}, mp_payment_type_id={mp_payment_type_id}")
+        
+        if is_pix:
             point_of_interaction = payment_result.get("point_of_interaction", {})
             transaction_data = point_of_interaction.get("transaction_data", {})
             
-            response_data['pix_data'] = {
+            logger.info(f"Dados PIX - point_of_interaction: {point_of_interaction}")
+            logger.info(f"Dados PIX - transaction_data: {transaction_data}")
+            
+            pix_data = {
                 'qr_code': transaction_data.get("qr_code", ""),
                 'qr_code_base64': transaction_data.get("qr_code_base64", ""),
                 'ticket_url': transaction_data.get("ticket_url", ""),
             }
+            
+            response_data['pix_data'] = pix_data
+            
+            logger.info(f"PIX data para resposta: qr_code={bool(pix_data['qr_code'])}, qr_code_base64={bool(pix_data['qr_code_base64'])}")
             
             # Redirecionar para página do PIX pendente
             response_data['redirect_url'] = reverse('payments:pagamento_pix') + f"?external_reference={external_reference}"
