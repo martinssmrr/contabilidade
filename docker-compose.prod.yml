@@ -60,7 +60,7 @@ services:
     volumes:
       - .:/app
       - static_volume:/app/staticfiles
-      - media_volume:/app/media
+      - ./media:/app/media  # Bind mount para media - compartilhado com Nginx
     env_file:
       - .env
     ports:
@@ -89,7 +89,7 @@ services:
     command: celery -A gestao360_project worker --loglevel=info --concurrency=2
     volumes:
       - .:/app
-      - media_volume:/app/media
+      - ./media:/app/media  # Bind mount para media
     env_file:
       - .env
     depends_on:
@@ -154,5 +154,4 @@ volumes:
     driver: local
   static_volume:
     driver: local
-  media_volume:
-    driver: local
+  # media_volume removido - agora usa bind mount ./media:/app/media
