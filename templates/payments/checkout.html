@@ -363,6 +363,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (userLastName) payerConfig.lastName = userLastName;
         // entityType deve ser 'individual' para pessoa física
         payerConfig.entityType = 'individual';
+        // Forçar solicitação de identificação (CPF) - essencial para aprovação no Brasil
+        payerConfig.identification = {
+            type: 'CPF',
+            number: ''
+        };
         
         const settings = {
             initialization: {
@@ -388,8 +393,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     bankTransfer: ['pix'],
                     maxInstallments: 12,
                 },
-                // Habilitar coleta de dados do pagador
-                enablePayerData: true,
             },
             callbacks: {
                 onReady: () => {

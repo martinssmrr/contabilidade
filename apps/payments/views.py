@@ -224,10 +224,22 @@ def processar_pagamento(request):
         # Dados do usuário enviados pelo frontend
         user_info = payment_data.get('userInfo', {})
         
+        # Extrair dados de identificação (CPF) - pode vir de vários lugares
+        # 1. Dentro do payer do formData
+        # 2. No próprio formData
+        # 3. Nos dados extras
+        identification_data = (
+            payer_data.get("identification") or 
+            form_data.get("identification") or 
+            payment_data.get("identification") or
+            {}
+        )
+        
         # Log para debug dos dados do payer
         logger.info(f"payer_data recebido: {payer_data}")
         logger.info(f"userInfo recebido: {user_info}")
         logger.info(f"cardholderName recebido: {payment_data.get('cardholderName', '')}")
+        logger.info(f"identification_data extraído: {identification_data}")
         
         # Obter email do payer
         payer_email = payer_data.get("email", "")
@@ -327,9 +339,15 @@ def processar_pagamento(request):
             },
         }
         
-        # Adicionar identification do payer se existir
-        if payer_data.get("identification"):
-            payment_create_data["payer"]["identification"] = payer_data["identification"]
+        # Adicionar identification do payer se existir (CRÍTICO para aprovação no Brasil)
+        if identification_data and identification_data.get("number"):
+            payment_create_data["payer"]["identification"] = {
+                "type": identification_data.get("type", "CPF"),
+                "number": identification_data.get("number", ""),
+            }
+            logger.info(f"Identificação adicionada: {payment_create_data['payer']['identification']}")
+        else:
+            logger.warning("AVISO: Identificação (CPF) não fornecida - pode causar rejeição!")
         
         # Lista de métodos de boleto
         boleto_methods = ['bolbradesco', 'pec', 'ticket', 'boleto']
@@ -386,31 +404,56 @@ def processar_pagamento(request):
             if issuer_id:
                 payment_create_data["issuer_id"] = issuer_id
             
-            # Adicionar dados adicionais para melhorar aprovação antifraude
-            # Identificação do comprador (CPF)
-            if payer_data.get("identification"):
-                payment_create_data["payer"]["identification"] = payer_data["identification"]
+            # Garantir que identificação está no payer (já foi adicionada na base se existir)
+            # Se não foi adicionada antes, tentar adicionar novamente
+            if not payment_create_data["payer"].get("identification") and identification_data and identification_data.get("number"):
+                payment_create_data["payer"]["identification"] = {
+                    "type": identification_data.get("type", "CPF"),
+                    "number": identification_data.get("number", ""),
+                }
+            
+            # Adicionar email do payer nos additional_info também
+            payer_additional = {
+                "first_name": payer_first_name,
+                "last_name": payer_last_name,
+            }
+            
+            # Adicionar registration_date se usuário logado (ajuda no antifraude)
+            if request.user.is_authenticated and hasattr(request.user, 'date_joined'):
+                payer_additional["registration_date"] = request.user.date_joined.strftime("%Y-%m-%dT%H:%M:%S.000-03:00")
             
             # Informações adicionais para antifraude (campos recomendados pelo MP)
             payment_create_data["additional_info"] = {
                 "items": [
                     {
-                        "id": str(pagamento.plano.id) if pagamento.plano else "1",  # Código do item
-                        "title": f"Plano {pagamento.plano.nome}" if pagamento.plano else "Serviço Vetorial",  # Nome do item
-                        "description": pagamento.plano.descricao[:255] if pagamento.plano and pagamento.plano.descricao else "Serviços de contabilidade profissional",  # Descrição
-                        "category_id": "services",  # Categoria
-                        "quantity": 1,  # Quantidade
-                        "unit_price": str(float(pagamento.valor)),  # Preço unitário (string)
+                        "id": str(pagamento.plano.id) if pagamento.plano else "1",
+                        "title": f"Plano {pagamento.plano.nome}" if pagamento.plano else "Serviço Vetorial",
+                        "description": pagamento.plano.descricao[:255] if pagamento.plano and pagamento.plano.descricao else "Serviços de contabilidade profissional",
+                        "category_id": "services",
+                        "quantity": 1,
+                        "unit_price": str(float(pagamento.valor)),
                     }
                 ],
-                "payer": {
-                    "first_name": payer_first_name,
-                    "last_name": payer_last_name,
-                },
+                "payer": payer_additional,
             }
+            
+            # Adicionar IP do cliente (ajuda no antifraude)
+            client_ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', ''))
+            if client_ip:
+                # Pegar apenas o primeiro IP se houver múltiplos
+                client_ip = client_ip.split(',')[0].strip()
+                payment_create_data["additional_info"]["ip_address"] = client_ip
+            
+            # binary_mode = true força aprovação ou rejeição imediata (sem pendente)
+            # Isso pode ajudar em alguns casos, mas também pode aumentar rejeições
+            # payment_create_data["binary_mode"] = True
             
             # Captura automática
             payment_create_data["capture"] = True
+            
+            # Log detalhado para debug
+            logger.info(f"Dados antifraude - payer: {payment_create_data['payer']}")
+            logger.info(f"Dados antifraude - additional_info: {payment_create_data['additional_info']}")
         
         logger.info(f"Enviando para MP: {payment_create_data}")
         
