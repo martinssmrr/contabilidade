@@ -37,21 +37,25 @@ def checkout_plano(request, plano_id):
     # URLs de callback
     site_url = settings.SITE_URL.rstrip('/')
     
-    # Criar preferência de pagamento (simplificada para funcionar em localhost)
+    # URL do webhook para notificações (OBRIGATÓRIO para aprovação)
+    notification_url = f"{site_url}/payments/webhook/mercadopago/"
+    
+    # Criar preferência de pagamento com todos os campos recomendados
     preference_data = {
         "items": [
             {
-                "id": str(plano.id),
-                "title": f"Plano {plano.nome} - Vetorial Contabilidade",
-                "description": plano.descricao[:255] if plano.descricao else f"Plano de contabilidade {plano.nome}",
-                "category_id": "services",
-                "quantity": 1,
+                "id": str(plano.id),  # Código do item (recomendado)
+                "title": f"Plano {plano.nome} - Vetorial Contabilidade",  # Nome do item (recomendado)
+                "description": plano.descricao[:255] if plano.descricao else f"Serviços de contabilidade - Plano {plano.nome}",  # Descrição do item (recomendado)
+                "category_id": "services",  # Categoria do item (recomendado)
+                "quantity": 1,  # Quantidade (recomendado)
                 "currency_id": "BRL",
-                "unit_price": float(plano.preco)
+                "unit_price": float(plano.preco)  # Preço unitário (recomendado)
             }
         ],
         "external_reference": str(pagamento.external_reference),
-        "statement_descriptor": "VETORIAL",
+        "statement_descriptor": "VETORIAL CONTAB",  # Descrição na fatura do cartão (recomendado)
+        "notification_url": notification_url,  # URL para webhooks (OBRIGATÓRIO)
     }
     
     # Adicionar payer apenas se tiver dados
@@ -182,6 +186,10 @@ def processar_pagamento(request):
             payment_create_data["payment_method_id"] = payment_method_id
         
         # Configuração específica por tipo de pagamento
+        # URL de notificação do webhook (OBRIGATÓRIO para todos os tipos)
+        site_url = settings.SITE_URL.rstrip('/')
+        notification_url = f"{site_url}/payments/webhook/mercadopago/"
+        
         if payment_method_id == 'pix' or payment_type == 'bank_transfer':
             # PIX - não precisa de token
             # Definir expiração do PIX (30 minutos)
@@ -189,6 +197,8 @@ def processar_pagamento(request):
             expiration = datetime.now() + timedelta(minutes=30)
             payment_create_data["date_of_expiration"] = expiration.strftime("%Y-%m-%dT%H:%M:%S.000-03:00")
             payment_create_data["payment_method_id"] = "pix"
+            payment_create_data["notification_url"] = notification_url
+            payment_create_data["statement_descriptor"] = "VETORIAL CONTAB"
             
         elif is_boleto:
             # Boleto - precisa de dados completos do payer incluindo endereço
@@ -206,6 +216,10 @@ def processar_pagamento(request):
                 "city": address_data.get("city", "") or "Sao Paulo",
                 "federal_unit": address_data.get("federalUnit", "") or address_data.get("federal_unit", "") or "SP",
             }
+            
+            # Adicionar notification_url e statement_descriptor para boleto
+            payment_create_data["notification_url"] = notification_url
+            payment_create_data["statement_descriptor"] = "VETORIAL CONTAB"
             
             logger.info(f"Boleto - payment_method_id: {payment_method_id}, payer: {payment_create_data['payer']}")
             
@@ -230,16 +244,16 @@ def processar_pagamento(request):
             if payer_data.get("identification"):
                 payment_create_data["payer"]["identification"] = payer_data["identification"]
             
-            # Informações adicionais para antifraude
+            # Informações adicionais para antifraude (campos recomendados pelo MP)
             payment_create_data["additional_info"] = {
                 "items": [
                     {
-                        "id": str(pagamento.plano.id) if pagamento.plano else "1",
-                        "title": f"Plano {pagamento.plano.nome}" if pagamento.plano else "Serviço Vetorial",
-                        "description": pagamento.plano.descricao[:255] if pagamento.plano and pagamento.plano.descricao else "Serviço de contabilidade",
-                        "category_id": "services",
-                        "quantity": 1,
-                        "unit_price": float(pagamento.valor),
+                        "id": str(pagamento.plano.id) if pagamento.plano else "1",  # Código do item
+                        "title": f"Plano {pagamento.plano.nome}" if pagamento.plano else "Serviço Vetorial",  # Nome do item
+                        "description": pagamento.plano.descricao[:255] if pagamento.plano and pagamento.plano.descricao else "Serviços de contabilidade profissional",  # Descrição
+                        "category_id": "services",  # Categoria
+                        "quantity": 1,  # Quantidade
+                        "unit_price": str(float(pagamento.valor)),  # Preço unitário (string)
                     }
                 ],
                 "payer": {
@@ -248,8 +262,11 @@ def processar_pagamento(request):
                 },
             }
             
-            # Statement descriptor (nome que aparece na fatura do cartão)
+            # Statement descriptor (nome que aparece na fatura do cartão) - RECOMENDADO
             payment_create_data["statement_descriptor"] = "VETORIAL CONTAB"
+            
+            # URL de notificação do webhook (OBRIGATÓRIO)
+            payment_create_data["notification_url"] = notification_url
             
             # Captura automática
             payment_create_data["capture"] = True
