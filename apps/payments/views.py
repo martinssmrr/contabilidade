@@ -224,6 +224,35 @@ def processar_pagamento(request):
             
             if issuer_id:
                 payment_create_data["issuer_id"] = issuer_id
+            
+            # Adicionar dados adicionais para melhorar aprovação antifraude
+            # Identificação do comprador (CPF)
+            if payer_data.get("identification"):
+                payment_create_data["payer"]["identification"] = payer_data["identification"]
+            
+            # Informações adicionais para antifraude
+            payment_create_data["additional_info"] = {
+                "items": [
+                    {
+                        "id": str(pagamento.plano.id) if pagamento.plano else "1",
+                        "title": f"Plano {pagamento.plano.nome}" if pagamento.plano else "Serviço Vetorial",
+                        "description": pagamento.plano.descricao[:255] if pagamento.plano and pagamento.plano.descricao else "Serviço de contabilidade",
+                        "category_id": "services",
+                        "quantity": 1,
+                        "unit_price": float(pagamento.valor),
+                    }
+                ],
+                "payer": {
+                    "first_name": payer_first_name,
+                    "last_name": payer_last_name,
+                },
+            }
+            
+            # Statement descriptor (nome que aparece na fatura do cartão)
+            payment_create_data["statement_descriptor"] = "VETORIAL CONTAB"
+            
+            # Captura automática
+            payment_create_data["capture"] = True
         
         logger.info(f"Enviando para MP: {payment_create_data}")
         
