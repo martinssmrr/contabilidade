@@ -15,102 +15,68 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <!-- Menu à esquerda (ao lado da logo) -->
             <ul class="navbar-nav me-auto ms-lg-4">
-                <li class="nav-item dropdown me-lg-3">
-                    <a class="nav-link dropdown-toggle fs-5 px-3" href="#" id="navbarServicos" role="button" 
+                <!-- 1º Botão: Abrir Empresa -->
+                <li class="nav-item me-lg-2">
+                    <a class="nav-link fs-6 px-3" href="/abrir-empresa/">Abrir Empresa</a>
+                </li>
+
+                <!-- 2º Botão: Trocar Contador -->
+                <li class="nav-item me-lg-2">
+                    <a class="nav-link fs-6 px-3" href="/trocar-contador/">Trocar Contador</a>
+                </li>
+
+                <!-- 3º Menu: Serviços -->
+                <li class="nav-item dropdown me-lg-2">
+                    <a class="nav-link dropdown-toggle fs-6 px-3" href="#" id="navbarServicos" role="button" 
                        data-bs-toggle="dropdown" aria-expanded="false">
                         Serviços
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarServicos">
-                        <li>
-                            <a class="dropdown-item" href="/abrir-empresa/">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v8A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1h-3zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5zm1.886 6.914L15 7.151V12.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7.15l6.614 1.764a1.5 1.5 0 0 0 .772 0zM1.5 4h13a.5.5 0 0 1 .5.5v1.616L8.129 7.948a.5.5 0 0 1-.258 0L1 6.116V4.5a.5.5 0 0 1 .5-.5z"/>
-                                </svg>
-                                Abrir Empresa
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="/deixar-mei">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
-                                </svg>
-                                Deixar de ser MEI
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="/trocar-contador">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M9.302 1.256a1.5 1.5 0 0 0-2.604 0l-1.704 2.98a.5.5 0 0 0 .869.497l1.703-2.981a.5.5 0 0 1 .868 0l2.54 4.444-1.256-.337a.5.5 0 1 0-.26.966l2.415.647a.5.5 0 0 0 .613-.353l.647-2.415a.5.5 0 1 0-.966-.259l-.333 1.242-2.532-4.431zM2.973 7.773l-1.255.337a.5.5 0 1 1-.26-.966l2.416-.647a.5.5 0 0 1 .612.353l.647 2.415a.5.5 0 0 1-.966.259l-.333-1.242-2.545 4.454a.5.5 0 0 0 .434.748H5a.5.5 0 0 1 0 1H1.723A1.5 1.5 0 0 1 .421 12.24l2.552-4.467zm10.89 1.463a.5.5 0 1 0-.868.496l1.716 3.004a.5.5 0 0 1-.434.748h-5.57l.647-.646a.5.5 0 1 0-.708-.707l-1.5 1.5a.498.498 0 0 0 0 .707l1.5 1.5a.5.5 0 1 0 .708-.707l-.647-.647h5.57a1.5 1.5 0 0 0 1.302-2.244l-1.716-3.004z"/>
-                                </svg>
-                                Trocar de Contador
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="/contabilidade-completa">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
-                                </svg>
-                                Contabilidade Completa
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="/assessoria">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
-                                    <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319z"/>
-                                </svg>
-                                Assessoria Contábil
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item fw-bold" href="/services/">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
-                                </svg>
-                                Ver Todos os Serviços
-                            </a>
-                        </li>
+                        <li><a class="dropdown-item" href="/abrir-empresa/">Abrir Empresa</a></li>
+                        <li><a class="dropdown-item" href="/trocar-contador/">Trocar de Contador</a></li>
+                        <li><a class="dropdown-item" href="/contabilidade-mei/">Contabilidade MEI</a></li>
+                        <li><a class="dropdown-item" href="/deixar-mei/">Deixar de Ser MEI</a></li>
+                        <li><a class="dropdown-item" href="/endereco-virtual/">Endereço Virtual</a></li>
+                        <li><a class="dropdown-item" href="/certificado-digital/">Certificado Digital</a></li>
+                        <li><a class="dropdown-item" href="/emissor-nota-fiscal/">Emissor de Nota Fiscal</a></li>
+                        <li><a class="dropdown-item" href="/contabilidade-online/">Contabilidade Online</a></li>
+                        <li><a class="dropdown-item" href="/assessoria/">Assessoria Contábil</a></li>
                     </ul>
                 </li>
-                <li class="nav-item me-lg-3">
-                    <a class="nav-link fs-5 px-3" href="/services/planos/">Planos</a>
-                </li>
-                <li class="nav-item dropdown me-lg-3">
-                    <a class="nav-link dropdown-toggle fs-5 px-3" href="#" id="navbarRecursos" role="button" 
+
+                <!-- 4º Menu: Segmentos -->
+                <li class="nav-item dropdown me-lg-2">
+                    <a class="nav-link dropdown-toggle fs-6 px-3" href="#" id="navbarSegmentos" role="button" 
                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Recursos
+                        Segmentos
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarRecursos">
-                        <li>
-                            <a class="dropdown-item" href="{% url 'calculadora_clt_pj' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="me-2" viewBox="0 0 16 16">
-                                    <path d="M6 13.5A1.5 1.5 0 0 1 7.5 12h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1A1.5 1.5 0 0 1 6 14.5v-1zM2.5 3A1.5 1.5 0 0 1 4 1.5h8A1.5 1.5 0 0 1 13.5 3v8a1.5 1.5 0 0 1-1.5 1.5H4A1.5 1.5 0 0 1 2.5 11V3zM4 2.5a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5H4z"/>
-                                </svg>
-                                Calculadora CLT vs. PJ
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{% url 'services:consulta_cnaes' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="me-2" viewBox="0 0 16 16">
-                                    <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
-                                </svg>
-                                Consultar CNAEs
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item" href="{% url 'blog:post_list' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="me-2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                                </svg>
-                                Blog
-                            </a>
-                        </li>
+                    <ul class="dropdown-menu" aria-labelledby="navbarSegmentos">
+                        <li><a class="dropdown-item" href="/segmentos/servicos/">Serviços</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/comercio/">Comércio</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/saude/">Saúde</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/direito/">Direito</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/engenharia/">Engenharia</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/agronegocio/">Agronegócio</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/turismo/">Turismo</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/tecnologia/">Profissionais de Tecnologia</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/outros/">Demais categorias atendidas</a></li>
                     </ul>
                 </li>
-                <li class="nav-item me-lg-3">
-                    <a class="nav-link fs-5 px-3" href="/abrir-empresa/">Abrir Empresa</a>
+
+                <!-- 5º Menu: Conteúdos -->
+                <li class="nav-item dropdown me-lg-2">
+                    <a class="nav-link dropdown-toggle fs-6 px-3" href="#" id="navbarConteudos" role="button" 
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Conteúdos
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarConteudos">
+                        <li><a class="dropdown-item" href="{% url 'blog:post_list' %}">Blog</a></li>
+                        <li><a class="dropdown-item" href="/conteudos/ebooks/">E-books</a></li>
+                        <li><a class="dropdown-item" href="/conteudos/educacao/">Educação</a></li>
+                        <li><a class="dropdown-item" href="{% url 'calculadora_clt_pj' %}">Calculadora CLT vs. PJ</a></li>
+                        <li><a class="dropdown-item" href="{% url 'services:consulta_cnaes' %}">Consultar CNAEs</a></li>
+                        <li><a class="dropdown-item" href="/conteudos/regime-tributario/">Regime Tributário</a></li>
+                    </ul>
                 </li>
             </ul>
             

@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Endereço Virtual - Vetorial Contabilidade{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Endereço Virtual</h1>
+                <p class="lead mb-4">Tenha um endereço comercial de prestígio para sua empresa sem os custos de um escritório físico.</p>
+                <a href="#contato" class="btn btn-primary btn-lg">Fale com um Especialista</a>
+            </div>
+            <div class="col-lg-6">
+                <div class="bg-secondary rounded-3" style="height: 300px; width: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                    Imagem Ilustrativa - Endereço Virtual
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Benefícios</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="h5 card-title">Economia</h3>
+                        <p class="card-text">Reduza custos com aluguel, condomínio e IPTU.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="h5 card-title">Credibilidade</h3>
+                        <p class="card-text">Endereço comercial em localização privilegiada.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="h5 card-title">Praticidade</h3>
+                        <p class="card-text">Gestão de correspondências e recados.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Como Funciona</h2>
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="mb-3 fw-bold fs-1 text-primary">1</div>
+                <p>Contratação</p>
+            </div>
+            <div class="col-md-3">
+                <div class="mb-3 fw-bold fs-1 text-primary">2</div>
+                <p>Documentação</p>
+            </div>
+            <div class="col-md-3">
+                <div class="mb-3 fw-bold fs-1 text-primary">3</div>
+                <p>Ativação</p>
+            </div>
+            <div class="col-md-3">
+                <div class="mb-3 fw-bold fs-1 text-primary">4</div>
+                <p>Uso Imediato</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Perguntas Frequentes</h2>
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Posso usar para registro na Junta Comercial?
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Sim, nosso endereço virtual é válido para registro fiscal e comercial.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white text-center" id="contato">
+    <div class="container">
+        <h2 class="mb-4">Pronto para contratar?</h2>
+        <p class="lead mb-4">Entre em contato conosco hoje mesmo.</p>
+        <a href="#" class="btn btn-light btn-lg">Solicitar Proposta</a>
+    </div>
+</section>
+
+{% endblock %}

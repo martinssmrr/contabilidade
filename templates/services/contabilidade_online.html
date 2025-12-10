@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contabilidade Online - Vetorial Contabilidade{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Contabilidade Online</h1>
+                <p class="lead mb-4">Tecnologia e praticidade para a gestão contábil da sua empresa, com atendimento humanizado.</p>
+                <a href="#contato" class="btn btn-primary btn-lg">Conheça Nossos Planos</a>
+            </div>
+            <div class="col-lg-6">
+                <div class="bg-secondary rounded-3" style="height: 300px; width: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                    Imagem Ilustrativa - Contabilidade Online
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Por que escolher a Contabilidade Online?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="h5 card-title">Praticidade</h3>
+                        <p class="card-text">Tudo resolvido pela internet.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="h5 card-title">Economia</h3>
+                        <p class="card-text">Planos acessíveis para o seu negócio.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="h5 card-title">Segurança</h3>
+                        <p class="card-text">Seus dados protegidos e contabilidade em dia.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-primary text-white text-center" id="contato">
+    <div class="container">
+        <h2 class="mb-4">Modernize sua contabilidade</h2>
+        <a href="#" class="btn btn-light btn-lg">Fale com um Consultor</a>
+    </div>
+</section>
+{% endblock %}

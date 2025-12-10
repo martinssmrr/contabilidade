@@ -186,6 +186,30 @@ urlpatterns = [
     path("trocar-contador/", trocar_contador_view, name='trocar_contador'),
     path("contabilidade-completa/", contabilidade_completa_view, name='contabilidade_completa'),
     path("assessoria/", assessoria_view, name='assessoria'),
+    
+    # Novos Serviços
+    path("contabilidade-mei/", TemplateView.as_view(template_name='services/contabilidade_mei.html'), name='contabilidade_mei'),
+    path("endereco-virtual/", TemplateView.as_view(template_name='services/endereco_virtual.html'), name='endereco_virtual'),
+    path("certificado-digital/", TemplateView.as_view(template_name='services/certificado_digital.html'), name='certificado_digital'),
+    path("emissor-nota-fiscal/", TemplateView.as_view(template_name='services/emissor_nota_fiscal.html'), name='emissor_nota_fiscal'),
+    path("contabilidade-online/", TemplateView.as_view(template_name='services/contabilidade_online.html'), name='contabilidade_online'),
+
+    # Segmentos
+    path("segmentos/servicos/", TemplateView.as_view(template_name='segments/servicos.html'), name='segmentos_servicos'),
+    path("segmentos/comercio/", TemplateView.as_view(template_name='segments/comercio.html'), name='segmentos_comercio'),
+    path("segmentos/saude/", TemplateView.as_view(template_name='segments/saude.html'), name='segmentos_saude'),
+    path("segmentos/direito/", TemplateView.as_view(template_name='segments/direito.html'), name='segmentos_direito'),
+    path("segmentos/engenharia/", TemplateView.as_view(template_name='segments/engenharia.html'), name='segmentos_engenharia'),
+    path("segmentos/agronegocio/", TemplateView.as_view(template_name='segments/agronegocio.html'), name='segmentos_agronegocio'),
+    path("segmentos/turismo/", TemplateView.as_view(template_name='segments/turismo.html'), name='segmentos_turismo'),
+    path("segmentos/tecnologia/", TemplateView.as_view(template_name='segments/tecnologia.html'), name='segmentos_tecnologia'),
+    path("segmentos/outros/", TemplateView.as_view(template_name='segments/outros.html'), name='segmentos_outros'),
+
+    # Conteúdos
+    path("conteudos/ebooks/", TemplateView.as_view(template_name='contents/ebooks.html'), name='conteudos_ebooks'),
+    path("conteudos/educacao/", TemplateView.as_view(template_name='contents/educacao.html'), name='conteudos_educacao'),
+    path("conteudos/regime-tributario/", TemplateView.as_view(template_name='contents/regime_tributario.html'), name='conteudos_regime_tributario'),
+
     path("obrigado/", TemplateView.as_view(template_name='obrigado.html'), name='obrigado'),
     # Páginas institucionais estáticas
     path('sobre/', TemplateView.as_view(template_name='pages/sobre.html'), name='sobre'),

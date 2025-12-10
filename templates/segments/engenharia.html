@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contabilidade para Engenharia - Vetorial Contabilidade{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Contabilidade para Engenharia</h1>
+                <p class="lead mb-4">Engenheiros e empresas de construção civil. Contabilidade técnica e precisa.</p>
+                <a href="#contato" class="btn btn-primary btn-lg">Fale com um Especialista</a>
+            </div>
+            <div class="col-lg-6">
+                <div class="bg-secondary rounded-3" style="height: 300px; width: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                    Imagem Ilustrativa - Engenharia
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Construindo Resultados</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="h5 card-title">CREA</h3>
+                        <p class="card-text">Regularização junto ao conselho de classe.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="h5 card-title">Obras</h3>
+                        <p class="card-text">Contabilidade específica para obras e projetos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="h5 card-title">Impostos</h3>
+                        <p class="card-text">Retenções e obrigações acessórias do setor.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-primary text-white text-center" id="contato">
+    <div class="container">
+        <h2 class="mb-4">Base sólida para o seu negócio</h2>
+        <a href="#" class="btn btn-light btn-lg">Solicitar Proposta</a>
+    </div>
+</section>
+{% endblock %}
