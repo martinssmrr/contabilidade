@@ -3,19 +3,191 @@
 
 {% block title %}Endereço Virtual - Vetorial Contabilidade{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .text-primary-dark {
+        color: #0a4fa3;
+    }
+    .step-card {
+        position: relative;
+        padding: 2rem;
+        height: 100%;
+        border-radius: 15px;
+        background: #fff;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+    .step-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background: #0c63d1;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+    }
+    .benefit-item {
+        display: flex;
+        align-items: start;
+        margin-bottom: 1.5rem;
+    }
+    .benefit-icon {
+        color: #3ef47c; /* Primary Green */
+        font-size: 1.4rem;
+        margin-right: 1rem;
+        margin-top: 0.1rem;
+    }
+    
+    /* Modern Card Styles */
+    .modern-card {
+        background: linear-gradient(160deg, #0c63d1 0%, #42A5F5 100%);
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(12, 99, 209, 0.2);
+        position: relative;
+        overflow: hidden;
+        border: none;
+        color: white;
+        padding: 1rem;
+    }
+    .modern-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+        transform: scale(2);
+        pointer-events: none;
+    }
+    .modern-card::after {
+        content: '';
+        position: absolute;
+        bottom: -20%;
+        left: -20%;
+        width: 60%;
+        height: 60%;
+        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    .modern-card-icon {
+        font-size: 4rem;
+        color: #ffffff;
+        margin-bottom: 1.5rem;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    }
+    .modern-card-title {
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        margin-bottom: 1rem;
+        font-size: 1.75rem;
+    }
+    .modern-card-text {
+        font-weight: 300;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+    }
+    .modern-card-btn {
+        background: white;
+        color: #0c63d1;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        border: none;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .modern-card-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+        color: #0c63d1;
+        background: white;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <!-- Hero Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Endereço Virtual</h1>
-                <p class="lead mb-4">Tenha um endereço comercial de prestígio para sua empresa sem os custos de um escritório físico.</p>
-                <a href="#contato" class="btn btn-primary btn-lg">Fale com um Especialista</a>
+<section class="hero-section text-white position-relative" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/abrirherosection.webp' %}'); background-size: cover; background-position: center right;">
+    <div class="container-fluid">
+        <div class="row align-items-center" style="min-height: 75vh; padding-bottom: 1rem;">
+            <!-- Coluna Esquerda - Conteúdo -->
+            <div class="col-lg-6 col-12 animate-fade-in px-5">
+                <h1 class="display-3 fw-bold mb-4">Endereço Virtual para Empresas Credibilidade e Regularidade Sem Custos Fixos</h1>
+                <p class="fs-5 mb-4">Garanta um endereço fiscal profissional para abrir, regularizar ou manter sua empresa sem precisar alugar um espaço físico. Uma solução econômica, segura e 100% online para quem deseja formalidade e credibilidade no CNPJ.</p>
+                <div class="d-grid gap-3 d-sm-flex mb-4">
+                    <button type="button" class="btn btn-light btn-lg px-5" data-bs-toggle="modal" data-bs-target="#contactModal">Abra sua empresa agora</button>
+                    <a href="https://wa.me/5561998311920" target="_blank" class="btn btn-outline-light btn-lg px-5">Falar com um especialista</a>
+                </div>
+                <!-- Selos de Segurança -->
+                <!-- <div class="d-flex gap-3 align-items-center flex-wrap mt-3">
+                    <div class="selo-badge selo-ra1000">
+                        <img src="{% static 'img/SELO-RA1000.webp' %}" alt="Selo RA1000" class="img-fluid">
+                    </div>
+                    <div class="selo-badge selo-google" style="width: 103.969px !important; height: 37.734px !important;">
+                        <img src="{% static 'img/googlesiteseguro.webp' %}" alt="Google Site Seguro" style="width: 100%; height: 100%; object-fit: contain;">
+                    </div>
+                </div> -->
             </div>
-            <div class="col-lg-6">
-                <div class="bg-secondary rounded-3" style="height: 300px; width: 100%; display: flex; align-items: center; justify-content: center; color: white;">
-                    Imagem Ilustrativa - Endereço Virtual
+            <!-- Coluna Direita - Vazia (imagem de fundo aparece aqui) -->
+            <div class="col-lg-6 d-none d-lg-block">
+                <!-- Espaço para a imagem de fundo aparecer -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-light" style="background-color: #ebeef1 !important;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-primary-dark">Como Funciona</h2>
+            <p class="lead text-muted">Simples, rápido e 100% online. Veja como é fácil contratar.</p>
+        </div>
+        <div class="row g-4">
+            <!-- Step 1 -->
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4 class="h5 fw-bold mb-3">Contratação Online</h4>
+                    <p class="text-muted small">Escolha o plano ideal para o seu negócio e faça a contratação diretamente pelo nosso site, em poucos cliques.</p>
+                </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4 class="h5 fw-bold mb-3">Envio de Documentos</h4>
+                    <p class="text-muted small">Envie seus documentos pessoais e da empresa de forma 100% digital e segura através da nossa plataforma.</p>
+                </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4 class="h5 fw-bold mb-3">Liberação do Endereço</h4>
+                    <p class="text-muted small">Após análise rápida, liberamos seu endereço fiscal e comercial para você regularizar seu CNPJ imediatamente.</p>
+                </div>
+            </div>
+            <!-- Step 4 -->
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h4 class="h5 fw-bold mb-3">Gestão Completa</h4>
+                    <p class="text-muted small">Pronto! Nós recebemos suas correspondências e notificamos você. Foque no seu negócio enquanto cuidamos do resto.</p>
                 </div>
             </div>
         </div>
@@ -23,77 +195,167 @@
 </section>
 
 <!-- Benefits Section -->
-<section class="py-5">
+<section class="py-5" style="background-color: #ebeef1 !important;">
     <div class="container">
-        <h2 class="text-center mb-5">Benefícios</h2>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Economia</h3>
-                        <p class="card-text">Reduza custos com aluguel, condomínio e IPTU.</p>
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="fw-bold text-primary-dark mb-4">Benefícios do Endereço Virtual</h2>
+                <p class="lead text-muted mb-4">Mais do que um endereço, uma solução estratégica para reduzir custos e profissionalizar sua empresa.</p>
+                
+                <div class="benefit-list">
+                    <div class="benefit-item">
+                        <i class="fa-solid fa-check-circle benefit-icon"></i>
+                        <div>
+                            <h5 class="fw-bold">Economia Real</h5>
+                            <p class="text-muted mb-0">Elimine gastos com aluguel, condomínio, IPTU, água, luz e manutenção de um escritório físico.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fa-solid fa-check-circle benefit-icon"></i>
+                        <div>
+                            <h5 class="fw-bold">Endereço Fiscal Garantido</h5>
+                            <p class="text-muted mb-0">Regularize sua empresa na Receita Federal e órgãos públicos com um endereço válido e seguro.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fa-solid fa-check-circle benefit-icon"></i>
+                        <div>
+                            <h5 class="fw-bold">Credibilidade Profissional</h5>
+                            <p class="text-muted mb-0">Transmita confiança aos seus clientes utilizando um endereço comercial em localização estratégica.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fa-solid fa-check-circle benefit-icon"></i>
+                        <div>
+                            <h5 class="fw-bold">Praticidade e Privacidade</h5>
+                            <p class="text-muted mb-0">Mantenha seu endereço residencial preservado e gerencie suas correspondências de forma online.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Credibilidade</h3>
-                        <p class="card-text">Endereço comercial em localização privilegiada.</p>
+            <div class="col-lg-6">
+                <div class="card modern-card h-100">
+                    <div class="card-body text-center position-relative z-1 d-flex flex-column justify-content-center align-items-center">
+                        <div class="mb-2">
+                            <i class="fa-solid fa-building-circle-check modern-card-icon"></i>
+                        </div>
+                        <h3 class="modern-card-title">Sua empresa regularizada hoje mesmo!</h3>
+                        <p class="modern-card-text">Não perca tempo com burocracia. Contrate agora e tenha seu endereço fiscal liberado.</p>
+                        <button class="btn modern-card-btn" data-bs-toggle="modal" data-bs-target="#contactModal">
+                            QUERO CONTRATAR
+                        </button>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Praticidade</h3>
-                        <p class="card-text">Gestão de correspondências e recados.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- How It Works Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center mb-5">Como Funciona</h2>
-        <div class="row text-center">
-            <div class="col-md-3">
-                <div class="mb-3 fw-bold fs-1 text-primary">1</div>
-                <p>Contratação</p>
-            </div>
-            <div class="col-md-3">
-                <div class="mb-3 fw-bold fs-1 text-primary">2</div>
-                <p>Documentação</p>
-            </div>
-            <div class="col-md-3">
-                <div class="mb-3 fw-bold fs-1 text-primary">3</div>
-                <p>Ativação</p>
-            </div>
-            <div class="col-md-3">
-                <div class="mb-3 fw-bold fs-1 text-primary">4</div>
-                <p>Uso Imediato</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- FAQ Section -->
-<section class="py-5">
+<section class="faq-section py-5" style="background-color: #ebeef1; min-height: 400px;">
     <div class="container">
-        <h2 class="text-center mb-5">Perguntas Frequentes</h2>
-        <div class="accordion" id="faqAccordion">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Posso usar para registro na Junta Comercial?
-                    </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
-                    <div class="accordion-body">
-                        Sim, nosso endereço virtual é válido para registro fiscal e comercial.
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Dúvidas Frequentes sobre os Planos</h2>
+            <p class="lead text-muted">Tire suas principais dúvidas sobre nossos planos</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="faq-accordion">
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">O que é necessário para abrir uma empresa?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Você precisa dos seus documentos pessoais, endereço, atividade da empresa e informações sobre sócios, quando houver.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Quanto tempo demora para abrir uma empresa?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>O processo para abrir uma empresa geralmente leva de 7 a 15 dias úteis, dependendo da complexidade do negócio e da rapidez na entrega dos documentos necessários.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Quanto custa abrir uma empresa?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Os custos para abrir uma empresa variam conforme o tipo de empresa e a localidade, incluindo taxas de registro, honorários contábeis e outros custos administrativos.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Posso usar meu endereço residencial?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Sim, você pode usar seu endereço residencial para abrir a empresa, desde que esteja de acordo com as normas municipais e o tipo de atividade exercida.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">É obrigatório ter contador?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Sim, é obrigatório ter um contador para a maioria dos tipos de empresa, pois ele é responsável pela escrituração contábil, cumprimento das obrigações fiscais e orientação financeira.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">É possível abrir empresa online?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Sim. Hoje o processo é 100% digital em quase todos os estados.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -101,12 +363,122 @@
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="py-5 bg-primary text-white text-center" id="contato">
-    <div class="container">
-        <h2 class="mb-4">Pronto para contratar?</h2>
-        <p class="lead mb-4">Entre em contato conosco hoje mesmo.</p>
-        <a href="#" class="btn btn-light btn-lg">Solicitar Proposta</a>
+<!-- Contact Section -->
+<section class="contact-section position-relative py-5">
+    <div class="contact-bg"></div>
+    <div class="container position-relative">
+        <div class="row justify-content-end align-items-center h-100">
+            <!-- Coluna Esquerda - Vazia (background aparece) -->
+            <div class="col-lg-7 d-none d-lg-block">
+                <!-- Espaço para o background aparecer -->
+            </div>
+            
+            <!-- Coluna Direita - Formulário -->
+            <div class="col-lg-5 col-md-8 col-12">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-4">
+                        <h3 class="fw-bold mb-2">Fale com um Especialista</h3>
+                        <p class="text-muted mb-4">Preencha o formulário e entraremos em contato</p>
+                        
+                        <form id="contactFormSection">
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Nome *</label>
+                                <input type="text" class="form-control" id="nome" required>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="emailForm" class="form-label">E-mail *</label>
+                                    <input type="email" class="form-control" id="emailForm" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="telefoneForm" class="form-label">Telefone *</label>
+                                    <input type="tel" class="form-control" id="telefoneForm" placeholder="(00) 00000-0000" required>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="estadoForm" class="form-label">Estado *</label>
+                                    <select class="form-select" id="estadoForm" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="AC">Acre</option>
+                                        <option value="AL">Alagoas</option>
+                                        <option value="AP">Amapá</option>
+                                        <option value="AM">Amazonas</option>
+                                        <option value="BA">Bahia</option>
+                                        <option value="CE">Ceará</option>
+                                        <option value="DF">Distrito Federal</option>
+                                        <option value="ES">Espírito Santo</option>
+                                        <option value="GO">Goiás</option>
+                                        <option value="MA">Maranhão</option>
+                                        <option value="MT">Mato Grosso</option>
+                                        <option value="MS">Mato Grosso do Sul</option>
+                                        <option value="MG">Minas Gerais</option>
+                                        <option value="PA">Pará</option>
+                                        <option value="PB">Paraíba</option>
+                                        <option value="PR">Paraná</option>
+                                        <option value="PE">Pernambuco</option>
+                                        <option value="PI">Piauí</option>
+                                        <option value="RJ">Rio de Janeiro</option>
+                                        <option value="RN">Rio Grande do Norte</option>
+                                        <option value="RS">Rio Grande do Sul</option>
+                                        <option value="RO">Rondônia</option>
+                                        <option value="RR">Roraima</option>
+                                        <option value="SC">Santa Catarina</option>
+                                        <option value="SP">São Paulo</option>
+                                        <option value="SE">Sergipe</option>
+                                        <option value="TO">Tocantins</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="cidadeForm" class="form-label">Cidade *</label>
+                                    <input type="text" class="form-control" id="cidadeForm" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="servicoForm" class="form-label">Qual serviço deseja? *</label>
+                                <select class="form-select" id="servicoForm" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="abrir_empresa">Abrir empresa</option>
+                                    <option value="trocar_contador">Trocar de contador</option>
+                                    <option value="mei_para_me">Transformar MEI para ME</option>
+                                    <option value="contabilidade_mei">Contabilidade para MEI</option>
+                                    <option value="abertura_mei">Abertura MEI</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="tipoNegocio" class="form-label">Qual é o seu tipo de negócio? *</label>
+                                <select class="form-select" id="tipoNegocio" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="servico">Serviço</option>
+                                    <option value="comercio">Comércio</option>
+                                    <option value="comercio_servico">Comércio e Serviço</option>
+                                    <option value="industria">Indústria</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="preferenciaContato" class="form-label">Como prefere que entremos em contato? *</label>
+                                <select class="form-select" id="preferenciaContato" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="whatsapp">WhatsApp</option>
+                                    <option value="email">E-mail</option>
+                                </select>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    FALE COM ESPECIALISTA
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 

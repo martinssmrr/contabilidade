@@ -3,41 +3,507 @@
 
 {% block title %}Certificado Digital - Vetorial Contabilidade{% endblock %}
 
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    /* Global Styles */
+    :root {
+        --primary-blue: #0c63d1;
+        --primary-dark: #0a4fa3;
+        --text-dark: #333333;
+        --text-light: #666666;
+        --bg-light: #f4f7f9;
+        --white: #ffffff;
+        --accent-green: #2ed66b;
+        --accent-orange: #ff9800;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: var(--text-dark);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        color: var(--primary-blue);
+    }
+
+    .section-padding {
+        padding: 80px 0;
+    }
+
+    .bg-light-alt {
+        background-color: var(--bg-light);
+    }
+
+    .btn-primary-custom {
+        background-color: var(--primary-blue);
+        color: var(--white);
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary-custom:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
+        color: var(--white);
+        box-shadow: 0 5px 15px rgba(12, 99, 209, 0.3);
+    }
+
+    .btn-outline-custom {
+        border: 2px solid var(--primary-blue);
+        color: var(--primary-blue);
+        padding: 10px 28px;
+        border-radius: 50px;
+        font-weight: 600;
+        background: transparent;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-custom:hover {
+        background-color: var(--primary-blue);
+        color: var(--white);
+    }
+
+    /* Hero Section */
+    .hero-digital {
+        background: linear-gradient(135deg, rgba(12, 99, 209, 0.7) 0%, rgba(10, 79, 163, 0.8) 100%), url('{% static "img/certificado-digital.webp" %}');
+        background-size: cover;
+        background-position: center;
+        min-height: 100vh;
+        padding: 120px 0 80px;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    
+    .hero-digital h1 {
+        color: #ffffff;
+    }
+    
+    .hero-digital p.lead {
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    /* 1. Como Funciona */
+    .step-card {
+        text-align: center;
+        position: relative;
+        padding: 20px;
+        z-index: 1;
+    }
+    .step-number {
+        font-size: 4rem;
+        font-weight: 900;
+        color: rgba(12, 99, 209, 0.1);
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: -1;
+    }
+    .step-icon {
+        font-size: 2.5rem;
+        color: var(--primary-blue);
+        margin-bottom: 20px;
+        background: var(--white);
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        border-radius: 50%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        display: inline-block;
+    }
+    .steps-connector {
+        position: absolute;
+        top: 50px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-image: linear-gradient(to right, var(--primary-blue) 50%, transparent 50%);
+        background-size: 20px 1px;
+        background-repeat: repeat-x;
+        z-index: 0;
+        display: none;
+    }
+    @media (min-width: 992px) {
+        .steps-connector { display: block; }
+    }
+
+    /* 2. Benefícios */
+    .benefit-card {
+        background: var(--white);
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    .benefit-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--primary-blue);
+        box-shadow: 0 15px 30px rgba(12, 99, 209, 0.1);
+    }
+    .benefit-icon {
+        font-size: 2rem;
+        color: var(--primary-blue);
+        margin-bottom: 20px;
+    }
+
+    /* 3. Tipos (A1 vs A3) */
+    .type-card {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+    .type-card:hover {
+        border-color: var(--primary-blue);
+    }
+    .type-card.popular {
+        border-color: var(--primary-blue);
+        background: linear-gradient(to bottom, #ffffff, #f8fbff);
+    }
+    .popular-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: var(--accent-green);
+        color: var(--white);
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    .type-list li {
+        margin-bottom: 10px;
+        color: var(--text-light);
+    }
+    .type-list i {
+        color: var(--accent-green);
+        margin-right: 10px;
+    }
+
+    /* 4. Para Quem Serve */
+    .target-item {
+        background: var(--white);
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        transition: transform 0.2s;
+    }
+    .target-item:hover {
+        transform: translateX(5px);
+    }
+    .check-icon {
+        color: var(--primary-blue);
+        margin-right: 15px;
+        font-size: 1.2rem;
+    }
+
+    /* Depoimentos */
+
+    .autor-foto {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    }
+
+    .depoimento-card {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        position: relative;
+        height: 100%;
+    }
+
+    .depoimento-card::before {
+        content: '"';
+        font-size: 6rem;
+        color: rgba(12, 99, 209, 0.1);
+        position: absolute;
+        top: 10px;
+        left: 25px;
+        font-family: Georgia, serif;
+        line-height: 1;
+    }
+
+    .depoimento-texto {
+        font-style: italic;
+        color: var(--text-light);
+        margin-bottom: 25px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .depoimento-autor {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .autor-avatar {
+        width: 60px;
+        height: 60px;
+        background-size: cover;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .autor-avatar i {
+        font-size: 1.5rem;
+        color: var(--white);
+    }
+
+    /* 6. FAQ */
+    .accordion-item {
+        border: none;
+        margin-bottom: 15px;
+        border-radius: 10px !important;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .accordion-button {
+        background-color: var(--white);
+        color: var(--text-dark);
+        font-weight: 600;
+        padding: 20px;
+        box-shadow: none !important;
+    }
+    .accordion-button:not(.collapsed) {
+        background-color: rgba(12, 99, 209, 0.05);
+        color: var(--primary-blue);
+    }
+    .accordion-button::after {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%230c63d1'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    }
+
+    /* 7. CTA Final */
+    .cta-final {
+        background-color: var(--primary-blue);
+        color: var(--white);
+        text-align: center;
+        padding: 80px 0;
+    }
+    .cta-final h2 {
+        color: var(--white);
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+    .btn-contrast {
+        background-color: var(--accent-green);
+        color: var(--white);
+        padding: 15px 40px;
+        font-size: 1.2rem;
+        border-radius: 50px;
+        font-weight: 700;
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    .btn-contrast:hover {
+        background-color: #25b359;
+        transform: scale(1.05);
+        color: var(--white);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<section class="py-5 bg-light">
+<!-- Hero Section (Simplified for Landing Page focus) -->
+<section class="hero-digital d-flex align-items-center">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Certificado Digital</h1>
-                <p class="lead mb-4">Emita seu Certificado Digital com rapidez e segurança. Essencial para sua empresa.</p>
-                <a href="#contato" class="btn btn-primary btn-lg">Agendar Emissão</a>
-            </div>
-            <div class="col-lg-6">
-                <div class="bg-secondary rounded-3" style="height: 300px; width: 100%; display: flex; align-items: center; justify-content: center; color: white;">
-                    Imagem Ilustrativa - Certificado Digital
+            <div class="col-lg-8 col-xl-7">
+                <h1 class="display-4 fw-bold mb-4">Certificado Digital <br>Rápido e Sem Burocracia</h1>
+                <p class="lead mb-5">Emita seu e-CPF ou e-CNPJ em minutos. Processo 100% online, seguro e com suporte especializado da Vetorial.</p>
+                <div class="d-flex gap-3 flex-column flex-sm-row">
+                    <a href="#tipos" class="btn btn-contrast">Escolher Certificado</a>
+                    <a href="#como-funciona" class="btn btn-outline-light">Como Funciona</a>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="py-5">
+<!-- 1. Como Funciona -->
+<section id="como-funciona" class="section-padding">
     <div class="container">
-        <h2 class="text-center mb-5">Tipos de Certificado</h2>
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Como Funciona</h2>
+            <p class="text-muted">Emita seu certificado em 4 passos simples</p>
+        </div>
+        
+        <div class="position-relative">
+            <div class="steps-connector d-none d-lg-block"></div>
+            <div class="row">
+                <!-- Step 1 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="step-card">
+                        <span class="step-number">1</span>
+                        <div class="step-icon">
+                            <i class="fa-regular fa-file-lines"></i>
+                        </div>
+                        <h4>Escolha</h4>
+                        <p class="text-muted small">Selecione o modelo ideal (A1 ou A3) para sua necessidade.</p>
+                    </div>
+                </div>
+                <!-- Step 2 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="step-card">
+                        <span class="step-number">2</span>
+                        <div class="step-icon">
+                            <i class="fa-regular fa-credit-card"></i>
+                        </div>
+                        <h4>Pagamento</h4>
+                        <p class="text-muted small">Realize o pagamento de forma segura e rápida.</p>
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="step-card">
+                        <span class="step-number">3</span>
+                        <div class="step-icon">
+                            <i class="fa-solid fa-video"></i>
+                        </div>
+                        <h4>Validação</h4>
+                        <p class="text-muted small">Agende e faça a validação por videoconferência.</p>
+                    </div>
+                </div>
+                <!-- Step 4 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="step-card">
+                        <span class="step-number">4</span>
+                        <div class="step-icon">
+                            <i class="fa-regular fa-circle-check"></i>
+                        </div>
+                        <h4>Pronto!</h4>
+                        <p class="text-muted small">Seu certificado é emitido e está pronto para uso.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 2. Benefícios -->
+<section class="section-padding bg-light-alt">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Por que emitir com a Vetorial?</h2>
+            <p class="text-muted">Segurança e agilidade para o seu dia a dia</p>
+        </div>
+
         <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">e-CNPJ</h3>
-                        <p class="card-text">Identidade digital da pessoa jurídica.</p>
+            <div class="col-md-4">
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fa-regular fa-clock"></i></div>
+                    <h5>Emissão Rápida</h5>
+                    <p class="text-muted small">Processo otimizado para você não perder tempo. Emita no mesmo dia.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fa-solid fa-globe"></i></div>
+                    <h5>100% Online</h5>
+                    <p class="text-muted small">Faça tudo de onde estiver, sem filas e sem deslocamentos desnecessários.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h5>Segurança Total</h5>
+                    <p class="text-muted small">Criptografia avançada e conformidade com padrões ICP-Brasil.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fa-regular fa-comments"></i></div>
+                    <h5>Suporte Especializado</h5>
+                    <p class="text-muted small">Nossa equipe te ajuda em todas as etapas, da compra à instalação.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fa-solid fa-file-signature"></i></div>
+                    <h5>Assinatura Jurídica</h5>
+                    <p class="text-muted small">Validade jurídica garantida para assinar contratos e documentos.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fa-solid fa-tags"></i></div>
+                    <h5>Melhor Preço</h5>
+                    <p class="text-muted small">Valores competitivos e transparentes, sem taxas escondidas.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 3. Tipos de Certificado (A1 vs A3) -->
+<section id="tipos" class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Escolha o Modelo Ideal</h2>
+            <p class="text-muted">Entenda a diferença e escolha o melhor para você</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <!-- A1 -->
+            <div class="col-lg-5 col-md-6">
+                <div class="type-card popular">
+                    <div class="popular-badge">Mais Popular</div>
+                    <h3 class="mb-2">Certificado A1</h3>
+                    <p class="text-muted mb-4">Arquivo Digital (Instalado no PC)</p>
+                    
+                    <ul class="list-unstyled type-list mb-4">
+                        <li><i class="fa-solid fa-check"></i> Validade de 1 ano</li>
+                        <li><i class="fa-solid fa-check"></i> Instalado no computador</li>
+                        <li><i class="fa-solid fa-check"></i> Pode ser usado em vários PCs</li>
+                        <li><i class="fa-solid fa-check"></i> Ideal para emissão de notas fiscais</li>
+                        <li><i class="fa-solid fa-check"></i> Backup facilitado</li>
+                    </ul>
+
+                    <div class="text-center mt-auto">
+                        <a href="https://wa.me/5561998311920?text=Quero%20o%20Certificado%20A1" class="btn btn-primary-custom w-100">Solicitar A1</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">e-CPF</h3>
-                        <p class="card-text">Identidade digital da pessoa física.</p>
+
+            <!-- A3 -->
+            <div class="col-lg-5 col-md-6">
+                <div class="type-card">
+                    <h3 class="mb-2">Certificado A3</h3>
+                    <p class="text-muted mb-4">Mídia Física (Token ou Cartão)</p>
+                    
+                    <ul class="list-unstyled type-list mb-4">
+                        <li><i class="fa-solid fa-check"></i> Validade de 1 a 3 anos</li>
+                        <li><i class="fa-solid fa-check"></i> Armazenado em Token/Cartão</li>
+                        <li><i class="fa-solid fa-check"></i> Alta portabilidade (físico)</li>
+                        <li><i class="fa-solid fa-check"></i> Maior segurança (hardware)</li>
+                        <li><i class="fa-solid fa-check"></i> Senha de acesso físico</li>
+                    </ul>
+
+                    <div class="text-center mt-auto">
+                        <a href="https://wa.me/5561998311920?text=Quero%20o%20Certificado%20A3" class="btn btn-outline-custom w-100">Solicitar A3</a>
                     </div>
                 </div>
             </div>
@@ -45,10 +511,234 @@
     </div>
 </section>
 
-<section class="py-5 bg-primary text-white text-center" id="contato">
+<!-- 4. Para Quem Serve -->
+<section class="section-padding bg-light-alt">
     <div class="container">
-        <h2 class="mb-4">Precisa de um Certificado?</h2>
-        <a href="#" class="btn btn-light btn-lg">Fale Conosco</a>
+        <div class="row align-items-center">
+            <div class="col-lg-5 mb-4 mb-lg-0">
+                <h2 class="mb-4">Para quem é o Certificado Digital?</h2>
+                <p class="text-muted mb-4">O Certificado Digital é indispensável para diversas categorias profissionais e empresas, garantindo autenticidade e segurança nas transações eletrônicas.</p>
+                <a href="#cta-final" class="btn btn-primary-custom">Emitir Agora</a>
+            </div>
+            <div class="col-lg-7">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="target-item">
+                            <i class="fa-solid fa-check-circle check-icon"></i>
+                            <span class="fw-bold">Empresas (CNPJ)</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="target-item">
+                            <i class="fa-solid fa-check-circle check-icon"></i>
+                            <span class="fw-bold">Microempreendedor (MEI)</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="target-item">
+                            <i class="fa-solid fa-check-circle check-icon"></i>
+                            <span class="fw-bold">Profissionais Liberais</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="target-item">
+                            <i class="fa-solid fa-check-circle check-icon"></i>
+                            <span class="fw-bold">Advogados e Médicos</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="target-item">
+                            <i class="fa-solid fa-check-circle check-icon"></i>
+                            <span class="fw-bold">Pessoas Físicas (e-CPF)</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="target-item">
+                            <i class="fa-solid fa-check-circle check-icon"></i>
+                            <span class="fw-bold">Condomínios</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
+
+<section class="section-padding" style="background-color: #f8fafc;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">O Que Nossos Clientes Dizem</h2>
+            <p class="section-subtitle">Profissionais da saúde que transformaram sua gestão financeira com a Vetorial.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Eu pagava quase 15% de imposto. Depois que a Vetorial fez meu planejamento tributário, caiu para menos de 8%. Em um ano, economizei mais de R$ 25 mil. Melhor decisão que tomei."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/ricardo.webp' %}" alt="Foto do Dr. Ricardo" class="autor-foto">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Dr. Ricardo Mendes</h6>
+                            <small class="text-muted">Cardiologista - São Paulo/SP</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Finalmente encontrei uma contabilidade que entende minha rotina. Resposta rápida pelo WhatsApp, notas emitidas sem eu precisar me preocupar. Tranquilidade total."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/camila.webp' %}" alt="Foto do Dr. Ricardo" class="autor-foto">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Dra. Camila Ferreira</h6>
+                            <small class="text-muted">Ortodontista - Brasília/DF</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Meu contador anterior não sabia nem o que era Fator R. A Vetorial reorganizou minha empresa e hoje pago muito menos imposto, tudo dentro da lei. Super recomendo!"</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/andre.webp' %}" alt="Foto do Dr. André Oliveira" class="autor-foto">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Dr. André Oliveira</h6>
+                            <small class="text-muted">Psicólogo Clínico - Rio de Janeiro/RJ</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section py-5" style="background-color: #ebeef1; min-height: 400px;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Dúvidas Frequentes sobre os Planos</h2>
+            <p class="lead text-muted">Tire suas principais dúvidas sobre nossos planos</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="faq-accordion">
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">O que é necessário para abrir uma empresa?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Você precisa dos seus documentos pessoais, endereço, atividade da empresa e informações sobre sócios, quando houver.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Quanto tempo demora para abrir uma empresa?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>O processo para abrir uma empresa geralmente leva de 7 a 15 dias úteis, dependendo da complexidade do negócio e da rapidez na entrega dos documentos necessários.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Quanto custa abrir uma empresa?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Os custos para abrir uma empresa variam conforme o tipo de empresa e a localidade, incluindo taxas de registro, honorários contábeis e outros custos administrativos.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Posso usar meu endereço residencial?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Sim, você pode usar seu endereço residencial para abrir a empresa, desde que esteja de acordo com as normas municipais e o tipo de atividade exercida.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">É obrigatório ter contador?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Sim, é obrigatório ter um contador para a maioria dos tipos de empresa, pois ele é responsável pela escrituração contábil, cumprimento das obrigações fiscais e orientação financeira.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">É possível abrir empresa online?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Sim. Hoje o processo é 100% digital em quase todos os estados.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 7. CTA Final -->
+<section id="cta-final" class="cta-final">
+    <div class="container">
+        <h2 class="fw-bold">Pronto para emitir seu Certificado Digital?</h2>
+        <p class="lead mb-5 opacity-75">Garanta segurança e agilidade para o seu negócio hoje mesmo.</p>
+        <a href="https://wa.me/5561998311920?text=Quero%20emitir%20meu%20Certificado%20Digital" class="btn btn-contrast">
+            Emitir Meu Certificado Agora
+        </a>
+    </div>
+</section>
+
 {% endblock %}

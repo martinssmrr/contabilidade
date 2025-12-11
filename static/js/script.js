@@ -7,24 +7,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const navbar = document.querySelector('.navbar');
     const heroSection = document.querySelector('.hero-section');
     
-    // Se existe hero section, navbar começa transparente
-    if (heroSection) {
-        navbar.classList.add('transparent');
-    }
-    
-    window.addEventListener('scroll', function() {
+    function updateNavbar() {
+        if (!navbar) return;
+        
         if (heroSection) {
-            // Com hero section: navbar transparente no topo, sólida ao rolar
-            if (window.scrollY > 50) {
+            const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+            if (scrollPosition > 50) {
                 navbar.classList.remove('transparent');
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.add('transparent');
                 navbar.classList.remove('scrolled');
             }
+        } else {
+            navbar.classList.remove('transparent');
+            navbar.classList.add('scrolled');
         }
-        // Sem hero section: navbar sempre sólida (não precisa fazer nada)
-    });
+    }
+
+    if (navbar) {
+        updateNavbar(); // Executa ao carregar para definir estado inicial
+        window.addEventListener('scroll', updateNavbar);
+    }
 
     // Auto-dismiss de mensagens após 5 segundos
     const alerts = document.querySelectorAll('.alert');

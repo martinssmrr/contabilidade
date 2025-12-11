@@ -211,7 +211,7 @@ main {
 
 /* Navbar customizada */
 .navbar {
-    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%) !important;
+    background: #0a4fa3 !important;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
     padding: 0.25rem 0;
     position: fixed;
@@ -229,7 +229,7 @@ main {
 }
 
 .navbar.scrolled {
-    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%) !important;
+    background: #0a4fa3 !important;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
     position: fixed;
     top: 0;
@@ -2767,6 +2767,10 @@ footer hr {
     .process-icon svg { width: 30px; height: 30px; }
 }
 
+.py-5 bg-white {
+    background-color: rgb(235, 238, 241) !important;
+}
+
 /* Recent posts (used in abrir_empresa) */
 .recent-posts-section {
     /* Background atualizado conforme solicitado */
@@ -3035,4 +3039,44 @@ section.recent-posts-section {
 }
 
 
+
+
+/* --- Seção de Segmentos Atendidos --- */
+.segments-section {
+    background-color: #f8f9fa;
+}
+
+.text-dark-purple {
+    color: #2d1b4e;
+}
+
+.segment-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.segment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.icon-box {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+/* Cores de fundo suaves para os ícones */
+.bg-soft-red { background-color: rgba(220, 53, 69, 0.1); }
+.bg-soft-blue { background-color: rgba(13, 110, 253, 0.1); }
+.bg-soft-purple { background-color: rgba(111, 66, 193, 0.1); }
+.bg-soft-orange { background-color: rgba(253, 126, 20, 0.1); }
+.bg-soft-green { background-color: rgba(25, 135, 84, 0.1); }
+.bg-soft-teal { background-color: rgba(32, 201, 151, 0.1); }
+
+/* Cores de texto para os ícones */
+.text-purple { color: #6f42c1; }
 
