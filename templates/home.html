@@ -9,6 +9,125 @@
     .text-orange {
         color: #0d47a1;
     }
+
+    /* Soluções Section */
+
+    .solucoes-card {
+    border: 1px solid #e7e7e7;
+    border-radius: 14px;
+    transition: all .3s ease-in-out;
+    }
+
+    .solucoes-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    /* Evitar que algo esconda as setas */
+    .carousel-control-prev,
+    .carousel-control-next {
+    width: 5%;
+    z-index: 20;
+    }
+
+    /* Garantir que nada corte as setas */
+    .carousel {
+    overflow: visible;
+    }
+
+
+
+
+
+    /* Depoimentos */
+
+    .autor-foto {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    }
+
+    .depoimento-card {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        position: relative;
+        height: 100%;
+    }
+
+    .depoimento-card::before {
+        content: '"';
+        font-size: 6rem;
+        color: rgba(12, 99, 209, 0.1);
+        position: absolute;
+        top: 10px;
+        left: 25px;
+        font-family: Georgia, serif;
+        line-height: 1;
+    }
+
+    .depoimento-texto {
+        font-style: italic;
+        color: var(--text-light);
+        margin-bottom: 25px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .depoimento-autor {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .autor-avatar {
+        width: 60px;
+        height: 60px;
+        background-size: cover;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .autor-avatar i {
+        font-size: 1.5rem;
+        color: var(--white);
+    }
+
+    .testimonials-scroll {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 20px;
+    }
+
+    .testimonials-scroll::-webkit-scrollbar {
+    height: 8px;
+    }
+
+    .testimonials-scroll::-webkit-scrollbar-thumb {
+    background: #c5c5c5;
+    border-radius: 4px;
+    }
+
+    .depoimento-card-wrapper {
+    min-width: calc(33.33% - 1rem); /* 3 por tela */
+    }
+
+    @media (max-width: 992px) { /* Tablet */
+    .depoimento-card-wrapper {
+        min-width: 50%; /* 2 por tela */
+    }
+    }
+
+    @media (max-width: 576px) { /* Mobile */
+    .depoimento-card-wrapper {
+        min-width: 85%; /* 1 por tela */
+    }
+    }
+
     
     /* Services Section New */
 
@@ -494,7 +613,7 @@
             <div class="col-lg-5 col-12 mb-4 mb-lg-0">
                 <span class="pre-title text-uppercase d-block mb-2">SERVIÇOS</span>
                 <h2 class="display-5 section-title-blue mb-4">Simples para abrir. <br>Seguro para operar. <br>Acessível para expandir.</h2>
-                <p class="lead text-muted mb-4">Esse é o jeito Vetorial: contabilidade completa, estratégica e com o melhor custo benefício para empresas que querem escalar o seu negócio.</p>
+                <p class="lead text-muted mb-4"><strong>Esse é o jeito Vetorial: contabilidade completa, estratégica e com o melhor custo benefício para empresas que querem escalar o seu negócio.</strong></p>
             </div>
 
             <!-- Right Column (Cards) -->
@@ -557,7 +676,7 @@
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="display-5 fw-bold section-title-blue">Veja por que somos a Melhor Escolha para o seu negócio</h2>
-            <p class="lead text-muted">Descubra por que empresas de todo o Brasil escolhem a Vetorial como parceira contábil</p>
+            <p class="lead text-muted"><strong>Descubra por que empresas de todo o Brasil escolhem a Vetorial como parceira contábil</strong></p>
         </div>
         <div class="grid-container">
             <!-- Card 9 (Top Left Vertex) -->
@@ -650,8 +769,8 @@
         <!-- Título e Descrição Centralizados -->
         <div class="row justify-content-center mb-5">
             <div class="col-lg-10 text-center">
-                <h2 class="display-5 fw-bold mb-3 text-dark-purple">Principais Segmentos Atendidos</h2>
-                <p class="lead text-muted">Para cada tipo de negócio, a Vetorial oferece uma equipe de contadores especialistas no seu segmento, garantindo orientação precisa, segurança e estratégias específicas para o seu mercado.</p>
+                <h2 class="display-5 section-title-blue mb-4">Principais Segmentos Atendidos</h2>
+                <p class="lead text-muted"><strong>Para cada tipo de negócio, a Vetorial oferece uma equipe de contadores especialistas no seu segmento, garantindo orientação precisa, segurança e estratégias específicas para o seu mercado.</strong></p>
             </div>
         </div>
 
@@ -758,7 +877,7 @@
 <section id="partners" class="partners-section py-4" style="background-color: #ebeef1;">
     <div class="container">
         <div class="text-center mb-3">
-            <h2 class="display-5 fw-bold">Empresas que confiam em nosso trabalho</h2>
+            <h2 class="display-5 section-title-blue mb-4">Empresas que confiam em nosso trabalho</h2>
         </div>
 
         <div class="partners-marquee mt-3">
@@ -1020,12 +1139,12 @@
             <!-- Conteúdo - Lado Direito -->
             <div class="col-lg-6">
                 <span class="badge bg-primary-soft mb-3">ATUAÇÃO NACIONAL</span>
-                <h2 class="display-5 fw-bold mb-4">Presença nacional: atuação em todas as cidades do Brasil</h2>
-                <p class="lead text-muted mb-4">
-                    A Vetorial entrega contabilidade estratégica para qualquer cidade do Brasil do interior aos grandes centros.
+                <h2 class="display-5 section-title-blue mb-4">Presença nacional: atuação em todas as cidades do Brasil</h2>
+                <p class="lead text-muted mb-4"><strong>A Vetorial entrega contabilidade estratégica para qualquer cidade do Brasil do interior aos grandes centros.</strong>
+                    
                 </p>
                 <p class="text-muted mb-4">
-                    Com abertura gratuita, processos 100% online e suporte especializado, você recebe uma gestão moderna, segura e de alta performance onde quer que esteja.
+                    <strong>Com abertura gratuita, processos 100% online e suporte especializado, você recebe uma gestão moderna, segura e de alta performance onde quer que esteja.</strong>
                 </p>
                 <p class="text-muted mb-4">
                     <strong>Se sua empresa está no Brasil, a Vetorial está com você.</strong>
@@ -1148,7 +1267,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <section id="planos" class="pricing-section py-5" style="background-color: #ebeef1;">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Escolha o plano que melhor se adequa à sua necessidade!</h2>
+            <h2 class="display-5 section-title-blue mb-4">Escolha o plano que melhor se adequa à sua necessidade!</h2>
             <p class="lead text-muted mb-4">Planos completos, com suporte humano e tecnologia para simplificar sua rotina. Escolha o que mais faz sentido para você:</p>
             
             <!-- Toggle de Modalidades -->
@@ -1337,53 +1456,285 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </section>
 
-<!-- Testimonials Section -->
+<!-- Depoimentos Section -->
 <section class="testimonials-section py-5" style="background-color: #ebeef1;">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Depoimentos que reforçam o nosso compromisso!</h2>
+            <h2 class="display-5 section-title-blue mb-4">Depoimentos que reforçam o nosso compromisso!</h2>
             <p class="lead text-muted mb-4">Faça como os mais de 30 mil empreendedores que confiam na Agilize e que descobriram um novo jeito de lidar com a contabilidade, de forma simples, eficiente e humanizada.</p>
             <img src="{% static 'img/avaliação-google.webp' %}" alt="Avaliação Google" class="img-fluid" style="max-width: 300px; height: auto;" loading="lazy">
         </div>
         
-        <div class="testimonials-scroll-container">
-            <div class="testimonials-wrapper">
-                {% for testimonial in testimonials %}
-                <div class="testimonial-card">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-center mb-3">
-                                {% if testimonial.photo %}
-                                <img src="{{ testimonial.photo.url }}" alt="{{ testimonial.name }}" class="testimonial-photo me-3">
-                                {% else %}
-                                <div class="testimonial-photo-placeholder me-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                        <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                                    </svg>
-                                </div>
-                                {% endif %}
-                                <div>
-                                    <h5 class="mb-0 fw-bold">{{ testimonial.name }}</h5>
-                                    <small class="text-muted">{{ testimonial.position }}</small>
-                                </div>
-                            </div>
-                            <p class="card-text text-muted">{{ testimonial.content }}</p>
-                            <div class="stars text-warning">
-                                ★★★★★
-                            </div>
+        <div class="testimonials-scroll d-flex gap-4">
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Eu pagava quase 15% de imposto. Depois que a Vetorial fez meu planejamento tributário, caiu para menos de 8%. Em um ano, economizei mais de R$ 25 mil. Melhor decisão que tomei."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/ricardo.webp' %}" alt="Foto do Dr. Ricardo" class="autor-foto">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Dr. Ricardo Mendes</h6>
+                            <small class="text-muted">Cardiologista - São Paulo/SP</small>
                         </div>
                     </div>
                 </div>
-                {% empty %}
-                <div class="col-12 text-center">
-                    <p class="text-muted">Nenhum depoimento disponível no momento.</p>
+            </div>
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Finalmente encontrei uma contabilidade que entende minha rotina. Resposta rápida pelo WhatsApp, notas emitidas sem eu precisar me preocupar. Tranquilidade total."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/camila.webp' %}" alt="Foto do Dr. Ricardo" class="autor-foto">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Dra. Camila Ferreira</h6>
+                            <small class="text-muted">Ortodontista - Brasília/DF</small>
+                        </div>
+                    </div>
                 </div>
-                {% endfor %}
+            </div>
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Meu contador anterior não sabia nem o que era Fator R. A Vetorial reorganizou minha empresa e hoje pago muito menos imposto, tudo dentro da lei. Super recomendo!"</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/andre.webp' %}" alt="Foto do Dr. André Oliveira" class="autor-foto">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Dr. André Oliveira</h6>
+                            <small class="text-muted">Psicólogo Clínico - Rio de Janeiro/RJ</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Meu contador anterior não sabia nem o que era Fator R. A Vetorial reorganizou minha empresa e hoje pago muito menos imposto, tudo dentro da lei. Super recomendo!"</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/andre.webp' %}" alt="Foto do Dr. André Oliveira" class="autor-foto">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Dr. André Oliveira</h6>
+                            <small class="text-muted">Psicólogo Clínico - Rio de Janeiro/RJ</small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Soluções Section -->
+<section class="py-5 bg-white" style="background-color: #ebeef1 !important;">
+    <div class="container">
+
+        <div class="text-center mb-4">
+            <h2 class="display-5 section-title-blue mb-4">
+                Uma contabilidade. Um mundo de soluções para o seu negócio.
+            </h2>
+        </div>
+        <div class="text-center mb-4">
+            <h5>
+                Confira outros serviços que oferecemos para o seu negócio:
+            </h5>
+        </div>
+
+        <!-- Controls and Indicator Container -->
+        <div class="d-flex justify-content-center align-items-center mb-3">
+    
+        <!-- Setinha esquerda -->
+        <button class="btn btn-outline-secondary btn-sm me-3 rounded-circle d-flex align-items-center justify-content-center"
+            type="button" data-bs-target="#solucoesCarousel" data-bs-slide="prev"
+            style="width: 40px; height: 40px;">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <!-- Indicador 1/3 -->
+        <span class="fw-bold text-muted mx-2" id="carousel-page-indicator">1 / 3</span>
+
+        <!-- Setinha direita -->
+        <button class="btn btn-outline-secondary btn-sm ms-3 rounded-circle d-flex align-items-center justify-content-center"
+            type="button" data-bs-target="#solucoesCarousel" data-bs-slide="next"
+            style="width: 40px; height: 40px;">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+
+</div>
+
+
+        <!-- Carrossel -->
+        <div id="solucoesCarousel" class="carousel slide carousel-dark" data-bs-ride="false">
+            <div class="carousel-inner">
+
+                <!-- ITEM 1 (4 Cards) -->
+                <div class="carousel-item active">
+                    <div class="row g-4">
+
+                        <!-- CARD 1 -->
+                        <div class="col-md-3">
+                            <div class="card solucoes-card h-100 p-3">
+                                <h4 class="fw-bold mb-2">Abertura de Empresa</h4>
+                                <p class="text-muted">
+                                    Abertura rápida, gratuita e com enquadramento tributário ideal para você começar certo e já preparado para crescer.
+                                </p>
+                                <a href="#" class="fw-bold text-primary">Saiba mais →</a>
+
+                                <div class="text-center mt-4">
+                                    <img src="{% static 'img/certificado-digital.webp' %}"
+                                         class="img-fluid rounded-circle">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD 2 -->
+                        <div class="col-md-3">
+                            <div class="card solucoes-card h-100 p-3">
+                                <h4 class="fw-bold mb-2">Mudança de Contador</h4>
+                                <p class="text-muted">
+                                    Migração rápida, organizada e sem burocracia. A Vetorial assume tudo e você não precisa se preocupar com nada.
+                                </p>
+                                <a href="#" class="fw-bold text-primary">Saiba mais →</a>
+
+                                <div class="text-center mt-4">
+                                    <img src="{% static 'img/acessorcontabil.webp' %}"
+                                         class="img-fluid rounded-circle">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD 3 -->
+                        <div class="col-md-3">
+                            <div class="card solucoes-card h-100 p-3">
+                                <h4 class="fw-bold mb-2">Emissor de Nota Fiscal</h4>
+                                <p class="text-muted">
+                                    Sistema simples e intuitivo para emitir notas com agilidade e conformidade total.
+                                </p>
+                                <a href="#" class="fw-bold text-primary">Saiba mais →</a>
+
+                                <div class="text-center mt-4">
+                                    <img src="{% static 'img/certificado-digital.webp' %}"
+                                         class="img-fluid rounded-circle">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD 4 -->
+                        <div class="col-md-3">
+                            <div class="card solucoes-card h-100 p-3">
+                                <h4 class="fw-bold mb-2">Endereço Virtual</h4>
+                                <p class="text-muted">
+                                    Solução profissional e econômica para registro da sua empresa, ideal para quem busca autoridade, privacidade e credibilidade.
+                                </p>
+                                <a href="#" class="fw-bold text-primary">Saiba mais →</a>
+
+                                <div class="text-center mt-4">
+                                    <img src="{% static 'img/certificado-digital.webp' %}"
+                                         class="img-fluid rounded-circle">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD 1 -->
+                        <div class="col-md-3">
+                            <div class="card solucoes-card h-100 p-3">
+                                <h4 class="fw-bold mb-2">Redução de Impostos</h4>
+                                <p class="text-muted">
+                                    Diagnóstico tributário completo para identificar economias e ajustar sua empresa ao regime mais vantajoso — sem riscos.
+                                </p>
+                                <a href="#" class="fw-bold text-primary">Saiba mais →</a>
+
+                                <div class="text-center mt-4">
+                                    <img src="{% static 'img/certificado-digital.webp' %}"
+                                         class="img-fluid rounded-circle">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD 2 -->
+                        <div class="col-md-3">
+                            <div class="card solucoes-card h-100 p-3">
+                                <h4 class="fw-bold mb-2">Regularização Empresarial</h4>
+                                <p class="text-muted">
+                                    Colocamos sua empresa 100% em dia, eliminando pendências, riscos e problemas fiscais.
+                                </p>
+                                <a href="#" class="fw-bold text-primary">Saiba mais →</a>
+
+                                <div class="text-center mt-4">
+                                    <img src="{% static 'img/acessorcontabil.webp' %}"
+                                         class="img-fluid rounded-circle">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD 3 -->
+                        <div class="col-md-3">
+                            <div class="card solucoes-card h-100 p-3">
+                                <h4 class="fw-bold mb-2">BPO Financeiro</h4>
+                                <p class="text-muted">
+                                    Gestão financeira completa: fluxo de caixa, conciliações, contas a pagar/receber e organização total das finanças da sua empresa.
+                                </p>
+                                <a href="#" class="fw-bold text-primary">Saiba mais →</a>
+
+                                <div class="text-center mt-4">
+                                    <img src="{% static 'img/certificado-digital.webp' %}"
+                                         class="img-fluid rounded-circle">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD 4 -->
+                        <div class="col-md-3">
+                            <div class="card solucoes-card h-100 p-3">
+                                <h4 class="fw-bold mb-2">Certificado Digital</h4>
+                                <p class="text-muted">
+                                    Emissão prática, segura e totalmente online para garantir operação sem interrupções.
+                                </p>
+                                <a href="#" class="fw-bold text-primary">Saiba mais →</a>
+
+                                <div class="text-center mt-4">
+                                    <img src="{% static 'img/certificado-digital.webp' %}"
+                                         class="img-fluid rounded-circle">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+        <div class="text-center mb-4" style="padding-top: 10px;">
+            <h5>
+                Não encontrou o que procura? <strong>Fale agora com um contador especializado.</strong>
+            </h5>
+        </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        <button type="submit" class="btn btn-primary btn-lg" style="text-align: center;">ENTRAR EM CONTATO</button>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var myCarousel = document.getElementById('solucoesCarousel');
+            var pageIndicator = document.getElementById('carousel-page-indicator');
+            var totalItems = document.querySelectorAll('#solucoesCarousel .carousel-item').length;
+            
+            // Update indicator on slide
+            myCarousel.addEventListener('slide.bs.carousel', function (e) {
+                var nextSlideIndex = e.to + 1;
+                pageIndicator.textContent = nextSlideIndex + ' / ' + totalItems;
+            });
+            
+            // Initial set
+            pageIndicator.textContent = '1 / ' + totalItems;
+        });
+    </script>
+</section>
+
 
 <!-- Contact Section -->
 <section class="contact-section position-relative py-5">
@@ -1508,7 +1859,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <section class="faq-section py-5" style="background-color: #ebeef1; min-height: 400px;">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Dúvidas</h2>
+            <h2 class="display-5 section-title-blue mb-4">Dúvidas</h2>
             <p class="lead text-muted">Tire suas principais dúvidas.</p>
         </div>
         
