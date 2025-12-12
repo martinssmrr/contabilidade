@@ -1,62 +1,660 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Contabilidade para Serviços - Vetorial Contabilidade{% endblock %}
+{% block title %}Contabilidade para Serviços | Vetorial{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root {
+        --primary-blue: #0c63d1;
+        --primary-dark: #0a4fa3;
+        --accent-green: #2ed66b;
+        --accent-teal: #00b894;
+        --text-dark: #1f2937;
+        --text-light: #6b7280;
+        --bg-light: #f8fafc;
+        --white: #ffffff;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, rgba(12, 99, 209, 0.9) 0%, rgba(10, 79, 163, 0.95) 100%), url('https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+        background-size: cover;
+        background-position: center;
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        padding: 120px 0 80px;
+        color: var(--white);
+    }
+
+    .hero-section h1 {
+        color: var(--white);
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-section .lead {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Buttons */
+    .btn-cta-primary {
+        background: var(--accent-green);
+        color: var(--white);
+        padding: 15px 35px;
+        border-radius: 50px;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-cta-primary:hover {
+        background: #25b359;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(46, 214, 107, 0.3);
+        color: var(--white);
+    }
+
+    .btn-cta-secondary {
+        background: transparent;
+        color: var(--white);
+        padding: 14px 35px;
+        border-radius: 50px;
+        font-weight: 600;
+        border: 2px solid var(--white);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-cta-secondary:hover {
+        background: var(--white);
+        color: var(--primary-blue);
+    }
+
+    /* General Sections */
+    .section-padding {
+        padding: 100px 0;
+    }
+    
+    .bg-light {
+        background-color: var(--bg-light) !important;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .section-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-light);
+        max-width: 700px;
+        margin: 0 auto 3rem;
+        text-align: center;
+    }
+
+    /* Cards */
+    .feature-card {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(12, 99, 209, 0.1);
+        border-color: rgba(12, 99, 209, 0.1);
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(12, 99, 209, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-blue);
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-card h3 {
+        color: var(--text-dark);
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .feature-card p {
+        color: var(--text-light);
+        margin-bottom: 0;
+    }
+
+    /* Accordion/FAQ */
+    .accordion-item {
+        border: none;
+        margin-bottom: 1rem;
+        background: transparent;
+    }
+
+    .accordion-button {
+        background: var(--white);
+        border-radius: 1rem !important;
+        padding: 1.5rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .accordion-button:not(.collapsed) {
+        background: var(--primary-blue);
+        color: var(--white);
+        box-shadow: 0 10px 20px rgba(12, 99, 209, 0.15);
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+    }
+
+    .accordion-body {
+        background: var(--white);
+        border-radius: 0 0 1rem 1rem;
+        padding: 1.5rem;
+        color: var(--text-light);
+        margin-top: -10px;
+        padding-top: 2rem;
+        border: 1px solid rgba(0,0,0,0.05);
+        border-top: none;
+    }
+    
+    /* Image Styling */
+    .img-styled {
+        border-radius: 1rem;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 1;
+    }
+    
+    .img-wrapper {
+        position: relative;
+    }
+    
+    .img-wrapper::before {
+        content: '';
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        width: 100%;
+        height: 100%;
+        background: rgba(46, 214, 107, 0.1);
+        border-radius: 1rem;
+        z-index: 0;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Contabilidade para Prestadores de Serviços</h1>
-                <p class="lead mb-4">Soluções especializadas para empresas de serviços. Foque no seu negócio e deixe a burocracia conosco.</p>
-                <a href="#contato" class="btn btn-primary btn-lg">Fale com um Especialista</a>
-            </div>
-            <div class="col-lg-6">
-                <div class="bg-secondary rounded-3" style="height: 300px; width: 100%; display: flex; align-items: center; justify-content: center; color: white;">
-                    Imagem Ilustrativa - Serviços
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="py-5">
-    <div class="container">
-        <h2 class="text-center mb-5">Como podemos ajudar</h2>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Tributação Otimizada</h3>
-                        <p class="card-text">Enquadramento no melhor regime tributário.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Emissão de Notas</h3>
-                        <p class="card-text">Suporte na emissão de NFS-e.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Gestão Financeira</h3>
-                        <p class="card-text">Apoio no controle financeiro do seu negócio.</p>
+    <!-- 1. Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1>Contabilidade especializada para empresas de serviços</h1>
+                    <p class="lead">Reduzindo impostos e eliminando burocracia para prestadores de serviço.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#contato" class="btn-cta-primary">Falar com um contador especialista</a>
+                        <a href="#planos" class="btn-cta-secondary">Ver Planos</a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="py-5 bg-primary text-white text-center" id="contato">
-    <div class="container">
-        <h2 class="mb-4">Especialize sua gestão</h2>
-        <a href="#" class="btn btn-light btn-lg">Solicitar Proposta</a>
-    </div>
-</section>
+    <!-- 2. Para Quem É -->
+    <section class="section-padding bg-white">
+        <div class="container">
+            <h2 class="section-title">Para Quem É Esse Serviço?</h2>
+            <p class="section-subtitle">Soluções ideais para profissionais e empresas.</p>
+            
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h3>Autônomos</h3>
+                        <p>Regularização de CPF e abertura de CNPJ.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3>Consultores</h3>
+                        <p>Gestão financeira para quem vende conhecimento.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h3>Agências</h3>
+                        <p>Marketing, Design e Tecnologia.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3>Manutenção</h3>
+                        <p>Empresas de reparos e assistência técnica.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-broom"></i>
+                        </div>
+                        <h3>Limpeza</h3>
+                        <p>Gestão de contratos e funcionários.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-cut"></i>
+                        </div>
+                        <h3>Salões de Beleza</h3>
+                        <p>Lei do Salão Parceiro e comissões.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h3>Transportadores</h3>
+                        <p>Emissão de CTe e manifestos.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h3>Profissionais Liberais</h3>
+                        <p>Médicos, Dentistas, Advogados e Engenheiros.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Dores -->
+    <section class="section-padding bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Gestão de Serviços" class="img-fluid img-styled">
+                    </div>
+                </div>
+                <div class="col-lg-6 ps-lg-5">
+                    <h2 class="section-title text-start">Desafios do Prestador de Serviço</h2>
+                    <p class="mb-4 text-muted">Sabemos que seu tempo é dinheiro. Não perca tempo com burocracia.</p>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="feature-icon flex-shrink-0 me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5 fw-bold">ISS e Retenções</h4>
+                            <p class="text-muted">Dificuldade em entender o ISS e retenções na fonte.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="feature-icon flex-shrink-0 me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5 fw-bold">Emissão de Notas</h4>
+                            <p class="text-muted">Medo de emitir nota errada e pagar imposto a mais.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="feature-icon flex-shrink-0 me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5 fw-bold">Mistura de Contas</h4>
+                            <p class="text-muted">Confusão entre dinheiro pessoal e da empresa (PF x PJ).</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex mb-4">
+                        <div class="feature-icon flex-shrink-0 me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5 fw-bold">Precificação</h4>
+                            <p class="text-muted">Dúvidas se o preço cobrado cobre todos os custos e impostos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Soluções -->
+    <section class="section-padding bg-white">
+        <div class="container">
+            <h2 class="section-title">Soluções para Serviços</h2>
+            <p class="section-subtitle">Tudo o que você precisa para crescer com segurança.</p>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <h3>Cálculo de ISS</h3>
+                        <p>Apuração correta do imposto sobre serviços, evitando bitributação.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-list-ol"></i>
+                        </div>
+                        <h3>Simples Nacional</h3>
+                        <p>Enquadramento no anexo correto para pagar a menor alíquota possível.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>BPO Financeiro</h3>
+                        <p>Terceirize seu financeiro e tenha relatórios profissionais.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <h3>Emissão de Notas</h3>
+                        <p>Suporte total para emissão de NFS-e em qualquer prefeitura.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Folha de Pagamento</h3>
+                        <p>Gestão de pró-labore e funcionários com segurança trabalhista.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>Planejamento</h3>
+                        <p>Estratégias para reduzir a carga tributária legalmente.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Benefícios -->
+    <section class="section-padding bg-light">
+        <div class="container">
+            <h2 class="section-title">Por que nos escolher?</h2>
+            <p class="section-subtitle">Vantagens reais para o seu negócio.</p>
+            
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <h3>Economia de até 60%</h3>
+                        <p>Redução de impostos comparado à pessoa física (Carne-Leão).</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3>Mais Tempo</h3>
+                        <p>Foque no seu cliente enquanto cuidamos da papelada.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Segurança</h3>
+                        <p>Sua empresa 100% regularizada com a Receita Federal.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Como Funciona -->
+    <section class="section-padding bg-white">
+        <div class="container">
+            <h2 class="section-title">Passo a Passo</h2>
+            <p class="section-subtitle">Simples, rápido e digital.</p>
+            
+            <div class="row g-4 text-center">
+                <div class="col-md-2 offset-md-1">
+                    <div class="position-relative">
+                        <div class="display-4 fw-bold text-primary opacity-25 mb-2">1</div>
+                        <h5 class="fw-bold">Contato</h5>
+                        <p class="text-muted small">Você entra em contato conosco.</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="position-relative">
+                        <div class="display-4 fw-bold text-primary opacity-25 mb-2">2</div>
+                        <h5 class="fw-bold">Proposta</h5>
+                        <p class="text-muted small">Enviamos uma proposta personalizada.</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="position-relative">
+                        <div class="display-4 fw-bold text-primary opacity-25 mb-2">3</div>
+                        <h5 class="fw-bold">Setup</h5>
+                        <p class="text-muted small">Configuramos sua empresa em nosso sistema.</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="position-relative">
+                        <div class="display-4 fw-bold text-primary opacity-25 mb-2">4</div>
+                        <h5 class="fw-bold">Treinamento</h5>
+                        <p class="text-muted small">Ensinamos a emitir notas e enviar documentos.</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="position-relative">
+                        <div class="display-4 fw-bold text-primary opacity-25 mb-2">5</div>
+                        <h5 class="fw-bold">Sucesso</h5>
+                        <p class="text-muted small">Sua contabilidade em dia, todo mês.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Depoimentos (Placeholders) -->
+    <section class="section-padding bg-light">
+        <div class="container">
+            <h2 class="section-title">Clientes Satisfeitos</h2>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <p class="fst-italic">"Como médico, eu pagava muito imposto na pessoa física. A Vetorial abriu minha PJ e reduziu minha carga tributária pela metade."</p>
+                        <h5 class="mt-3 fw-bold">- Dr. Ricardo, Médico</h5>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <p class="fst-italic">"O atendimento é rápido e eles resolveram todas as pendências da minha agência de marketing. Recomendo demais!"</p>
+                        <h5 class="mt-3 fw-bold">- Juliana, CEO de Agência</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Planos (Placeholders) -->
+    <section class="section-padding bg-white" id="planos">
+        <div class="container">
+            <h2 class="section-title">Planos para Serviços</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card text-center border-primary">
+                        <h3>Autônomos/MEI</h3>
+                        <p class="display-6 fw-bold my-3">R$ 149<span class="fs-6 text-muted">/mês</span></p>
+                        <ul class="list-unstyled text-start mb-4">
+                            <li><i class="fas fa-check text-success me-2"></i>Declaração Anual</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Emissão de Guias</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Suporte Básico</li>
+                        </ul>
+                        <a href="#contato" class="btn btn-outline-primary rounded-pill w-100">Escolher</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center bg-primary text-white transform-scale">
+                        <h3>Simples Nacional</h3>
+                        <p class="display-6 fw-bold my-3">R$ 349<span class="fs-6 text-white-50">/mês</span></p>
+                        <ul class="list-unstyled text-start mb-4">
+                            <li><i class="fas fa-check text-white me-2"></i>Contabilidade Completa</li>
+                            <li><i class="fas fa-check text-white me-2"></i>Folha de Sócios</li>
+                            <li><i class="fas fa-check text-white me-2"></i>Atendimento Prioritário</li>
+                        </ul>
+                        <a href="#contato" class="btn btn-light rounded-pill w-100 text-primary fw-bold">Escolher</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center border-primary">
+                        <h3>Lucro Presumido</h3>
+                        <p class="display-6 fw-bold my-3">Sob Consulta</p>
+                        <ul class="list-unstyled text-start mb-4">
+                            <li><i class="fas fa-check text-success me-2"></i>Gestão Complexa</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Consultoria Tributária</li>
+                            <li><i class="fas fa-check text-success me-2"></i>BPO Financeiro Opcional</li>
+                        </ul>
+                        <a href="#contato" class="btn btn-outline-primary rounded-pill w-100">Falar com Consultor</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. FAQ -->
+    <section class="section-padding bg-light">
+        <div class="container">
+            <h2 class="section-title">Dúvidas Comuns</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    Qual o melhor anexo do Simples Nacional?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Depende da sua atividade e do Fator R (relação folha de pagamento/faturamento). Podemos analisar para enquadrar você no Anexo III (a partir de 6%) em vez do Anexo V (a partir de 15,5%).
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    Devo abrir empresa ou continuar como autônomo?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Na maioria dos casos, abrir empresa (PJ) é mais vantajoso tributariamente se você fatura acima de R$ 4-5 mil mensais, pois o imposto de renda pessoa física pode chegar a 27,5%.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    Serviços podem ser MEI?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Muitas atividades de serviço são permitidas no MEI (cabeleireiros, eletricistas, etc.), mas atividades intelectuais regulamentadas (médicos, engenheiros, consultores) geralmente não podem. Consulte-nos.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                    Como emitir nota fiscal de serviço?
+                                </button>
+                            </h2>
+                            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    A nota é emitida no site da prefeitura do seu município ou através de sistemas emissores. Nós configuramos tudo e te ensinamos o passo a passo.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. CTA Final -->
+    <section class="section-padding text-center text-white" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);">
+        <div class="container">
+            <h2 class="fw-bold mb-4">Transforme sua empresa de serviços</h2>
+            <p class="lead mb-5 opacity-75">Contabilidade digital, humana e eficiente.</p>
+            <a href="#contato" class="btn btn-light btn-lg rounded-pill px-5 fw-bold text-primary">Falar com Especialista</a>
+        </div>
+    </section>
 {% endblock %}

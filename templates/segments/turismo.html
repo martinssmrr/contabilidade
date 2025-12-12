@@ -1,62 +1,468 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Contabilidade para Turismo - Vetorial Contabilidade{% endblock %}
+{% block title %}Contabilidade para Turismo e Hotelaria | Vetorial{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root {
+        --primary-blue: #0c63d1;
+        --primary-dark: #0a4fa3;
+        --accent-green: #2ed66b;
+        --accent-teal: #00b894;
+        --text-dark: #1f2937;
+        --text-light: #6b7280;
+        --bg-light: #f8fafc;
+        --white: #ffffff;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, rgba(12, 99, 209, 0.9) 0%, rgba(10, 79, 163, 0.95) 100%), url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+        background-size: cover;
+        background-position: center;
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        padding: 120px 0 80px;
+        color: var(--white);
+    }
+
+    .hero-section h1 {
+        color: var(--white);
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-section .lead {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Buttons */
+    .btn-cta-primary {
+        background: var(--accent-green);
+        color: var(--white);
+        padding: 15px 35px;
+        border-radius: 50px;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-cta-primary:hover {
+        background: #25b359;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(46, 214, 107, 0.3);
+        color: var(--white);
+    }
+
+    .btn-cta-secondary {
+        background: transparent;
+        color: var(--white);
+        padding: 14px 35px;
+        border-radius: 50px;
+        font-weight: 600;
+        border: 2px solid var(--white);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-cta-secondary:hover {
+        background: var(--white);
+        color: var(--primary-blue);
+    }
+
+    /* General Sections */
+    .section-padding {
+        padding: 100px 0;
+    }
+    
+    .bg-light {
+        background-color: var(--bg-light) !important;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .section-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-light);
+        max-width: 700px;
+        margin: 0 auto 3rem;
+        text-align: center;
+    }
+
+    /* Cards */
+    .feature-card {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(12, 99, 209, 0.1);
+        border-color: rgba(12, 99, 209, 0.1);
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(12, 99, 209, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-blue);
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-card h3 {
+        color: var(--text-dark);
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .feature-card p {
+        color: var(--text-light);
+        margin-bottom: 0;
+    }
+
+    /* Accordion/FAQ */
+    .accordion-item {
+        border: none;
+        margin-bottom: 1rem;
+        background: transparent;
+    }
+
+    .accordion-button {
+        background: var(--white);
+        border-radius: 1rem !important;
+        padding: 1.5rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .accordion-button:not(.collapsed) {
+        background: var(--primary-blue);
+        color: var(--white);
+        box-shadow: 0 10px 20px rgba(12, 99, 209, 0.15);
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+    }
+
+    .accordion-body {
+        background: var(--white);
+        border-radius: 0 0 1rem 1rem;
+        padding: 1.5rem;
+        color: var(--text-light);
+        margin-top: -10px;
+        padding-top: 2rem;
+        border: 1px solid rgba(0,0,0,0.05);
+        border-top: none;
+    }
+    
+    /* Image Styling */
+    .img-styled {
+        border-radius: 1rem;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 1;
+    }
+    
+    .img-wrapper {
+        position: relative;
+    }
+    
+    .img-wrapper::before {
+        content: '';
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        width: 100%;
+        height: 100%;
+        background: rgba(46, 214, 107, 0.1);
+        border-radius: 1rem;
+        z-index: 0;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Contabilidade para Turismo</h1>
-                <p class="lead mb-4">Agências de viagens, hotéis e pousadas. Contabilidade que entende o seu negócio.</p>
-                <a href="#contato" class="btn btn-primary btn-lg">Fale com um Especialista</a>
-            </div>
-            <div class="col-lg-6">
-                <div class="bg-secondary rounded-3" style="height: 300px; width: 100%; display: flex; align-items: center; justify-content: center; color: white;">
-                    Imagem Ilustrativa - Turismo
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="py-5">
-    <div class="container">
-        <h2 class="text-center mb-5">Destino: Sucesso</h2>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Cadastur</h3>
-                        <p class="card-text">Regularização junto ao Ministério do Turismo.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Tributação</h3>
-                        <p class="card-text">Regimes especiais para o setor de turismo.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Gestão</h3>
-                        <p class="card-text">Controle financeiro e de reservas.</p>
+    <!-- 1. Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1>Contabilidade para Turismo e Hotelaria</h1>
+                    <p class="lead">Aproveite os benefícios do PERSE e regularize seu Cadastur. Gestão especializada para quem vende sonhos.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#contato" class="btn-cta-primary">Quero Benefícios Fiscais</a>
+                        <a href="#planos" class="btn-cta-secondary">Ver Planos</a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="py-5 bg-primary text-white text-center" id="contato">
-    <div class="container">
-        <h2 class="mb-4">Viaje tranquilo com sua contabilidade em dia</h2>
-        <a href="#" class="btn btn-light btn-lg">Solicitar Proposta</a>
-    </div>
-</section>
+    <!-- 2. Para Quem É -->
+    <section class="section-padding bg-white">
+        <div class="container">
+            <h2 class="section-title">Para Quem Trabalha com Turismo</h2>
+            <p class="section-subtitle">Soluções para todo o trade turístico.</p>
+            
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <h3>Agências de Viagens</h3>
+                        <p>Gestão de comissões e notas fiscais de intermediação.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-hotel"></i>
+                        </div>
+                        <h3>Hotéis e Pousadas</h3>
+                        <p>Controle de fluxo de caixa e folha de pagamento.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h3>Guias de Turismo</h3>
+                        <p>Regularização como MEI ou Microempresa.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-bus"></i>
+                        </div>
+                        <h3>Transportadoras</h3>
+                        <p>Gestão de frota e impostos específicos do transporte.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Dores -->
+    <section class="section-padding bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Hotelaria e Turismo" class="img-fluid img-styled">
+                    </div>
+                </div>
+                <div class="col-lg-6 ps-lg-5">
+                    <h2 class="section-title text-start">Desafios do Setor</h2>
+                    <p class="mb-4 text-muted">O turismo é sazonal e complexo. Nós ajudamos a manter o equilíbrio o ano todo.</p>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="feature-icon flex-shrink-0 me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5 fw-bold">PERSE</h4>
+                            <p class="text-muted">Dúvidas sobre como acessar o benefício de alíquota zero de impostos federais.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="feature-icon flex-shrink-0 me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5 fw-bold">Bitributação</h4>
+                            <p class="text-muted">Pagar imposto sobre o valor total da venda e não apenas sobre a comissão.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="feature-icon flex-shrink-0 me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5 fw-bold">Cadastur</h4>
+                            <p class="text-muted">Dificuldade em manter o cadastro regularizado para operar legalmente.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Soluções -->
+    <section class="section-padding bg-white">
+        <div class="container">
+            <h2 class="section-title">Soluções para o Trade</h2>
+            <p class="section-subtitle">Tudo o que seu negócio de turismo precisa para crescer.</p>
+            
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <h3>Adesão ao PERSE</h3>
+                        <p>Analisamos se sua empresa se enquadra no Programa Emergencial de Retomada do Setor de Eventos para zerar impostos federais.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <h3>Tributação de Agências</h3>
+                        <p>Configuração correta para tributar apenas sobre a comissão (intermediação) e não sobre o pacote total.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <h3>Regularização Cadastur</h3>
+                        <p>Mantemos sua empresa em dia com o Ministério do Turismo, requisito obrigatório para atuar no setor.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Gestão Financeira</h3>
+                        <p>Apoio no controle de contas a pagar e receber, essencial para lidar com a sazonalidade.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Como Funciona -->
+    <section class="section-padding bg-light">
+        <div class="container">
+            <h2 class="section-title">Check-in na Vetorial</h2>
+            <p class="section-subtitle">Processo simplificado para regularizar sua empresa.</p>
+            
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="position-relative">
+                        <div class="display-1 fw-bold text-primary opacity-25 mb-3">1</div>
+                        <h4 class="fw-bold">Análise Tributária</h4>
+                        <p class="text-muted">Verificamos enquadramento no PERSE e regime de tributação.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="position-relative">
+                        <div class="display-1 fw-bold text-primary opacity-25 mb-3">2</div>
+                        <h4 class="fw-bold">Regularização</h4>
+                        <p class="text-muted">Ajustamos CNAEs e Cadastur se necessário.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="position-relative">
+                        <div class="display-1 fw-bold text-primary opacity-25 mb-3">3</div>
+                        <h4 class="fw-bold">Decolagem</h4>
+                        <p class="text-muted">Início da gestão mensal com foco em economia.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. FAQ -->
+    <section class="section-padding bg-white">
+        <div class="container">
+            <h2 class="section-title">Dúvidas Frequentes</h2>
+            <p class="section-subtitle">Perguntas comuns sobre contabilidade para turismo.</p>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    O que é o PERSE?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    O PERSE (Programa Emergencial de Retomada do Setor de Eventos) é um benefício que reduz a 0% as alíquotas de PIS, COFINS, CSLL e IRPJ para empresas do setor de turismo e eventos, por um prazo determinado.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    Agência de viagem pode ser MEI?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Sim, a atividade de Agente de Viagens é permitida no MEI (CNAE 7911-2/00), desde que o faturamento seja de até R$ 81 mil anuais e tenha no máximo 1 funcionário. Acima disso, deve ser ME.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    Como pagar imposto só sobre a comissão?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Para pagar imposto apenas sobre a comissão, a agência deve emitir a nota fiscal apenas do valor do seu serviço (agenciamento), e não do valor total do pacote (que inclui a parte da cia aérea e hotel). É preciso configurar isso corretamente na contabilidade.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. CTA Final -->
+    <section class="section-padding text-center text-white" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);">
+        <div class="container">
+            <h2 class="fw-bold mb-4">Pronto para decolar?</h2>
+            <p class="lead mb-5 opacity-75">Deixe a burocracia em terra firme com a gente.</p>
+            <a href="#contato" class="btn btn-light btn-lg rounded-pill px-5 fw-bold text-primary">Regularizar Agora</a>
+        </div>
+    </section>
 {% endblock %}

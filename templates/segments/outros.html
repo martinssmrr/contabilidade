@@ -1,62 +1,520 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Outros Segmentos - Vetorial Contabilidade{% endblock %}
+{% block title %}Outros Segmentos | Vetorial Contabilidade{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root {
+        --primary-blue: #0c63d1;
+        --primary-dark: #0a4fa3;
+        --accent-green: #2ed66b;
+        --accent-teal: #00b894;
+        --text-dark: #1f2937;
+        --text-light: #6b7280;
+        --bg-light: #f8fafc;
+        --white: #ffffff;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--bg-light);
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        padding: 100px 0;
+        color: var(--white);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=') repeat;
+        opacity: 0.3;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-section h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-section .lead {
+        font-size: 1.25rem;
+        opacity: 0.9;
+        margin-bottom: 2.5rem;
+        font-weight: 300;
+    }
+
+    /* Hero SVG Illustration Placeholder */
+    .hero-img-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .hero-svg {
+        max-width: 100%;
+        height: auto;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0px); }
+    }
+
+    /* Buttons */
+    .btn-cta-primary {
+        background: var(--accent-green);
+        color: var(--white);
+        padding: 15px 40px;
+        border-radius: 50px;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(46, 214, 107, 0.3);
+    }
+
+    .btn-cta-primary:hover {
+        background: #25b359;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(46, 214, 107, 0.4);
+        color: var(--white);
+    }
+
+    /* Cards */
+    .category-card {
+        background: var(--white);
+        padding: 2.5rem 2rem;
+        border-radius: 1rem;
+        border: 1px solid rgba(0,0,0,0.03);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        height: 100%;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .category-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(12, 99, 209, 0.1);
+        border-color: rgba(12, 99, 209, 0.1);
+    }
+
+    .category-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--primary-blue);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+        transform-origin: left;
+    }
+
+    .category-card:hover::after {
+        transform: scaleX(1);
+    }
+
+    .card-icon-wrapper {
+        width: 70px;
+        height: 70px;
+        background: rgba(12, 99, 209, 0.05);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .category-card:hover .card-icon-wrapper {
+        background: var(--primary-blue);
+        color: var(--white);
+    }
+
+    .card-icon {
+        font-size: 1.75rem;
+        color: var(--primary-blue);
+        transition: all 0.3s ease;
+    }
+
+    .category-card:hover .card-icon {
+        color: var(--white);
+    }
+
+    .category-title {
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+        font-size: 1.25rem;
+    }
+
+    .category-desc {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin-bottom: 0;
+        line-height: 1.6;
+    }
+
+    /* Section Styling */
+    .section-header {
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto 4rem;
+    }
+
+    .section-header h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin-bottom: 1rem;
+    }
+
+    .section-header p {
+        font-size: 1.1rem;
+        color: var(--text-light);
+    }
+
+    /* CTA Block */
+    .cta-block {
+        background: var(--white);
+        border-radius: 2rem;
+        padding: 4rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-block::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(46, 214, 107, 0.1);
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .cta-block::after {
+        content: '';
+        position: absolute;
+        bottom: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(12, 99, 209, 0.05);
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .cta-content {
+        position: relative;
+        z-index: 1;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Demais Categorias Atendidas</h1>
-                <p class="lead mb-4">Não encontrou seu segmento? Entre em contato, atendemos diversos setores da economia.</p>
-                <a href="#contato" class="btn btn-primary btn-lg">Fale com um Especialista</a>
-            </div>
-            <div class="col-lg-6">
-                <div class="bg-secondary rounded-3" style="height: 300px; width: 100%; display: flex; align-items: center; justify-content: center; color: white;">
-                    Imagem Ilustrativa - Outros
+    <!-- 1. Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content">
+                    <h1>Demais Categorias Atendidas</h1>
+                    <p class="lead">Contabilidade especializada e eficiente para diversos segmentos. Seja qual for o seu negócio, temos a solução ideal.</p>
+                    <a href="#contato" class="btn-cta-primary">Falar com um Especialista</a>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block">
+                    <div class="hero-img-container">
+                        <!-- Inline SVG Illustration -->
+                        <svg class="hero-svg" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#2ed66b;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#0c63d1;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Abstract Background Shapes -->
+                            <circle cx="250" cy="200" r="180" fill="rgba(255,255,255,0.1)" />
+                            <circle cx="400" cy="100" r="50" fill="rgba(46, 214, 107, 0.2)" />
+                            <circle cx="100" cy="300" r="30" fill="rgba(12, 99, 209, 0.2)" />
+                            
+                            <!-- Main Illustration Elements (Stylized) -->
+                            <rect x="150" y="100" width="200" height="240" rx="10" fill="white" opacity="0.9" />
+                            <rect x="170" y="130" width="160" height="20" rx="5" fill="#e2e8f0" />
+                            <rect x="170" y="170" width="100" height="10" rx="5" fill="#cbd5e1" />
+                            <rect x="170" y="190" width="120" height="10" rx="5" fill="#cbd5e1" />
+                            <rect x="170" y="210" width="80" height="10" rx="5" fill="#cbd5e1" />
+                            
+                            <!-- Chart Elements -->
+                            <path d="M170 300 L210 260 L240 280 L290 230 L330 250" stroke="url(#grad1)" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="170" cy="300" r="4" fill="#0c63d1" />
+                            <circle cx="210" cy="260" r="4" fill="#0c63d1" />
+                            <circle cx="240" cy="280" r="4" fill="#0c63d1" />
+                            <circle cx="290" cy="230" r="4" fill="#0c63d1" />
+                            <circle cx="330" cy="250" r="4" fill="#0c63d1" />
+                            
+                            <!-- Floating Icons -->
+                            <g transform="translate(380, 180)">
+                                <circle cx="0" cy="0" r="30" fill="#ffffff" filter="drop-shadow(0 5px 10px rgba(0,0,0,0.1))" />
+                                <text x="-10" y="8" font-family="FontAwesome" font-size="20" fill="#2ed66b"></text>
+                            </g>
+                            <g transform="translate(120, 250)">
+                                <circle cx="0" cy="0" r="25" fill="#ffffff" filter="drop-shadow(0 5px 10px rgba(0,0,0,0.1))" />
+                                <text x="-8" y="6" font-family="FontAwesome" font-size="16" fill="#0c63d1"></text>
+                            </g>
+                        </svg>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="py-5">
-    <div class="container">
-        <h2 class="text-center mb-5">Soluções Personalizadas</h2>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Diagnóstico</h3>
-                        <p class="card-text">Análise completa da situação da sua empresa.</p>
+    <!-- 2. General Explanation -->
+    <section class="section-padding bg-white">
+        <div class="container">
+            <div class="section-header">
+                <h2>Soluções para Todos os Negócios</h2>
+                <p>Não encontrou sua categoria no menu principal? Não se preocupe. Nossa expertise contábil abrange uma vasta gama de atividades econômicas, garantindo conformidade e crescimento para o seu empreendimento.</p>
+            </div>
+            
+            <div class="row justify-content-center text-center g-5">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle text-success fa-2x"></i>
                     </div>
+                    <h4 class="h5 fw-bold">Atendimento Personalizado</h4>
+                    <p class="text-muted small">Entendemos as particularidades do seu CNAE e regime tributário.</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <i class="fas fa-shield-alt text-primary fa-2x"></i>
+                    </div>
+                    <h4 class="h5 fw-bold">Segurança Fiscal</h4>
+                    <p class="text-muted small">Monitoramento constante para manter sua empresa 100% regular.</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <i class="fas fa-laptop-medical text-info fa-2x"></i>
+                    </div>
+                    <h4 class="h5 fw-bold">Tecnologia Integrada</h4>
+                    <p class="text-muted small">Processos digitais que facilitam o dia a dia da sua gestão.</p>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Planejamento</h3>
-                        <p class="card-text">Estratégias contábeis sob medida.</p>
+        </div>
+    </section>
+
+    <!-- 3. Grid de Categorias -->
+    <section class="section-padding" style="background-color: #f1f5f9;">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Card 1 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-store card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Comércio em Geral</h3>
+                        <p class="category-desc">Varejo, atacado e distribuição de produtos.</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Execução</h3>
-                        <p class="card-text">Implementação eficiente e acompanhamento.</p>
+                <!-- Card 2 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-concierge-bell card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Serviços Diversos</h3>
+                        <p class="category-desc">Prestadores de serviços de todas as áreas.</p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-utensils card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Food Service</h3>
+                        <p class="category-desc">Restaurantes, bares, lanchonetes e delivery.</p>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-truck-moving card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Transporte</h3>
+                        <p class="category-desc">Transportadoras, logística e motoristas.</p>
+                    </div>
+                </div>
+                <!-- Card 5 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-spa card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Beleza & Estética</h3>
+                        <p class="category-desc">Salões, clínicas e profissionais da beleza.</p>
+                    </div>
+                </div>
+                <!-- Card 6 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-paw card-icon"></i>
+                        </div>
+                        <h3 class="category-title">PET</h3>
+                        <p class="category-desc">Pet shops, clínicas veterinárias e banho/tosa.</p>
+                    </div>
+                </div>
+                <!-- Card 7 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-hard-hat card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Construção</h3>
+                        <p class="category-desc">Empreiteiras, reformas e engenharia civil.</p>
+                    </div>
+                </div>
+                <!-- Card 8 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-tshirt card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Moda & Vestuário</h3>
+                        <p class="category-desc">Confecções, lojas de roupas e acessórios.</p>
+                    </div>
+                </div>
+                <!-- Card 9 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-bullhorn card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Marketing</h3>
+                        <p class="category-desc">Agências, publicidade e gestores de tráfego.</p>
+                    </div>
+                </div>
+                <!-- Card 10 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-chalkboard-teacher card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Consultorias</h3>
+                        <p class="category-desc">Consultores empresariais, RH e gestão.</p>
+                    </div>
+                </div>
+                <!-- Card 11 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-theater-masks card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Artes</h3>
+                        <p class="category-desc">Entretenimento, eventos e produções.</p>
+                    </div>
+                </div>
+                <!-- Card 12 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-laptop-house card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Freelancers</h3>
+                        <p class="category-desc">Profissionais autônomos e digitais.</p>
+                    </div>
+                </div>
+                <!-- Card 13 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-seedling card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Produtores</h3>
+                        <p class="category-desc">Pequenos produtores rurais e artesanais.</p>
+                    </div>
+                </div>
+                <!-- Card 14 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-store-alt card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Ambulantes</h3>
+                        <p class="category-desc">Comércio de rua e feirantes regularizados.</p>
+                    </div>
+                </div>
+                <!-- Card 15 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-palette card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Criativos</h3>
+                        <p class="category-desc">Designers, fotógrafos e artistas.</p>
+                    </div>
+                </div>
+                <!-- Card 16 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="category-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fas fa-plus card-icon"></i>
+                        </div>
+                        <h3 class="category-title">Outros</h3>
+                        <p class="category-desc">Entre em contato para avaliar seu caso.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="py-5 bg-primary text-white text-center" id="contato">
-    <div class="container">
-        <h2 class="mb-4">Temos a solução ideal para você</h2>
-        <a href="#" class="btn btn-light btn-lg">Solicitar Proposta</a>
-    </div>
-</section>
+    <!-- 4. CTA Final -->
+    <section class="section-padding bg-white">
+        <div class="container">
+            <div class="cta-block">
+                <div class="cta-content">
+                    <h2 class="fw-bold mb-4 display-5">Seu negócio merece uma contabilidade de excelência</h2>
+                    <p class="lead mb-5 text-muted">Independentemente do seu tamanho ou setor, temos a solução certa para você crescer com segurança.</p>
+                    <a href="#contato" class="btn btn-primary btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg" style="background-color: var(--primary-blue); border: none;">
+                        Falar com um Especialista <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
