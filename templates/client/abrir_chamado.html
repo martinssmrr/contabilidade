@@ -1,52 +1,94 @@
 {% extends 'base_dashboard.html' %}
+{% load static %}
 
 {% block page_title %}Abrir Chamado{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard-modern.css' %}">
+{% endblock %}
+
 {% block content %}
-  <div class="row">
-    <div class="col-12 col-lg-8">
-      <div class="card">
-        <div class="card-header">Abrir Novo Chamado</div>
-        <div class="card-body">
-          {% if error %}
-            <div class="alert alert-danger">{{ error }}</div>
-          {% endif %}
-          <form method="post" enctype="multipart/form-data" novalidate>
-            {% csrf_token %}
-            <div class="mb-3">
-              {{ form.titulo.label_tag }}
-              {{ form.titulo }}
-              {% for error in form.titulo.errors %}
-                <div class="text-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-            <div class="mb-3">
-              {{ form.tipo_solicitacao.label_tag }}
-              {{ form.tipo_solicitacao }}
-              {% for error in form.tipo_solicitacao.errors %}
-                <div class="text-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-            <div class="mb-3">
-              {{ form.descricao.label_tag }}
-              {{ form.descricao }}
-              {% for error in form.descricao.errors %}
-                <div class="text-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-
-            <div class="mb-3">
-              <label for="id_anexos" class="form-label">Anexos (opcional)</label>
-              <input type="file" name="anexos" id="id_anexos" class="form-control" multiple>
-            </div>
-
-            <div class="d-flex justify-content-between">
-              <a href="{% url 'support:dashboard_cliente' %}" class="btn btn-secondary">Voltar</a>
-              <button type="submit" class="btn btn-primary">Enviar</button>
-            </div>
-          </form>
-        </div>
-      </div>
+<div class="dashboard-wrapper">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Abrir Novo Chamado</h1>
+        <p class="dashboard-subtitle">Preencha os dados abaixo para solicitar suporte</p>
     </div>
-  </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="dash-card">
+                <div class="dash-card-header">
+                    <div>
+                        <h3 class="dash-card-title">Formulário de Solicitação</h3>
+                        <p class="dash-card-subtitle">Descreva sua solicitação com detalhes</p>
+                    </div>
+                    <div class="dash-card-icon icon-primary">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                </div>
+                
+                <div class="dash-card-body">
+                    {% if error %}
+                        <div class="alert alert-danger d-flex align-items-center mb-4">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <div>{{ error }}</div>
+                        </div>
+                    {% endif %}
+
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label for="{{ form.titulo.id_for_label }}" class="form-label fw-bold">
+                                {{ form.titulo.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.titulo }}
+                            {% for error in form.titulo.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.tipo_solicitacao.id_for_label }}" class="form-label fw-bold">
+                                {{ form.tipo_solicitacao.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.tipo_solicitacao }}
+                            {% for error in form.tipo_solicitacao.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.descricao.id_for_label }}" class="form-label fw-bold">
+                                {{ form.descricao.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.descricao }}
+                            {% for error in form.descricao.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                            <div class="form-text small">Descreva detalhadamente o motivo do seu contato.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_anexos" class="form-label fw-bold">
+                                Anexos <span class="text-muted fw-normal">(opcional)</span>
+                            </label>
+                            <input type="file" name="anexos" id="id_anexos" class="form-control" multiple>
+                            <div class="form-text small">Você pode enviar múltiplos arquivos (imagens, PDF, etc).</div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                            <a href="{% url 'support:dashboard_cliente' %}" class="btn-dash btn-dash-outline">
+                                <i class="fas fa-arrow-left me-2"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn-dash btn-dash-primary">
+                                <i class="fas fa-paper-plane me-2"></i> Enviar Solicitação
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,261 @@
+/* ==========================================================================
+   DASHBOARD MODERN - REFATORAÇÃO VISUAL
+   ========================================================================== */
+
+:root {
+    /* Paleta de Cores Padrão */
+    --dash-primary: #3ef47c;       /* Verde Vibrante */
+    --dash-primary-hover: #2ed66b;
+    --dash-secondary: #0c63d1;     /* Azul Institucional */
+    --dash-secondary-hover: #0a4fa3;
+    
+    /* Neutros */
+    --dash-text-main: #1f2937;     /* Cinza Escuro para títulos */
+    --dash-text-body: #4b5563;     /* Cinza Médio para texto corrido */
+    --dash-text-muted: #9ca3af;    /* Cinza Claro para detalhes */
+    --dash-bg-page: #f3f4f6;       /* Fundo da página */
+    --dash-bg-card: #ffffff;       /* Fundo dos cards */
+    --dash-border: #e5e7eb;        /* Bordas sutis */
+    
+    /* Sombras */
+    --dash-shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --dash-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    --dash-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+}
+
+/* ==========================================================================
+   ESTRUTURA E LAYOUT
+   ========================================================================== */
+
+.dashboard-wrapper {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--dash-bg-page);
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.dashboard-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--dash-text-main);
+    letter-spacing: -0.025em;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-subtitle {
+    color: var(--dash-text-muted);
+    font-size: 1rem;
+}
+
+/* ==========================================================================
+   NAVEGAÇÃO POR ABAS
+   ========================================================================== */
+
+.tabs-container {
+    background-color: var(--dash-bg-card);
+    border-radius: 12px;
+    box-shadow: var(--dash-shadow-sm);
+    padding: 0.5rem 0.5rem 0;
+    margin-bottom: 2rem;
+    border: 1px solid var(--dash-border);
+}
+
+.tabs-nav {
+    display: flex;
+    gap: 2rem;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid var(--dash-border);
+    overflow-x: auto; /* Responsividade */
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 1rem 0.5rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--dash-text-muted);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.tab-btn:hover {
+    color: var(--dash-secondary);
+}
+
+.tab-btn.active {
+    color: var(--dash-secondary); /* Azul para texto ativo para melhor contraste */
+    font-weight: 600;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; /* Sobrepõe a borda do container */
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--dash-primary); /* Verde para a barra indicadora */
+    border-radius: 3px 3px 0 0;
+}
+
+/* ==========================================================================
+   CONTEÚDO DAS ABAS
+   ========================================================================== */
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   CARDS E COMPONENTES
+   ========================================================================== */
+
+.dash-card {
+    background-color: var(--dash-bg-card);
+    border-radius: 16px;
+    border: 1px solid var(--dash-border);
+    padding: 1.5rem;
+    box-shadow: var(--dash-shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.dash-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--dash-shadow-md);
+}
+
+.dash-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.dash-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dash-text-main);
+    margin-bottom: 0.25rem;
+}
+
+.dash-card-subtitle {
+    font-size: 0.875rem;
+    color: var(--dash-text-muted);
+}
+
+.dash-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.icon-primary {
+    background-color: rgba(62, 244, 124, 0.1);
+    color: #2db85b; /* Versão mais escura do verde para ícone */
+}
+
+.icon-secondary {
+    background-color: rgba(12, 99, 209, 0.1);
+    color: var(--dash-secondary);
+}
+
+.dash-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dash-text-main);
+    margin-bottom: 0.5rem;
+}
+
+.dash-status {
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.status-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+.status-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+}
+
+.dash-card-footer {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--dash-border);
+}
+
+/* Botões */
+.btn-dash {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+}
+
+.btn-dash-primary {
+    background-color: var(--dash-primary);
+    color: #000; /* Contraste melhor no verde claro */
+    box-shadow: 0 2px 4px rgba(62, 244, 124, 0.2);
+}
+
+.btn-dash-primary:hover {
+    background-color: var(--dash-primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-dash-outline {
+    background-color: transparent;
+    border: 1px solid var(--dash-border);
+    color: var(--dash-text-body);
+}
+
+.btn-dash-outline:hover {
+    border-color: var(--dash-secondary);
+    color: var(--dash-secondary);
+    background-color: rgba(12, 99, 209, 0.05);
+}
+
+/* Grid System Customizado para Dashboard */
+.dash-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}

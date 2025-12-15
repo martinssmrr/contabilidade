@@ -1,45 +1,100 @@
 {% extends 'base_dashboard.html' %}
+{% load static %}
 
 {% block page_title %}Meus Chamados{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard-modern.css' %}">
+{% endblock %}
+
 {% block content %}
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="h5">{% if request.user.first_name %}Bem-vindo, {{ request.user.first_name }}{% else %}Bem-vindo, {{ request.user.username }}{% endif %}</h2>
-    <a href="{% url 'support:abrir_chamado' %}" class="btn btn-primary">Abrir Novo Chamado</a>
-  </div>
-
-  <div class="card">
-    <div class="card-header">Histórico de Chamados</div>
-    <div class="card-body p-0">
-      {% if chamados and chamados.exists %}
-        <div class="table-responsive">
-          <table class="table table-striped mb-0">
-            <thead>
-              <tr>
-                <th>Título</th>
-                <th>Tipo</th>
-                <th>Data</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for c in chamados %}
-                <tr>
-                  <td><a href="{% url 'support:chamado_detail' c.pk %}">{{ c.titulo }}</a></td>
-                  <td>{{ c.get_tipo_solicitacao_display }}</td>
-                  <td>{{ c.data_criacao|date:'d/m/Y H:i' }}</td>
-                  <td>{{ c.get_status_display }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% else %}
-        <div class="p-4">
-          <p class="mb-0">Você ainda não tem chamados. Clique em <strong>Abrir Novo Chamado</strong> para solicitar um serviço.</p>
-        </div>
-      {% endif %}
+<div class="dashboard-wrapper">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Suporte</h1>
+        <p class="dashboard-subtitle">Gerencie seus chamados e solicitações de suporte</p>
     </div>
-  </div>
 
+    <div class="dash-card">
+        <div class="dash-card-header">
+            <div>
+                <h3 class="dash-card-title">Histórico de Chamados</h3>
+                <p class="dash-card-subtitle">Acompanhe o status das suas solicitações</p>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <a href="{% url 'support:abrir_chamado' %}" class="btn-dash btn-dash-primary">
+                    <i class="fas fa-plus me-2"></i> Abrir Novo Chamado
+                </a>
+            </div>
+        </div>
+        
+        <div class="dash-card-body p-0">
+            {% if chamados and chamados.exists %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Título</th>
+                                <th>Tipo</th>
+                                <th>Data</th>
+                                <th>Status</th>
+                                <th class="text-end pe-4">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in chamados %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3 text-primary">
+                                            <i class="fas fa-ticket-alt fa-lg"></i>
+                                        </div>
+                                        <div class="fw-bold text-dark">
+                                            {{ c.titulo }}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-3">
+                                        {{ c.get_tipo_solicitacao_display }}
+                                    </span>
+                                </td>
+                                <td class="text-muted">{{ c.data_criacao|date:'d/m/Y H:i' }}</td>
+                                <td>
+                                    {% if c.status == 'aberto' %}
+                                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-3">Aberto</span>
+                                    {% elif c.status == 'em_andamento' %}
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3">Em Andamento</span>
+                                    {% elif c.status == 'resolvido' %}
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3">Resolvido</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-3">{{ c.get_status_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a href="{% url 'support:chamado_detail' c.pk %}" class="btn-dash btn-dash-outline btn-sm">
+                                        <i class="fas fa-eye me-1"></i> Detalhes
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <div class="mb-3 text-muted opacity-50">
+                        <i class="fas fa-headset fa-4x"></i>
+                    </div>
+                    <h4 class="text-muted">Nenhum chamado encontrado</h4>
+                    <p class="text-muted mb-4">
+                        Você ainda não tem chamados. Clique no botão abaixo para solicitar um serviço.
+                    </p>
+                    <a href="{% url 'support:abrir_chamado' %}" class="btn-dash btn-dash-primary">
+                        <i class="fas fa-plus me-2"></i> Abrir Novo Chamado
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

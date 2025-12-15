@@ -1707,47 +1707,81 @@
     function renderDocumentosEmpresaInterface() {
         const dataCard = document.getElementById('dataCard');
         
-        // Buscar histórico de documentos
-        fetch('/support/api/documentos-empresa/')
-            .then(response => response.json())
-            .then(result => {
-                const documentos = result.data || [];
-                
-                dataCard.innerHTML = `
-                    <div style="padding: 32px;">
-                        <!-- Card de Instrução -->
-                        <div style="background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%); border-radius: 16px; padding: 32px; margin-bottom: 32px; color: white;">
-                            <div style="display: flex; align-items: center; gap: 24px;">
-                                <svg width="80" height="80" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0; opacity: 0.9;">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
-                                </svg>
-                                <div>
-                                    <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px;">Gerenciar Documentos da Empresa</h3>
-                                    <p style="opacity: 0.95; line-height: 1.6;">Envie documentos importantes como Contratos, Alvarás, Certidões e outros para os clientes. Eles visualizam em "Minha Empresa".</p>
-                                </div>
+        // Buscar histórico de documentos e clientes
+        Promise.all([
+            fetch('/support/api/documentos-empresa/').then(r => r.json()),
+            fetch('/support/api/clientes-fase/').then(r => r.json())
+        ])
+        .then(([docsResult, clientesResult]) => {
+            const documentos = docsResult.data || [];
+            const clientes = clientesResult.data || [];
+            
+            dataCard.innerHTML = `
+                <div style="padding: 32px;">
+                    <!-- Card de Instrução -->
+                    <div style="background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%); border-radius: 16px; padding: 32px; margin-bottom: 32px; color: white;">
+                        <div style="display: flex; align-items: center; gap: 24px;">
+                            <svg width="80" height="80" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0; opacity: 0.9;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
+                            </svg>
+                            <div>
+                                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px;">Gerenciar Documentos da Empresa</h3>
+                                <p style="opacity: 0.95; line-height: 1.6;">Envie documentos importantes como Contratos, Alvarás, Certidões e outros para os clientes. Eles visualizam em "Minha Empresa".</p>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Gerenciar Fase de Abertura -->
+                    <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 32px;">
+                        <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
+                            🚀 Gerenciar Fase de Abertura
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 16px; align-items: end;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-secondary);">Cliente</label>
+                                <select id="faseClienteSelect" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px;">
+                                    <option value="">Selecione um cliente...</option>
+                                    ${clientes.map(c => `<option value="${c.id}" data-fase="${c.fase_abertura}">${c.nome} (${c.email})</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-secondary);">Fase Atual</label>
+                                <select id="faseSelect" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px;">
+                                    <option value="fase_1">Fase 1 — Planejamento e Análise Inicial</option>
+                                    <option value="fase_2">Fase 2 — Consulta de Viabilidade</option>
+                                    <option value="fase_3">Fase 3 — Registro Jurídico</option>
+                                    <option value="fase_4">Fase 4 — Inscrições Fiscais</option>
+                                    <option value="fase_5">Fase 5 — Licenças e Autorizações</option>
+                                    <option value="fase_6">Fase 6 — Enquadramento Tributário</option>
+                                    <option value="fase_7">Fase 7 — Empresa Aberta</option>
+                                </select>
+                            </div>
+                            <button onclick="updateFaseAbertura()" style="padding: 10px 24px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                                Atualizar Fase
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Histórico de Documentos -->
+                    <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
+                            📄 Histórico de Documentos Enviados
+                        </h4>
                         
-                        <!-- Histórico de Documentos -->
-                        <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
-                                📄 Histórico de Documentos Enviados
-                            </h4>
-                            
-                            ${documentos.length === 0 ? `
-                                <div style="text-align: center; padding: 48px 24px;">
-                                    <svg width="80" height="80" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin: 0 auto 16px; opacity: 0.2;">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
-                                    </svg>
-                                    <p style="color: var(--text-secondary); font-size: 1.125rem;">Nenhum documento enviado ainda</p>
-                                </div>
-                            ` : `
-                                <div style="overflow-x: auto;">
-                                    <table style="width: 100%; border-collapse: collapse;">
-                                        <thead>
-                                            <tr style="border-bottom: 2px solid var(--border-color);">
-                                                <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Data/Hora</th>
-                                                <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Cliente</th>
+                        ${documentos.length === 0 ? `
+                            <div style="text-align: center; padding: 48px 24px;">
+                                <svg width="80" height="80" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin: 0 auto 16px; opacity: 0.2;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
+                                </svg>
+                                <p style="color: var(--text-secondary); font-size: 1.125rem;">Nenhum documento enviado ainda</p>
+                            </div>
+                        ` : `
+                            <div style="overflow-x: auto;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="border-bottom: 2px solid var(--border-color);">
+                                            <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Data/Hora</th>
+                                            <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Cliente</th>
                                                 <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">Título</th>
                                                 <th style="padding: 12px; text-align: center; font-weight: 600; color: var(--text-secondary);">Categoria</th>
                                                 <th style="padding: 12px; text-align: center; font-weight: 600; color: var(--text-secondary);">Arquivo</th>
@@ -1788,6 +1822,20 @@
                         </div>
                     </div>
                 `;
+                
+                // Add event listener for client select
+                const faseClienteSelect = document.getElementById('faseClienteSelect');
+                const faseSelect = document.getElementById('faseSelect');
+                
+                if (faseClienteSelect && faseSelect) {
+                    faseClienteSelect.addEventListener('change', function() {
+                        const selectedOption = this.options[this.selectedIndex];
+                        const currentFase = selectedOption.getAttribute('data-fase');
+                        if (currentFase) {
+                            faseSelect.value = currentFase;
+                        }
+                    });
+                }
             })
             .catch(error => {
                 console.error('Erro ao carregar histórico de documentos:', error);
@@ -1797,6 +1845,46 @@
                     </div>
                 `;
             });
+    }
+
+    // Função para atualizar a fase de abertura
+    function updateFaseAbertura() {
+        const clienteId = document.getElementById('faseClienteSelect').value;
+        const fase = document.getElementById('faseSelect').value;
+        
+        if (!clienteId) {
+            alert('Por favor, selecione um cliente.');
+            return;
+        }
+        
+        fetch('/support/api/clientes-fase/update/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                cliente_id: clienteId,
+                fase: fase
+            })
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                alert(result.message);
+                // Atualizar o atributo data-fase no select
+                const option = document.querySelector(`#faseClienteSelect option[value="${clienteId}"]`);
+                if (option) {
+                    option.setAttribute('data-fase', fase);
+                }
+            } else {
+                alert('Erro ao atualizar fase: ' + result.error);
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao atualizar fase.');
+        });
     }
 
     // Renderizar interface de Certidões Negativas

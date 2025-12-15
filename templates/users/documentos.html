@@ -1,92 +1,120 @@
 {% extends 'base_dashboard.html' %}
+{% load static %}
 
 {% block page_title %}Documentos{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard-modern.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="fas fa-folder-open me-2"></i>Meus Documentos</h1>
+<div class="dashboard-wrapper">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Meus Documentos</h1>
+        <p class="dashboard-subtitle">Central de documentos e notas fiscais</p>
     </div>
 
     <!-- Informação -->
-    <div class="alert alert-info mb-4">
-        <i class="fas fa-info-circle me-2"></i>
-        Aqui você encontra todos os documentos enviados pela nossa equipe.
-        Total de <strong>{{ total_geral }}</strong> documento{{ total_geral|pluralize:"s" }}.
+    <div class="alert alert-info mb-4 d-flex align-items-center">
+        <i class="fas fa-info-circle me-3 fs-4"></i>
+        <div>
+            Total de <strong>{{ total_geral }}</strong> documento{{ total_geral|pluralize:"s" }} disponível{{ total_geral|pluralize:"s" }}.
+        </div>
     </div>
 
     <!-- Estatísticas -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-building fa-3x text-primary mb-3"></i>
-                    <h2 class="mb-0">{{ total_documentos }}</h2>
-                    <p class="text-muted mb-0">Documento{{ total_documentos|pluralize:"s" }} da Empresa</p>
-                </div>
+    <div class="dash-grid mb-4">
+        <div class="dash-card text-center p-4">
+            <div class="mb-3 text-primary">
+                <i class="fas fa-building fa-3x"></i>
             </div>
+            <h2 class="mb-1 fw-bold">{{ total_documentos }}</h2>
+            <p class="text-muted mb-0">Documento{{ total_documentos|pluralize:"s" }} da Empresa</p>
         </div>
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-file-invoice-dollar fa-3x text-success mb-3"></i>
-                    <h2 class="mb-0">{{ total_notas }}</h2>
-                    <p class="text-muted mb-0">Nota{{ total_notas|pluralize:"s" }} Fiscal{{ total_notas|pluralize:"is" }}</p>
-                </div>
+        <div class="dash-card text-center p-4">
+            <div class="mb-3 text-success">
+                <i class="fas fa-file-invoice-dollar fa-3x"></i>
             </div>
+            <h2 class="mb-1 fw-bold">{{ total_notas }}</h2>
+            <p class="text-muted mb-0">Nota{{ total_notas|pluralize:"s" }} Fiscal{{ total_notas|pluralize:"is" }}</p>
         </div>
     </div>
 
     <!-- Documentos da Empresa -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0"><i class="fas fa-building me-2"></i>Documentos da Empresa ({{ total_documentos }})</h5>
+    <div class="dash-card mb-4">
+        <div class="dash-card-header">
+            <div>
+                <h3 class="dash-card-title">Documentos da Empresa</h3>
+                <p class="dash-card-subtitle">Contratos, certidões e outros</p>
+            </div>
+            <div class="dash-card-icon icon-primary">
+                <i class="fas fa-building"></i>
+            </div>
         </div>
-        <div class="card-body">
+        
+        <div class="dash-card-body p-0">
             {% if documentos_empresa %}
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
                             <tr>
-                                <th><i class="fas fa-heading me-2"></i>Título</th>
-                                <th><i class="fas fa-tags me-2"></i>Categoria</th>
-                                <th><i class="fas fa-file me-2"></i>Arquivo</th>
-                                <th><i class="fas fa-calendar me-2"></i>Data</th>
-                                <th><i class="fas fa-weight me-2"></i>Tamanho</th>
-                                <th class="text-center">Ações</th>
+                                <th class="ps-4">Título</th>
+                                <th>Categoria</th>
+                                <th>Arquivo</th>
+                                <th>Data</th>
+                                <th>Tamanho</th>
+                                <th class="text-end pe-4">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for doc in documentos_empresa %}
                             <tr>
-                                <td>
-                                    <strong><i class="fas fa-file-alt text-primary me-2"></i>{{ doc.titulo }}</strong>
-                                    {% if doc.descricao %}
-                                    <br><small class="text-muted">{{ doc.descricao|truncatewords:15 }}</small>
-                                    {% endif %}
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3 text-primary">
+                                            <i class="fas fa-file-alt fa-lg"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">{{ doc.titulo }}</div>
+                                            {% if doc.descricao %}
+                                                <div class="small text-muted">{{ doc.descricao|truncatewords:8 }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </td>
-                                <td><span class="badge bg-info">{{ doc.get_categoria_display }}</span></td>
                                 <td>
-                                    <span class="badge bg-secondary">
-                                        <i class="fas fa-file me-1"></i>{{ doc.extensao_arquivo|upper }}
+                                    <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-3">
+                                        {{ doc.get_categoria_display }}
                                     </span>
-                                    <br><small class="text-muted">{{ doc.nome_arquivo }}</small>
                                 </td>
-                                <td>{{ doc.data_upload|date:"d/m/Y" }}</td>
-                                <td><span class="badge bg-secondary">{{ doc.tamanho_arquivo }}</span></td>
-                                <td class="text-center">
-                                    <a href="{{ doc.arquivo.url }}" 
-                                       class="btn btn-sm btn-primary" 
-                                       target="_blank"
-                                       title="Visualizar">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ doc.arquivo.url }}" 
-                                       class="btn btn-sm btn-success" 
-                                       download
-                                       title="Baixar">
-                                        <i class="fas fa-download"></i>
-                                    </a>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-2 text-secondary">
+                                            <i class="fas fa-file fa-sm"></i>
+                                        </div>
+                                        <div>
+                                            <div class="small text-dark">{{ doc.nome_arquivo }}</div>
+                                            <div class="small text-muted" style="font-size: 0.75rem;">{{ doc.extensao_arquivo|upper }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-muted">{{ doc.data_upload|date:"d/m/Y" }}</td>
+                                <td><span class="badge bg-secondary-subtle text-secondary">{{ doc.tamanho_arquivo }}</span></td>
+                                <td class="text-end pe-4">
+                                    <div class="btn-group">
+                                        <a href="{{ doc.arquivo.url }}" 
+                                           class="btn btn-sm btn-outline-primary" 
+                                           target="_blank"
+                                           title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ doc.arquivo.url }}" 
+                                           class="btn btn-sm btn-outline-success" 
+                                           download
+                                           title="Baixar">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -94,53 +122,70 @@
                     </table>
                 </div>
             {% else %}
-                <div class="text-center py-4">
-                    <i class="fas fa-building fa-3x text-muted mb-3"></i>
-                    <p class="text-muted">Nenhum documento da empresa disponível.</p>
+                <div class="text-center py-5">
+                    <div class="mb-3 text-muted opacity-50">
+                        <i class="fas fa-building fa-4x"></i>
+                    </div>
+                    <h4 class="text-muted">Nenhum documento da empresa disponível</h4>
                 </div>
             {% endif %}
         </div>
     </div>
 
     <!-- Notas Fiscais -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0"><i class="fas fa-file-invoice-dollar me-2"></i>Notas Fiscais ({{ total_notas }})</h5>
+    <div class="dash-card">
+        <div class="dash-card-header">
+            <div>
+                <h3 class="dash-card-title">Notas Fiscais</h3>
+                <p class="dash-card-subtitle">Notas fiscais emitidas</p>
+            </div>
+            <div class="dash-card-icon icon-success">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </div>
         </div>
-        <div class="card-body">
+        
+        <div class="dash-card-body p-0">
             {% if notas_fiscais %}
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
                             <tr>
-                                <th><i class="fas fa-file-pdf me-2"></i>Arquivo</th>
-                                <th><i class="fas fa-calendar me-2"></i>Data</th>
-                                <th><i class="fas fa-weight me-2"></i>Tamanho</th>
-                                <th class="text-center">Ações</th>
+                                <th class="ps-4">Arquivo</th>
+                                <th>Data</th>
+                                <th>Tamanho</th>
+                                <th class="text-end pe-4">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for nota in notas_fiscais %}
                             <tr>
-                                <td>
-                                    <i class="fas fa-file-pdf text-danger me-2"></i>
-                                    {{ nota.nome_arquivo }}
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3 text-danger">
+                                            <i class="fas fa-file-pdf fa-lg"></i>
+                                        </div>
+                                        <div class="fw-bold text-dark">
+                                            {{ nota.nome_arquivo }}
+                                        </div>
+                                    </div>
                                 </td>
-                                <td>{{ nota.data_upload|date:"d/m/Y" }}</td>
-                                <td><span class="badge bg-secondary">{{ nota.tamanho_arquivo }}</span></td>
-                                <td class="text-center">
-                                    <a href="{{ nota.arquivo_pdf.url }}" 
-                                       class="btn btn-sm btn-primary" 
-                                       target="_blank"
-                                       title="Visualizar">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ nota.arquivo_pdf.url }}" 
-                                       class="btn btn-sm btn-success" 
-                                       download
-                                       title="Baixar">
-                                        <i class="fas fa-download"></i>
-                                    </a>
+                                <td class="text-muted">{{ nota.data_upload|date:"d/m/Y" }}</td>
+                                <td><span class="badge bg-secondary-subtle text-secondary">{{ nota.tamanho_arquivo }}</span></td>
+                                <td class="text-end pe-4">
+                                    <div class="btn-group">
+                                        <a href="{{ nota.arquivo_pdf.url }}" 
+                                           class="btn btn-sm btn-outline-primary" 
+                                           target="_blank"
+                                           title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ nota.arquivo_pdf.url }}" 
+                                           class="btn btn-sm btn-outline-success" 
+                                           download
+                                           title="Baixar">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -148,27 +193,14 @@
                     </table>
                 </div>
             {% else %}
-                <div class="text-center py-4">
-                    <i class="fas fa-file-invoice-dollar fa-3x text-muted mb-3"></i>
-                    <p class="text-muted">Nenhuma nota fiscal disponível.</p>
+                <div class="text-center py-5">
+                    <div class="mb-3 text-muted opacity-50">
+                        <i class="fas fa-file-invoice-dollar fa-4x"></i>
+                    </div>
+                    <h4 class="text-muted">Nenhuma nota fiscal disponível</h4>
                 </div>
             {% endif %}
         </div>
     </div>
 </div>
-
-<style>
-.table > :not(caption) > * > * {
-    padding: 0.75rem;
-}
-
-.btn-sm {
-    font-size: 0.875rem;
-    margin: 0 0.125rem;
-}
-
-.card {
-    border: none;
-}
-</style>
 {% endblock %}

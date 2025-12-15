@@ -1,11 +1,31 @@
 {% extends 'base_dashboard.html' %}
+{% load static %}
 
 {% block page_title %}Serviços Avulsos{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard-modern.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="content-placeholder">
-    <i class="fas fa-plus-circle"></i>
-    <h2>Serviços Avulsos</h2>
-    <p>Em breve, você poderá contratar serviços adicionais aqui.</p>
+<div class="dashboard-wrapper">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Serviços Avulsos</h1>
+        <p class="dashboard-subtitle">Contrate serviços adicionais para sua empresa</p>
+    </div>
+
+    <div class="dash-card text-center py-5">
+        <div class="mb-4 text-info">
+            <i class="fas fa-plus-circle fa-4x"></i>
+        </div>
+        <h2 class="mb-3">Em Breve</h2>
+        <p class="text-muted mb-4" style="max-width: 500px; margin: 0 auto;">
+            Logo você poderá contratar serviços extras de forma rápida e fácil diretamente pelo painel.
+            Estamos preparando um catálogo completo para você.
+        </p>
+        <button class="btn-dash btn-dash-primary" disabled>
+            <i class="fas fa-clock me-2"></i> Aguarde novidades
+        </button>
+    </div>
 </div>
 {% endblock %}

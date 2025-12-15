@@ -1,116 +1,294 @@
 {% extends 'base_dashboard.html' %}
+{% load static %}
 
-{% block page_title %}Painel de Controle{% endblock %}
+{% block title %}Área do Cliente - Vetorial{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard-modern.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="fas fa-tachometer-alt me-2"></i>Painel de Controle</h1>
-        <div class="text-muted">Bem-vindo(a), <strong>{{ user.first_name|default:user.username }}</strong></div>
+<div class="dashboard-wrapper">
+    
+    <!-- Header da Página -->
+    <div class="dashboard-header d-flex justify-content-between align-items-end">
+        <div>
+            <h1 class="dashboard-title">Painel de Controle</h1>
+            <p class="dashboard-subtitle">Bem-vindo de volta, <strong>{{ user.first_name|default:user.username }}</strong>. Aqui está o resumo da sua empresa.</p>
+        </div>
+        <div class="d-none d-md-block">
+            <span class="text-muted small"><i class="far fa-calendar-alt me-1"></i> {% now "d de F de Y" %}</span>
+        </div>
     </div>
 
-    <div class="row g-3">
-        <!-- Card: Resumo Contábil -->
-        <div class="col-md-6">
-            <a href="{% url 'users:contabilidade' %}" class="text-decoration-none text-reset">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h5 class="card-title">Resumo Contábil</h5>
-                            <p class="mb-1 text-muted">Resultado do mês atual</p>
-                            <h3 id="dash-resultado" class="mb-2">R$ 0,00</h3>
-                            <div id="dash-transmissao" class="text-muted small">Nenhuma transmissão encontrada</div>
-                        </div>
-                        <div class="text-end">
-                            <i class="fas fa-calculator fa-2x text-primary"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-white border-0">
-                    <button class="btn btn-sm btn-outline-primary">Acessar Contabilidade</button>
-                </div>
-            </div>
-            </a>
-        </div>
+    <!-- Navegação por Abas -->
+    <div class="tabs-container">
+        <nav class="tabs-nav">
+            <button class="tab-btn active" onclick="openTab(event, 'tab-visao-geral')">
+                <i class="fas fa-th-large me-2"></i>Visão Geral
+            </button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-contabilidade')">
+                <i class="fas fa-calculator me-2"></i>Contabilidade
+            </button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-certidoes')">
+                <i class="fas fa-file-contract me-2"></i>Certidões
+            </button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-financeiro')">
+                <i class="fas fa-chart-line me-2"></i>Financeiro
+            </button>
+        </nav>
+    </div>
 
-        <!-- Card: Certidões Negativas -->
-        <div class="col-md-6">
-            <a href="{% url 'users:pendencias' %}" class="text-decoration-none text-reset">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h5 class="card-title">Status das Certidões</h5>
-                            <div id="dash-cert-alert" class="mb-2 d-none">
-                                <div class="alert alert-danger py-1 mb-0">Atenção: Existem pendências!</div>
-                            </div>
-                            <div id="dash-cert-list" class="small text-muted">
-                                <!-- preenchido por JS -->
-                            </div>
-                        </div>
-                        <div class="text-end">
-                            <i class="fas fa-file-contract fa-2x text-success"></i>
-                        </div>
+    <!-- Conteúdo das Abas -->
+    
+    <!-- ABA 1: VISÃO GERAL -->
+    <div id="tab-visao-geral" class="tab-content active">
+        <div class="dash-grid">
+            
+            <!-- Card: Resumo Contábil -->
+            <div class="dash-card">
+                <div class="dash-card-header">
+                    <div>
+                        <h3 class="dash-card-title">Resumo Contábil</h3>
+                        <p class="dash-card-subtitle">Resultado do mês atual</p>
+                    </div>
+                    <div class="dash-card-icon icon-primary">
+                        <i class="fas fa-coins"></i>
                     </div>
                 </div>
-                <div class="card-footer bg-white border-0">
-                    <button class="btn btn-sm btn-outline-primary">Ver Detalhes das Certidões</button>
+                
+                <div class="dash-card-body flex-grow-1">
+                    <div id="dash-resultado" class="dash-value">R$ 0,00</div>
+                    <div id="dash-transmissao" class="text-muted small mt-2">
+                        <i class="fas fa-spinner fa-spin me-1"></i> Carregando dados...
+                    </div>
+                </div>
+
+                <div class="dash-card-footer">
+                    <a href="{% url 'users:contabilidade' %}" class="btn-dash btn-dash-outline w-100">
+                        Ver Detalhes <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
                 </div>
             </div>
-            </a>
+
+            <!-- Card: Status das Certidões -->
+            <div class="dash-card">
+                <div class="dash-card-header">
+                    <div>
+                        <h3 class="dash-card-title">Certidões Negativas</h3>
+                        <p class="dash-card-subtitle">Monitoramento automático</p>
+                    </div>
+                    <div class="dash-card-icon icon-secondary">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+
+                <div class="dash-card-body flex-grow-1">
+                    <div id="dash-cert-alert" class="d-none mb-3">
+                        <div class="status-danger w-100 text-center">
+                            <i class="fas fa-exclamation-triangle me-1"></i> Atenção: Existem pendências!
+                        </div>
+                    </div>
+                    <div id="dash-cert-list" class="d-flex flex-column gap-2">
+                        <!-- Preenchido via JS -->
+                        <div class="text-muted small"><i class="fas fa-spinner fa-spin me-1"></i> Verificando status...</div>
+                    </div>
+                </div>
+
+                <div class="dash-card-footer">
+                    <a href="{% url 'users:pendencias' %}" class="btn-dash btn-dash-outline w-100">
+                        Gerenciar Certidões <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card: Acesso Rápido (Novo) -->
+            <div class="dash-card">
+                <div class="dash-card-header">
+                    <div>
+                        <h3 class="dash-card-title">Acesso Rápido</h3>
+                        <p class="dash-card-subtitle">Atalhos frequentes</p>
+                    </div>
+                    <div class="dash-card-icon" style="background-color: #f3f4f6; color: #6b7280;">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                </div>
+                <div class="dash-card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'users:notas_fiscais' %}" class="btn-dash btn-dash-outline justify-content-start">
+                            <i class="fas fa-file-invoice me-2"></i> Minhas Notas Fiscais
+                        </a>
+                        <a href="{% url 'users:documentos' %}" class="btn-dash btn-dash-outline justify-content-start">
+                            <i class="fas fa-folder-open me-2"></i> Documentos da Empresa
+                        </a>
+                        <a href="{% url 'users:servicos_avulsos' %}" class="btn-dash btn-dash-outline justify-content-start">
+                            <i class="fas fa-plus-circle me-2"></i> Solicitar Serviço Extra
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ABA 2: CONTABILIDADE (Exemplo de Conteúdo) -->
+    <div id="tab-contabilidade" class="tab-content">
+        <div class="dash-card">
+            <div class="text-center py-5">
+                <div class="mb-3">
+                    <i class="fas fa-calculator fa-3x text-muted"></i>
+                </div>
+                <h3>Módulo de Contabilidade</h3>
+                <p class="text-muted mb-4">Acesse o histórico completo de movimentações, balancetes e relatórios.</p>
+                <a href="{% url 'users:contabilidade' %}" class="btn-dash btn-dash-primary">
+                    Acessar Módulo Completo
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABA 3: CERTIDÕES (Exemplo) -->
+    <div id="tab-certidoes" class="tab-content">
+        <div class="dash-card">
+            <div class="text-center py-5">
+                <div class="mb-3">
+                    <i class="fas fa-file-contract fa-3x text-muted"></i>
+                </div>
+                <h3>Central de Certidões</h3>
+                <p class="text-muted mb-4">Visualize, baixe e monitore a validade de todas as suas certidões.</p>
+                <a href="{% url 'users:pendencias' %}" class="btn-dash btn-dash-primary">
+                    Ver Todas as Certidões
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABA 4: FINANCEIRO (Exemplo) -->
+    <div id="tab-financeiro" class="tab-content">
+        <div class="dash-card">
+            <div class="text-center py-5">
+                <div class="mb-3">
+                    <i class="fas fa-chart-pie fa-3x text-muted"></i>
+                </div>
+                <h3>Gestão Financeira</h3>
+                <p class="text-muted mb-4">Controle seu fluxo de caixa, contas a pagar e receber.</p>
+                <a href="{% url 'users:financeiro' %}" class="btn-dash btn-dash-primary">
+                    Acessar Financeiro
+                </a>
+            </div>
         </div>
     </div>
 
 </div>
-
 {% endblock %}
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function(){
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]') ? document.querySelector('[name=csrfmiddlewaretoken]').value : '';
-
-    function money(v){
-        try{ return Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }catch(e){ return v; }
+    // Função para troca de abas
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        
+        // Esconde todo o conteúdo das abas
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.remove("active");
+        }
+        
+        // Remove a classe 'active' de todos os botões
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        
+        // Mostra a aba atual e adiciona a classe 'active' ao botão clicado
+        document.getElementById(tabName).style.display = "block";
+        // Pequeno delay para permitir a animação CSS
+        setTimeout(() => {
+            document.getElementById(tabName).classList.add("active");
+        }, 10);
+        
+        evt.currentTarget.className += " active";
     }
 
-    // carregar resumo contábil
-    fetch('/users/api/contabilidade/summary/', {headers: {'X-CSRFToken': csrftoken}})
-    .then(r=>r.json()).then(data=>{
-        if(!data.success) return;
-        const res = Number(data.resultado || 0);
-        const el = document.getElementById('dash-resultado');
-        if(res>0){ el.textContent = 'Lucro de R$ ' + money(res); el.classList.remove('text-danger'); el.classList.add('text-success'); }
-        else if(res<0){ el.textContent = 'Prejuízo de R$ ' + money(Math.abs(res)); el.classList.remove('text-success'); el.classList.add('text-danger'); }
-        else { el.textContent = 'R$ 0,00'; }
+    // Lógica original de carregamento de dados
+    document.addEventListener('DOMContentLoaded', function(){
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]') ? document.querySelector('[name=csrfmiddlewaretoken]').value : '';
 
-        if(data.last_transmissao){
-            const t = data.last_transmissao;
-            document.getElementById('dash-transmissao').textContent = `Transmissão de ${t.competencia}: ${t.count} lançamentos`;
+        function money(v){
+            try{ return Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }catch(e){ return v; }
         }
-    }).catch(console.error);
 
-    // carregar status de certidões
-    fetch('/users/api/certidoes/status/', {headers: {'X-CSRFToken': csrftoken}})
-    .then(r=>r.json()).then(data=>{
-        if(!data.success) return;
-        const wrap = document.getElementById('dash-cert-list');
-        wrap.innerHTML = '';
-        data.items.forEach(it=>{
-            const span = document.createElement('div');
-            let icon = '';
-            if(it.status === 'negativa') icon = '<span class="text-success">✔️</span>';
-            else if(it.status === 'positiva') icon = '<span class="text-warning">⚠️</span>';
-            else if(it.status === 'indisponivel') icon = '<span class="text-danger">❌</span>';
-            else icon = '<span class="text-muted">—</span>';
-            span.innerHTML = `${icon} <strong>${it.label}</strong> — <small class="text-muted">${it.status_display || 'Sem Registro'}</small>`;
-            wrap.appendChild(span);
-        });
-        if(data.has_indisponivel){
-            document.getElementById('dash-cert-alert').classList.remove('d-none');
-        }
-    }).catch(console.error);
-});
+        // Carregar resumo contábil
+        fetch('/users/api/contabilidade/summary/', {headers: {'X-CSRFToken': csrftoken}})
+        .then(r=>r.json()).then(data=>{
+            if(!data.success) return;
+            const res = Number(data.resultado || 0);
+            const el = document.getElementById('dash-resultado');
+            
+            // Atualização visual baseada no valor
+            if(res > 0){ 
+                el.textContent = 'Lucro de R$ ' + money(res); 
+                el.style.color = 'var(--success-color, #10b981)';
+            } else if(res < 0){ 
+                el.textContent = 'Prejuízo de R$ ' + money(Math.abs(res)); 
+                el.style.color = 'var(--danger-color, #ef4444)';
+            } else { 
+                el.textContent = 'R$ 0,00'; 
+                el.style.color = 'var(--dash-text-main)';
+            }
+
+            if(data.last_transmissao){
+                const t = data.last_transmissao;
+                document.getElementById('dash-transmissao').innerHTML = `<i class="fas fa-check-circle text-success me-1"></i> Transmissão de ${t.competencia}: ${t.count} lançamentos`;
+            } else {
+                document.getElementById('dash-transmissao').textContent = 'Nenhuma transmissão recente.';
+            }
+        }).catch(console.error);
+
+        // Carregar status de certidões
+        fetch('/users/api/certidoes/status/', {headers: {'X-CSRFToken': csrftoken}})
+        .then(r=>r.json()).then(data=>{
+            if(!data.success) return;
+            const wrap = document.getElementById('dash-cert-list');
+            wrap.innerHTML = '';
+            
+            if (data.items.length === 0) {
+                wrap.innerHTML = '<div class="text-muted small">Nenhuma certidão encontrada.</div>';
+            }
+
+            data.items.forEach(it=>{
+                const div = document.createElement('div');
+                div.className = 'd-flex justify-content-between align-items-center py-2 border-bottom border-light';
+                
+                let statusClass = 'text-muted';
+                let icon = '<i class="fas fa-minus-circle"></i>';
+                
+                if(it.status === 'negativa') {
+                    statusClass = 'text-success';
+                    icon = '<i class="fas fa-check-circle"></i>';
+                } else if(it.status === 'positiva') {
+                    statusClass = 'text-warning';
+                    icon = '<i class="fas fa-exclamation-circle"></i>';
+                } else if(it.status === 'indisponivel') {
+                    statusClass = 'text-danger';
+                    icon = '<i class="fas fa-times-circle"></i>';
+                }
+                
+                div.innerHTML = `
+                    <div class="d-flex align-items-center">
+                        <span class="${statusClass} me-2">${icon}</span>
+                        <span class="small fw-bold text-dark">${it.label}</span>
+                    </div>
+                    <span class="badge bg-light text-dark border">${it.status_display || 'Sem Registro'}</span>
+                `;
+                wrap.appendChild(div);
+            });
+            
+            if(data.has_indisponivel){
+                document.getElementById('dash-cert-alert').classList.remove('d-none');
+            }
+        }).catch(console.error);
+    });
 </script>
 {% endblock %}

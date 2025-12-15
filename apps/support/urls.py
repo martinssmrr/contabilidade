@@ -54,6 +54,8 @@ urlpatterns = [
     # API Endpoints - Documentos da Empresa (Staff)
     path('api/documentos-empresa/', views.api_documentos_empresa_list, name='api_documentos_empresa_list'),
     path('api/documentos-empresa/enviar/', views.api_documento_empresa_enviar, name='api_documento_empresa_enviar'),
+    path('api/clientes-fase/', views.api_clientes_fase_list, name='api_clientes_fase_list'),
+    path('api/clientes-fase/update/', views.api_cliente_fase_update, name='api_cliente_fase_update'),
     
     # API Endpoints - Extratos Bancários (Staff)
     path('api/extratos-bancarios/clientes/', views.api_clientes_com_extratos, name='api_clientes_com_extratos'),

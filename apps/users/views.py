@@ -295,9 +295,45 @@ def minha_empresa(request):
     # Buscar todos os documentos da empresa do usuário logado
     documentos = DocumentoEmpresa.objects.filter(cliente=request.user).order_by('-data_upload')
     
+    # Configuração das fases
+    fases = [
+        {'id': 'fase_1', 'nome': 'Planejamento', 'descricao': 'Análise Inicial', 'step': 1},
+        {'id': 'fase_2', 'nome': 'Viabilidade', 'descricao': 'Consulta Prévia', 'step': 2},
+        {'id': 'fase_3', 'nome': 'Registro', 'descricao': 'Contrato Social', 'step': 3},
+        {'id': 'fase_4', 'nome': 'Inscrições', 'descricao': 'CNPJ e Inscrições', 'step': 4},
+        {'id': 'fase_5', 'nome': 'Licenças', 'descricao': 'Alvarás', 'step': 5},
+        {'id': 'fase_6', 'nome': 'Tributário', 'descricao': 'Enquadramento', 'step': 6},
+        {'id': 'fase_7', 'nome': 'Concluído', 'descricao': 'Empresa Aberta', 'step': 7},
+    ]
+    
+    fase_atual_id = 'fase_1'
+    if hasattr(request.user, 'cliente_profile'):
+        fase_atual_id = request.user.cliente_profile.fase_abertura
+        
+    # Determinar passo atual
+    current_step = 1
+    for fase in fases:
+        if fase['id'] == fase_atual_id:
+            current_step = fase['step']
+            break
+            
+    # Definir status de cada fase
+    for fase in fases:
+        if fase_atual_id == 'fase_7':
+            fase['status'] = 'completed'
+        elif fase['step'] < current_step:
+            fase['status'] = 'completed'
+        elif fase['step'] == current_step:
+            fase['status'] = 'active'
+        else:
+            fase['status'] = 'pending'
+    
     context = {
         'documentos': documentos,
         'total_documentos': documentos.count(),
+        'fases': fases,
+        'fase_atual_id': fase_atual_id,
+        'is_concluido': fase_atual_id == 'fase_7'
     }
     
     return render(request, 'users/minha_empresa.html', context)

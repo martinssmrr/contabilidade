@@ -1,11 +1,31 @@
 {% extends 'base_dashboard.html' %}
+{% load static %}
 
 {% block page_title %}Indique e Ganhe{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard-modern.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="content-placeholder">
-    <i class="fas fa-gift"></i>
-    <h2>Indique e Ganhe</h2>
-    <p>Em breve, você poderá indicar amigos e ganhar recompensas aqui.</p>
+<div class="dashboard-wrapper">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Indique e Ganhe</h1>
+        <p class="dashboard-subtitle">Indique amigos e ganhe benefícios exclusivos</p>
+    </div>
+
+    <div class="dash-card text-center py-5">
+        <div class="mb-4 text-danger">
+            <i class="fas fa-gift fa-4x"></i>
+        </div>
+        <h2 class="mb-3">Em Breve</h2>
+        <p class="text-muted mb-4" style="max-width: 500px; margin: 0 auto;">
+            Prepare-se para ganhar recompensas incríveis indicando a Vetorial para seus parceiros de negócios.
+            O programa de indicação estará disponível em breve.
+        </p>
+        <button class="btn-dash btn-dash-primary" disabled>
+            <i class="fas fa-clock me-2"></i> Aguarde novidades
+        </button>
+    </div>
 </div>
 {% endblock %}

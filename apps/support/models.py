@@ -140,6 +140,23 @@ class Cliente(models.Model):
         related_name='clientes_atendidos'
     )
 
+    FASE_ABERTURA_CHOICES = [
+        ('fase_1', 'Fase 1 — Planejamento e Análise Inicial'),
+        ('fase_2', 'Fase 2 — Consulta de Viabilidade'),
+        ('fase_3', 'Fase 3 — Registro Jurídico'),
+        ('fase_4', 'Fase 4 — Inscrições Fiscais'),
+        ('fase_5', 'Fase 5 — Licenças e Autorizações'),
+        ('fase_6', 'Fase 6 — Enquadramento Tributário'),
+        ('fase_7', 'Fase 7 — Empresa Aberta'),
+    ]
+
+    fase_abertura = models.CharField(
+        max_length=20,
+        choices=FASE_ABERTURA_CHOICES,
+        default='fase_1',
+        verbose_name='Fase de Abertura'
+    )
+
     class Meta:
         verbose_name = 'Cliente'
         verbose_name_plural = 'Clientes'

@@ -1057,3 +1057,55 @@ def api_contabilidade_movimentacoes(request, cliente_id):
         },
         'data': data
     })
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_clientes_fase_list(request):
+    """Lista clientes e suas fases de abertura"""
+    from apps.support.models import Cliente
+    
+    clientes = Cliente.objects.select_related('user').all().order_by('user__first_name')
+    data = []
+    
+    for cliente in clientes:
+        data.append({
+            'id': cliente.id,
+            'user_id': cliente.user.id,
+            'nome': cliente.user.get_full_name() or cliente.user.username,
+            'email': cliente.user.email,
+            'fase_abertura': cliente.fase_abertura,
+            'fase_abertura_display': cliente.get_fase_abertura_display()
+        })
+        
+    return JsonResponse({'success': True, 'data': data})
+
+
+@login_required
+@user_passes_test(is_staff_user)
+@require_http_methods(["POST"])
+def api_cliente_fase_update(request):
+    """Atualiza a fase de abertura de um cliente"""
+    from apps.support.models import Cliente
+    
+    try:
+        data = json.loads(request.body)
+        cliente_id = data.get('cliente_id')
+        fase = data.get('fase')
+        
+        if not cliente_id or not fase:
+            return JsonResponse({'success': False, 'error': 'Cliente ID e Fase são obrigatórios'}, status=400)
+            
+        cliente = get_object_or_404(Cliente, id=cliente_id)
+        cliente.fase_abertura = fase
+        cliente.save()
+        
+        return JsonResponse({
+            'success': True, 
+            'message': f'Fase atualizada para {cliente.get_fase_abertura_display()}',
+            'fase_display': cliente.get_fase_abertura_display()
+        })
+        
+    except Exception as e:
+        logger.error(f"Erro ao atualizar fase do cliente: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
