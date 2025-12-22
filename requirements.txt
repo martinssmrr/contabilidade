@@ -29,6 +29,7 @@ requests>=2.31.0  # Para chamadas HTTP à Evolution API
 django-ckeditor-5>=0.2.15  # Editor WYSIWYG moderno e seguro
 redis>=5.0.0  # Cliente Redis para cache
 django-redis>=5.4.0  # Backend de cache Redis para Django
+reportlab>=4.0.0  # Geração de PDFs
 
 # ==================================
 # CELERY - TASKS ASSÍNCRONAS

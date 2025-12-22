@@ -131,78 +131,69 @@
         <div class="text-danger mt-1">{{ form.regime_tributario.errors }}</div>
         {% endif %}
     </div>
+</div>
+
+<!-- Endereço Comercial -->
+<div id="campos-endereco-comercial">
+    <h3 class="h5 text-secondary mt-4 mb-3">Endereço Comercial</h3>
     
     <div class="form-group">
-        <div class="form-check">
-            {{ form.endereco_comercial_diferente }}
-            <label class="form-check-label" for="{{ form.endereco_comercial_diferente.id_for_label }}">
-                O endereço comercial é diferente do residencial?
-            </label>
+        <label for="{{ form.cep_comercial.id_for_label }}" class="form-label">CEP</label>
+        {{ form.cep_comercial }}
+        {% if form.cep_comercial.errors %}
+        <div class="text-danger mt-1">{{ form.cep_comercial.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.endereco_comercial.id_for_label }}" class="form-label">Endereço</label>
+        {{ form.endereco_comercial }}
+        {% if form.endereco_comercial.errors %}
+        <div class="text-danger mt-1">{{ form.endereco_comercial.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4 form-group">
+            <label for="{{ form.numero_comercial.id_for_label }}" class="form-label">Número</label>
+            {{ form.numero_comercial }}
+            {% if form.numero_comercial.errors %}
+            <div class="text-danger mt-1">{{ form.numero_comercial.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-8 form-group">
+            <label for="{{ form.complemento_comercial.id_for_label }}" class="form-label">Complemento</label>
+            {{ form.complemento_comercial }}
+            {% if form.complemento_comercial.errors %}
+            <div class="text-danger mt-1">{{ form.complemento_comercial.errors }}</div>
+            {% endif %}
         </div>
     </div>
     
-    <!-- Endereço Comercial -->
-    <div id="campos-endereco-comercial" style="display: none;">
-        <h3 class="h5 text-secondary mt-4 mb-3">Endereço Comercial</h3>
-        
-        <div class="form-group">
-            <label for="{{ form.cep_comercial.id_for_label }}" class="form-label">CEP</label>
-            {{ form.cep_comercial }}
-            {% if form.cep_comercial.errors %}
-            <div class="text-danger mt-1">{{ form.cep_comercial.errors }}</div>
+    <div class="form-group">
+        <label for="{{ form.bairro_comercial.id_for_label }}" class="form-label">Bairro</label>
+        {{ form.bairro_comercial }}
+        {% if form.bairro_comercial.errors %}
+        <div class="text-danger mt-1">{{ form.bairro_comercial.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8 form-group">
+            <label for="{{ form.cidade_comercial.id_for_label }}" class="form-label">Cidade</label>
+            {{ form.cidade_comercial }}
+            {% if form.cidade_comercial.errors %}
+            <div class="text-danger mt-1">{{ form.cidade_comercial.errors }}</div>
             {% endif %}
         </div>
         
-        <div class="form-group">
-            <label for="{{ form.endereco_comercial.id_for_label }}" class="form-label">Endereço</label>
-            {{ form.endereco_comercial }}
-            {% if form.endereco_comercial.errors %}
-            <div class="text-danger mt-1">{{ form.endereco_comercial.errors }}</div>
+        <div class="col-md-4 form-group">
+            <label for="{{ form.estado_comercial.id_for_label }}" class="form-label">Estado</label>
+            {{ form.estado_comercial }}
+            {% if form.estado_comercial.errors %}
+            <div class="text-danger mt-1">{{ form.estado_comercial.errors }}</div>
             {% endif %}
-        </div>
-        
-        <div class="row">
-            <div class="col-md-4 form-group">
-                <label for="{{ form.numero_comercial.id_for_label }}" class="form-label">Número</label>
-                {{ form.numero_comercial }}
-                {% if form.numero_comercial.errors %}
-                <div class="text-danger mt-1">{{ form.numero_comercial.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="col-md-8 form-group">
-                <label for="{{ form.complemento_comercial.id_for_label }}" class="form-label">Complemento</label>
-                {{ form.complemento_comercial }}
-                {% if form.complemento_comercial.errors %}
-                <div class="text-danger mt-1">{{ form.complemento_comercial.errors }}</div>
-                {% endif %}
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="{{ form.bairro_comercial.id_for_label }}" class="form-label">Bairro</label>
-            {{ form.bairro_comercial }}
-            {% if form.bairro_comercial.errors %}
-            <div class="text-danger mt-1">{{ form.bairro_comercial.errors }}</div>
-            {% endif %}
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 form-group">
-                <label for="{{ form.cidade_comercial.id_for_label }}" class="form-label">Cidade</label>
-                {{ form.cidade_comercial }}
-                {% if form.cidade_comercial.errors %}
-                <div class="text-danger mt-1">{{ form.cidade_comercial.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="col-md-4 form-group">
-                <label for="{{ form.estado_comercial.id_for_label }}" class="form-label">Estado</label>
-                {{ form.estado_comercial }}
-                {% if form.estado_comercial.errors %}
-                <div class="text-danger mt-1">{{ form.estado_comercial.errors }}</div>
-                {% endif %}
-            </div>
         </div>
     </div>
 </div>
@@ -228,22 +219,11 @@
             }
         }
         
-        // Controle de endereço comercial
-        function toggleEnderecoComercial() {
-            if ($('#id_endereco_comercial_diferente').is(':checked')) {
-                $('#campos-endereco-comercial').show();
-            } else {
-                $('#campos-endereco-comercial').hide();
-            }
-        }
-        
         // Inicializar
         toggleCamposPorTipo();
-        toggleEnderecoComercial();
         
         // Eventos
         $('#id_tipo_societario').on('change', toggleCamposPorTipo);
-        $('#id_endereco_comercial_diferente').on('change', toggleEnderecoComercial);
     });
 </script>
 {% endblock %}

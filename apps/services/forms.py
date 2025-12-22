@@ -126,7 +126,7 @@ class Etapa3DadosEmpresaForm(forms.ModelForm):
             # Campos ME/EPP/LTDA
             'razao_social', 'nome_fantasia_me', 'cnae_principal_me',
             'cnaes_secundarios_me', 'capital_social', 'quantidade_socios',
-            'regime_tributario', 'endereco_comercial_diferente',
+            'regime_tributario',
             # Endereço Comercial
             'cep_comercial', 'endereco_comercial', 'numero_comercial',
             'complemento_comercial', 'bairro_comercial', 'cidade_comercial',
@@ -187,10 +187,6 @@ class Etapa3DadosEmpresaForm(forms.ModelForm):
                 'placeholder': 'Número de sócios'
             }),
             'regime_tributario': forms.Select(attrs={'class': 'form-select'}),
-            'endereco_comercial_diferente': forms.CheckboxInput(attrs={
-                'class': 'form-check-input',
-                'id': 'id_endereco_comercial_diferente'
-            }),
             # Endereço Comercial
             'cep_comercial': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -219,6 +215,10 @@ class Etapa3DadosEmpresaForm(forms.ModelForm):
             }),
             'estado_comercial': forms.Select(attrs={'class': 'form-select'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['tipo_societario'].required = True
 
 
 class SocioForm(forms.ModelForm):
@@ -266,7 +266,7 @@ class Etapa5DocumentosForm(forms.ModelForm):
     
     class Meta:
         model = ProcessoAbertura
-        fields = ['doc_identidade_frente', 'doc_identidade_verso', 'comprovante_residencia', 'selfie_com_documento']
+        fields = ['doc_identidade_frente', 'doc_identidade_verso', 'comprovante_residencia', 'selfie_com_documento', 'iptu_imovel']
         widgets = {
             'doc_identidade_frente': forms.FileInput(attrs={
                 'class': 'form-control filepond',
@@ -283,6 +283,10 @@ class Etapa5DocumentosForm(forms.ModelForm):
             'selfie_com_documento': forms.FileInput(attrs={
                 'class': 'form-control filepond',
                 'accept': 'image/*'
+            }),
+            'iptu_imovel': forms.FileInput(attrs={
+                'class': 'form-control filepond',
+                'accept': 'image/*,.pdf'
             }),
         }
 
@@ -301,28 +305,8 @@ class Etapa6InformacoesFiscaisForm(forms.ModelForm):
         }
 
 
-class Etapa7DadosAcessoForm(forms.ModelForm):
-    """Etapa 7: Dados de Acesso a Portais"""
-    
-    class Meta:
-        model = ProcessoAbertura
-        fields = ['gov_br_nivel', 'gov_br_cpf', 'gov_br_senha']
-        widgets = {
-            'gov_br_nivel': forms.Select(attrs={'class': 'form-select'}),
-            'gov_br_cpf': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': '000.000.000-00',
-                'data-mask': '000.000.000-00'
-            }),
-            'gov_br_senha': forms.PasswordInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Digite sua senha do Gov.br'
-            }),
-        }
-
-
 class Etapa8AssinaturaForm(forms.ModelForm):
-    """Etapa 8: Assinatura e Termos"""
+    """Etapa 7: Assinatura e Termos"""
     
     class Meta:
         model = ProcessoAbertura
@@ -334,16 +318,7 @@ class Etapa8AssinaturaForm(forms.ModelForm):
         }
 
 
-class Etapa9PagamentoForm(forms.ModelForm):
-    """Etapa 9: Pagamento"""
-    
-    class Meta:
-        model = ProcessoAbertura
-        fields = ['plano_selecionado', 'cupom_desconto']
-        widgets = {
-            'plano_selecionado': forms.Select(attrs={'class': 'form-select'}),
-            'cupom_desconto': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Digite o cupom (opcional)'
-            }),
-        }
+class Etapa8RevisaoForm(forms.Form):
+    """Etapa 8: Revisão e Conclusão (Sem campos, apenas confirmação)"""
+    pass
+

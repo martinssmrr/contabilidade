@@ -251,12 +251,12 @@
                     <strong>Formas de pagamento disponíveis:</strong> PIX (aprovação instantânea) e Boleto Bancário.
                 </div>
                 
-                <div id="payment-brick-container">
-                    <div class="loading-spinner">
-                        <div class="spinner"></div>
-                        <p class="mt-3">Carregando formas de pagamento...</p>
-                    </div>
+                <div id="payment-loading" class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p class="mt-3">Carregando formas de pagamento...</p>
                 </div>
+                
+                <div id="payment-brick-container"></div>
                 
                 <div class="security-badges">
                     <div class="security-badge">
@@ -278,49 +278,46 @@
             </div>
             
             <!-- Resumo do Pedido -->
-            <div class="order-summary">
-                <h2>Resumo do Pedido</h2>
-                
-                <div class="plan-info">
-                    <div class="plan-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v1.384l7.614 2.03a1.5 1.5 0 0 0 .772 0L16 5.884V4.5A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1h-3zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5z"/>
-                            <path d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85v5.65z"/>
-                        </svg>
-                    </div>
-                    <div class="plan-details">
-                        <h3>Plano {{ plano.nome }}</h3>
-                        <p>{{ plano.get_categoria_display }}</p>
-                    </div>
-                </div>
-                
-                {% if plano.features %}
-                <ul class="plan-features">
-                    {% for feature in plano.features %}
-                    <li>
+            <div class="order-summary-wrapper" style="position: sticky; top: 100px; height: fit-content;">
+                <div class="pricing-card {% if plano.destaque %}pricing-card-popular{% endif %}" style="width: 100%;">
+                    {% if plano.destaque %}
+                    <div class="popular-badge">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
                         </svg>
-                        {{ feature }}
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-                
-                <div class="price-breakdown">
-                    <div class="price-row">
-                        <span>Plano {{ plano.nome }} (mensal)</span>
-                        <span>R$ {{ plano.preco|floatformat:2 }}</span>
-                    </div>
-                    {% if plano.tem_desconto %}
-                    <div class="price-row" style="color: #10b981;">
-                        <span>Desconto {{ plano.percentual_desconto|floatformat:0 }}%</span>
-                        <span>- R$ {{ plano.preco_antigo|floatformat:2 }}</span>
+                        Mais Popular
                     </div>
                     {% endif %}
-                    <div class="price-row total">
-                        <span>Total</span>
-                        <span>R$ {{ plano.preco|floatformat:2 }}</span>
+                    <div class="pricing-card-header">
+                        <h3 class="pricing-plan-name">{{ plano.nome }}</h3>
+                        <p class="pricing-description">{{ plano.descricao }}</p>
+                    </div>
+                    <div class="pricing-card-price">
+                        {% if plano.tem_desconto %}
+                        <span class="price-old">R$ {{ plano.preco_antigo|floatformat:2 }}</span>
+                        {% endif %}
+                        <div class="price-current">
+                            <span class="price-currency">R$</span>
+                            <span class="price-value">{{ plano.preco|floatformat:2 }}</span>
+                            <span class="price-period">/mês</span>
+                        </div>
+                    </div>
+                    <div class="pricing-card-body">
+                        <ul class="pricing-features">
+                            {% for item in plano.features %}
+                                {% if item.included %}
+                                <li class="feature-included">
+                                    <span class="feature-icon">✔</span>
+                                    <span>{{ item.feature }}</span>
+                                </li>
+                                {% else %}
+                                <li class="feature-excluded">
+                                    <span class="feature-icon">✖</span>
+                                    <span>{{ item.feature }}</span>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -390,9 +387,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     hidePaymentButton: false,
                 },
                 paymentMethods: {
-                    // Cartões desativados temporariamente devido à análise de risco do MP
-                    creditCard: [],  // Desativado
-                    debitCard: [],   // Desativado
+                    creditCard: 'all',
+                    debitCard: 'all',
                     ticket: 'all',   // Boleto ativo
                     bankTransfer: ['pix'],  // PIX ativo
                 },
@@ -401,6 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 onReady: () => {
                     // Brick carregado
                     console.log('Payment Brick carregado');
+                    document.getElementById('payment-loading').style.display = 'none';
                 },
                 onSubmit: async (formData) => {
                     // Processar pagamento (PIX e Boleto)

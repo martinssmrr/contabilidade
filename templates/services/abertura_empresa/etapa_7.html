@@ -1,36 +1,127 @@
 {% extends 'services/abertura_empresa/base_wizard.html' %}
 
 {% block wizard_content %}
-<h2 class="form-section-title">🔐 Dados de Acesso a Portais</h2>
+<h2 class="form-section-title">✍️ Assinatura e Termos</h2>
 
-<div class="alert alert-warning">
-    <i class="fas fa-shield-alt me-2"></i>
-    <strong>Segurança e Privacidade:</strong> Seus dados são criptografados e protegidos conforme a LGPD. Utilizamos essas informações apenas para processos obrigatórios de abertura de empresa.
+<div class="card mb-4 shadow-sm">
+    <div class="card-header bg-light">
+        <h5 class="mb-0"><i class="fas fa-file-contract me-2"></i>Contrato de Prestação de Serviços</h5>
+    </div>
+    <div class="card-body bg-white" style="max-height: 400px; overflow-y: auto; font-size: 0.9rem; line-height: 1.6;">
+        <div class="contract-content p-2">
+            <h4 class="text-center mb-4">CONTRATO DE PRESTAÇÃO DE SERVIÇOS CONTÁBEIS</h4>
+            
+            <p><strong>CONTRATANTE:</strong> {{ processo.nome_completo|default:"____________________" }}, 
+            CPF {{ processo.cpf|default:"____________________" }}, 
+            residente em {{ processo.endereco|default:"____________________" }}, {{ processo.numero }}, {{ processo.bairro }}, {{ processo.cidade }}-{{ processo.estado }}.</p>
+            
+            <p><strong>CONTRATADA:</strong> VETORIAL CONTABILIDADE LTDA, CNPJ 00.000.000/0000-00, estabelecida em...</p>
+            
+            <p><strong>CLÁUSULA PRIMEIRA - DO OBJETO</strong><br>
+            O presente contrato tem por objeto a prestação de serviços de abertura de empresa e assessoria contábil, conforme as normas brasileiras de contabilidade e a legislação vigente.</p>
+            
+            <p><strong>CLÁUSULA SEGUNDA - DAS OBRIGAÇÕES DA CONTRATADA</strong><br>
+            I - Elaborar o contrato social e demais documentos necessários para o registro da empresa;<br>
+            II - Protocolar os documentos nos órgãos competentes (Junta Comercial, Receita Federal, Prefeitura, etc.);<br>
+            III - Manter o CONTRATANTE informado sobre o andamento do processo.</p>
+            
+            <p><strong>CLÁUSULA TERCEIRA - DAS OBRIGAÇÕES DO CONTRATANTE</strong><br>
+            I - Fornecer documentos e informações verdadeiras e dentro do prazo solicitado;<br>
+            II - Pagar as taxas governamentais e os honorários da CONTRATADA;<br>
+            III - Responsabilizar-se pela veracidade dos documentos enviados.</p>
+            
+            <p><strong>CLÁUSULA QUARTA - DA ASSINATURA DIGITAL</strong><br>
+            As partes reconhecem a validade jurídica da assinatura digital/eletrônica aposta neste documento, nos termos da MP 2.200-2/2001.</p>
+            
+            <p class="text-center mt-5">
+                {{ processo.cidade|default:"Cidade" }} - {{ processo.estado|default:"UF" }}, {% now "d \d\e F \d\e Y" %}
+            </p>
+        </div>
+    </div>
 </div>
 
 <div class="form-group">
-    <label for="{{ form.gov_br_nivel.id_for_label }}" class="form-label required-field">Nível da Conta Gov.br</label>
-    {{ form.gov_br_nivel }}
-    <small class="help-text">Você precisa ter conta Gov.br nível Prata ou Ouro para abertura de empresa</small>
-    {% if form.gov_br_nivel.errors %}
-    <div class="text-danger mt-1">{{ form.gov_br_nivel.errors }}</div>
+    <div class="form-check">
+        {{ form.aceite_termos }}
+        <label class="form-check-label" for="{{ form.aceite_termos.id_for_label }}">
+            Li e aceito os <a href="#" target="_blank">Termos de Uso</a> e a <a href="#" target="_blank">Política de Privacidade</a>
+        </label>
+    </div>
+    {% if form.aceite_termos.errors %}
+    <div class="text-danger mt-1">{{ form.aceite_termos.errors }}</div>
     {% endif %}
 </div>
 
 <div class="form-group">
-    <label for="{{ form.gov_br_cpf.id_for_label }}" class="form-label required-field">CPF cadastrado no Gov.br</label>
-    {{ form.gov_br_cpf }}
-    {% if form.gov_br_cpf.errors %}
-    <div class="text-danger mt-1">{{ form.gov_br_cpf.errors }}</div>
+    <div class="form-check">
+        {{ form.declaracao_veracidade }}
+        <label class="form-check-label" for="{{ form.declaracao_veracidade.id_for_label }}">
+            Declaro que todas as informações fornecidas são verdadeiras e concordo com os termos do contrato acima.
+        </label>
+    </div>
+    {% if form.declaracao_veracidade.errors %}
+    <div class="text-danger mt-1">{{ form.declaracao_veracidade.errors }}</div>
     {% endif %}
 </div>
 
-<div class="form-group">
-    <label for="{{ form.gov_br_senha.id_for_label }}" class="form-label required-field">Senha do Gov.br</label>
-    {{ form.gov_br_senha }}
-    <small class="help-text text-danger">⚠️ Seus dados são armazenados de forma segura e criptografada</small>
-    {% if form.gov_br_senha.errors %}
-    <div class="text-danger mt-1">{{ form.gov_br_senha.errors }}</div>
+<div class="form-group mt-4">
+    <label class="form-label required-field">Assinatura Digital</label>
+    <p class="text-muted small">Assine no quadro abaixo usando o mouse ou o dedo (celular/tablet).</p>
+    <div class="border rounded p-3" style="background: #f8f9fa;">
+        <canvas id="signature-pad" class="w-100" style="border: 2px dashed #dee2e6; cursor: crosshair; background: white; touch-action: none;" height="200"></canvas>
+        <div class="mt-2 d-flex justify-content-between">
+            <small class="text-muted">Assine dentro da área pontilhada</small>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearSignature()">
+                <i class="fas fa-eraser me-1"></i> Limpar Assinatura
+            </button>
+        </div>
+    </div>
+    {{ form.assinatura_digital }}
+    {% if form.assinatura_digital.errors %}
+    <div class="text-danger mt-1">{{ form.assinatura_digital.errors }}</div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script>
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas, {
+        backgroundColor: 'rgb(255, 255, 255)',
+        penColor: 'rgb(0, 0, 0)'
+    });
+    
+    function resizeCanvas() {
+        const ratio =  Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext("2d").scale(ratio, ratio);
+        
+        // Resizing clears the canvas, so we might want to save/restore if needed, 
+        // but for now we just clear it which is standard behavior on resize
+        signaturePad.clear();
+    }
+    
+    window.addEventListener("resize", resizeCanvas);
+    // Call resizeCanvas immediately to set initial size correctly
+    setTimeout(resizeCanvas, 100);
+    
+    function clearSignature() {
+        signaturePad.clear();
+        document.getElementById('id_assinatura_digital').value = '';
+    }
+    
+    // Salvar assinatura antes de enviar o formulário
+    document.getElementById('wizardForm').addEventListener('submit', function(e) {
+        if (signaturePad.isEmpty()) {
+            // Se o campo hidden já tiver valor (ex: erro de validação em outro campo), não precisa assinar de novo
+            // Mas se estiver vazio, impede o envio se for obrigatório (validado no backend/form)
+        } else {
+            const dataURL = signaturePad.toDataURL();
+            document.getElementById('id_assinatura_digital').value = dataURL;
+        }
+    });
+</script>
 {% endblock %}

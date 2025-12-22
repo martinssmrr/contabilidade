@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Processo Concluído - Abertura de Empresa{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-5">
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+                    </div>
+                    <h2 class="mb-3">Processo Enviado com Sucesso!</h2>
+                    <p class="lead text-muted mb-4">
+                        Recebemos seus dados e seu contrato assinado. Nossa equipe de especialistas iniciará a análise imediatamente.
+                    </p>
+                    
+                    <div class="alert alert-light border mb-4 text-start">
+                        <h5 class="alert-heading"><i class="fas fa-info-circle me-2"></i>Próximos Passos:</h5>
+                        <ul class="mb-0 mt-2">
+                            <li class="mb-2">Nossa equipe verificará a documentação enviada.</li>
+                            <li class="mb-2">Entraremos em contato via WhatsApp ou E-mail caso seja necessário algum ajuste.</li>
+                            <li class="mb-2">Você receberá atualizações sobre o andamento do registro da sua empresa.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                        <a href="{% url 'users:area_cliente' %}" class="btn btn-primary btn-lg px-4 gap-3">
+                            <i class="fas fa-home me-2"></i>Ir para o Dashboard
+                        </a>
+                        <a href="{% url 'services:download_contrato' processo.id %}" class="btn btn-outline-secondary btn-lg px-4" target="_blank">
+                            <i class="fas fa-file-pdf me-2"></i>Baixar Contrato
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

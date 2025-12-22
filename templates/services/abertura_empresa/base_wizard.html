@@ -268,7 +268,7 @@
         <!-- Barra de Progresso -->
         <div class="progress-container">
             <div class="progress-steps">
-                {% for i in "123456789" %}
+                {% for i in "12345678" %}
                 <div class="progress-step {% if forloop.counter == etapa %}active{% elif forloop.counter < etapa %}completed{% endif %}">
                     <div class="step-number">{{ forloop.counter }}</div>
                     <div class="step-label">
@@ -278,9 +278,8 @@
                         {% elif forloop.counter == 4 %}Sócios
                         {% elif forloop.counter == 5 %}Documentos
                         {% elif forloop.counter == 6 %}Fiscal
-                        {% elif forloop.counter == 7 %}Acesso
-                        {% elif forloop.counter == 8 %}Assinatura
-                        {% elif forloop.counter == 9 %}Pagamento
+                        {% elif forloop.counter == 7 %}Assinatura
+                        {% elif forloop.counter == 8 %}Pagamento
                         {% endif %}
                     </div>
                 </div>
@@ -324,7 +323,7 @@
                 {% endif %}
 
                 <button type="submit" class="btn btn-next btn-wizard">
-                    {% if etapa < 9 %}
+                    {% if etapa < 8 %}
                     Próxima Etapa<i class="fas fa-arrow-right ms-2"></i>
                     {% else %}
                     Finalizar<i class="fas fa-check ms-2"></i>

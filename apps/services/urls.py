@@ -18,6 +18,7 @@ urlpatterns = [
     path('abertura-empresa/<int:processo_id>/pagamento/', views.pagamento_abertura, name='pagamento_abertura'),
     path('abertura-empresa/<int:processo_id>/confirmar-pagamento/', views.confirmar_pagamento, name='confirmar_pagamento'),
     path('abertura-empresa/<int:processo_id>/sucesso/', views.processo_sucesso, name='processo_sucesso'),
+    path('abertura-empresa/<int:processo_id>/contrato/', views.download_contrato, name='download_contrato'),
     
     # Recursos
     path('recursos/consultar-cnaes/', views.consulta_cnaes_view, name='consulta_cnaes'),

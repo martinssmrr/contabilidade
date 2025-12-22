@@ -2,20 +2,21 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from .models import ProcessoAbertura, Socio
 from .forms import (
     Etapa1DadosPessoaisForm, Etapa2EnderecoForm, Etapa3DadosEmpresaForm,
     SocioFormSet, Etapa5DocumentosForm, Etapa6InformacoesFiscaisForm,
-    Etapa7DadosAcessoForm, Etapa8AssinaturaForm, Etapa9PagamentoForm
+    Etapa8AssinaturaForm, Etapa8RevisaoForm
 )
+from .pdf_generator import generate_contract_pdf
 
 
 @login_required
 def abertura_empresa_wizard(request, etapa=1):
     """
     View principal do wizard de abertura de empresa
-    Gerencia todas as 9 etapas do processo
+    Gerencia todas as 8 etapas do processo
     """
     from .models import Plano
     
@@ -27,7 +28,7 @@ def abertura_empresa_wizard(request, etapa=1):
     )
     
     # Validar se a etapa solicitada é válida
-    if etapa < 1 or etapa > 9:
+    if etapa < 1 or etapa > 8:
         messages.error(request, 'Etapa inválida.')
         return redirect('services:abertura_empresa', etapa=1)
     
@@ -38,6 +39,9 @@ def abertura_empresa_wizard(request, etapa=1):
     
     # Selecionar o formulário da etapa atual
     form_class = get_form_for_etapa(etapa)
+    
+    form = None
+    formset = None
     
     if request.method == 'POST':
         # Processar formulário
@@ -60,30 +64,36 @@ def abertura_empresa_wizard(request, etapa=1):
                 messages.success(request, 'Dados dos sócios salvos com sucesso!')
                 return redirect('services:abertura_empresa', etapa=etapa + 1)
         else:
-            form = form_class(request.POST, request.FILES, instance=processo)
+            # Para etapas normais (ModelForm) ou a etapa 8 (Form simples)
+            if etapa == 8:
+                form = form_class(request.POST)
+            else:
+                form = form_class(request.POST, request.FILES, instance=processo)
+                
             if form.is_valid():
-                form.save()
+                if etapa != 8: # Etapa 8 não salva no model via form
+                    form.save()
                 
                 # Atualizar etapa
-                if etapa >= processo.etapa_atual:
+                if etapa >= processo.etapa_atual and etapa < 8:
                     processo.etapa_atual = etapa + 1
                 
-                # Etapa 8: registrar data de assinatura
-                if etapa == 8:
+                # Etapa 7: registrar data de assinatura
+                if etapa == 7:
                     processo.data_assinatura = timezone.now()
                 
-                # Etapa 9: marcar como aguardando pagamento
-                if etapa == 9:
-                    processo.status = 'aguardando_pagamento'
+                # Etapa 8: Finalização
+                if etapa == 8:
+                    processo.status = 'em_analise' # Finalizado pelo cliente
+                    processo.save()
+                    messages.success(request, 'Processo de abertura enviado com sucesso! Nossa equipe entrará em contato.')
+                    return redirect('services:processo_sucesso', processo_id=processo.id)
                 
                 processo.save()
                 
-                if etapa < 9:
+                if etapa < 8:
                     messages.success(request, f'Etapa {etapa} concluída com sucesso!')
                     return redirect('services:abertura_empresa', etapa=etapa + 1)
-                else:
-                    messages.success(request, 'Processo de abertura concluído! Prossiga para o pagamento.')
-                    return redirect('services:pagamento_abertura', processo_id=processo.id)
     
     else:
         # GET: exibir formulário
@@ -107,29 +117,15 @@ def abertura_empresa_wizard(request, etapa=1):
             
             formset = SocioFormSet(prefix='socios', initial=initial_data)
             form = None
+        elif etapa == 8:
+            form = form_class()
+            formset = None
         else:
             form = form_class(instance=processo)
             formset = None
     
     # Calcular progresso
-    progresso = (etapa / 9) * 100
-    
-    # Buscar planos disponíveis para a etapa 9 (filtrados por tipo de atividade)
-    planos_abertura = None
-    if etapa == 9:
-        # Mapear tipo_atividade para categoria de plano
-        tipo_atividade = processo.tipo_atividade
-        
-        # Definir categoria baseada no tipo de atividade escolhido na etapa 6
-        if tipo_atividade == 'servico':
-            categoria_plano = 'servicos'
-        elif tipo_atividade == 'comercio':
-            categoria_plano = 'comercio'
-        else:
-            # Fallback: Se não houver tipo_atividade ou for 'industria'/'misto', mostrar planos de abertura
-            categoria_plano = 'abertura'
-        
-        planos_abertura = Plano.objects.filter(ativo=True, categoria=categoria_plano).order_by('ordem', 'preco')
+    progresso = (etapa / 8) * 100
     
     context = {
         'processo': processo,
@@ -137,8 +133,7 @@ def abertura_empresa_wizard(request, etapa=1):
         'form': form,
         'formset': formset,
         'progresso': progresso,
-        'total_etapas': 9,
-        'planos_abertura': planos_abertura,
+        'total_etapas': 8,
     }
     
     return render(request, f'services/abertura_empresa/etapa_{etapa}.html', context)
@@ -153,9 +148,8 @@ def get_form_for_etapa(etapa):
         # 4: SocioFormSet (tratado separadamente)
         5: Etapa5DocumentosForm,
         6: Etapa6InformacoesFiscaisForm,
-        7: Etapa7DadosAcessoForm,
-        8: Etapa8AssinaturaForm,
-        9: Etapa9PagamentoForm,
+        7: Etapa8AssinaturaForm,
+        8: Etapa8RevisaoForm,
     }
     return forms_map.get(etapa)
 
@@ -167,7 +161,7 @@ def pagamento_abertura(request, processo_id):
     
     if not processo.plano_selecionado:
         messages.error(request, 'Nenhum plano foi selecionado.')
-        return redirect('services:abertura_empresa', etapa=9)
+        return redirect('services:abertura_empresa', etapa=8)
     
     context = {
         'processo': processo,
@@ -390,3 +384,23 @@ def calculadora_clt_pj(request):
     }
     
     return render(request, 'recursos/calculadora_clt_pj.html', context)
+
+
+@login_required
+def download_contrato(request, processo_id):
+    """
+    Gera e retorna o PDF do contrato assinado
+    """
+    processo = get_object_or_404(ProcessoAbertura, id=processo_id, usuario=request.user)
+    
+    if not processo.assinatura_digital:
+        messages.warning(request, 'O contrato ainda não foi assinado.')
+        return redirect('services:abertura_empresa', etapa=7)
+        
+    pdf_buffer = generate_contract_pdf(processo)
+    
+    return FileResponse(
+        pdf_buffer, 
+        as_attachment=True, 
+        filename=f'contrato_prestacao_servicos_{processo.id}.pdf'
+    )

@@ -134,8 +134,6 @@ class ProcessoAbertura(models.Model):
     TIPO_ATIVIDADE_CHOICES = [
         ('servico', 'Serviço'),
         ('comercio', 'Comércio'),
-        ('industria', 'Indústria'),
-        ('misto', 'Misto'),
     ]
     
     GOV_BR_NIVEL_CHOICES = [
@@ -147,7 +145,7 @@ class ProcessoAbertura(models.Model):
     # Metadados
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='processos_abertura')
     status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='rascunho')
-    etapa_atual = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(9)])
+    etapa_atual = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(8)])
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
     concluido_em = models.DateTimeField(null=True, blank=True)
@@ -209,6 +207,7 @@ class ProcessoAbertura(models.Model):
     doc_identidade_verso = models.ImageField(upload_to='processos_abertura/documentos/', blank=True, null=True)
     comprovante_residencia = models.FileField(upload_to='processos_abertura/documentos/', blank=True, null=True)
     selfie_com_documento = models.ImageField(upload_to='processos_abertura/documentos/', blank=True, null=True)
+    iptu_imovel = models.FileField(upload_to='processos_abertura/documentos/', blank=True, null=True, verbose_name="Inscrição Imobiliária/IPTU")
     
     # ETAPA 6: Informações Fiscais
     tipo_atividade = models.CharField(max_length=20, choices=TIPO_ATIVIDADE_CHOICES, blank=True, null=True)
@@ -216,7 +215,7 @@ class ProcessoAbertura(models.Model):
     precisa_alvara = models.BooleanField(default=False)
     deseja_conta_pj = models.BooleanField(default=False)
     
-    # ETAPA 7: Dados de Acesso a Portais
+    # ETAPA 7: Dados de Acesso a Portais (REMOVIDO DO FLUXO, MANTIDO NO MODELO POR COMPATIBILIDADE)
     gov_br_nivel = models.CharField(max_length=10, choices=GOV_BR_NIVEL_CHOICES, blank=True, null=True)
     gov_br_cpf = models.CharField(max_length=14, blank=True, null=True)
     gov_br_senha = models.CharField(max_length=200, blank=True, null=True)  # Será encriptada
@@ -228,7 +227,7 @@ class ProcessoAbertura(models.Model):
     data_assinatura = models.DateTimeField(blank=True, null=True)
     
     # ETAPA 9: Pagamento
-    plano_selecionado = models.ForeignKey('Plan', on_delete=models.SET_NULL, null=True, blank=True)
+    plano_selecionado = models.ForeignKey('Plano', on_delete=models.SET_NULL, null=True, blank=True)
     cupom_desconto = models.CharField(max_length=50, blank=True, null=True)
     valor_pago = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     data_pagamento = models.DateTimeField(blank=True, null=True)
