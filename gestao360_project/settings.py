@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     "apps.documents.apps.DocumentsConfig",  # Com AppConfig explícito para signals
     "apps.blog",
     "apps.testimonials",
+    "apps.finance",
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,323 @@
+{% extends 'base_dashboard.html' %} {% load static %} {% block title %}Contas
+Agendadas - Vetorial{% endblock %} {% block page_title %}Contas Agendadas{%
+endblock %} {% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <a href="{% url 'finance:dashboard' %}" class="btn btn-outline-secondary">
+    <i class="fas fa-arrow-left me-2"></i> Voltar ao Painel
+  </a>
+  <div class="d-flex gap-2">
+    <button
+      class="btn btn-success"
+      data-bs-toggle="modal"
+      data-bs-target="#scheduledEntradaModal"
+    >
+      <i class="fas fa-plus me-2"></i> Nova Receita
+    </button>
+    <button
+      class="btn btn-danger"
+      data-bs-toggle="modal"
+      data-bs-target="#scheduledSaidaModal"
+    >
+      <i class="fas fa-minus me-2"></i> Nova Despesa
+    </button>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-white border-0 py-3">
+    <h5 class="mb-0 fw-bold text-secondary">Próximos Vencimentos</h5>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Vencimento</th>
+          <th>Tipo</th>
+          <th>Descrição</th>
+          <th>Categoria / Conta</th>
+          <th>Valor</th>
+          <th>Recorrência</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in scheduled_transactions %}
+        <tr>
+          <td>
+            <div
+              class="fw-bold {% if item.due_date < today %}text-danger{% endif %}"
+            >
+              {{ item.due_date|date:"d/m/Y" }}
+            </div>
+            {% if item.due_date < today %}
+            <small class="text-danger fw-bold">Vencido</small>
+            {% endif %}
+          </td>
+          <td>
+            {% if item.type == 'entrada' %}
+            <span class="badge bg-success bg-opacity-10 text-success"
+              >A Receber</span
+            >
+            {% else %}
+            <span class="badge bg-danger bg-opacity-10 text-danger"
+              >A Pagar</span
+            >
+            {% endif %}
+          </td>
+          <td>{{ item.description }}</td>
+          <td>
+            <div class="small text-muted">
+              {{ item.account.subcategory.name }}
+            </div>
+            <div>{{ item.account.name }}</div>
+          </td>
+          <td class="fw-bold">R$ {{ item.value|floatformat:2 }}</td>
+          <td>
+            {% if item.is_recurring %}
+            <span class="badge bg-info text-dark"
+              ><i class="fas fa-sync-alt me-1"></i> Mensal</span
+            >
+            {% else %}
+            <span class="text-muted">-</span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="d-flex gap-2">
+              <form
+                action="{% url 'finance:liquidate_scheduled_transaction' item.pk %}"
+                method="post"
+                onsubmit="return confirm('Confirmar liquidação desta conta? Isso irá gerar um lançamento financeiro.');"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  class="btn btn-sm btn-success"
+                  title="Liquidar (Marcar como Pago/Recebido)"
+                >
+                  <i class="fas fa-check"></i>
+                </button>
+              </form>
+              <form
+                action="{% url 'finance:delete_scheduled_transaction' item.pk %}"
+                method="post"
+                onsubmit="return confirm('Tem certeza que deseja excluir este agendamento?');"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  class="btn btn-sm btn-outline-danger"
+                  title="Excluir"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="text-center py-5 text-muted">
+            <i class="fas fa-calendar-check fa-3x mb-3"></i>
+            <p>Nenhuma conta agendada pendente.</p>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Reutilizando Modais do Dashboard (precisam ser incluídos ou redefinidos aqui se não estenderem um base comum com eles) -->
+<!-- Como estendemos base_dashboard, os modais não vêm automaticamente do dashboard.html. Vamos redefini-los ou criar um include. -->
+<!-- Para simplificar, vou adicionar os modais aqui também, mas o ideal seria um partial. -->
+
+<!-- Modal Scheduled Entrada (A Receber) -->
+<div class="modal fade" id="scheduledEntradaModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">
+          <i class="fas fa-plus-circle me-2"></i> Nova Conta a Receber
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <form
+        action="{% url 'finance:add_scheduled_transaction' %}"
+        method="post"
+      >
+        {% csrf_token %}
+        <input type="hidden" name="type" value="entrada" />
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Cliente</label>
+            <input
+              type="text"
+              name="description"
+              class="form-control"
+              placeholder="Nome do Cliente"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Categoria / Conta</label>
+            <!-- Aqui precisaria carregar as contas via context processor ou view. 
+                             Como esta view não tem o form completo no contexto, vamos simplificar ou carregar via AJAX se necessário.
+                             Mas espere, a view list_scheduled_transactions não está passando os forms. Vamos corrigir a view.
+                        -->
+            <select name="account" class="form-select" required>
+              <option value="">Selecione...</option>
+              <!-- Idealmente preenchido pelo backend. Vou ajustar a view para passar os forms ou as contas. -->
+              {% for acc in user_accounts %}
+              <option value="{{ acc.id }}">
+                {{ acc.subcategory.name }} - {{ acc.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Valor (R$)</label>
+              <input
+                type="number"
+                name="value"
+                step="0.01"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Data de Recebimento</label>
+              <input
+                type="date"
+                name="due_date"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-check form-switch">
+            <input
+              type="checkbox"
+              name="is_recurring"
+              class="form-check-input"
+              id="recur_entrada"
+            />
+            <label class="form-check-label" for="recur_entrada">
+              Recebimento Recorrente (Mensal)
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-success">
+            Agendar Recebimento
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Scheduled Saida (A Pagar) -->
+<div class="modal fade" id="scheduledSaidaModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">
+          <i class="fas fa-minus-circle me-2"></i> Nova Conta a Pagar
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <form
+        action="{% url 'finance:add_scheduled_transaction' %}"
+        method="post"
+      >
+        {% csrf_token %}
+        <input type="hidden" name="type" value="saida" />
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Fornecedor</label>
+            <input
+              type="text"
+              name="description"
+              class="form-control"
+              placeholder="Nome do Fornecedor"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Categoria / Conta</label>
+            <select name="account" class="form-select" required>
+              <option value="">Selecione...</option>
+              {% for acc in user_accounts %}
+              <option value="{{ acc.id }}">
+                {{ acc.subcategory.name }} - {{ acc.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Valor (R$)</label>
+              <input
+                type="number"
+                name="value"
+                step="0.01"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Data de Pagamento</label>
+              <input
+                type="date"
+                name="due_date"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-check form-switch">
+            <input
+              type="checkbox"
+              name="is_recurring"
+              class="form-check-input"
+              id="recur_saida"
+            />
+            <label class="form-check-label" for="recur_saida">
+              Pagamento Recorrente (Mensal)
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-danger">
+            Agendar Pagamento
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

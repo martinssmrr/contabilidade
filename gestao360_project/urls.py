@@ -225,6 +225,7 @@ urlpatterns = [
     path("payments/", include('apps.payments.urls')),
     path("recursos/calculadora-clt-pj/", calculadora_clt_pj, name='calculadora_clt_pj'),
     path("support/", include('apps.support.urls')),
+    path("finance/", include('apps.finance.urls')),
     # path("payments/", include('apps.payments.urls')),
     
     # SEO - Sitemap e Robots
