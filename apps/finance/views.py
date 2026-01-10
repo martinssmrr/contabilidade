@@ -10,8 +10,14 @@ from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
-from .models import Transaction, Subcategory, Account, ScheduledTransaction
-from .forms import TransactionForm, SubcategoryForm, AccountForm, ScheduledTransactionForm
+from .models import Transaction, Subcategory, Account, ScheduledTransaction, BankReconciliation
+from .forms import TransactionForm, AccountForm, ScheduledTransactionForm
+from .tasks import process_ofx_file
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+import os
+import uuid
+
 from apps.users.models import MovimentacaoFinanceira
 
 @login_required
@@ -69,7 +75,7 @@ def dashboard(request):
 
     # Forms
     transaction_form = TransactionForm(user=request.user)
-    subcategory_form = SubcategoryForm()
+    # subcategory_form = SubcategoryForm()
     account_form = AccountForm(user=request.user)
     
     # Forms para Contas Agendadas
@@ -87,7 +93,7 @@ def dashboard(request):
         'saldo': saldo,
         'saidas_por_subcategoria': saidas_por_subcategoria,
         'transaction_form': transaction_form,
-        'subcategory_form': subcategory_form,
+        # 'subcategory_form': subcategory_form,
         'account_form': account_form,
         'scheduled_form_entrada': scheduled_form_entrada,
         'scheduled_form_saida': scheduled_form_saida,
@@ -239,18 +245,48 @@ def new_subcategory(request):
     return render(request, 'finance/form.html', {'form': form, 'title': 'Nova Subcategoria'})
 
 @login_required
+def manage_accounts(request):
+    """View para gerenciar o plano de contas em árvore"""
+    accounts = Account.objects.filter(user=request.user).order_by('code')
+    return render(request, 'finance/manage_accounts.html', {'accounts': accounts})
+
+@login_required
 def new_account(request):
+    parent_id = request.GET.get('parent')
+    
     if request.method == 'POST':
         form = AccountForm(request.user, request.POST)
         if form.is_valid():
             account = form.save(commit=False)
             account.user = request.user
+            # Tenta inferir subcategoria do pai por compatibilidade (opcional)
+            if account.parent and account.parent.subcategory:
+                account.subcategory = account.parent.subcategory
             account.save()
             messages.success(request, 'Conta criada com sucesso!')
             return redirect('finance:manage_accounts')
     else:
-        form = AccountForm(request.user)
+        initial = {}
+        if parent_id:
+            parent = get_object_or_404(Account, pk=parent_id, user=request.user)
+            initial['parent'] = parent
+            # Sugerir próximo código
+            last_child = Account.objects.filter(parent=parent).order_by('-code').first()
+            if last_child and last_child.code:
+                try:
+                    parts = last_child.code.split('.')
+                    last_num = int(parts[-1])
+                    new_num = str(last_num + 1).zfill(len(parts[-1]))
+                    initial['code'] = f"{'.'.join(parts[:-1])}.{new_num}"
+                except:
+                    pass
+            elif parent.code:
+                 initial['code'] = f"{parent.code}.01"
+
+        form = AccountForm(request.user, initial=initial)
+        
     return render(request, 'finance/form.html', {'form': form, 'title': 'Nova Conta'})
+
 
 @login_required
 def edit_transaction(request, pk):
@@ -486,6 +522,89 @@ def delete_scheduled_transaction(request, pk):
         scheduled.delete()
         messages.success(request, 'Conta agendada excluída com sucesso!')
     return redirect('finance:list_scheduled_transactions')
+
+@login_required
+def reconciliation_view(request):
+    if request.method == 'POST' and 'ofx_file' in request.FILES:
+        ofx_file = request.FILES['ofx_file']
+        if not ofx_file.name.lower().endswith('.ofx'):
+            messages.error(request, 'Formato inválido. Envie um arquivo .ofx')
+            return redirect('finance:reconciliation')
+
+        # Salva o arquivo temporariamente
+        temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp_ofx')
+        os.makedirs(temp_dir, exist_ok=True)
+        
+        fs = FileSystemStorage(location=temp_dir)
+        filename = fs.save(f"{uuid.uuid4()}_{ofx_file.name}", ofx_file)
+        file_path = fs.path(filename)
+        
+        print(f"[VIEW] Arquivo salvo em: {file_path}")
+        print(f"[VIEW] Disparando task Celery para user {request.user.id}")
+        
+        # Dispara Task do Celery
+        try:
+            task_result = process_ofx_file.delay(file_path, request.user.id)
+            print(f"[VIEW] Task disparada com ID: {task_result.id}")
+            messages.info(request, f'Arquivo enviado! ID da Tarefa: {task_result.id}')
+        except Exception as e:
+            print(f"[VIEW] ERRO ao disparar task: {e}")
+            messages.error(request, f"Erro ao iniciar processamento: {e}")
+        
+        # messages.info(request, 'Arquivo enviado! O processamento iniciou em segundo plano. Atualize a página em breve.')
+        return redirect('finance:reconciliation')
+            
+    # Listar itens pendentes
+    items = BankReconciliation.objects.filter(
+        user=request.user, 
+        status=BankReconciliation.STATUS_PENDING
+    ).order_by('date')
+    
+    accounts = Account.objects.filter(user=request.user).order_by('name')
+    
+    return render(request, 'finance/reconciliation.html', {
+        'items': items,
+        'accounts': accounts
+    })
+
+@login_required
+def approve_reconciliation(request, pk):
+    if request.method == 'POST':
+        recon_item = get_object_or_404(BankReconciliation, pk=pk, user=request.user)
+        account_id = request.POST.get('account_id')
+        description = request.POST.get('description', recon_item.description)
+        
+        if account_id:
+            account = get_object_or_404(Account, pk=account_id, user=request.user)
+            
+            # Cria a transação real
+            Transaction.objects.create(
+                user=request.user,
+                account=account,
+                date=recon_item.date,
+                value=recon_item.amount,
+                description=description,
+                status=Transaction.STATUS_TRANSMITTED
+            )
+            
+            # Atualiza status da conciliação
+            recon_item.status = BankReconciliation.STATUS_IMPORTED
+            recon_item.save()
+            
+            messages.success(request, 'Lançamento conciliado com sucesso!')
+        else:
+            messages.error(request, 'Selecione uma categoria válida.')
+            
+    return redirect('finance:reconciliation')
+
+@login_required
+def ignore_reconciliation(request, pk):
+    if request.method == 'POST':
+        recon_item = get_object_or_404(BankReconciliation, pk=pk, user=request.user)
+        recon_item.status = BankReconciliation.STATUS_IGNORED
+        recon_item.save()
+        messages.success(request, 'Item removido da lista.')
+    return redirect('finance:reconciliation')
 
 
 

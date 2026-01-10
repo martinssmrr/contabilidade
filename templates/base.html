@@ -40,6 +40,8 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     <link rel="preload" as="image" href="{% static 'img/herosection.webp' %}">
     
@@ -120,8 +122,7 @@
     <!-- CSS Externo -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}?v={{ STATIC_VERSION|default:'1.0' }}">
-    <link rel="stylesheet" href="{% static 'css/footer.css' %}?v={{ STATIC_VERSION|default:'1.0' }}" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="{% static 'css/footer.css' %}?v={{ STATIC_VERSION|default:'1.0' }}"></noscript>
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}?v={{ STATIC_VERSION|default:'2.0' }}">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon.png' %}">
@@ -162,7 +163,7 @@
     </main>
     
     <!-- Footer -->
-    {% include 'partials/footer_clean.html' %}
+    {% include 'partials/footer.html' %}
     
     <!-- JavaScript - Carregamento Deferido -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>

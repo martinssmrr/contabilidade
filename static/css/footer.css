@@ -1,43 +1,240 @@
-.site-footer{
-  background:#0f1724;
-  color:#e6eef8;
-  font-size:14px;
-  line-height:1.4;
-}
-.site-footer a{ color: #cfe7ff; text-decoration:none; }
-.site-footer a:hover{ text-decoration:underline; }
+/* =========================================
+   ESTILOS DO RODAPÉ (FOOTER)
+   ========================================= */
 
-.footer-inner{
-  display:flex;
-  gap:2rem;
-  align-items:flex-start;
-  justify-content:space-between;
-  padding:2.25rem 1rem;
-  max-width:1100px;
-  margin:0 auto;
-  flex-wrap:wrap;
-}
-.footer-brand{ max-width:320px; }
-.footer-logo{ font-weight:700; font-size:1.05rem; color:#fff; display:inline-block; margin-bottom:.25rem; }
-.footer-tagline{ color:#9fb6d1; margin:0; font-size:0.95rem; }
-
-.footer-links ul{ list-style:none; padding:0; margin:0; display:flex; gap:1rem; flex-wrap:wrap; }
-.footer-links li{ margin:0; }
-.footer-links a{ color:#cfe7ff; }
-
-.footer-contact{ color:#9fb6d1; }
-
-.footer-bottom{
-  border-top:1px solid rgba(255,255,255,0.04);
-  padding:0.75rem 1rem;
-  text-align:center;
-  background:transparent;
-  color:#9fb6d1;
+/* Configurações Gerais */
+.main-footer {
+    background-color: #102268; /* Azul Escuro */
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+    padding: 60px 0 20px 0;
+    box-sizing: border-box;
+    font-size: 14px;
 }
 
-.sep{ margin:0 .5rem; color:#7f98b1; }
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px;
+}
 
-@media (max-width:720px){
-  .footer-inner{ flex-direction:column; align-items:flex-start; padding:1.5rem 1rem; gap:1rem; }
-  .footer-links ul{ flex-direction:column; gap:0.5rem; }
+/* Títulos Dourados */
+.main-footer h3 {
+    color: #FFE066; /* Amarelo/Dourado */
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Coluna 1: Marca */
+.brand-col {
+    flex: 1 1 300px; /* Cresce, encolhe, base de 300px */
+    max-width: 350px;
+}
+
+.footer-logo {
+    max-width: 150px;
+    margin-bottom: 20px;
+    filter: brightness(0) invert(1); /* Torna o logo branco se ele for colorido, ajuste conforme necessário */
+}
+
+.brand-desc {
+    line-height: 1.6;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.legal-info {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: #cbd5e1;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons a {
+    color: #ffffff;
+    font-size: 20px;
+    transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: #FFE066;
+}
+
+/* Grupo de Links (Colunas 2, 3, 4, 5) */
+.links-group {
+    display: flex;
+    flex: 2 1 400px;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.link-col {
+    min-width: 140px;
+}
+
+.link-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.link-col ul li {
+    margin-bottom: 12px;
+}
+
+.link-col ul li a {
+    color: #e2e8f0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.link-col ul li a:hover {
+    color: #FFE066;
+    transform: translateX(5px); /* Efeito suave de movimento */
+}
+
+/* Coluna Newsletter */
+.newsletter-col {
+    flex: 1 1 250px;
+}
+
+.newsletter-col p {
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+/* Design do Input com Botão Interno */
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 15px 100px 15px 20px; /* Padding direito grande para o botão não cobrir texto */
+    border-radius: 50px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    outline: none;
+    box-sizing: border-box; /* Garante que padding não aumente a largura total */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.input-wrapper input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.input-wrapper input:focus {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: #FFE066;
+}
+
+.input-wrapper button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    background-color: #FFE066;
+    color: #102268;
+    border: none;
+    border-radius: 50px;
+    padding: 0 20px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.input-wrapper button:hover {
+    background-color: #ffd700;
+}
+
+/* Copyright Bar */
+.footer-bottom {
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+}
+
+/* =========================================
+   BOTÃO FLUTUANTE DO WHATSAPP
+   ========================================= */
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 20px; /* Distância do fundo */
+    left: 20px;   /* Distância da esquerda */
+    background-color: #25D366;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1); /* Efeito de escalar ao passar o mouse */
+    color: #fff; /* Mantém ícone branco */
+}
+
+/* =========================================
+   RESPONSIVIDADE (Mobile)
+   ========================================= */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+
+    .brand-col, .links-group, .newsletter-col {
+        max-width: 100%;
+        flex: 1 1 100%;
+    }
+
+    /* Centralizar links e itens no mobile */
+    .links-group {
+        justify-content: center;
+    }
+    
+    .social-icons, .legal-info {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .footer-logo {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+
+    .link-col {
+        width: 45%; /* Mostra 2 colunas por linha no mobile */
+        margin-bottom: 20px;
+    }
 }

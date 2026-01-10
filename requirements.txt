@@ -51,3 +51,4 @@ flower>=2.0.0  # Monitoramento web do Celery
 # ==================================
 gunicorn>=21.2.0
 whitenoise>=6.6.0
+ofxparse>=0.21

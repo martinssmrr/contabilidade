@@ -364,11 +364,19 @@
           </a>
           <a
             href="{% url 'finance:dashboard' %}"
-            class="sidebar-nav-item {% if 'finance' in request.resolver_match.app_names %}active{% endif %}"
+            class="sidebar-nav-item {% if 'finance' in request.resolver_match.app_names and request.resolver_match.url_name != 'reconciliation' %}active{% endif %}"
           >
             <i class="fas fa-chart-pie"></i>
             Painel Financeiro
           </a>
+          <a
+            href="{% url 'finance:reconciliation' %}"
+            class="sidebar-nav-item {% if request.resolver_match.url_name == 'reconciliation' %}active{% endif %}"
+          >
+            <i class="fas fa-university"></i>
+            Conciliação Bancária
+          </a>
+
           <a
             href="{% url 'users:minha_empresa' %}"
             class="sidebar-nav-item {% if request.resolver_match.url_name == 'minha_empresa' %}active{% endif %}"

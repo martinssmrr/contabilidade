@@ -24,4 +24,7 @@ urlpatterns = [
     path('scheduled/list/', views.list_scheduled_transactions, name='list_scheduled_transactions'),
     path('scheduled/<int:pk>/liquidate/', views.liquidate_scheduled_transaction, name='liquidate_scheduled_transaction'),
     path('scheduled/<int:pk>/delete/', views.delete_scheduled_transaction, name='delete_scheduled_transaction'),
+    path('reconciliation/', views.reconciliation_view, name='reconciliation'),
+    path('reconciliation/<int:pk>/approve/', views.approve_reconciliation, name='approve_reconciliation'),
+    path('reconciliation/<int:pk>/ignore/', views.ignore_reconciliation, name='ignore_reconciliation'),
 ]
