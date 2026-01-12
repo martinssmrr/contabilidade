@@ -52,9 +52,10 @@ docker-compose -f docker-compose.prod.yml exec web python manage.py migrate
 # 4. Coletar arquivos estáticos (templates novos)
 docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --noinput
 
-# 5. Reiniciar os containers (web e celery)
+# 5. Reiniciar os containers (web, celery_worker e celery_beat)
 docker-compose -f docker-compose.prod.yml restart web
-docker-compose -f docker-compose.prod.yml restart celery
+docker-compose -f docker-compose.prod.yml restart celery_worker
+docker-compose -f docker-compose.prod.yml restart celery_beat
 
 # 6. Verificar se está rodando
 docker-compose -f docker-compose.prod.yml ps

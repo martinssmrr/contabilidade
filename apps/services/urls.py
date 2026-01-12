@@ -18,6 +18,10 @@ urlpatterns = [
     path('abertura-empresa/<int:processo_id>/pagamento/', views.pagamento_abertura, name='pagamento_abertura'),
     path('abertura-empresa/<int:processo_id>/confirmar-pagamento/', views.confirmar_pagamento, name='confirmar_pagamento'),
     path('abertura-empresa/<int:processo_id>/sucesso/', views.processo_sucesso, name='processo_sucesso'),
+    
+    # Teste de Contrato
+    path('contrato-teste/', views.contrato_test_view, name='contrato_test'),
+
     path('abertura-empresa/<int:processo_id>/contrato/', views.download_contrato, name='download_contrato'),
     
     # Recursos

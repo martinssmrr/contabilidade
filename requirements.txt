@@ -30,6 +30,7 @@ django-ckeditor-5>=0.2.15  # Editor WYSIWYG moderno e seguro
 redis>=5.0.0  # Cliente Redis para cache
 django-redis>=5.4.0  # Backend de cache Redis para Django
 reportlab>=4.0.0  # Geração de PDFs
+pypdf>=3.17.0 # Manipulação de PDFs (merge, watermark)
 ofxparse>=0.21  # Parser de arquivos OFX (Financeiro)
 
 # ==================================

@@ -404,3 +404,35 @@ def download_contrato(request, processo_id):
         as_attachment=True, 
         filename=f'contrato_prestacao_servicos_{processo.id}.pdf'
     )
+
+def contrato_test_view(request):
+    """
+    View de teste para gerar o contrato PDF com dados manuais
+    """
+    if request.method == 'POST':
+        # Criar um objeto mockado com os dados do form
+        class ProcessoMock:
+            def __init__(self, data):
+                self.nome_completo = data.get('nome_completo')
+                self.cpf = data.get('cpf')
+                self.endereco = data.get('endereco')
+                self.numero = data.get('numero')
+                self.bairro = data.get('bairro')
+                self.cidade = data.get('cidade')
+                self.estado = data.get('estado')
+                self.assinatura_digital = None # Para teste sem assinatura
+                # O pdf_generator pode precisar de mais campos se for atualizado,
+                # por enquanto estes são os usados.
+        
+        processo_mock = ProcessoMock(request.POST)
+        
+        # Gerar o PDF
+        pdf_buffer = generate_contract_pdf(processo_mock)
+        
+        return FileResponse(
+            pdf_buffer,
+            as_attachment=False,
+            filename='contrato_teste.pdf'
+        )
+        
+    return render(request, 'contrato_test.html')

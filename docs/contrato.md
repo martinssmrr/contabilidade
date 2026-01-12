@@ -1,32 +1,26 @@
 import io
-import os
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER
 from reportlab.lib.units import mm
 from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
-from django.utils import timezone
-from django.conf import settings
+from django.utils import timezone # Assuming django is available for timezone.now()
 import base64
-from pypdf import PdfWriter, PdfReader
 
 def generate_contract_pdf(processo):
     """
     Gera o PDF do contrato de prestação de serviços com base no conteúdo da Vetorial.
-    Utiliza um papel timbrado como fundo.
     """
-    # 1. Gerar o conteúdo do contrato (texto) em memória
-    content_buffer = io.BytesIO()
-    doc = SimpleDocTemplate(content_buffer, pagesize=A4,
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4,
                             rightMargin=20*mm, leftMargin=20*mm,
-                            topMargin=40*mm, bottomMargin=30*mm) # Margens maiores para o papel timbrado
+                            topMargin=20*mm, bottomMargin=20*mm)
     
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY, leading=14))
     styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER, leading=14, spaceAfter=20))
-    styles.add(ParagraphStyle(name='ContractHeading1', fontSize=14, leading=16, alignment=TA_CENTER, spaceAfter=12, spaceBefore=12, fontName='Helvetica-Bold'))
-    styles.add(ParagraphStyle(name='ContractHeading2', fontSize=12, leading=14, alignment=TA_JUSTIFY, spaceAfter=8, spaceBefore=8, fontName='Helvetica-Bold'))
+    styles.add(ParagraphStyle(name='Heading1', fontSize=14, leading=16, alignment=TA_CENTER, spaceAfter=12, spaceBefore=12, fontName='Helvetica-Bold'))
+    styles.add(ParagraphStyle(name='Heading2', fontSize=12, leading=14, alignment=TA_JUSTIFY, spaceAfter=8, spaceBefore=8, fontName='Helvetica-Bold'))
     styles.add(ParagraphStyle(name='BodyTextIndent', parent=styles['Justify'], firstLineIndent=10))
 
     story = []
@@ -41,7 +35,7 @@ def generate_contract_pdf(processo):
     endereco_contratante = f"{processo.endereco or ''}, {processo.numero or ''}, {processo.bairro or ''}, {processo.cidade or ''}-{processo.estado or ''}"
     
     texto_contratante_dados = f"""
-    Este contrato estabelece como serão prestados os serviços e licenciado software pela Vetorial. Ao aceitá-lo você, doravante denominado <b>CONTRATANTE</b>: <br/> {nome_contratante}, CPF {cpf_contratante}, residente e domiciliado em {endereco_contratante}, confirma que leu, entendeu e concordou com todos os termos e condições e também com o Aviso de Privacidade da Vetorial.
+    Este contrato estabelece como serão prestados os serviços e licenciado software pela Vetorial. Ao aceitá-lo você, doravante denominado <b>CONTRATANTE</b>: {nome_contratante}, CPF {cpf_contratante}, residente e domiciliado em {endereco_contratante}, confirma que leu, entendeu e concordou com todos os termos e condições e também com o Aviso de Privacidade da Vetorial.
     """
     story.append(Paragraph(texto_contratante_dados, styles['Justify']))
     story.append(Spacer(1, 5*mm))
@@ -59,7 +53,7 @@ def generate_contract_pdf(processo):
     
     # Cláusulas do Contrato Vetorial
     
-    story.append(Paragraph("<b>1. SERVIÇOS PRESTADOS E SOFTWARE LICENCIADO PELA VETORIAL:</b>", styles['ContractHeading2']))
+    story.append(Paragraph("<b>1. SERVIÇOS PRESTADOS E SOFTWARE LICENCIADO PELA VETORIAL:</b>", styles['Heading2']))
     story.append(Paragraph(
         "1.1 A depender do plano pelo qual você optou, a Vetorial poderá:<br/>"
         "&nbsp;&nbsp;&nbsp;&nbsp;a) Prestar serviços de assessoria contábil, fiscal e de folha de pagamento (“Assessoria Mensal”);<br/>"
@@ -96,7 +90,7 @@ def generate_contract_pdf(processo):
     ))
     story.append(Spacer(1, 5*mm))
 
-    story.append(Paragraph("<b>2. PRAZO DE DURAÇÃO DOS SERVIÇOS E DO LICENCIAMENTO DE SOFTWARE:</b>", styles['ContractHeading2']))
+    story.append(Paragraph("<b>2. PRAZO DE DURAÇÃO DOS SERVIÇOS E DO LICENCIAMENTO DE SOFTWARE:</b>", styles['Heading2']))
     story.append(Paragraph(
         "2.1 A prestação dos serviços e o Licenciamento de Software previstos neste contrato terá vigência conforme abaixo:<br/>"
         "&nbsp;&nbsp;&nbsp;&nbsp;a) Se você contratou apenas a Abertura de Empresa (sem os serviços de Assessoria Mensal): O prazo de duração será pelo tempo necessário à finalização de seu processo de abertura, contados a partir do aceite deste contrato. No entanto, se você não finalizar seu cadastro na plataforma ou não enviar todas as informações e documentações necessárias dentro prazo estabelecido em atendimento (no máximo 90 dias), seu contrato será terminado e nenhum valor pago será restituído.<br/>"
@@ -118,7 +112,7 @@ def generate_contract_pdf(processo):
     ))
     story.append(Spacer(1, 5*mm))
 
-    story.append(Paragraph("<b>3. PREÇOS E PAGAMENTOS:</b>", styles['ContractHeading2']))
+    story.append(Paragraph("<b>3. PREÇOS E PAGAMENTOS:</b>", styles['Heading2']))
     story.append(Paragraph(
         "3.1 Os valores dos serviços de Assessoria Mensal e das funcionalidades de software correspondentes à Abertura de Empresa e às Funcionalidades Adicionais podem variar de acordo com o plano contratado e as características de sua empresa. Os valores estão disponíveis para consulta na Plataforma Vetorial.",
         styles['Justify']
@@ -161,7 +155,7 @@ def generate_contract_pdf(processo):
     ))
     story.append(Spacer(1, 5*mm))
 
-    story.append(Paragraph("<b>4. COMO SERÁ REALIZADA A ABERTURA DE EMPRESA:</b>", styles['ContractHeading2']))
+    story.append(Paragraph("<b>4. COMO SERÁ REALIZADA A ABERTURA DE EMPRESA:</b>", styles['Heading2']))
     story.append(Paragraph(
         "4.1 Para a Abertura de Empresa, as seguintes funcionalidades do Software da Vetorial Tecnologia estarão disponíveis:<br/>"
         "&nbsp;&nbsp;&nbsp;&nbsp;a) Consulta em órgãos públicos: consulta prévia da localização do imóvel onde se pretende instalar a empresa na Prefeitura e da viabilidade de nome na Junta Comercial;<br/>"
@@ -215,7 +209,7 @@ def generate_contract_pdf(processo):
     ))
     story.append(Spacer(1, 5*mm))
 
-    story.append(Paragraph("<b>5. COMO SERÃO REALIZADOS OS SERVIÇOS DE ASSESSORIA CONTÁBIL, COM ROTINAS MENSAIS FISCAIS E DE FOLHA DE PAGAMENTO:</b>", styles['ContractHeading2']))
+    story.append(Paragraph("<b>5. COMO SERÃO REALIZADOS OS SERVIÇOS DE ASSESSORIA CONTÁBIL, COM ROTINAS MENSAIS FISCAIS E DE FOLHA DE PAGAMENTO:</b>", styles['Heading2']))
     story.append(Paragraph(
         "5.1 É condição essencial para a prestação dos serviços de Assessoria Mensal, sob pena de cancelamento dos serviços e término do contrato, que você adquira e nos forneça o certificado digital de sua empresa (e-CNPJ) Modelo A1, emitido pelo sócio administrador responsável na Receita Federal do Brasil, bem como Procuração e-CAC para a Vetorial Contabilidade, cuja falta pode sujeitar você a multas e penalidades não reembolsáveis pela Vetorial.",
         styles['Justify']
@@ -308,7 +302,7 @@ def generate_contract_pdf(processo):
     ))
     story.append(Spacer(1, 5*mm))
 
-    story.append(Paragraph("<b>6. SERVIÇOS PRESTADOS POR PARCEIROS DA VETORIAL:</b>", styles['ContractHeading2']))
+    story.append(Paragraph("<b>6. SERVIÇOS PRESTADOS POR PARCEIROS DA VETORIAL:</b>", styles['Heading2']))
     story.append(Paragraph(
         "6.1 A Vetorial poderá disponibilizar, em caráter não-contributário, serviços, produtos e ferramentas de empresas parceiras com condições especiais e até com integração à Plataforma Vetorial, tais como: contas digitais, serviços e soluções financeiras, planos de saúde, produtos de seguros, softwares, sistemas de gestão e outros. Tais produtos, serviços e ferramentas são fornecidos pelas empresas parceiras da Vetorial e seu fornecimento é de exclusiva responsabilidade destas. Esses serviços não fazem parte dos serviços fornecidos pela Vetorial, de forma que a Vetorial não está obrigada a manter sua ativação disponível ao longo da vigência deste contrato.",
         styles['Justify']
@@ -319,7 +313,7 @@ def generate_contract_pdf(processo):
     ))
     story.append(Spacer(1, 5*mm))
 
-    story.append(Paragraph("<b>7. CANCELAMENTO DOS SERVIÇOS, DO LICENCIAMENTO DE SOFTWARE E TÉRMINO DO CONTRATO:</b>", styles['ContractHeading2']))
+    story.append(Paragraph("<b>7. CANCELAMENTO DOS SERVIÇOS, DO LICENCIAMENTO DE SOFTWARE E TÉRMINO DO CONTRATO:</b>", styles['Heading2']))
     story.append(Paragraph(
         "7.1 A Vetorial poderá solicitar o término deste contrato a qualquer tempo, mediante aviso prévio de 30 (trinta) dias. Você também poderá solicitar o encerramento do contrato e, consequentemente, o cancelamento dos serviços e/ou do Licenciamento de Software, desde que observado o aviso prévio de 30 (trinta) dias e as condições abaixo:<br/>"
         "&nbsp;&nbsp;&nbsp;&nbsp;a) Cancelamento durante o processo de Abertura de Empresa: será aplicada uma multa no valor de R\$ 200,00 (duzentos reais). Após o processamento dos documentos ou emissão de seu CNPJ pelo software, o valor adiantado pelo licenciamento não será mais devolvido e, caso a abertura da empresa tenha sido contratada em conjunto com a assessoria contábil, com rotinas mensais fiscais e de folha de pagamento, também serão aplicadas outras multas previstas neste contrato. Seu contrato será automaticamente cancelado pela Vetorial, sem direito a devolução dos valores já pagos, se após o prazo estabelecido pelo atendimento, ou se após o prazo da cláusula 1.5, contados a partir do aceite deste contrato, você não finalizar seu cadastro na Plataforma Vetorial, não enviar os documentos e informações solicitadas ou deixar de realizar pagamentos e protocolos necessários para a abertura de sua empresa.<br/>"
@@ -362,7 +356,7 @@ def generate_contract_pdf(processo):
     ))
     story.append(Spacer(1, 5*mm))
 
-    story.append(Paragraph("<b>8. RESPONSABILIDADE DE ADMINISTRAÇÃO</b>", styles['ContractHeading2']))
+    story.append(Paragraph("<b>8. RESPONSABILIDADE DE ADMINISTRAÇÃO</b>", styles['Heading2']))
     story.append(Paragraph(
         "8.1 Ao assinar este contrato você declara que:<br/>"
         "&nbsp;&nbsp;&nbsp;&nbsp;a) A atividade exercida por você e pela sua empresa não é ilegal;<br/>"
@@ -381,7 +375,7 @@ def generate_contract_pdf(processo):
     ))
     story.append(Spacer(1, 5*mm))
 
-    story.append(Paragraph("<b>9. LEI GERAL DE PROTEÇÃO DE DADOS</b>", styles['ContractHeading2']))
+    story.append(Paragraph("<b>9. LEI GERAL DE PROTEÇÃO DE DADOS</b>", styles['Heading2']))
     story.append(Paragraph(
         "9.1 Ao aceitar os termos e condições deste contrato, você autoriza a Vetorial a acessar e usar todas as informações fornecidas por você durante o cadastro ou durante o atendimento, incluindo seus dados pessoais. Seus dados e informações permanecerão armazenados enquanto você for cliente, estiver utilizando os produtos e serviços da Vetorial.",
         styles['Justify']
@@ -412,7 +406,7 @@ def generate_contract_pdf(processo):
     ))
     story.append(Spacer(1, 5*mm))
 
-    story.append(Paragraph("<b>10. LICENÇA DE USO DA PLATAFORMA Vetorial:</b>", styles['ContractHeading2']))
+    story.append(Paragraph("<b>10. LICENÇA DE USO DA PLATAFORMA Vetorial:</b>", styles['Heading2']))
     story.append(Paragraph(
         "10.1 Você declara e reconhece que a Plataforma Vetorial e todo material nela disponível, inclusive modificações, atualizações e novas versões, são de propriedade da Vetorial Tecnologia Ltda e são protegidos pela legislação de direitos autorais e demais direitos de propriedade intelectual e de software.",
         styles['Justify']
@@ -443,7 +437,7 @@ def generate_contract_pdf(processo):
     ))
     story.append(Spacer(1, 5*mm))
 
-    story.append(Paragraph("<b>11. CONDIÇÕES GERAIS:</b>", styles['ContractHeading2']))
+    story.append(Paragraph("<b>11. CONDIÇÕES GERAIS:</b>", styles['Heading2']))
     story.append(Paragraph(
         "11.1 Os serviços e funcionalidades oferecidos pela Vetorial são prestados, nos termos deste contrato, nas localidades, CNAES, regimes tributários e societários específicos em que atua, conforme especificados na Plataforma Vetorial.",
         styles['Justify']
@@ -493,7 +487,7 @@ def generate_contract_pdf(processo):
         styles['Justify']
     ))
     story.append(Paragraph(
-        "11.13 Fica eleito o foro da Comarca de Salvador, Estado da Bahia, para dirimir quaisquer dúvidas ou litígios decorrentes deste Contrato, renunciando expressamente a qualquer outro, mesmo que privilegiado.",
+        "11.13 Fica eleito o foro da Comarca de Curitiba, Estado do Paraná, para dirimir quaisquer dúvidas ou litígios decorrentes deste Contrato, renunciando expressamente a qualquer outro, mesmo que privilegiado.",
         styles['Justify']
     ))
     story.append(Spacer(1, 10*mm))
@@ -523,7 +517,7 @@ def generate_contract_pdf(processo):
             story.append(Paragraph(f"[Erro ao carregar assinatura: {str(e)}]", styles['Center']))
     else:
         story.append(Paragraph("____________________________________________", styles['Center']))
-        story.append(Paragraph(f"<b>{nome_contratante}</b><br/>CONTRATANTE", styles['Center']))
+        story.append(Paragraph(f"<b>{nome_contratante}</b><br/>CONTRATANTE (Pendente de Assinatura)", styles['Center']))
         
     story.append(Spacer(1, 10*mm))
     
@@ -532,71 +526,5 @@ def generate_contract_pdf(processo):
     story.append(Paragraph("<b>VETORIAL CONTABILIDADE LTDA</b><br/>CONTRATADA", styles['Center']))
     
     doc.build(story)
-    content_buffer.seek(0)
-
-    # -------------------------------------------------------------------------
-    # Aplicação do Papel Timbrado (Background)
-    # -------------------------------------------------------------------------
-    try:
-        # Tenta localizar o arquivo de background
-        # 1. Tenta em settings.STATIC_ROOT / pdf / ... (produção)
-        # 2. Tenta em static/pdf/... (desenvolvimento)
-        
-        bg_candidates = [
-            os.path.join(settings.BASE_DIR, 'static', 'pdf', 'papeltimbrado.pdf'),
-            os.path.join(settings.BASE_DIR, 'vetorial_project', 'static', 'pdf', 'papeltimbrado.pdf'),
-        ]
-        if hasattr(settings, 'STATIC_ROOT') and settings.STATIC_ROOT:
-             bg_candidates.insert(0, os.path.join(settings.STATIC_ROOT, 'pdf', 'papeltimbrado.pdf'))
-
-        bg_path = None
-        for p in bg_candidates:
-            if os.path.exists(p):
-                bg_path = p
-                break
-        
-        if bg_path:
-            reader_content = PdfReader(content_buffer)
-            reader_bg = PdfReader(bg_path)
-            
-            if len(reader_bg.pages) > 0:
-                bg_page = reader_bg.pages[0]
-                
-                # --- Criar Mascara Branca para reduzir opacidade ---
-                # Isso desenha um retangulo branco semitransparente sobre o background original
-                try:
-                    mask_buffer = io.BytesIO()
-                    c = canvas.Canvas(mask_buffer, pagesize=A4)
-                    c.setFillAlpha(0.40)
-                    c.setFillColorRGB(1, 1, 1)
-                    c.rect(0, 0, A4[0], A4[1], fill=True, stroke=False)
-                    c.save()
-                    mask_buffer.seek(0)
-                    
-                    reader_mask = PdfReader(mask_buffer)
-                    if len(reader_mask.pages) > 0:
-                        mask_page = reader_mask.pages[0]
-                        bg_page.merge_page(mask_page, over=True)
-                except Exception as e:
-                    print(f"Erro ao criar mascara de opacidade: {e}")
-
-                writer = PdfWriter()
-
-                for page in reader_content.pages:
-                    # Mescla o background (bg_page) SOB a pagina de conteudo
-                    # over=False coloca o bg_page ATRAS do conteudo atual
-                    page.merge_page(bg_page, over=False)
-                    writer.add_page(page)
-                
-                final_buffer = io.BytesIO()
-                writer.write(final_buffer)
-                final_buffer.seek(0)
-                return final_buffer
-        
-        # Se não encontrou background ou erro, retorna original
-        return content_buffer
-
-    except Exception as e:
-        print(f"Erro ao aplicar papel timbrado: {e}")
-        content_buffer.seek(0)
-        return content_buffer
+    buffer.seek(0)
+    return buffer
