@@ -1,79 +1,364 @@
 {% extends 'base_dashboard.html' %}
 {% load static %}
 
-{% block page_title %}Minhas Notas Fiscais{% endblock %}
+{% block title %}Notas Fiscais - Vetorial{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/dashboard-modern.css' %}">
+<!-- Create/Ensure specific CSS for this page is handled here or inline style for drag-drop -->
+<style>
+    .upload-area {
+        border: 2px dashed #dee2e6;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .upload-area:hover, .upload-area.dragover {
+        border-color: #0d6efd;
+        background-color: #e9ecef;
+    }
+    .upload-icon {
+        font-size: 3rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+    .nav-tabs .nav-link {
+        color: #495057;
+        font-weight: 500;
+        border: none;
+        border-bottom: 3px solid transparent;
+        padding-bottom: 1rem;
+    }
+    .nav-tabs .nav-link.active {
+        color: #0d6efd;
+        border-bottom-color: #0d6efd;
+        font-weight: 600;
+    }
+    .table-card {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        border: 1px solid #e9ecef;
+    }
+    .badge-status-enviado { background-color: #ffc107; color: #000; }
+    .badge-status-em_analise { background-color: #17a2b8; color: #fff; }
+    .badge-status-processado { background-color: #28a745; color: #fff; }
+    .badge-status-rejeitado { background-color: #dc3545; color: #fff; }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-wrapper">
+<div class="container-fluid py-4">
     
-    <div class="dashboard-header">
-        <h1 class="dashboard-title"><i class="fas fa-file-invoice-dollar me-2"></i>Minhas Notas Fiscais</h1>
-        <p class="dashboard-subtitle">Visualize e faça download das suas notas fiscais</p>
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800 fw-bold">Notas Fiscais</h1>
+            <p class="text-muted mb-0">Gerencie suas notas fiscais recebidas e enviadas.</p>
+        </div>
+        <div class="d-none d-md-block">
+            <!-- Optional Top Action, maybe a quick upload button that jumps to tab? -->
+            <button class="btn btn-primary" onclick="triggerUploadTab()">
+                <i class="fas fa-cloud-upload-alt me-2"></i>Enviar Nova Nota
+            </button>
+        </div>
     </div>
 
-    <div class="dash-card">
-        <div class="dash-card-body">
-            {% if total_notas > 0 %}
-                <div class="alert alert-info mb-4">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Você possui <strong>{{ total_notas }}</strong> nota{{ total_notas|pluralize:"s" }} fiscal{{ total_notas|pluralize:"is" }} disponível{{ total_notas|pluralize:"is" }}.
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Tabs Layout -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+            <ul class="nav nav-tabs" id="nfTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="recebidas-tab" data-bs-toggle="tab" data-bs-target="#recebidas" type="button" role="tab" aria-controls="recebidas" aria-selected="true">
+                        <i class="fas fa-inbox me-2"></i>Recebidas da Contabilidade 
+                        <span class="badge bg-light text-dark rounded-pill ms-2">{{ total_recebidas }}</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="enviar-tab" data-bs-toggle="tab" data-bs-target="#enviar" type="button" role="tab" aria-controls="enviar" aria-selected="false">
+                        <i class="fas fa-paper-plane me-2"></i>Enviar Notas 
+                        <span class="badge bg-light text-dark rounded-pill ms-2">{{ total_enviadas }}</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card-body p-4">
+            <div class="tab-content" id="nfTabsContent">
+                
+                <!-- TAB 1: RECEBIDAS -->
+                <div class="tab-pane fade show active" id="recebidas" role="tabpanel" aria-labelledby="recebidas-tab">
+                    
+                    <!-- Search/Filters -->
+                    <div class="row mb-4 g-3 align-items-center">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                <input type="text" class="form-control border-start-0 ps-0" id="searchRecebidas" placeholder="Buscar por nome do arquivo ou data...">
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-filter me-1"></i> Filtros</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-download me-1"></i> Exportar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if total_recebidas > 0 %}
+                    <div class="table-responsive table-card">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="ps-4">Documento</th>
+                                    <th scope="col">Data Upload (Contabilidade)</th>
+                                    <th scope="col">Tamanho</th>
+                                    <th scope="col" class="text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listaRecebidas">
+                                {% for nota in notas_recebidas %}
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-light rounded p-2 me-3 text-danger">
+                                                <i class="fas fa-file-pdf fa-lg"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 text-dark">{{ nota.nome_arquivo }}</h6>
+                                                <small class="text-muted">Nota Fiscal</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <i class="far fa-calendar-alt text-muted me-1"></i> {{ nota.data_upload|date:"d/m/Y H:i" }}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary fw-normal">{{ nota.tamanho_arquivo }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{{ nota.arquivo_pdf.url }}" class="btn btn-sm btn-primary" download title="Baixar Arquivo">
+                                            <i class="fas fa-download"></i> Baixar
+                                        </a>
+                                        <a href="{{ nota.arquivo_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-secondary" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <img src="{% static 'img/empty_state.svg' %}" alt="" class="mb-3" style="max-height: 150px; opacity: 0.5;">
+                        <h5 class="text-muted">Nenhuma nota fiscal recebida ainda.</h5>
+                        <p class="text-secondary small">Quando a contabilidade enviar notas para você, elas aparecerão aqui.</p>
+                    </div>
+                    {% endif %}
                 </div>
 
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th><i class="fas fa-file-pdf me-2"></i>Arquivo</th>
-                                <th><i class="fas fa-calendar me-2"></i>Data do Envio</th>
-                                <th><i class="fas fa-weight me-2"></i>Tamanho</th>
-                                <th class="text-center"><i class="fas fa-download me-2"></i>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for nota in notas_fiscais %}
-                            <tr>
-                                <td>
-                                    <i class="fas fa-file-pdf text-danger me-2"></i>
-                                    <strong>{{ nota.nome_arquivo }}</strong>
-                                </td>
-                                <td>
-                                    {{ nota.data_upload|date:"d/m/Y \à\s H:i" }}
-                                </td>
-                                <td>
-                                    <span class="badge bg-secondary">{{ nota.tamanho_arquivo }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <a href="{{ nota.arquivo_pdf.url }}" 
-                                       class="btn btn-sm btn-dash-primary" 
-                                       download
-                                       target="_blank"
-                                       title="Baixar nota fiscal">
-                                        <i class="fas fa-download me-1"></i>Baixar
-                                    </a>
-                                    <a href="{{ nota.arquivo_pdf.url }}" 
-                                       class="btn btn-sm btn-dash-outline" 
-                                       target="_blank"
-                                       title="Visualizar nota fiscal">
-                                        <i class="fas fa-eye me-1"></i>Visualizar
-                                    </a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <!-- TAB 2: ENVIAR (UPLOAD) -->
+                <div class="tab-pane fade" id="enviar" role="tabpanel" aria-labelledby="enviar-tab">
+                    
+                    <div class="row g-4">
+                        <!-- Upload Area -->
+                        <div class="col-lg-5">
+                            <div class="card h-100 border-light shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold mb-3">Enviar Nota Fiscal</h5>
+                                    
+                                    <form action="{% url 'users:notas_fiscais' %}" method="POST" enctype="multipart/form-data" id="uploadForm">
+                                        {% csrf_token %}
+                                        
+                                        <div class="mb-3">
+                                            <label for="descricao" class="form-label">Descrição (Opcional)</label>
+                                            <input type="text" class="form-control" id="descricao" name="descricao" placeholder="Ex: NF Compra Equipamentos">
+                                        </div>
+
+                                        <div class="upload-area mb-3" id="dropZone">
+                                            <input type="file" name="arquivo_nf" id="arquivo_nf" class="d-none" accept=".pdf,.xml,.zip">
+                                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                            <h6 class="fw-bold text-dark">Arraste e solte seu arquivo aqui</h6>
+                                            <p class="text-muted small mb-3">ou clique para selecionar</p>
+                                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="document.getElementById('arquivo_nf').click()">Selecionar Arquivo</button>
+                                        </div>
+                                        
+                                        <div id="fileInfo" class="d-none mb-3 p-2 bg-light rounded border d-flex justify-content-between align-items-center">
+                                            <span class="text-truncate" id="fileName">nome_do_arquivo.pdf</span>
+                                            <button type="button" class="btn-close small" id="clearFile"></button>
+                                        </div>
+
+                                        <div class="alert alert-light border small text-muted">
+                                            <ul class="mb-0 ps-3">
+                                                <li>Formatos aceitos: <strong>PDF, XML, ZIP</strong></li>
+                                                <li>Tamanho máximo: <strong>10MB</strong></li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="d-grid">
+                                            <button type="submit" class="btn btn-primary btn-lg" id="btnSubmit" disabled>
+                                                <i class="fas fa-paper-plane me-2"></i> Enviar Nota
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- History Area -->
+                        <div class="col-lg-7">
+                            <h5 class="fw-bold mb-3">Histórico de Envios</h5>
+                            {% if total_enviadas > 0 %}
+                            <div class="table-responsive table-card">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="ps-4">Arquivo</th>
+                                            <th>Enviado em</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for nota in notas_enviadas %}
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <i class="fas fa-file-alt text-secondary me-2"></i>
+                                                    <div>
+                                                        <span class="d-block fw-medium text-dark">{{ nota.nome_arquivo }}</span>
+                                                        {% if nota.descricao %}
+                                                        <small class="text-muted">{{ nota.descricao|truncatechars:30 }}</small>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{ nota.data_envio|date:"d/m/Y H:i" }}</td>
+                                            <td>
+                                                <span class="badge badge-status-{{ nota.status }} rounded-pill px-3">
+                                                    {{ nota.get_status_display }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="text-center py-5 bg-light rounded border border-dashed">
+                                <p class="text-muted mb-0">Você ainda não enviou notas fiscais.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
                 </div>
-            {% else %}
-                <div class="text-center py-5">
-                    <i class="fas fa-file-invoice-dollar fa-4x text-muted mb-3"></i>
-                    <h3>Nenhuma nota fiscal disponível</h3>
-                    <p class="text-muted">Quando sua equipe enviar notas fiscais, elas aparecerão aqui.</p>
-                </div>
-            {% endif %}
+            </div>
         </div>
     </div>
 </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function triggerUploadTab() {
+        var triggerEl = document.querySelector('#enviar-tab')
+        var tab = new bootstrap.Tab(triggerEl)
+        tab.show()
+    }
+
+    // Drag and Drop Logic
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('arquivo_nf');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const clearFile = document.getElementById('clearFile');
+    const btnSubmit = document.getElementById('btnSubmit');
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // Highlight drop zone when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        dropZone.classList.add('dragover');
+    }
+
+    function unhighlight(e) {
+        dropZone.classList.remove('dragover');
+    }
+
+    // Handle dropped files
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+    }
+
+    fileInput.addEventListener('change', function() {
+        handleFiles(this.files);
+    });
+
+    function handleFiles(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            fileInput.files = files; // Sync if dropped
+            fileName.textContent = file.name;
+            dropZone.classList.add('d-none');
+            fileInfo.classList.remove('d-none');
+            btnSubmit.disabled = false;
+        }
+    }
+
+    clearFile.addEventListener('click', function() {
+        fileInput.value = '';
+        fileInfo.classList.add('d-none');
+        dropZone.classList.remove('d-none');
+        btnSubmit.disabled = true;
+    });
+
+    // Simple Client-side Search for Received Table
+    document.getElementById('searchRecebidas').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#listaRecebidas tr');
+        rows.forEach(row => {
+            let text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? '' : 'none';
+        });
+    });
+</script>
 {% endblock %}

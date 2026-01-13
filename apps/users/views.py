@@ -191,16 +191,46 @@ def api_certidoes_status(request):
 @login_required
 def notas_fiscais(request):
     """
-    View para o cliente visualizar suas próprias notas fiscais.
+    View para o cliente visualizar e enviar notas fiscais.
     """
-    from apps.documents.models import NotaFiscal
+    from apps.documents.models import NotaFiscal, NotaFiscalCliente
     
-    # Buscar todas as notas fiscais do usuário logado
-    notas_fiscais_list = NotaFiscal.objects.filter(cliente=request.user).order_by('-data_upload')
+    if request.method == 'POST':
+        arquivo = request.FILES.get('arquivo_nf')
+        descricao = request.POST.get('descricao', '')
+        
+        if arquivo:
+            # Validar tamanho/extensão se necessário (usando utils existente se houver)
+            # from .utils import validate_file_upload
+            # is_valid, err = validate_file_upload(arquivo)
+            # if not is_valid: messages.error...
+            
+            try:
+                NotaFiscalCliente.objects.create(
+                    cliente=request.user,
+                    arquivo=arquivo,
+                    descricao=descricao
+                )
+                messages.success(request, 'Nota fiscal enviada com sucesso! A equipe de contabilidade será notificada.')
+                return redirect('users:notas_fiscais')
+            except Exception as e:
+                messages.error(request, f'Erro ao enviar arquivo: {str(e)}')
+        else:
+            messages.error(request, 'Por favor, selecione um arquivo para enviar.')
+            
+    # Buscar todas as notas fiscais do usuário logado (Recebidas)
+    notas_recebidas = NotaFiscal.objects.filter(cliente=request.user).order_by('-data_upload')
+    
+    # Buscar notas enviadas pelo cliente
+    notas_enviadas = NotaFiscalCliente.objects.filter(cliente=request.user).order_by('-data_envio')
     
     context = {
-        'notas_fiscais': notas_fiscais_list,
-        'total_notas': notas_fiscais_list.count(),
+        'notas_fiscais': notas_recebidas, # Manter compatibilidade se o template antigo for usado temporariamente
+        'notas_recebidas': notas_recebidas,
+        'notas_enviadas': notas_enviadas,
+        'total_notas': notas_recebidas.count(),
+        'total_recebidas': notas_recebidas.count(),
+        'total_enviadas': notas_enviadas.count(),
     }
     
     return render(request, 'users/notas_fiscais.html', context)

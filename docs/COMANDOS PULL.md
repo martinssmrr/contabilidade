@@ -1,6 +1,10 @@
 comandos quando troca apenas html e imagens
 
 
+# Link SSH
+ssh root@72.60.144.18
+
+
 # 1. Primeiro, vamos fazer o deploy das alterações nos templates
 cd /root/vetorial
 git pull origin master
@@ -63,5 +67,11 @@ docker-compose -f docker-compose.prod.yml ps
 # 7. Verificar logs (opcional)
 docker-compose -f docker-compose.prod.yml logs --tail 50 web
 
+
+# 8. Reconstruir a imagem 
+docker-compose -f docker-compose.prod.yml build --no-cache
+
+# 9. Subir os containers
+docker-compose -f docker-compose.prod.yml up -d
 
 

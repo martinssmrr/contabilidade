@@ -532,3 +532,73 @@ class DocumentoCliente(models.Model):
     def get_absolute_url(self):
         """Retorna a URL para visualizar este documento."""
         return f"/usuarios/documentos/{self.id}/"
+
+
+def nota_fiscal_cliente_upload_path(instance, filename):
+    """
+    Define o caminho de upload das notas fiscais enviadas pelos clientes.
+    """
+    now = timezone.now()
+    return f'notas_clientes/{now.year}/{now.month:02d}/cliente_{instance.cliente.id}/{filename}'
+
+
+class NotaFiscalCliente(models.Model):
+    """
+    Modelo para Notas Fiscais enviadas pelo cliente para a contabilidade.
+    """
+    STATUS_CHOICES = [
+        ('enviado', 'Enviado'),
+        ('em_analise', 'Em Análise'),
+        ('processado', 'Processado'),
+        ('rejeitado', 'Rejeitado'),
+    ]
+
+    cliente = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='notas_fiscais_enviadas_cliente',
+        verbose_name='Cliente'
+    )
+    arquivo = models.FileField(
+        upload_to=nota_fiscal_cliente_upload_path, 
+        verbose_name='Arquivo'
+    )
+    descricao = models.CharField(
+        max_length=255, 
+        verbose_name='Descrição', 
+        blank=True
+    )
+    data_envio = models.DateTimeField(
+        auto_now_add=True, 
+        verbose_name='Data de Envio'
+    )
+    status = models.CharField(
+        max_length=20, 
+        choices=STATUS_CHOICES, 
+        default='enviado', 
+        verbose_name='Status'
+    )
+
+    class Meta:
+        verbose_name = 'Nota Fiscal (Cliente)'
+        verbose_name_plural = 'Notas Fiscais (Clientes)'
+        ordering = ['-data_envio']
+        
+    def __str__(self):
+        return f"NF Enviada - {self.cliente} - {self.data_envio.strftime('%d/%m/%Y')}"
+        
+    @property
+    def nome_arquivo(self):
+        if self.arquivo:
+            return os.path.basename(self.arquivo.name)
+        return "Sem arquivo"
+        
+    @property
+    def tamanho_arquivo(self):
+        if self.arquivo:
+            size = self.arquivo.size
+            for unit in ['B', 'KB', 'MB', 'GB']:
+                if size < 1024.0:
+                    return f"{size:.1f} {unit}"
+                size /= 1024.0
+        return "0 B"
