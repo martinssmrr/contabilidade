@@ -34,8 +34,8 @@
 
 /* Coluna 1: Marca */
 .brand-col {
-    flex: 1 1 300px; /* Cresce, encolhe, base de 300px */
-    max-width: 350px;
+    flex: 0 0 280px; /* Fixo em 280px para dar espaço aos links */
+    max-width: 280px;
 }
 
 .footer-logo {
@@ -76,14 +76,15 @@
 /* Grupo de Links (Colunas 2, 3, 4, 5) */
 .links-group {
     display: flex;
-    flex: 2 1 400px;
+    flex: 1; /* Ocupa o restante do espaço */
     justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
+    gap: 15px;
+    flex-wrap: nowrap; /* Força ficar na mesma linha em telas grandes */
 }
 
 .link-col {
-    min-width: 140px;
+    min-width: auto; /* Deixa o conteúdo definir ou o flex encolher */
+    flex: 1; /* Distribui o espaço igualmente */
 }
 
 .link-col ul {
@@ -220,6 +221,7 @@
     /* Centralizar links e itens no mobile */
     .links-group {
         justify-content: center;
+        flex-wrap: wrap; /* Permite quebrar linha no mobile */
     }
     
     .social-icons, .legal-info {

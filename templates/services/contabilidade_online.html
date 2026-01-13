@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Contabilidade Online | Vetorial Contabilidade{% endblock %}
+{% block title %}Contabilidade Online para E-commerce, PJ e Serviços | Vetorial{% endblock %}
+{% block meta_description %}Contabilidade Online completa, simples e econômica. Abertura de empresa grátis, emissor de notas ilimitado e atendimento humanizado. Comece agora!{% endblock %}
 
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -40,23 +41,24 @@
         right: 0;
         width: 50%;
         height: 100%;
-        background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAwIDAgTDAgMTAwIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==');
-        opacity: 0.3;
-        mask-image: linear-gradient(to left, black, transparent);
-        -webkit-mask-image: linear-gradient(to left, black, transparent);
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+        opacity: 0.6;
     }
 
     .hero-title {
         font-weight: 800;
-        font-size: 3.5rem;
+        font-size: 3rem;
         line-height: 1.1;
         margin-bottom: 1.5rem;
         letter-spacing: -1px;
     }
+    @media(min-width: 992px) {
+        .hero-title { font-size: 3.5rem; }
+    }
 
     .hero-subtitle {
         font-size: 1.25rem;
-        opacity: 0.9;
+        opacity: 0.95;
         font-weight: 300;
         margin-bottom: 2.5rem;
         max-width: 600px;
@@ -72,12 +74,33 @@
         border: none;
         transition: all 0.3s ease;
         box-shadow: 0 4px 15px rgba(46, 214, 107, 0.3);
+        text-decoration: none;
+        display: inline-block;
     }
 
     .btn-hero:hover {
         background-color: #25b359;
         transform: translateY(-3px);
         box-shadow: 0 10px 25px rgba(46, 214, 107, 0.4);
+        color: white;
+    }
+
+    .btn-outline-hero {
+        background-color: transparent;
+        color: white;
+        border: 2px solid rgba(255,255,255,0.3);
+        padding: 14px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-outline-hero:hover {
+        background-color: rgba(255,255,255,0.1);
+        border-color: white;
         color: white;
     }
 
@@ -123,7 +146,7 @@
     /* Timeline Section */
     .timeline-section {
         position: relative;
-        padding: 80px 0;
+        padding: 100px 0;
         background-color: var(--bg-light);
     }
 
@@ -132,15 +155,16 @@
         justify-content: center;
         flex-wrap: wrap;
         position: relative;
+        margin-top: 60px;
     }
 
     .timeline-steps::before {
         content: "";
         position: absolute;
-        top: 50px;
-        left: 10%;
-        right: 10%;
-        height: 2px;
+        top: 40px;
+        left: 15%;
+        right: 15%;
+        height: 3px;
         background: #e2e8f0;
         z-index: 0;
     }
@@ -156,19 +180,20 @@
     }
 
     .step-circle {
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
         background: white;
-        border: 2px solid #e2e8f0;
+        border: 3px solid #e2e8f0;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 auto 20px;
-        font-size: 2rem;
+        font-size: 1.8rem;
         color: var(--primary-blue);
         box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         transition: all 0.3s ease;
+        position: relative;
     }
 
     .timeline-step:hover .step-circle {
@@ -176,13 +201,14 @@
         background: var(--primary-blue);
         color: white;
         transform: scale(1.1);
+        box-shadow: 0 10px 25px rgba(12, 99, 209, 0.3);
     }
 
     /* Included Services */
     .included-card {
         background: white;
         border-radius: 12px;
-        padding: 1.5rem;
+        padding: 1.25rem 1.5rem;
         display: flex;
         align-items: center;
         box-shadow: 0 4px 6px rgba(0,0,0,0.02);
@@ -200,23 +226,68 @@
         color: var(--accent-green);
         margin-right: 1rem;
         font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    /* Pricing Section */
+    .pricing-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        border: 1px solid #f1f5f9;
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pricing-card.popular {
+        border: 2px solid var(--primary-blue);
+        box-shadow: 0 20px 40px rgba(12, 99, 209, 0.15);
+    }
+
+    .pricing-badge {
+        position: absolute;
+        top: 20px;
+        right: -30px;
+        background: var(--accent-green);
+        color: white;
+        padding: 5px 40px;
+        transform: rotate(45deg);
+        font-size: 0.8rem;
+        font-weight: bold;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    }
+
+    .price-value {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--text-dark);
+        line-height: 1;
+        margin: 20px 0 10px;
+    }
+
+    .price-period {
+        font-size: 1rem;
+        color: var(--text-muted);
+        font-weight: 400;
     }
 
     /* Testimonials */
     .testimonial-card {
         background: white;
-        padding: 2rem;
+        padding: 2.5rem;
         border-radius: 16px;
         box-shadow: var(--card-shadow);
         border: 1px solid rgba(0,0,0,0.03);
+        transition: transform 0.3s ease;
     }
 
-    .testimonial-author img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-right: 1rem;
+    .testimonial-card:hover {
+        transform: translateY(-5px);
     }
 
     /* CTA Final */
@@ -242,113 +313,153 @@
         border-radius: 50%;
     }
 
+    .faq-item {
+        background: white;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        border: 1px solid #f1f5f9;
+        overflow: hidden;
+    }
+
+    .accordion-button:not(.collapsed) {
+        color: var(--primary-blue);
+        background-color: rgba(12, 99, 209, 0.05);
+        box-shadow: inset 0 -1px 0 rgba(0,0,0,.125);
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: rgba(12, 99, 209, 0.1);
+    }
+
     @media (max-width: 991px) {
-        .hero-title { font-size: 2.5rem; }
         .timeline-steps::before { display: none; }
-        .timeline-step { margin-bottom: 40px; }
+        .timeline-steps { flex-direction: column; align-items: center; margin-top: 30px; }
+        .timeline-step { margin-bottom: 40px; width: 100%; }
+        .step-circle { margin-bottom: 15px; }
+        .timeline-step::after {
+            content: "";
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 20px;
+            background: #e2e8f0;
+        }
+        .timeline-step:last-child::after { display: none; }
     }
 </style>
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AccountingService",
+      "name": "Vetorial Contabilidade",
+      "image": "https://contabilvetorial.com.br/static/img/logo.png",
+      "description": "Contabilidade online completa para pequenas e médias empresas. Abertura grátis, emissor de notas e suporte humanizado.",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "BR"
+      },
+      "telephone": "+5561998311920"
+    }
+</script>
 {% endblock %}
 
 {% block content %}
 
 <!-- 1. Hero Section -->
 <section class="hero-section">
-    <div class="container">
+    <div class="container position-relative z-1">
         <div class="row align-items-center">
-            <div class="col-lg-6 animate-fade-in">
-                <h1 class="hero-title">Contabilidade Online Completa e Sem Complicações</h1>
-                <p class="hero-subtitle">Simplifique a gestão da sua empresa com tecnologia de ponta e o suporte humanizado que você merece. Tudo o que você precisa, em um só lugar.</p>
-                <div class="d-flex gap-3 flex-wrap">
-                    <a href="#planos" class="btn-hero">Ver Planos</a>
-                    <a href="#contato" class="btn btn-outline-light rounded-pill px-4 py-3 fw-bold" style="border-width: 2px;">Falar com Especialista</a>
+            <div class="col-lg-7 animate-fade-in">
+                <span class="badge bg-white text-primary fw-bold px-3 py-2 rounded-pill mb-3 shadow-sm"><i class="fas fa-bolt me-2"></i> Rápido, Seguro e 100% Digital</span>
+                <h1 class="hero-title">Contabilidade Online que Simplifica sua Vida</h1>
+                <p class="hero-subtitle">Deixe a burocracia com a gente e foque no crescimento do seu negócio. Abertura de empresa grátis, impostos em dia e atendimento que resolve.</p>
+                <div class="d-flex flex-column flex-sm-row gap-3">
+                    <a href="https://wa.me/5561998311920?text=Quero%20abrir%20minha%20empresa%20com%20a%20Vetorial" target="_blank" class="btn-hero text-center" aria-label="Abrir Empresa Grátis">
+                        Abrir Empresa Grátis
+                    </a>
+                    <a href="https://wa.me/5561998311920?text=Quero%20trocar%20de%20contador%20para%20a%20Vetorial" target="_blank" class="btn-outline-hero text-center" aria-label="Trocar de Contador">
+                        Trocar de Contador
+                    </a>
                 </div>
-                <div class="mt-4 d-flex align-items-center gap-3 text-white-50 small">
-                    <span><i class="fas fa-check-circle text-success me-1"></i> Abertura Grátis*</span>
-                    <span><i class="fas fa-check-circle text-success me-1"></i> Migração Fácil</span>
-                    <span><i class="fas fa-check-circle text-success me-1"></i> Atendimento Rápido</span>
+                <div class="mt-4 pt-3 border-top border-white border-opacity-25 d-flex align-items-center gap-4 text-white-50 small flex-wrap">
+                    <div class="d-flex align-items-center"><i class="fas fa-check-circle text-success me-2 fs-5"></i> <span>Economia de até 40%</span></div>
+                    <div class="d-flex align-items-center"><i class="fas fa-check-circle text-success me-2 fs-5"></i> <span>Zero Papelada</span></div>
+                    <div class="d-flex align-items-center"><i class="fas fa-check-circle text-success me-2 fs-5"></i> <span>Suporte Humanizado</span></div>
                 </div>
             </div>
-            <div class="col-lg-6 d-none d-lg-block text-center">
-                <!-- Custom SVG Illustration -->
-                <svg width="500" height="400" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 20px 40px rgba(0,0,0,0.2)); animation: float 6s ease-in-out infinite;">
-                    <rect x="80" y="60" width="340" height="280" rx="20" fill="white" fill-opacity="0.95"/>
-                    <!-- Header Bar -->
-                    <rect x="80" y="60" width="340" height="60" rx="20" fill="#f1f5f9"/>
-                    <circle cx="110" cy="90" r="6" fill="#cbd5e1"/>
-                    <circle cx="130" cy="90" r="6" fill="#cbd5e1"/>
-                    <circle cx="150" cy="90" r="6" fill="#cbd5e1"/>
-                    
-                    <!-- Dashboard Elements -->
-                    <rect x="110" y="150" width="130" height="80" rx="10" fill="#e0f2fe"/>
-                    <rect x="260" y="150" width="130" height="80" rx="10" fill="#dcfce7"/>
-                    <rect x="110" y="250" width="280" height="60" rx="10" fill="#f8fafc"/>
-                    
-                    <!-- Graph Line -->
-                    <path d="M130 200 L160 180 L190 190 L220 160" stroke="#0c63d1" stroke-width="3" stroke-linecap="round"/>
-                    
-                    <!-- Floating Elements -->
-                    <g transform="translate(380, 120)">
-                        <circle cx="0" cy="0" r="35" fill="#2ed66b"/>
-                        <path d="M-10 0 L-3 7 L 10 -7" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                    </g>
-                    
-                    <g transform="translate(60, 300)">
-                        <rect x="0" y="0" width="60" height="60" rx="15" fill="#0c63d1"/>
-                        <text x="18" y="38" font-family="Arial" font-weight="bold" font-size="24" fill="white">%</text>
-                    </g>
-                </svg>
+            <div class="col-lg-5 d-none d-lg-block text-center position-relative">
+                <!-- Ilustração Otimizada -->
+               <img src="{% static 'img/hero-dashboard-mockup.png'|default:'https://cdn-icons-png.flaticon.com/512/2920/2920349.png' %}" 
+                    alt="Plataforma de Contabilidade Online Vetorial" 
+                    class="img-fluid" 
+                    style="filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3)); max-width: 450px; animation: float 6s ease-in-out infinite;">
             </div>
         </div>
     </div>
 </section>
 
-<!-- 2. O que é Contabilidade Online -->
+<!-- 2. Problema vs Solução (O que é) -->
 <section class="py-5 bg-white">
     <div class="container py-5">
         <div class="row align-items-center g-5">
             <div class="col-lg-5">
-                <h2 class="display-6 fw-bold mb-4 text-dark">O que é a Contabilidade Online?</h2>
-                <p class="lead text-muted mb-4">É a evolução do escritório tradicional. Unimos a expertise de contadores reais com a eficiência da tecnologia para entregar um serviço mais rápido, seguro e econômico.</p>
-                <p class="text-muted mb-4">Você envia documentos, emite notas e acompanha seus impostos através de uma plataforma simples, enquanto nossa equipe cuida de toda a burocracia legal.</p>
-                <a href="#como-funciona" class="btn btn-outline-primary rounded-pill px-4 fw-semibold">Entenda como funciona</a>
+                <h2 class="display-6 fw-bold mb-4 text-dark">O fim da dor de cabeça com contabilidade</h2>
+                <p class="lead text-muted mb-4">A contabilidade tradicional é lenta, cara e burocrática. A <strong>Vetorial Contabilidade Online</strong> une a expertise de contadores reais com a eficiência da tecnologia.</p>
+                <div class="d-flex align-items-start mb-3">
+                    <div class="text-danger me-3 mt-1"><i class="fas fa-times-circle fa-lg"></i></div>
+                    <div><strong class="d-block text-dark">Escritório Tradicional</strong>
+                    <small class="text-muted">Malotes, papelada, demora para responder e honorários altos.</small></div>
+                </div>
+                <div class="d-flex align-items-start mb-4">
+                    <div class="text-success me-3 mt-1"><i class="fas fa-check-circle fa-lg"></i></div>
+                    <div><strong class="d-block text-primary">Vetorial Online</strong>
+                    <small class="text-muted">Tudo digital, atendimento via WhatsApp, economia e agilidade.</small></div>
+                </div>
+                <a href="#como-funciona" class="btn btn-outline-primary rounded-pill px-4 fw-semibold icon-link icon-link-hover">
+                    Ver como funciona <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
             <div class="col-lg-7">
                 <div class="row g-4">
                     <div class="col-md-6">
-                        <div class="feature-card p-4">
-                            <div class="icon-box mb-3" style="width: 50px; height: 50px; font-size: 1.2rem;">
-                                <i class="fas fa-laptop-code"></i>
+                        <div class="feature-card p-4 h-100">
+                            <div class="icon-box mb-3">
+                                <i class="fas fa-mobile-alt"></i>
                             </div>
-                            <h4 class="h5 fw-bold">100% Digital</h4>
-                            <p class="small text-muted mb-0">Sem papelada e sem malotes. Tudo na nuvem.</p>
+                            <h3 class="h5 fw-bold">Controle na Palma da Mão</h3>
+                            <p class="text-muted mb-0">Envie notas, visualize guias e fale com seu contador pelo celular ou computador.</p>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="feature-card p-4 mt-md-4">
-                            <div class="icon-box mb-3" style="width: 50px; height: 50px; font-size: 1.2rem;">
-                                <i class="fas fa-user-shield"></i>
+                        <div class="feature-card p-4 h-100">
+                            <div class="icon-box mb-3">
+                                <i class="fas fa-shield-alt"></i>
                             </div>
-                            <h4 class="h5 fw-bold">Segurança Total</h4>
-                            <p class="small text-muted mb-0">Seus dados protegidos com criptografia de ponta.</p>
+                            <h3 class="h5 fw-bold">Segurança Fiscal</h3>
+                            <p class="text-muted mb-0">Monitoramento constante do seu CNPJ para evitar multas e irregularidades.</p>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="feature-card p-4" style="margin-top: -1.5rem;">
-                            <div class="icon-box mb-3" style="width: 50px; height: 50px; font-size: 1.2rem;">
-                                <i class="fas fa-piggy-bank"></i>
+                        <div class="feature-card p-4 h-100">
+                            <div class="icon-box mb-3">
+                                <i class="fas fa-wallet"></i>
                             </div>
-                            <h4 class="h5 fw-bold">Mais Econômico</h4>
-                            <p class="small text-muted mb-0">Mensalidades que cabem no bolso do pequeno empresário.</p>
+                            <h3 class="h5 fw-bold">Mensalidade Justa</h3>
+                            <p class="text-muted mb-0">Preços que cabem no orçamento de quem está começando ou quer crescer.</p>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="feature-card p-4 mt-md-2">
-                            <div class="icon-box mb-3" style="width: 50px; height: 50px; font-size: 1.2rem;">
-                                <i class="fas fa-headset"></i>
+                        <div class="feature-card p-4 h-100">
+                            <div class="icon-box mb-3">
+                                <i class="fas fa-comments"></i>
                             </div>
-                            <h4 class="h5 fw-bold">Suporte Real</h4>
-                            <p class="small text-muted mb-0">Atendimento por WhatsApp, E-mail e Telefone.</p>
+                            <h3 class="h5 fw-bold">Atendimento Real</h3>
+                            <p class="text-muted mb-0">Robôs são ótimos, mas aqui você fala com especialistas de verdade quando precisa.</p>
                         </div>
                     </div>
                 </div>
@@ -357,53 +468,70 @@
     </div>
 </section>
 
-<!-- 3. Benefícios (Grid) -->
+<!-- 3. Recursos e Ferramentas incl. -->
 <section class="py-5" style="background-color: #f8fafc;">
     <div class="container py-4">
-        <div class="text-center mb-5">
-            <span class="text-primary fw-bold text-uppercase small tracking-wide">Vantagens Exclusivas</span>
-            <h2 class="display-6 fw-bold mt-2">Por que migrar para a Vetorial?</h2>
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+                <span class="text-primary fw-bold text-uppercase small tracking-wide">Plataforma Completa</span>
+                <h2 class="display-6 fw-bold mt-2">Tudo incluso na sua mensalidade</h2>
+                <p class="text-muted">Sem surpresas no fim do mês. Oferecemos um pacote completo para sua empresa.</p>
+            </div>
         </div>
-        
-        <div class="row g-4">
-            <!-- Card 1 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="feature-card text-center">
-                    <div class="icon-box mx-auto">
-                        <i class="fas fa-chart-line"></i>
+
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-4">
+                <div class="included-card">
+                    <i class="fas fa-check-circle check-icon"></i>
+                    <div>
+                        <span class="fw-bold d-block text-dark">Emissor de Notas Fiscais</span>
+                        <span class="small text-muted">Emita NF-e e NFS-e ilimitadas</span>
                     </div>
-                    <h3 class="h5 fw-bold mb-3">Redução de Custos</h3>
-                    <p class="text-muted small">Economize com mensalidades justas e evite multas por atrasos.</p>
                 </div>
             </div>
-            <!-- Card 2 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="feature-card text-center">
-                    <div class="icon-box mx-auto">
-                        <i class="fas fa-file-invoice-dollar"></i>
+            <div class="col-md-6 col-lg-4">
+                <div class="included-card">
+                    <i class="fas fa-check-circle check-icon"></i>
+                    <div>
+                        <span class="fw-bold d-block text-dark">Cálculo de Impostos</span>
+                        <span class="small text-muted">DAS, DARF, GPS e FGTS</span>
                     </div>
-                    <h3 class="h5 fw-bold mb-3">Emissor de Notas</h3>
-                    <p class="text-muted small">Emita notas fiscais de serviço ilimitadas em poucos cliques.</p>
                 </div>
             </div>
-            <!-- Card 3 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="feature-card text-center">
-                    <div class="icon-box mx-auto">
-                        <i class="fas fa-clock"></i>
+            <div class="col-md-6 col-lg-4">
+                <div class="included-card">
+                    <i class="fas fa-check-circle check-icon"></i>
+                    <div>
+                        <span class="fw-bold d-block text-dark">Obrigações Acessórias</span>
+                        <span class="small text-muted">DEFIS, DCTF, RAIS e mais</span>
                     </div>
-                    <h3 class="h5 fw-bold mb-3">Ganho de Tempo</h3>
-                    <p class="text-muted small">Automatize rotinas e foque no crescimento do seu negócio.</p>
                 </div>
             </div>
-            <!-- Card 4 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="feature-card text-center">
-                    <div class="icon-box mx-auto">
-                        <i class="fas fa-mobile-alt"></i>
+            <div class="col-md-6 col-lg-4">
+                <div class="included-card">
+                    <i class="fas fa-check-circle check-icon"></i>
+                    <div>
+                        <span class="fw-bold d-block text-dark">Folha de Pagamento</span>
+                        <span class="small text-muted">Pró-labore dos sócios</span>
                     </div>
-                    <h3 class="h5 fw-bold mb-3">App Exclusivo</h3>
-                    <p class="text-muted small">Tenha sua contabilidade na palma da mão, onde estiver.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="included-card">
+                    <i class="fas fa-check-circle check-icon"></i>
+                    <div>
+                        <span class="fw-bold d-block text-dark">Relatórios Contábeis</span>
+                        <span class="small text-muted">Balanço, DRE e Balancetes</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="included-card">
+                    <i class="fas fa-check-circle check-icon"></i>
+                    <div>
+                        <span class="fw-bold d-block text-dark">Suporte Ilimitado</span>
+                        <span class="small text-muted">Via Chat, E-mail e WhatsApp</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -414,145 +542,160 @@
 <section id="como-funciona" class="timeline-section">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="display-6 fw-bold">Como funciona a migração?</h2>
-            <p class="text-muted">É muito mais simples do que você imagina. Nós cuidamos de tudo.</p>
+            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-bold mb-3">Passo a Passo</span>
+            <h2 class="display-6 fw-bold">Como contratar a Vetorial?</h2>
+            <p class="text-muted">O processo é 100% online e a gente te guia em cada etapa.</p>
         </div>
 
         <div class="timeline-steps">
             <!-- Step 1 -->
             <div class="timeline-step">
                 <div class="step-circle">
-                    <i class="far fa-comments"></i>
+                    <span class="fw-bold">1</span>
                 </div>
-                <h4 class="h5 fw-bold">1. Conversa Inicial</h4>
-                <p class="text-muted small">Entendemos o perfil da sua empresa e indicamos o melhor plano.</p>
+                <h4 class="h5 fw-bold">Cadastro Rápido</h4>
+                <p class="text-muted small">Preencha seus dados básicos e nos conte sobre sua empresa ou ideia.</p>
             </div>
             <!-- Step 2 -->
             <div class="timeline-step">
                 <div class="step-circle">
-                    <i class="fas fa-search-dollar"></i>
+                    <span class="fw-bold">2</span>
                 </div>
-                <h4 class="h5 fw-bold">2. Diagnóstico</h4>
-                <p class="text-muted small">Analisamos a situação fiscal atual para garantir segurança.</p>
+                <h4 class="h5 fw-bold">Proposta Personalizada</h4>
+                <p class="text-muted small">Nossos consultores analisam seu perfil e indicam o plano ideal.</p>
             </div>
             <!-- Step 3 -->
             <div class="timeline-step">
                 <div class="step-circle">
-                    <i class="fas fa-file-contract"></i>
+                    <span class="fw-bold">3</span>
                 </div>
-                <h4 class="h5 fw-bold">3. Documentação</h4>
-                <p class="text-muted small">Coletamos os dados e fazemos a comunicação com o contador anterior.</p>
+                <h4 class="h5 fw-bold">Setup e Migração</h4>
+                <p class="text-muted small">Cuidamos da portabilidade do seu contador anterior ou da abertura do CNPJ.</p>
             </div>
             <!-- Step 4 -->
             <div class="timeline-step">
                 <div class="step-circle">
-                    <i class="fas fa-rocket"></i>
+                    <span class="fw-bold text-success"><i class="fas fa-check"></i></span>
                 </div>
-                <h4 class="h5 fw-bold">4. Início Imediato</h4>
-                <p class="text-muted small">Pronto! Sua empresa já está ativa em nossa plataforma.</p>
+                <h4 class="h5 fw-bold text-success">Empresa Ativa!</h4>
+                <p class="text-muted small">Você recebe os acessos à plataforma e já pode começar a usar.</p>
+            </div>
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="https://wa.me/5561998311920" class="btn btn-primary rounded-pill px-5 py-3 fw-bold shadow-sm">
+                Falar com Consultor Agora
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- 5. Planos (Pricing) -->
+<section id="planos" class="py-5 bg-white">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Planos que crescem com você</h2>
+            <p class="text-muted">Transparência total. Sem taxas de setup ou fidelidade.</p>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            <!-- Plano MEI -->
+            <div class="col-md-6 col-lg-4">
+                <div class="pricing-card">
+                    <div class="mb-4">
+                        <span class="badge bg-light text-dark border mb-2">Iniciante</span>
+                        <h3 class="h4 fw-bold">Plano MEI</h3>
+                        <p class="text-muted small">Ideal para Microempreendedores Individuais que querem profissionalizar a gestão.</p>
+                        <hr class="my-4 opacity-10">
+                        <div class="price-value">R$ 59,90<span class="price-period">/mês</span></div>
+                    </div>
+                    <ul class="list-unstyled mb-4 flex-grow-1">
+                        <li class="mb-3 d-flex align-items-center"><i class="fas fa-check text-success me-2"></i> Obrigações MEI (DASN)</li>
+                        <li class="mb-3 d-flex align-items-center"><i class="fas fa-check text-success me-2"></i> Emissor de Notas Ilimitado</li>
+                        <li class="mb-3 d-flex align-items-center"><i class="fas fa-check text-success me-2"></i> Controle de faturamento</li>
+                        <li class="mb-3 d-flex align-items-center"><i class="fas fa-check text-success me-2"></i> Suporte por Chat</li>
+                    </ul>
+                    <a href="https://wa.me/5561998311920?text=Quero%20contratar%20o%20Plano%20MEI" class="btn btn-outline-primary w-100 rounded-pill fw-bold py-2">Escolher MEI</a>
+                </div>
+            </div>
+            
+            <!-- Plano Simples Nacional -->
+            <div class="col-md-6 col-lg-4">
+                <div class="pricing-card popular">
+                    <div class="pricing-badge">MAIS POPULAR</div>
+                    <div class="mb-4">
+                        <span class="badge bg-primary text-white mb-2">Recomendado</span>
+                        <h3 class="h4 fw-bold text-primary">Simples Nacional</h3>
+                        <p class="text-muted small">Contabilidade completa para Prestadores de Serviços (ME e EPP).</p>
+                        <hr class="my-4 opacity-10">
+                        <div class="price-value text-primary">R$ 99,90<span class="price-period">/mês</span></div>
+                    </div>
+                    <ul class="list-unstyled mb-4 flex-grow-1">
+                        <li class="mb-3 d-flex align-items-center"><i class="fas fa-check text-success me-2"></i> <strong>Todas as obrigações legais</strong></li>
+                        <li class="mb-3 d-flex align-items-center"><i class="fas fa-check text-success me-2"></i> Abertura de Empresa Grátis</li>
+                        <li class="mb-3 d-flex align-items-center"><i class="fas fa-check text-success me-2"></i> Folha de pgto. sócios (Pro-labore)</li>
+                        <li class="mb-3 d-flex align-items-center"><i class="fas fa-check text-success me-2"></i> Atendimento Prioritário WhatsApp</li>
+                        <li class="mb-3 d-flex align-items-center"><i class="fas fa-check text-success me-2"></i> Balanço e relatórios anuais</li>
+                    </ul>
+                    <a href="https://wa.me/5561998311920?text=Quero%20contratar%20o%20Plano%20Simples%20Nacional" class="btn btn-primary w-100 rounded-pill fw-bold py-3 shadow-sm">Começar Agora</a>
+                </div>
+            </div>
+
+            <!-- Plano Sob Medida -->
+            <div class="col-md-6 col-lg-4">
+                <div class="pricing-card bg-dark text-white border-0">
+                    <div class="mb-4">
+                        <span class="badge bg-white text-dark mb-2">Corporativo</span>
+                        <h3 class="h4 fw-bold">Lucro Presumido</h3>
+                        <p class="text-white-50 small">Para empresas maiores ou com regimes tributários específicos.</p>
+                        <hr class="my-4 bg-white opacity-25">
+                        <div class="price-value text-white h2 mb-4">Sob Consulta</div>
+                    </div>
+                    <ul class="list-unstyled mb-4 flex-grow-1">
+                        <li class="mb-3 d-flex align-items-center"><i class="fas fa-check text-success me-2"></i> Gestão Tributária Complexa</li>
+                        <li class="mb-3 d-flex align-items-center"><i class="fas fa-check text-success me-2"></i> Consultoria Fiscal Dedicada</li>
+                        <li class="mb-3 d-flex align-items-center"><i class="fas fa-check text-success me-2"></i> BPO Financeiro (Opcional)</li>
+                        <li class="mb-3 d-flex align-items-center"><i class="fas fa-check text-success me-2"></i> Reuniões Periódicas</li>
+                    </ul>
+                    <a href="https://wa.me/5561998311920?text=Gostaria%20de%20uma%20proposta%20para%20Lucro%20Presumido" class="btn btn-light w-100 rounded-pill fw-bold py-2 text-dark">Solicitar Proposta</a>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- 5. O que está incluído -->
-<section class="py-5 bg-white">
-    <div class="container">
-        <div class="row justify-content-center mb-5">
-            <div class="col-lg-8 text-center">
-                <h2 class="display-6 fw-bold">Tudo o que sua empresa precisa</h2>
-                <p class="text-muted">Sem pegadinhas. Nossos planos incluem todas as obrigações legais.</p>
-            </div>
-        </div>
-
-        <div class="row g-3">
-            <div class="col-md-6 col-lg-4">
-                <div class="included-card">
-                    <i class="fas fa-check-circle check-icon"></i>
-                    <span class="fw-medium">Cálculo de Impostos e Guias</span>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="included-card">
-                    <i class="fas fa-check-circle check-icon"></i>
-                    <span class="fw-medium">Folha de Pagamento (Sócios/Func.)</span>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="included-card">
-                    <i class="fas fa-check-circle check-icon"></i>
-                    <span class="fw-medium">Obrigações Acessórias (DCTF, DEFIS...)</span>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="included-card">
-                    <i class="fas fa-check-circle check-icon"></i>
-                    <span class="fw-medium">Balanço e DRE Anual</span>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="included-card">
-                    <i class="fas fa-check-circle check-icon"></i>
-                    <span class="fw-medium">Atendimento via Chat/WhatsApp</span>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="included-card">
-                    <i class="fas fa-check-circle check-icon"></i>
-                    <span class="fw-medium">Emissor de Notas Fiscais</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- 6. Prova Social -->
+<!-- 6. Prova Social (Depoimentos) -->
 <section class="py-5" style="background-color: #f8fafc;">
-    <div class="container">
-        <h2 class="text-center fw-bold mb-5">O que dizem nossos clientes</h2>
-        <div class="row g-4">
+    <div class="container py-4">
+        <h2 class="text-center fw-bold mb-5">Confiança de quem usa</h2>
+        <div class="row g-4 justify-content-center">
             <div class="col-md-4">
                 <div class="testimonial-card h-100">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 50px; height: 50px; margin-right: 1rem;">R</div>
-                        <div>
-                            <h5 class="mb-0 fw-bold">Ricardo Silva</h5>
-                            <small class="text-muted">Agência de Marketing</small>
-                        </div>
-                    </div>
-                    <p class="text-muted fst-italic">"A migração foi super tranquila. O sistema é intuitivo e o suporte sempre me responde rápido. Recomendo demais!"</p>
-                    <div class="text-warning small">
+                    <div class="mb-3 text-warning">
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-muted fst-italic mb-4">"Trocar meu contador antigo pela Vetorial foi a melhor decisão. É tudo muito claro, rápido e eu economizo mais de 200 reais por mês."</p>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 48px; height: 48px; margin-right: 1rem;">JS</div>
+                        <div>
+                            <h6 class="mb-0 fw-bold text-dark">João Souza</h6>
+                            <small class="text-muted">Desenvolvedor Fullstack</small>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="testimonial-card h-100">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 50px; height: 50px; margin-right: 1rem;">F</div>
-                        <div>
-                            <h5 class="mb-0 fw-bold">Fernanda Costa</h5>
-                            <small class="text-muted">Psicóloga</small>
-                        </div>
-                    </div>
-                    <p class="text-muted fst-italic">"Eu perdia muito tempo com papelada. Agora emito minhas notas em segundos e fico tranquila com o fisco."</p>
-                    <div class="text-warning small">
+                    <div class="mb-3 text-warning">
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="testimonial-card h-100">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 50px; height: 50px; margin-right: 1rem;">M</div>
+                    <p class="text-muted fst-italic mb-4">"A plataforma é super simples de usar para emitir notas. E quando tenho dúvida, chamo no WhatsApp e resolvem na hora."</p>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-accent-green text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 48px; height: 48px; margin-right: 1rem; background-color: var(--accent-green);">MA</div>
                         <div>
-                            <h5 class="mb-0 fw-bold">Marcelo Oliveira</h5>
-                            <small class="text-muted">Desenvolvedor PJ</small>
+                            <h6 class="mb-0 fw-bold text-dark">Mariana Alves</h6>
+                            <small class="text-muted">Marketing Digital</small>
                         </div>
-                    </div>
-                    <p class="text-muted fst-italic">"Melhor custo-benefício que encontrei. Serviço profissional e preço justo para quem está começando."</p>
-                    <div class="text-warning small">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                     </div>
                 </div>
             </div>
@@ -560,15 +703,85 @@
     </div>
 </section>
 
-<!-- 7. CTA Final -->
+<!-- 7. FAQ -->
+<section class="py-5 bg-white" id="faq">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold display-6">Perguntas Frequentes</h2>
+                    <p class="text-muted">Tire suas dúvidas sobre a Vetorial Contabilidade Online.</p>
+                </div>
+                
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true">
+                                A Vetorial atende minha cidade?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                Sim! Como somos 100% online, atendemos prestadores de serviços de todo o Brasil. Cuidamos de todos os trâmites da sua cidade remotamente.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                É seguro ter contador online?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                Totalmente. Somos um escritório contábil registrado no CRC (Conselho Regional de Contabilidade) como qualquer outro, porém mais tecnológico. Seus dados são criptografados e armazenados em nuvem segura.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                Como funciona a troca de contador?
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                É muito simples. Você só precisa nos fornecer o contato do seu contador atual e nós fazemos o processo de solicitação de documentos e transferência de responsabilidade técnica. Você não precisa se indispor com ninguém.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                                Preciso ter certificado digital?
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                Sim, para a maioria das empresas o Certificado Digital A1 é necessário para emissão de notas e entrega de declarações. Se você não tem, nós te ajudamos a emitir com desconto.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 8. CTA Final -->
 <section class="py-5 bg-white">
     <div class="container">
         <div class="cta-final">
-            <h2 class="display-5 fw-bold mb-4">Pronto para modernizar sua contabilidade?</h2>
-            <p class="lead mb-5 opacity-75">Junte-se a centenas de empreendedores que já simplificaram a gestão de seus negócios.</p>
-            <a href="#contato" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold text-primary shadow-lg">
-                Quero Contratar Agora <i class="fas fa-arrow-right ms-2"></i>
-            </a>
+            <h2 class="display-5 fw-bold mb-4">Pronto para modernizar sua empresa?</h2>
+            <p class="lead mb-5 opacity-90" style="max-width: 700px; margin: 0 auto 3rem;">Junte-se a centenas de empreendedores que já simplificaram a gestão de seus negócios com a Vetorial. Sem Fidelidade.</p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="#planos" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold text-primary shadow-lg hover-scale">
+                    Ver Planos e Preços
+                </a>
+                <a href="https://wa.me/5561998311920" target="_blank" class="btn btn-outline-light btn-lg rounded-pill px-5 py-3 fw-bold hover-scale">
+                    Conversar no WhatsApp
+                </a>
+            </div>
         </div>
     </div>
 </section>

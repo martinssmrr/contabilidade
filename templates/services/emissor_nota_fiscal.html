@@ -1,51 +1,250 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Emissor de Nota Fiscal - Vetorial Contabilidade{% endblock %}
+{% block title %}Emissor de Nota Fiscal Eletrônica (NF-e) Online | Vetorial{% endblock %}
+{% block meta_description %}Emita Notas Fiscais Eletrônicas (NF-e, NFS-e) ilimitadas com o emissor da Vetorial. Simples, rápido e 100% online. Teste Grátis agora!{% endblock %}
 
 {% block content %}
-<section class="py-5 bg-light">
-    <div class="container">
+<!-- 1. Hero Section -->
+<section class="py-5 position-relative overflow-hidden" style="background: linear-gradient(135deg, #0a4fa3 0%, #0c63d1 100%); color: white;">
+    <div class="container position-relative z-1 py-5">
         <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Emissor de Nota Fiscal</h1>
-                <p class="lead mb-4">Sistema prático e eficiente para emissão de notas fiscais de serviço e produto.</p>
-                <a href="#contato" class="btn btn-primary btn-lg">Conheça o Sistema</a>
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <span class="badge bg-warning text-dark fw-bold mb-3 px-3 py-2 rounded-pill">Sistema 100% Online</span>
+                <h1 class="display-4 fw-bold mb-4">A Forma Mais Simples de Emitir Suas Notas Fiscais</h1>
+                <p class="lead mb-5 opacity-90">Esqueça a lentidão e a burocracia dos sistemas do governo. Emita NF-e e NFS-e em segundos, calcule impostos automaticamente e mantenha sua empresa regularizada.</p>
+                <div class="d-flex flex-column flex-sm-row gap-3">
+                    <a href="https://wa.me/5561998311920?text=Quero%20testar%20o%20Emissor%20de%20Notas" target="_blank" class="btn btn-warning btn-lg fw-bold px-4 py-3 text-dark shadow-sm hover-scale">
+                        Começar Teste Grátis
+                    </a>
+                    <a href="#como-funciona" class="btn btn-outline-light btn-lg fw-bold px-4 py-3 hover-scale">
+                        Ver Como Funciona
+                    </a>
+                </div>
+                <p class="mt-4 small opacity-75"><i class="fas fa-check-circle text-success me-2"></i> Junte-se a mais de 5.000 empresas satisfeitas.</p>
             </div>
-            <div class="col-lg-6">
-                <div class="bg-secondary rounded-3" style="height: 300px; width: 100%; display: flex; align-items: center; justify-content: center; color: white;">
-                    Imagem Ilustrativa - Emissor NF
+            <div class="col-lg-6 text-center">
+                <!-- Placeholder para Interface do Sistema -->
+                <div class="position-relative">
+                   <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                         alt="Sistema de Emissão de Nota Fiscal Vetorial" 
+                         class="img-fluid rounded-4 shadow-lg border border-white border-opacity-25"
+                         style="transform: perspective(1000px) rotateY(-5deg);">
+                    <!-- Floating Badge -->
+                    <div class="position-absolute bg-white text-dark p-3 rounded-3 shadow-lg d-none d-md-block bounce-animation" style="bottom: 30px; left: -20px;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-success text-white rounded-circle p-2">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0 fw-bold small">Nota Emitida!</p>
+                                <p class="mb-0 text-muted extra-small">Em menos de 30s</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Background Decoration -->
+    <div class="position-absolute top-0 end-0 opacity-10">
+        <svg width="600" height="600" fill="white" viewBox="0 0 100 100"><path d="M50 0 L100 100 L0 100 Z" /></svg>
+    </div>
+</section>
+
+<!-- 2. Problema e Solução -->
+<section class="py-5 bg-light">
+    <div class="container py-4">
+        <div class="row justify-content-center text-center mb-5">
+            <div class="col-lg-8">
+                <h2 class="fw-bold text-dark mb-3">Chega de Perder Tempo com Burocracia</h2>
+                <p class="text-muted lead">Você não abriu uma empresa para ficar brigando com sistemas lentos e complicados.</p>
+            </div>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <!-- Problema -->
+            <div class="col-md-5">
+                <div class="p-4 bg-white rounded-3 shadow-sm h-100 border-start border-5 border-danger">
+                    <h4 class="fw-bold text-danger mb-3"><i class="fas fa-times-circle me-2"></i> O Jeito Antigo</h4>
+                    <ul class="list-unstyled text-muted">
+                        <li class="mb-2"><i class="fas fa-times text-danger me-2"></i> Sites da prefeitura que vivem fora do ar</li>
+                        <li class="mb-2"><i class="fas fa-times text-danger me-2"></i> Digitação repetitiva dos mesmos dados</li>
+                        <li class="mb-2"><i class="fas fa-times text-danger me-2"></i> Medo de errar o imposto e ser multado</li>
+                        <li class="mb-2"><i class="fas fa-times text-danger me-2"></i> Backup manual de arquivos XML</li>
+                    </ul>
+                </div>
+            </div>
+             <!-- Icon Divider (Mobile: Vertical, Desktop: Horizontal) -->
+             <div class="col-md-1 d-flex align-items-center justify-content-center">
+                <i class="fas fa-arrow-right fa-2x text-primary d-none d-md-block"></i>
+                <i class="fas fa-arrow-down fa-2x text-primary d-md-none"></i>
+            </div>
+            <!-- Solução -->
+            <div class="col-md-5">
+                <div class="p-4 bg-white rounded-3 shadow-sm h-100 border-start border-5 border-success position-relative overflow-hidden">
+                    <h4 class="fw-bold text-success mb-3"><i class="fas fa-check-circle me-2"></i> O Jeito Vetorial</h4>
+                    <ul class="list-unstyled text-dark">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>Sistema Online 24/7</strong>, rápido e estável</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>Cópia automática</strong> de dados de clientes</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>Cálculos automáticos</strong> e precisos</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>Armazenamento seguro</strong> por 5 anos</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- 3. Como Funciona -->
+<section id="como-funciona" class="py-5">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-primary">Simples como deve ser</h2>
+            <p class="text-muted">Emita sua primeira nota em menos de 5 minutos</p>
+        </div>
+        <div class="row g-4 text-center position-relative">
+            <!-- Line connector (Desktop only) -->
+            <div class="d-none d-lg-block w-75 position-absolute top-50 start-50 translate-middle border-top border-2 border-primary border-opacity-25" style="z-index: 0;"></div>
+
+            <!-- Step 1 -->
+            <div class="col-lg-4 position-relative z-1">
+                <div class="bg-white p-4 rounded-4 shadow-sm h-100 hover-lift">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 shadow" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">1</div>
+                    <h4 class="fw-bold mb-3">Cadastre-se</h4>
+                    <p class="text-muted small">Crie sua conta e configure os dados da sua empresa e certificado digital uma única vez.</p>
+                </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="col-lg-4 position-relative z-1">
+                <div class="bg-white p-4 rounded-4 shadow-sm h-100 hover-lift">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 shadow" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">2</div>
+                    <h4 class="fw-bold mb-3">Preencha a Nota</h4>
+                    <p class="text-muted small">O sistema puxa o cadastro do cliente e calcula os impostos automaticamente para você.</p>
+                </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="col-lg-4 position-relative z-1">
+                <div class="bg-white p-4 rounded-4 shadow-sm h-100 hover-lift">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 shadow" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">3</div>
+                    <h4 class="fw-bold mb-3">Emita e Envie</h4>
+                    <p class="text-muted small">Clique em emitir e seu cliente recebe a nota e o XML por e-mail e WhatsApp na hora.</p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-5">
+             <a href="https://wa.me/5561998311920?text=Quero%20ver%20uma%20demonstra%C3%A7%C3%A3o%20do%20emissor" target="_blank" class="btn btn-outline-primary fw-bold px-4 py-2 rounded-pill">Ver Demonstração em Vídeo <i class="fas fa-play-circle ms-2"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- 4. Recursos e Benefícios -->
+<section class="py-5 bg-light">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-5 order-lg-2 mb-4 mb-lg-0">
+                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Gestão de Notas Fiscais" class="img-fluid rounded-4 shadow-lg">
+            </div>
+            <div class="col-lg-7 order-lg-1">
+                <h2 class="fw-bold text-primary mb-4">Tudo o que sua empresa precisa</h2>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <i class="fas fa-infinity text-primary fa-2x me-3"></i>
+                            <div>
+                                <h5 class="fw-bold">Emissão Ilimitada</h5>
+                                <p class="text-muted small">Sem limite de notas por mês. Cresça sem se preocupar com custos extras.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <i class="fas fa-calculator text-primary fa-2x me-3"></i>
+                            <div>
+                                <h5 class="fw-bold">Inteligência Tributária</h5>
+                                <p class="text-muted small">O sistema sugere as alíquotas corretas para evitar erros e multas.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <i class="fas fa-cloud text-primary fa-2x me-3"></i>
+                            <div>
+                                <h5 class="fw-bold">Nuvem Segura</h5>
+                                <p class="text-muted small">XMLs armazenados por 5 anos conforme a lei. Acesse de qualquer lugar.</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-md-6">
+                        <div class="d-flex">
+                            <i class="fas fa-user-friends text-primary fa-2x me-3"></i>
+                            <div>
+                                <h5 class="fw-bold">Contador Integrado</h5>
+                                <p class="text-muted small">Enviamos os XMLs automaticamente para sua contabilidade no fim do mês.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. Depoimentos -->
 <section class="py-5">
-    <div class="container">
-        <h2 class="text-center mb-5">Vantagens</h2>
+    <div class="container py-4">
+        <h2 class="fw-bold text-center mb-5">Quem usa, recomenda</h2>
         <div class="row g-4">
+            <!-- Depoimento 1 -->
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Agilidade</h3>
-                        <p class="card-text">Emita notas em poucos cliques.</p>
+                <div class="card h-100 border-0 shadow-sm bg-light">
+                    <div class="card-body p-4">
+                        <div class="mb-3 text-warning">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="fst-italic text-muted">"Antes eu perdia horas no site da prefeitura. Agora emito uma nota em segundos. O suporte da Vetorial também é sensacional!"</p>
+                        <div class="d-flex align-items-center mt-4">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold" style="width: 40px; height: 40px;">RC</div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Ricardo Campos</h6>
+                                <small class="text-muted">Consultor de Marketing</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Organização</h3>
-                        <p class="card-text">Histórico completo de suas notas.</p>
+             <!-- Depoimento 2 -->
+             <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm bg-light">
+                    <div class="card-body p-4">
+                        <div class="mb-3 text-warning">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="fst-italic text-muted">"Melhor investimento que fiz. O cálculo automático dos impostos me dá uma tranquilidade enorme. Super recomendo."</p>
+                        <div class="d-flex align-items-center mt-4">
+                            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold" style="width: 40px; height: 40px;">AN</div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Ana Nunes</h6>
+                                <small class="text-muted">Psicóloga Clínica</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <h3 class="h5 card-title">Integração</h3>
-                        <p class="card-text">Integrado com a contabilidade.</p>
+             <!-- Depoimento 3 -->
+             <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm bg-light">
+                    <div class="card-body p-4">
+                        <div class="mb-3 text-warning">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="fst-italic text-muted">"Interface muito limpa e fácil de usar. Não sou bom com tecnologia, mas aprendi a usar no primeiro dia."</p>
+                        <div class="d-flex align-items-center mt-4">
+                            <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold" style="width: 40px; height: 40px;">FS</div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Felipe Souza</h6>
+                                <small class="text-muted">Representante Comercial</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -53,10 +252,135 @@
     </div>
 </section>
 
-<section class="py-5 bg-primary text-white text-center" id="contato">
-    <div class="container">
-        <h2 class="mb-4">Facilite sua gestão fiscal</h2>
-        <a href="#" class="btn btn-light btn-lg">Solicitar Demonstração</a>
+<!-- 6. Preços -->
+<section id="planos" class="py-5 bg-dark text-white">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-6">Planos Transparentes</h2>
+            <p class="text-white-50">Escolha o melhor para o seu momento. Sem taxas escondidas.</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <!-- Plano MEI -->
+            <div class="col-md-4">
+                <div class="card h-100 bg-transparent border border-secondary text-white">
+                    <div class="card-header border-bottom border-secondary py-4 text-center">
+                        <h4 class="fw-bold">MEI / Autônomo</h4>
+                        <div class="display-5 fw-bold my-3">R$ 59<small class="fs-6 text-white-50">/mês</small></div>
+                    </div>
+                    <div class="card-body p-4">
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-3"><i class="fas fa-check text-success me-2"></i> Notas Ilimitadas</li>
+                            <li class="mb-3"><i class="fas fa-check text-success me-2"></i> 1 Usuário</li>
+                            <li class="mb-3"><i class="fas fa-check text-success me-2"></i> Suporte por E-mail</li>
+                            <li class="mb-3"><i class="fas fa-check text-success me-2"></i> Envio para contador</li>
+                        </ul>
+                        <div class="d-grid">
+                            <a href="https://wa.me/5561998311920?text=Quero%20assinar%20o%20plano%20MEI" class="btn btn-outline-light btn-lg rounded-pill fw-bold">Escolher Este</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Plano PME (Destaque) -->
+            <div class="col-md-4">
+                <div class="card h-100 bg-white text-dark border-0 shadow-lg scale-up transform-origin-center">
+                    <div class="position-absolute top-0 start-50 translate-middle">
+                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill shadow-sm fw-bold">MAIS POPULAR</span>
+                    </div>
+                    <div class="card-header border-0 bg-transparent py-4 text-center pt-5">
+                        <h4 class="fw-bold text-primary">Empresarial</h4>
+                        <div class="display-5 fw-bold my-3 text-dark">R$ 99<small class="fs-6 text-muted">/mês</small></div>
+                    </div>
+                    <div class="card-body p-4">
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-3"><i class="fas fa-check text-success me-2"></i> <strong>Tudo do MEI +</strong></li>
+                            <li class="mb-3"><i class="fas fa-check text-success me-2"></i> 3 Usuários</li>
+                            <li class="mb-3"><i class="fas fa-check text-success me-2"></i> Suporte Prioritário (WhatsApp)</li>
+                            <li class="mb-3"><i class="fas fa-check text-success me-2"></i> Cadastro de Produtos/Serviços</li>
+                            <li class="mb-3"><i class="fas fa-check text-success me-2"></i> Relatórios Financeiros</li>
+                        </ul>
+                        <div class="d-grid">
+                            <a href="https://wa.me/5561998311920?text=Quero%20assinar%20o%20plano%20Empresarial" class="btn btn-primary btn-lg rounded-pill shadow fw-bold">Escolher Este</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
+
+<!-- 7. FAQ -->
+<section class="py-5">
+    <div class="container py-4">
+        <h2 class="fw-bold text-center mb-5">Dúvidas Frequentes</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold bg-white rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                Preciso de Certificado Digital?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                Sim. Para emitir Nota Fiscal Eletrônica é necessário um Certificado Digital modelo A1 (arquivo). Se você ainda não tem, nós emitimos para você com desconto especial.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold bg-white rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                Funciona para qualquer cidade?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                Nosso emissor atende a NF-e (Produtos) em todo o Brasil e a NFS-e (Serviços) em mais de 1.500 prefeituras homologadas. Consulte nossa equipe para vericar sua cidade.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold bg-white rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Tem fidelidade? Posso cancelar quando quiser?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                Sem fidelidade, sem letras miúdas. Você pode cancelar a assinatura a qualquer momento se não estiver satisfeito.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 8. CTA Final -->
+<section class="py-5 bg-success text-white text-center position-relative overflow-hidden">
+    <div class="container position-relative z-1 py-4">
+        <h2 class="display-5 fw-bold mb-4">Teste 7 dias sem compromisso</h2>
+        <p class="lead mb-5 opacity-90">Veja na prática como é fácil ganhar tempo e organizar sua empresa.</p>
+        <a href="https://wa.me/5561998311920?text=Quero%20testar%20o%20Emissor%20por%207%20dias" target="_blank" class="btn btn-light btn-lg fw-bold px-5 py-3 rounded-pill shadow hover-scale text-success">
+            <i class="fab fa-whatsapp me-2"></i> Iniciar Teste Grátis
+        </a>
+    </div>
+     <!-- Background Circles -->
+     <div class="position-absolute top-0 start-0 translate-middle rounded-circle bg-white opacity-10" style="width: 300px; height: 300px;"></div>
+     <div class="position-absolute bottom-0 end-0 translate-middle rounded-circle bg-white opacity-10" style="width: 200px; height: 200px;"></div>
+</section>
+
+<style>
+    .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important; }
+    .hover-scale { transition: transform 0.2s ease; }
+    .hover-scale:hover { transform: scale(1.05); }
+    .bounce-animation { animation: bounce 3s infinite; }
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-10px);}
+        60% {transform: translateY(-5px);}
+    }
+</style>
 {% endblock %}
