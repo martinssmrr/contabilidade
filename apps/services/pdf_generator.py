@@ -1,6 +1,6 @@
 import io
 import os
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER
 from reportlab.lib.units import mm
@@ -41,18 +41,17 @@ def generate_contract_pdf(processo):
     endereco_contratante = f"{processo.endereco or ''}, {processo.numero or ''}, {processo.bairro or ''}, {processo.cidade or ''}-{processo.estado or ''}"
     
     texto_contratante_dados = f"""
-    Este contrato estabelece como serão prestados os serviços e licenciado software pela Vetorial. Ao aceitá-lo você, doravante denominado <b>CONTRATANTE</b>: <br/> {nome_contratante}, CPF {cpf_contratante}, residente e domiciliado em {endereco_contratante}, confirma que leu, entendeu e concordou com todos os termos e condições e também com o Aviso de Privacidade da Vetorial.
+    Este contrato estabelece como serão prestados os serviços e licenciado software pela Vetorial. 
+Ao aceitá-lo você confirma que leu, entendeu e concordou com todos os termos e condições e 
+também com o Aviso de Privacidade da Vetorial.<br/><b>CONTRATANTE</b>:  {nome_contratante}, CPF {cpf_contratante}, residente e domiciliado em {endereco_contratante}, confirma que leu, entendeu e concordou com todos os termos e condições e também com o Aviso de Privacidade da Vetorial.
     """
     story.append(Paragraph(texto_contratante_dados, styles['Justify']))
     story.append(Spacer(1, 5*mm))
 
     # Dados das Contratadas (Vetorial)
     texto_contratadas_vetorial = """
-    Nossos serviços serão prestados por: <br/>
-    <b>CH CONTABILIDADE - GESTÃO CONTABIL & CONSULTORIA LTDA.</b> (CNPJ: 57.397.355/0001-83 e CRC/BA: 009504/O-3), com sede na Rua Almirante Alves Camara, número 73, sala 02, Engenho Velho de Brotas, Salvador - BA (ou apenas <b>Vetorial Contabilidade</b>).<br/><br/>
-    O software é licenciado por: <br/>
-    <b>CH CONTABILIDADE - GESTÃO CONTABIL & CONSULTORIA LTDA.</b> (CNPJ: 57.397.355/0001-83, com sede na Rua Almirante Alves Camara, número 73, sala 02, Engenho Velho de Brotas, Salvador - BA (ou apenas <b>Vetorial Tecnologia</b>).<br/><br/>
-    Quando em conjunto, as duas empresas serão chamadas de <b>Vetorial</b> neste contrato, doravante denominada <b>CONTRATADA</b>.
+    Nossos serviços serão prestados e o software é licenciado por: <br/>
+    <b>CONTRATADA:CH CONTABILIDADE - GESTÃO CONTABIL & CONSULTORIA LTDA.</b> (CNPJ: 57.397.355/0001-83 e CRC/BA: 009504/O-3), com sede na Rua Almirante Alves Camara, número 73, sala 02, Engenho Velho de Brotas, Salvador - BA (ou apenas <b>Vetorial Contabilidade</b>).<br/><br/>
     """
     story.append(Paragraph(texto_contratadas_vetorial, styles['Justify']))
     story.append(Spacer(1, 5*mm))
@@ -530,6 +529,311 @@ def generate_contract_pdf(processo):
     # Assinatura da Contratada (Placeholder ou imagem fixa se tivesse)
     story.append(Paragraph("____________________________________________", styles['Center']))
     story.append(Paragraph("<b>VETORIAL CONTABILIDADE LTDA</b><br/>CONTRATADA", styles['Center']))
+    
+    # -------------------------------------------------------------------------
+    # ANEXO I (Planos Master)
+    # -------------------------------------------------------------------------
+    story.append(PageBreak())
+    
+    story.append(Paragraph("<b>ANEXO I</b>", styles['ContractHeading1']))
+    story.append(Paragraph("<b>TERMOS E CONDIÇÕES DOS PLANOS MASTER</b>", styles['ContractHeading2']))
+    
+    story.append(Paragraph(
+        "Estes termos e condições estabelecem o funcionamento dos Planos Master oferecidos pela Vetorial e somente serão aplicáveis aos clientes que contratarem um dos Planos Master disponíveis.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>1. SOBRE OS PLANOS MASTER</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "1.1 Além de acesso às funcionalidades e serviços dos demais planos, você passará a receber suporte de profissionais especialistas no segmento do seu negócio, que estarão disponíveis para tirar dúvidas sobre as funcionalidades de nosso sistema, apoio exclusivo na operação de nossa plataforma, com atendimento em horários especiais e flexíveis, com disponibilidade de atendimento por WhatsApp, telefone, e-mail e chat.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "1.2 Além de estrutura personalizada de atendimento, você terá acesso aos módulos adicionais: emissão guiada de notas fiscais e boletos; importação e conciliação de extratos bancários; agendamento de pagamento de contas (caso disponível em seu plano); relatório de movimentação de conta bancária (caso disponível em seu plano); atendimento personalizado para temas de folha de pagamento e emissão Pró-Labore de sócios.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "1.1.1 Algumas destas funcionalidades serão limitadas ao número de vezes que a função poderá ser acionada, e/ou, ainda, ao número de funcionários, sócios, contas bancárias vinculadas e nº de notas fiscais, de acordo com o Plano Expert escolhido. Caso você precise usar alguma destas funcionalidades para além do que está incluso em seu plano, basta realizar a contratação avulsa, de acordo com a tabela de preços vigente no momento da contratação.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "1.3 A depender do Plano Expert escolhido, para aproveitar todas as funcionalidades do plano, será necessário cadastrar a Vetorial como um “usuário secundário” em suas contas bancárias. O acesso secundário permite apenas que nós façamos consultas aos extratos e agendamento de pagamentos. Todo e qualquer pagamento ou movimentação financeira terá que ser aprovada por você. A liberação deste acesso é de sua inteira responsabilidade e deverá ser solicitada por você junto ao seu banco.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "1.4 Fique atento aos prazos para solicitar ajuda a um de nossos especialistas e considere que:<br/>"
+        "&nbsp;&nbsp;&nbsp;&nbsp;a) Emissão e cancelamento de nota fiscal: Caso precise de suporte para emitir faturamentos, você precisará nos acionar com pelo menos 1 (um) dia útil de antecedência à data que pretender a emissão. Caso precise de apoio para cancelar faturamentos e para que ele aconteça sem penalidades para você, você precisará solicitar este cancelamento até, no máximo, o primeiro dia útil do mês seguinte ao da emissão.<br/>"
+        "&nbsp;&nbsp;&nbsp;&nbsp;b) Importação e conciliação de extratos bancários: As conciliações acontecem sempre na segunda quinzena do mês posterior ao de competência e para que isso ocorra:<br/>"
+        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(i) Os extratos bancários devem ser enviados até a data informada pelo nosso atendimento. Caso nenhuma data seja estabelecida, estas informações deverão ser encaminhadas até o dia 10 (Master Essencial) ou até o dia 03 (Master Pro) de cada mês em formato pdf ou ofx. Extratos enviados após essa data serão conciliados no mês seguinte;<br/>"
+        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(ii) Caso seu plano permita e você tenha habilitado a Vetorial em “Acesso Secundário” em suas contas bancárias, seus extratos serão importados por nós diretamente e nós mesmos consultaremos e importaremos os extratos para a realização da conciliação.<br/>"
+        "&nbsp;&nbsp;&nbsp;&nbsp;c) Agendamento de pagamento de contas: Caso disponível em seu plano, esta função somente poderá ser habilitada se possuirmos “Acesso Secundário” à sua conta. Além disso, a documentação de suporte da operação precisa ser submetida para nós com prazo mínimo de 48 horas de antecedência do vencimento.<br/>"
+        "&nbsp;&nbsp;&nbsp;&nbsp;d) Relatório de movimentação de conta bancária: Caso disponível em seu plano, você terá direito a relatórios de movimentação de suas contas, relação de impostos que deverão ser pagos e outras informações pertinentes.<br/>"
+        "&nbsp;&nbsp;&nbsp;&nbsp;e) Folha de pagamento: Os holerites de pagamentos de seus funcionários serão disponibilizados até as 23h59m do terceiro dia útil de cada mês, de acordo com as informações submetidas por você. Por isso, é importante que eventuais lançamentos/descontos de folha, alterações contratuais (salário/carga horária) sejam informados para nós até o dia 25 de cada mês. Em caso de eventos ocorridos do dia 26 ao dia 30, você deverá enviar até o último dia do mês. As admissões deverão ser informadas com 3 dias de antecedência e as rescisões imediatamente ao ocorrido, já que o prazo para pagamento das verbas rescisórias é de até dez dias do último dia trabalhado.<br/>"
+        "&nbsp;&nbsp;&nbsp;&nbsp;f) Pró-labore dos sócios: Devem ser solicitados até o dia 25 de cada mês.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>2. CONDIÇÕES E EXECUÇÃO DOS SERVIÇOS MASTER</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "2.1 Os serviços de Assessoria Mensal e a funcionalidade de Abertura de Empresa serão realizados em conformidade com o descrito no contrato principal, exceto aqueles que estiverem especificados ou diferenciados neste Anexo I.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "2.3 É de sua exclusiva responsabilidade garantir o envio correto de todos os documentos e informações solicitadas dentro dos prazos estabelecidos por nós. A Vetorial não se responsabiliza pelas consequências de informações ou documentações incompletas, não verdadeiras ou não apresentadas por você.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "2.5 Todas as decisões gerenciais são de sua responsabilidade, de forma que a Vetorial não se responsabiliza pelos resultados de seus negócios e por sua empresa, mas tão somente pela correta funcionalidade dos módulos de nosso software ou pelos serviços que prestamos.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "2.6 Caso o acesso secundário de suas contas bancárias não seja concedido a seu Assessor Master, você deverá obrigatoriamente enviar os extratos bancários de suas contas até o dia 10 de cada mês para a realização de contabilidade. A Vetorial não assume nenhuma responsabilidade pelo não envio dos extratos ou pelo envio em atraso.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "2.7 Não é de responsabilidade da Vetorial: realizar ou aprovar pagamentos; acessar e/ou gerenciar sistemas/plataformas de terceiros utilizadas por sua empresa; negociar com fornecedores, clientes, colaboradores e terceiros; tomar decisões gerenciais; cobrar seus clientes ou fornecedores; responder por omissões ou pela veracidade de suas informações e movimentações financeiras.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "2.8 Se você também contratou a Abertura de Empresa, a Vetorial se encarregará dos protocolos de documentos e processos de sua empresa e/ou sócios em órgãos de classe (CRC, OAB, CRM, CREA, etc) quando sua atividade exigir. No entanto, todas as custas relativas ao registro em órgãos de classe ou anuidades serão de sua responsabilidade, assim como suas respectivas renovações.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "2.8.1 Se a sua atividade exigir registro em órgãos de classe, você deverá fornecer toda a documentação necessária para o processo de registro à Vetorial no prazo máximo de 60 (sessenta) dias a partir da contratação do serviço de Abertura de Empresa. Caso a documentação completa não seja enviada dentro desse prazo, a responsabilidade pelo registro e quaisquer penalizações decorrentes será exclusivamente sua.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "2.8.2 As renovações anuais dos registros em órgãos de classe não estão incluídas no plano Master oferecido pela Vetorial. Portanto, é de sua responsabilidade estar atento às datas de vencimento anuais, bem como realizar a renovação e o pagamento das taxas devidas aos respectivos órgãos de classe.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "2.9 Você pode solicitar a troca de seu Assessor Master mediante aviso prévio de 30 dias, sendo que, para a segunda troca será necessário um período de no mínimo três meses, salvo por autorização expressa da Vetorial.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "2.10 Ao contratar algum dos Planos Master, liberaremos sem custos adicionais alguns dos módulos e serviços vendidos como avulsos, conforme descritos na Plataforma Vetorial.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>3. CANCELAMENTO OU ALTERAÇÃO DE PLANO</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "3.1 Você deverá permanecer no Plano Master por no mínimo 6 meses, sendo permitido após esse prazo, solicitar o downgrade ou o cancelamento do plano, sendo aplicadas as regras de cancelamento e downgrade do Contrato de Prestação de Serviços e Licença de Software.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "3.2 Os Planos Master poderão sofrer alterações, inclusive em seus nomes, de forma que você será previamente informado pela Vetorial. Em caso de descontinuidade do seu plano, você poderá optar por outro que melhor atenda sua empresa.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>4. DEMAIS CONDIÇÕES</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "4.1 Os prazo mínimos estabelecidos para a correta funcionalidade do software ou prestação de serviços poderão ser alterados por nós, mediante comunicação prévia, com, pelo menos, 30 dias de antecedência.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "4.2 Todas as demais cláusulas do Contrato de Prestação de Serviços e Licença de Software e seus Anexos que não estejam em conflito com as cláusulas deste Anexo I, permanecem inalteradas e em plena vigência.",
+        styles['Justify']
+    ))
+
+    # -------------------------------------------------------------------------
+    # ANEXO II (Plano Multibenefícios)
+    # -------------------------------------------------------------------------
+    story.append(PageBreak())
+
+    story.append(Paragraph("<b>ANEXO II</b>", styles['ContractHeading1']))
+    story.append(Paragraph("<b>TERMOS E CONDIÇÕES DO PLANO MULTIBENEFÍCIOS</b>", styles['ContractHeading2']))
+    
+    story.append(Paragraph(
+        "Estes termos e condições estabelecem o funcionamento do Plano Multibenefícios oferecidos pela Vetorial e somente serão aplicáveis aos clientes que contratarem o Plano Multibenefícios.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>1. SOBRE O PLANO MULTIBENEFÍCIOS</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "1.1 Além de acesso às funcionalidades e serviços dos demais planos (exceto os serviços do Plano Expert), ao escolher o Plano Multibenefícios, você poderá ativar benefícios adicionais, que poderão incluir, entre outros, acesso a produtos ou serviços de saúde e bem-estar, conforme descrito na Plataforma Vetorial.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "1.2 A não utilização ou não ativação de qualquer dos benefícios incluídos no Plano Multibenefícios não resultará em descontos ou abatimentos no valor da mensalidade.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>2. SOBRE OS BENEFÍCIOS OFERTADOS POR EMPRESAS PARCEIRAS</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "2.1 Todos os benefícios são fornecidos por empresas parceiras da Vetorial e são de inteira responsabilidade destas. Ao ativar um benefício, você concorda e declara estar ciente de que estará sujeito aos termos e condições e políticas de privacidade estabelecidas por essas empresas parceiras. Recomendamos que você revise todos os termos e condições que serão compartilhados com você para compreender integralmente os benefícios oferecidos.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "2.2 Alguns benefícios exigem a contratação de um plano específico com a empresa parceira a um valor reduzido, parcialmente subsidiado pela Vetorial. Você pode escolher contratar ou não esses benefícios, sabendo que haverá um custo associado, que, via de regra, será pago por você diretamente ao parceiro.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "2.3 Você declara estar ciente de que o descumprimento dos termos e condições da Vetorial ou, conforme o caso, das empresas parceiras pode resultar na suspensão ou cancelamento dos seus benefícios. A Vetorial não se responsabiliza por qualquer suspensão ou cancelamento decorrente desse descumprimento.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>3. CANCELAMENTO E ALTERAÇÃO DOS BENEFÍCIOS</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "3.1 Você pode desativar ou cancelar qualquer benefício a qualquer momento através da plataforma da Vetorial. A desativação ou cancelamento não reduzirá o valor da mensalidade do plano. Quaisquer termos e condições específicos dos benefícios desativados ou cancelados continuarão aplicáveis até a data efetiva da desativação ou cancelamento.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "3.2 Com exceção do benefício do Seguro de Vida que possui regras específicas previstas adiante, a ausência de pagamento de 2 (duas) mensalidades consecutivas ocasionará na suspensão ou cancelamento imediato dos benefícios oferecidos, sem necessidade de aviso prévio, sendo que a reativação poderá ocorrer após a regularização de todos os pagamentos das mensalidades em atraso e, quando aplicável, mediante o pagamento dos custos dos parceiros para a reativação dos benefícios, previstos em seus Termos e Condições.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "3.3 A Vetorial ou os parceiros dela poderão alterar os benefícios oferecidos a qualquer momento, visando melhorar a oferta do plano e atender às necessidades de seus clientes. Quaisquer alterações serão comunicadas previamente a você, garantindo a possibilidade de ajustar suas preferências, ativar ou desativar os benefícios, ou alterar seu plano conforme necessário.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "3.4 Caso a Vetorial ou os parceiros dela decidam descontinuar benefícios existentes ou incorporar novos benefícios no Plano Multibenefícios, você será informado antecipadamente sobre as mudanças Conforme o caso, você receberá os novos termos referentes à configuração atualizada dos benefícios. Nesse momento, você poderá optar por permanecer no plano com os benefícios atualizados ou escolher um plano que melhor atenda às suas necessidades.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>4. CONDIÇÕES ESPECÍFICAS PARA O BENEFÍCIO SEGURO DE VIDA:</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "4.1 Caso você opte por ativar o benefício do Seguro de Vida, você declara estar ciente e de acordo que:<br/>"
+        "&nbsp;&nbsp;&nbsp;&nbsp;i) a assinatura deste Contrato deverá ocorrer no prazo máximo de até 48 (quarenta e oito) horas a contar de sua adesão aos serviços da Vetorial;<br/>"
+        "&nbsp;&nbsp;&nbsp;&nbsp;ii) mesmo na eventualidade dos serviços Objeto deste Contrato virem a ser disponibilizados a você antes da assinatura do Contrato, você não terá acesso ou qualquer direito a este benefício até que cumpra o disposto no item “i” acima;<br/>"
+        "&nbsp;&nbsp;&nbsp;&nbsp;iii) em seu certificado de seguro e nas respectivas condições contratuais constarão todos os detalhes do seguro contratado, cabendo a você realizar a leitura e interpretação de todas as condições, aderindo a elas, sendo que, em caso de dúvidas, a Vetorial e seus parceiros disponibilizarão os canais de atendimento para tais fins;<br/>"
+        "&nbsp;&nbsp;&nbsp;&nbsp;iv) o não pagamento de sua mensalidade na data estipulada em seu Contrato acarretará na comunicação imediata aos nossos parceiros e, consequentemente, na possibilidade de suspensão de seu certificado de seguro que será previamente comunicada a você. A reativação, quando possível, somente poderá ocorrer após a regularização de todos os pagamentos das mensalidades em atraso devidamente corrigidas nos termos do Contrato, e quando aplicável, mediante o pagamento dos custos dos parceiros para a reativação do benefício.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>5. DEMAIS CONDIÇÕES</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "5.1 Os prazos mínimos estabelecidos para a correta funcionalidade do software ou prestação de serviços poderão ser alterados por nós, mediante comunicação prévia, com, pelo menos, 30 dias de antecedência.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "5.2 Todas as demais cláusulas do Contrato de Prestação de Serviços e Licença de Software e seus Anexos que não estejam em conflito com as cláusulas deste Anexo II, permanecem inalteradas e em plena vigência.",
+        styles['Justify']
+    ))
+
+    # -------------------------------------------------------------------------
+    # ANEXO III (Escritório Virtual)
+    # -------------------------------------------------------------------------
+    story.append(PageBreak())
+
+    story.append(Paragraph("<b>ANEXO III</b>", styles['ContractHeading1']))
+    story.append(Paragraph("<b>TERMOS E CONDIÇÕES DOS SERVIÇOS DE ESCRITÓRIO VIRTUAL</b>", styles['ContractHeading2']))
+    
+    story.append(Paragraph(
+        "Estes termos e condições estabelecem o funcionamento dos serviços de Endereço Fiscal (“Escritório Virtual”) oferecidos pela Vetorial e somente serão aplicáveis aos clientes que contratarem o serviço de Escritório Virtual.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>1. SOBRE OS SERVIÇOS DE ESCRITÓRIO VIRTUAL:</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "1.1 Os serviços de Escritório Virtual serão prestados por: Vetorial TECNOLOGIA LTDA (matriz ou filiais), conforme o endereço disponível no momento da contratação do produto.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "1.2 Disponibilizamos um endereço para você registrar sua empresa (“Endereço Fiscal”) e receber correspondências oficiais. Digitalizamos e enviamos as suas correspondências para o seu e-mail de cadastro em até 5 dias úteis. Para isso, você nos autoriza a receber e cuidar das suas correspondências recebidas, exceto as mencionadas no item 1.5.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "1.3. Você deve atender aos seguintes requisitos para utilizar o serviço de Escritório Virtual: a) Realizar atividades de serviços de baixo risco definidos pela Vetorial e que não exijam um Alvará Especial; b) Ser optante do Simples Nacional; c) Lucro Presumido, desde que todos os sócios estejam domiciliados na mesma cidade de estabelecimento da empresa e mediante disponibilidade de oferta para este regime tributário. d) Não exercer atividade de comércio e/ou possuir inscrição estadual; e) Se exercer alguma atividade regulamentada, seu registro profissional no órgão de classe competente precisará ser no Estado da Cidade do estabelecimento da sua empresa e pelo menos um dos sócios deve residir neste mesmo Estado.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "1.4. Ao assinar este Contrato, você está selecionando a cidade de estabelecimento da sua empresa conforme a localidade escolhida no momento da contratação e concorda em assumir todas as responsabilidades fiscais e regulatórias perante o município selecionado.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "1.5. Não aceitaremos encomendas ou qualquer outro item que: a) exceda 3 kg de peso, 50 cm em qualquer dimensão ou 0,03 metros cúbicos de volume; b) contenha bens perigosos, vivos ou perecíveis; c) seja um pacote que contenha valor declarado.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "1.6. Nos comprometemos a receber, digitalizar e enviar suas cartas físicas. Após a digitalização, as cartas físicas serão destruídas. Manteremos uma cópia digital por 30 dias a partir do recebimento, e depois disso, elas serão apagadas permanentemente.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "1.7. Caso necessite das suas correspondências físicas, você deve retirá-las pessoalmente em nosso endereço ou arcar com as despesas de envio para o seu endereço.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "1.8. Não nos responsabilizamos por prazos legais de documentos recebidos. Nossa única obrigação é digitalizar e disponibilizar as correspondências dentro do prazo estabelecido no item 1.2.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "1.9. Caso você já possua CNPJ ativo, será necessário realizar a alteração de seu contrato social para ativar este contrato. Caso seja do seu interesse, você poderá contratar o serviço adicional de alteração do contrato social por meio da plataforma Vetorial. Se você optar por não utilizar o serviço adicional da Vetorial, você deverá informar à Vetorial assim que a alteração do contrato social estiver devidamente registrada.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>2. O QUE NÃO ESTÁ INCLUÍDO NA CONTRATAÇÃO DO ESCRITÓRIO VIRTUAL:</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "2. O que não está incluído na sua contratação: a) direito de utilizar as instalações físicas da Vetorial como endereço comercial. A contratação se limita ao uso do endereço para fins fiscais e é estritamente proibido utilizar o endereço para reuniões, atendimento a clientes, divulgação do endereço no google e/ou redes sociais e recebimento de encomendas como compras e equipamentos. b) custos e honorários com alteração do contrato social necessárias para a confirmação de alteração do endereço de sua empresa.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>3. VALOR E PAGAMENTO:</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "3. O serviço de Escritório Virtual é cobrado à parte, conforme detalhado na proposta comercial. O valor acordado será cobrado mensalmente e poderá ser ajustado anualmente. Emitiremos a Nota Fiscal mensalmente, com pagamento até a data de vencimento. Em caso de atraso, será aplicada uma multa de 2% sobre o valor devido, além de juros de 1% ao mês.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "3.1. Em caso de falta de pagamento por 2 (dois) meses consecutivos, os serviços serão suspensos imediatamente e você será notificado sobre essa suspensão. Nesse momento, será obrigatório que você realize a alteração do endereço de seu estabelecimento e cartão CNPJ por meio de uma alteração de seu contrato social, conforme condições e prazos estabelecidos neste contrato. Se a alteração não for efetuada dentro do prazo estabelecido no aviso de suspensão do serviço, iremos notificar os órgãos e autoridades competentes, incluindo a Junta Comercial, a Receita Estadual, a Receita Federal e Município, sobre a irregularidade de seu estabelecimento (inclusive por meio de DBE), sujeitando sua empresa a penalidades e possíveis sanções legais, além da manutenção da cobrança até a alteração do endereço, nos termos do item 4.2.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "3.2. Em caso de falta de pagamento, a Vetorial poderá inscrever sua empresa em órgãos de proteção ao crédito, ceder os direitos de crédito deste contrato a terceiros e terceirizar os procedimentos de cobrança. Nessa situação, seus dados poderão ser compartilhados com terceiros para essa finalidade.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>4. PRAZO E CANCELAMENTO DOS SERVIÇOS:</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "4. O Contrato de Escritório Virtual terá duração por prazo indeterminado.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "4.1 O contrato pode ser cancelado a qualquer momento por você ou pela Vetorial, sem qualquer ônus, desde que seja concedido um aviso prévio de 30 dias, seguindo as regras estabelecidas abaixo.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "4.2. Dentro do prazo do aviso prévio, você deverá providenciar às suas expensas a alteração do endereço do seu estabelecimento, enviando a alteração do contrato social e do seu Cartão CNPJ para o e-mail contabilidadevetorial@gmail.com  para fins de comprovação. Caso você não cumpra com essa obrigação, o contrato não será encerrado e continuaremos a efetuar as cobranças das mensalidades até que seja comprovada a substituição de seu endereço, acrescida de multa mensal correspondente a três vezes o valor da mensalidade vigente.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "4.3. Cancelamento por não atendimento aos requisitos: Se houver qualquer mudança ou se identificarmos que sua empresa não se enquadra nos requisitos mencionados no item 1.5, o contrato será cancelado pela Vetorial e você deverá realizar a alteração de seu endereço, conforme estabelecido no item 4.2. Neste caso, você será responsável por todos os custos, honorários e procedimentos necessários para realizar a troca do seu endereço.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "4.4. Cancelamento por uso ilegal: Se você utilizar o endereço do Escritório Virtual para para fins não previstos no Contrato ou atividades contrárias à lei, o contrato será imediatamente cancelado, sem aviso prévio. Você também estará sujeito a uma multa não compensatória, equivalente a três vezes o valor da sua última mensalidade. Essa multa será aplicada mensalmente até que você comprove a alteração do seu endereço. Você será responsável por todos os custos e procedimentos necessários para realizar a troca do endereço.",
+        styles['Justify']
+    ))
+    story.append(Spacer(1, 5*mm))
+
+    story.append(Paragraph("<b>5. DEMAIS CONDIÇÕES</b>", styles['ContractHeading2']))
+    story.append(Paragraph(
+        "5.1 Os prazos mínimos estabelecidos para a correta prestação de serviços poderão ser alterados por nós, mediante comunicação prévia, com, pelo menos, 30 dias de antecedência.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "5.2 A Vetorial reserva-se no direito de alterar a forma de prestação dos serviços, bem como seu endereço a qualquer tempo. Você será informado destas alterações e poderá optar por cancelar os serviços de Escritório Virtual sem ônus.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "5.3 A Vetorial poderá tomar medidas e compartilhar seus dados com outros órgãos e entidades, privadas ou públicas, a fim de que as condições contratuais e regulatórias sejam cumpridas por você.",
+        styles['Justify']
+    ))
+    story.append(Paragraph(
+        "5.4 Todas as demais cláusulas do Contrato de Prestação de Serviços e Licença de Software e seus Anexos que não estejam em conflito com as cláusulas deste Anexo III, permanecem inalteradas e em plena vigência.",
+        styles['Justify']
+    ))
     
     doc.build(story)
     content_buffer.seek(0)

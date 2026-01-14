@@ -1,294 +1,263 @@
 {% extends 'base_dashboard.html' %}
 {% load static %}
 
-{% block title %}Área do Cliente - Vetorial{% endblock %}
+{% block title %}Início - Área do Cliente Vetorial{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/dashboard-modern.css' %}">
+<style>
+    /* Estilos Específicos para a Nova Dashboard */
+    .welcome-banner {
+        background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .welcome-banner::after {
+        content: '';
+        position: absolute;
+        right: -20px;
+        bottom: -40px;
+        width: 150px;
+        height: 150px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+    }
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .action-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        border: 1px solid #e9ecef;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        height: 100%;
+        justify-content: center;
+    }
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        border-color: #0d6efd;
+    }
+    .action-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #e7f1ff;
+        color: #0d6efd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+    .status-tracker {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .tracker-steps {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+        position: relative;
+    }
+    .tracker-steps::before {
+        content: '';
+        position: absolute;
+        top: 15px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: #e9ecef;
+        z-index: 1;
+    }
+    .step {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        width: 25%;
+    }
+    .step-circle {
+        width: 35px;
+        height: 35px;
+        background: #fff;
+        border: 3px solid #dee2e6;
+        border-radius: 50%;
+        margin: 0 auto 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #adb5bd;
+        font-weight: bold;
+    }
+    .step.active .step-circle {
+        border-color: #28a745;
+        background: #28a745;
+        color: white;
+    }
+    .step-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+    .step.active .step-text {
+        color: #28a745;
+        font-weight: 600;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-wrapper">
-    
-    <!-- Header da Página -->
-    <div class="dashboard-header d-flex justify-content-between align-items-end">
-        <div>
-            <h1 class="dashboard-title">Painel de Controle</h1>
-            <p class="dashboard-subtitle">Bem-vindo de volta, <strong>{{ user.first_name|default:user.username }}</strong>. Aqui está o resumo da sua empresa.</p>
+<!-- Welcome Banner -->
+<div class="welcome-banner">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold mb-2">Olá, {{ user.first_name|default:user.username }}! 👋</h2>
+            <p class="mb-0 opacity-75">Bem-vindo ao seu painel contábil. Aqui está o resumo atual da sua empresa.</p>
         </div>
-        <div class="d-none d-md-block">
-            <span class="text-muted small"><i class="far fa-calendar-alt me-1"></i> {% now "d de F de Y" %}</span>
-        </div>
-    </div>
-
-    <!-- Navegação por Abas -->
-    <div class="tabs-container">
-        <nav class="tabs-nav">
-            <button class="tab-btn active" onclick="openTab(event, 'tab-visao-geral')">
-                <i class="fas fa-th-large me-2"></i>Visão Geral
-            </button>
-            <button class="tab-btn" onclick="openTab(event, 'tab-contabilidade')">
-                <i class="fas fa-calculator me-2"></i>Contabilidade
-            </button>
-            <button class="tab-btn" onclick="openTab(event, 'tab-certidoes')">
-                <i class="fas fa-file-contract me-2"></i>Certidões
-            </button>
-            <button class="tab-btn" onclick="openTab(event, 'tab-financeiro')">
-                <i class="fas fa-chart-line me-2"></i>Financeiro
-            </button>
-        </nav>
-    </div>
-
-    <!-- Conteúdo das Abas -->
-    
-    <!-- ABA 1: VISÃO GERAL -->
-    <div id="tab-visao-geral" class="tab-content active">
-        <div class="dash-grid">
-            
-            <!-- Card: Resumo Contábil -->
-            <div class="dash-card">
-                <div class="dash-card-header">
-                    <div>
-                        <h3 class="dash-card-title">Resumo Contábil</h3>
-                        <p class="dash-card-subtitle">Resultado do mês atual</p>
-                    </div>
-                    <div class="dash-card-icon icon-primary">
-                        <i class="fas fa-coins"></i>
-                    </div>
-                </div>
-                
-                <div class="dash-card-body flex-grow-1">
-                    <div id="dash-resultado" class="dash-value">R$ 0,00</div>
-                    <div id="dash-transmissao" class="text-muted small mt-2">
-                        <i class="fas fa-spinner fa-spin me-1"></i> Carregando dados...
-                    </div>
-                </div>
-
-                <div class="dash-card-footer">
-                    <a href="{% url 'users:contabilidade' %}" class="btn-dash btn-dash-outline w-100">
-                        Ver Detalhes <i class="fas fa-arrow-right ms-2"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Card: Status das Certidões -->
-            <div class="dash-card">
-                <div class="dash-card-header">
-                    <div>
-                        <h3 class="dash-card-title">Certidões Negativas</h3>
-                        <p class="dash-card-subtitle">Monitoramento automático</p>
-                    </div>
-                    <div class="dash-card-icon icon-secondary">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                </div>
-
-                <div class="dash-card-body flex-grow-1">
-                    <div id="dash-cert-alert" class="d-none mb-3">
-                        <div class="status-danger w-100 text-center">
-                            <i class="fas fa-exclamation-triangle me-1"></i> Atenção: Existem pendências!
-                        </div>
-                    </div>
-                    <div id="dash-cert-list" class="d-flex flex-column gap-2">
-                        <!-- Preenchido via JS -->
-                        <div class="text-muted small"><i class="fas fa-spinner fa-spin me-1"></i> Verificando status...</div>
-                    </div>
-                </div>
-
-                <div class="dash-card-footer">
-                    <a href="{% url 'users:pendencias' %}" class="btn-dash btn-dash-outline w-100">
-                        Gerenciar Certidões <i class="fas fa-arrow-right ms-2"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Card: Acesso Rápido (Novo) -->
-            <div class="dash-card">
-                <div class="dash-card-header">
-                    <div>
-                        <h3 class="dash-card-title">Acesso Rápido</h3>
-                        <p class="dash-card-subtitle">Atalhos frequentes</p>
-                    </div>
-                    <div class="dash-card-icon" style="background-color: #f3f4f6; color: #6b7280;">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                </div>
-                <div class="dash-card-body">
-                    <div class="d-grid gap-2">
-                        <a href="{% url 'users:notas_fiscais' %}" class="btn-dash btn-dash-outline justify-content-start">
-                            <i class="fas fa-file-invoice me-2"></i> Minhas Notas Fiscais
-                        </a>
-                        <a href="{% url 'users:documentos' %}" class="btn-dash btn-dash-outline justify-content-start">
-                            <i class="fas fa-folder-open me-2"></i> Documentos da Empresa
-                        </a>
-                        <a href="{% url 'users:servicos_avulsos' %}" class="btn-dash btn-dash-outline justify-content-start">
-                            <i class="fas fa-plus-circle me-2"></i> Solicitar Serviço Extra
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- ABA 2: CONTABILIDADE (Exemplo de Conteúdo) -->
-    <div id="tab-contabilidade" class="tab-content">
-        <div class="dash-card">
-            <div class="text-center py-5">
-                <div class="mb-3">
-                    <i class="fas fa-calculator fa-3x text-muted"></i>
-                </div>
-                <h3>Módulo de Contabilidade</h3>
-                <p class="text-muted mb-4">Acesse o histórico completo de movimentações, balancetes e relatórios.</p>
-                <a href="{% url 'users:contabilidade' %}" class="btn-dash btn-dash-primary">
-                    Acessar Módulo Completo
-                </a>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <div class="d-inline-block bg-white bg-opacity-25 px-3 py-2 rounded">
+                <i class="far fa-calendar-alt me-2"></i> {% now "d de F de Y" %}
             </div>
         </div>
     </div>
-
-    <!-- ABA 3: CERTIDÕES (Exemplo) -->
-    <div id="tab-certidoes" class="tab-content">
-        <div class="dash-card">
-            <div class="text-center py-5">
-                <div class="mb-3">
-                    <i class="fas fa-file-contract fa-3x text-muted"></i>
-                </div>
-                <h3>Central de Certidões</h3>
-                <p class="text-muted mb-4">Visualize, baixe e monitore a validade de todas as suas certidões.</p>
-                <a href="{% url 'users:pendencias' %}" class="btn-dash btn-dash-primary">
-                    Ver Todas as Certidões
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ABA 4: FINANCEIRO (Exemplo) -->
-    <div id="tab-financeiro" class="tab-content">
-        <div class="dash-card">
-            <div class="text-center py-5">
-                <div class="mb-3">
-                    <i class="fas fa-chart-pie fa-3x text-muted"></i>
-                </div>
-                <h3>Gestão Financeira</h3>
-                <p class="text-muted mb-4">Controle seu fluxo de caixa, contas a pagar e receber.</p>
-                <a href="{% url 'users:financeiro' %}" class="btn-dash btn-dash-primary">
-                    Acessar Financeiro
-                </a>
-            </div>
-        </div>
-    </div>
-
 </div>
-{% endblock %}
 
-{% block extra_js %}
-<script>
-    // Função para troca de abas
-    function openTab(evt, tabName) {
-        var i, tabcontent, tablinks;
-        
-        // Esconde todo o conteúdo das abas
-        tabcontent = document.getElementsByClassName("tab-content");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-            tabcontent[i].classList.remove("active");
-        }
-        
-        // Remove a classe 'active' de todos os botões
-        tablinks = document.getElementsByClassName("tab-btn");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        
-        // Mostra a aba atual e adiciona a classe 'active' ao botão clicado
-        document.getElementById(tabName).style.display = "block";
-        // Pequeno delay para permitir a animação CSS
-        setTimeout(() => {
-            document.getElementById(tabName).classList.add("active");
-        }, 10);
-        
-        evt.currentTarget.className += " active";
-    }
+<!-- Ações Rápidas (Shortcuts) -->
+<h3 class="section-title"><i class="fas fa-bolt text-warning me-2"></i> Acesso Rápido</h3>
+<div class="grid-container">
+    <a href="{% url 'users:notas_fiscais' %}" class="action-card">
+        <div class="action-icon">
+            <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+        <h5 class="fw-bold mb-1">Enviar Notas</h5>
+        <small class="text-muted">Envie XMLs ou PDFs para a contabilidade</small>
+    </a>
 
-    // Lógica original de carregamento de dados
-    document.addEventListener('DOMContentLoaded', function(){
-        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]') ? document.querySelector('[name=csrfmiddlewaretoken]').value : '';
+    <a href="{% url 'users:pendencias' %}" class="action-card">
+        <div class="action-icon" style="background-color: #fff3cd; color: #ffc107;">
+            <i class="fas fa-barcode"></i>
+        </div>
+        <h5 class="fw-bold mb-1">Pagar Impostos</h5>
+        <small class="text-muted">Acesse suas guias de pagamento (DAS, INSS)</small>
+    </a>
 
-        function money(v){
-            try{ return Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }catch(e){ return v; }
-        }
+    <a href="{% url 'finance:dashboard' %}" class="action-card">
+        <div class="action-icon" style="background-color: #d1e7dd; color: #198754;">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <h5 class="fw-bold mb-1">Painel Financeiro</h5>
+        <small class="text-muted">Visualize receitas, despesas e relatórios</small>
+    </a>
+    
+    <a href="{% url 'support:dashboard_cliente' %}" class="action-card">
+        <div class="action-icon" style="background-color: #e2e3e5; color: #495057;">
+            <i class="fas fa-headset"></i>
+        </div>
+        <h5 class="fw-bold mb-1">Preciso de Ajuda</h5>
+        <small class="text-muted">Fale com seu analista contábil</small>
+    </a>
+</div>
 
-        // Carregar resumo contábil
-        fetch('/users/api/contabilidade/summary/', {headers: {'X-CSRFToken': csrftoken}})
-        .then(r=>r.json()).then(data=>{
-            if(!data.success) return;
-            const res = Number(data.resultado || 0);
-            const el = document.getElementById('dash-resultado');
-            
-            // Atualização visual baseada no valor
-            if(res > 0){ 
-                el.textContent = 'Lucro de R$ ' + money(res); 
-                el.style.color = 'var(--success-color, #10b981)';
-            } else if(res < 0){ 
-                el.textContent = 'Prejuízo de R$ ' + money(Math.abs(res)); 
-                el.style.color = 'var(--danger-color, #ef4444)';
-            } else { 
-                el.textContent = 'R$ 0,00'; 
-                el.style.color = 'var(--dash-text-main)';
-            }
+<div class="row g-4 mb-4">
+    <!-- Tracker Abertura (Exemplo Visual) - Pode ser condicional se a empresa for nova -->
+    <div class="col-12"> <!-- Se for empresa consolidada, pode esconder isso ou trocar por "Status do Mês" -->
+        <div class="status-tracker">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+                <h5 class="mb-0 fw-bold"><i class="fas fa-tasks text-primary me-2"></i>Status do Fechamento Mensal (Exemplo)</h5>
+                <span class="badge bg-info text-dark">Em Processamento</span>
+            </div>
+            <div class="tracker-steps">
+                <div class="step active">
+                    <div class="step-circle"><i class="fas fa-check"></i></div>
+                    <div class="step-text">Docs Enviados</div>
+                </div>
+                <div class="step active">
+                    <div class="step-circle"><i class="fas fa-calculator"></i></div>
+                    <div class="step-text">Apuração Fiscal</div>
+                </div>
+                <div class="step">
+                    <div class="step-circle">3</div>
+                    <div class="step-text">Folha de Pagto</div>
+                </div>
+                <div class="step">
+                    <div class="step-circle">4</div>
+                    <div class="step-text">Contabilidade</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-            if(data.last_transmissao){
-                const t = data.last_transmissao;
-                document.getElementById('dash-transmissao').innerHTML = `<i class="fas fa-check-circle text-success me-1"></i> Transmissão de ${t.competencia}: ${t.count} lançamentos`;
-            } else {
-                document.getElementById('dash-transmissao').textContent = 'Nenhuma transmissão recente.';
-            }
-        }).catch(console.error);
+<!-- Resumo Informativo -->
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold"><i class="fas fa-bullhorn text-danger me-2"></i>Avisos Importantes</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-light border-start border-4 border-info shadow-sm">
+                    <h6 class="alert-heading fw-bold"><i class="fas fa-info-circle text-info me-1"></i> IRPF 2026</h6>
+                    <p class="mb-0 small">O prazo para entrega da declaração começa em Março. Organize seus informes de rendimentos.</p>
+                </div>
+                <div class="alert alert-light border-start border-4 border-warning shadow-sm">
+                    <h6 class="alert-heading fw-bold"><i class="fas fa-clock text-warning me-1"></i> Feriado Bancário</h6>
+                    <p class="mb-0 small">Não haverá expediente bancário na próxima segunda-feira. Antecipe seus pagamentos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        // Carregar status de certidões
-        fetch('/users/api/certidoes/status/', {headers: {'X-CSRFToken': csrftoken}})
-        .then(r=>r.json()).then(data=>{
-            if(!data.success) return;
-            const wrap = document.getElementById('dash-cert-list');
-            wrap.innerHTML = '';
-            
-            if (data.items.length === 0) {
-                wrap.innerHTML = '<div class="text-muted small">Nenhuma certidão encontrada.</div>';
-            }
+    <div class="col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold"><i class="fas fa-file-alt text-secondary me-2"></i>Últimos Documentos</h5>
+                <a href="#" class="btn btn-sm btn-link text-decoration-none">Ver todos</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% for doc in documentos_recentes|default:''|slice:":3" %}
+                    <a href="#" class="list-group-item list-group-item-action d-flex align-items-center p-3">
+                        <i class="fas fa-file-pdf text-danger fa-2x me-3"></i>
+                        <div>
+                            <h6 class="mb-1 text-dark">{{ doc.nome }}</h6>
+                            <small class="text-muted">{{ doc.data }}</small>
+                        </div>
+                    </a>
+                    {% empty %}
+                        <div class="text-center py-4 text-muted">
+                            <i class="far fa-folder-open fa-2x mb-2 opacity-50"></i>
+                            <p class="mb-0">Nenhum documento recente.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-            data.items.forEach(it=>{
-                const div = document.createElement('div');
-                div.className = 'd-flex justify-content-between align-items-center py-2 border-bottom border-light';
-                
-                let statusClass = 'text-muted';
-                let icon = '<i class="fas fa-minus-circle"></i>';
-                
-                if(it.status === 'negativa') {
-                    statusClass = 'text-success';
-                    icon = '<i class="fas fa-check-circle"></i>';
-                } else if(it.status === 'positiva') {
-                    statusClass = 'text-warning';
-                    icon = '<i class="fas fa-exclamation-circle"></i>';
-                } else if(it.status === 'indisponivel') {
-                    statusClass = 'text-danger';
-                    icon = '<i class="fas fa-times-circle"></i>';
-                }
-                
-                div.innerHTML = `
-                    <div class="d-flex align-items-center">
-                        <span class="${statusClass} me-2">${icon}</span>
-                        <span class="small fw-bold text-dark">${it.label}</span>
-                    </div>
-                    <span class="badge bg-light text-dark border">${it.status_display || 'Sem Registro'}</span>
-                `;
-                wrap.appendChild(div);
-            });
-            
-            if(data.has_indisponivel){
-                document.getElementById('dash-cert-alert').classList.remove('d-none');
-            }
-        }).catch(console.error);
-    });
-</script>
 {% endblock %}

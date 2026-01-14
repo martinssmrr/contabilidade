@@ -82,6 +82,29 @@
 
 {% block content %}
 
+<!-- Shared Financial Navigation -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-white border-bottom-0 pb-0 pt-3">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link active fw-bold text-primary" href="#">
+                    <i class="fas fa-chart-line me-2"></i>Painel & Lançamentos
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-muted" href="{% url 'finance:reconciliation' %}">
+                    <i class="fas fa-check-double me-2"></i>Conciliação (.OFX)
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-muted" href="{% url 'users:financeiro' %}">
+                    <i class="fas fa-file-invoice-dollar me-2"></i>Documentos Financeiros
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
 <div class="d-flex justify-content-end align-items-center mb-4 gap-2">
     <button class="btn btn-primary btn-lg shadow-sm" data-bs-toggle="modal" data-bs-target="#transactionModal">
         <i class="fas fa-plus-circle me-2"></i> Novo Lançamento

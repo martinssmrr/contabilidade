@@ -12,6 +12,7 @@ from decimal import Decimal, InvalidOperation
 from .models import MovimentacaoFinanceira
 from .models import TransmissaoMensal
 from .models import CertidaoNegativa
+from apps.documents.models_guia_imposto import GuiaImposto
 from django.db.models import Sum, Q
 from django.conf import settings
 from .utils import validate_file_upload
@@ -255,11 +256,15 @@ def pendencias(request):
     cert_trabalhista = last_for(CertidaoNegativa.TIPO_TRABALHISTA)
     cert_fgts = last_for(CertidaoNegativa.TIPO_FGTS)
 
+    # Buscando Guias de Impostos
+    guias = GuiaImposto.objects.filter(cliente=user).order_by('status', 'vencimento')
+
     context = {
         'cert_federal': cert_federal,
         'cert_estadual': cert_estadual,
         'cert_trabalhista': cert_trabalhista,
         'cert_fgts': cert_fgts,
+        'guias': guias,
     }
 
     return render(request, 'users/pendencias.html', context)

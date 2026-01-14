@@ -3,6 +3,7 @@ from django.conf import settings
 from django.utils import timezone
 from typing import Optional
 import os
+from .models_guia_imposto import GuiaImposto
 
 # Create your models here.
 

@@ -8,6 +8,18 @@
 {% endblock %}
 
 {% block content %}
+<ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'finance:dashboard' %}">Painel & Lançamentos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'finance:reconciliation' %}">Conciliação</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="#">Documentos Financeiros</a>
+    </li>
+</ul>
+
 <div class="dashboard-wrapper">
     <div class="dashboard-header">
         <h1 class="dashboard-title">Extratos Bancários</h1>

@@ -183,5 +183,82 @@
             </div>
         </div>
     </div>
+
+    <!-- Seção de Guias de Impostos -->
+    <div class="mt-5">
+        <h2 class="dashboard-title mb-4">Guias de Pagamento</h2>
+        
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Imposto</th>
+                                <th>Competência</th>
+                                <th>Vencimento</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th class="text-end pe-4">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for guia in guias %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle icon-sm bg-light text-primary me-3">
+                                            <i class="fas fa-file-invoice-dollar"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">{{ guia.get_tipo_display }}</div>
+                                            {% if guia.descricao %}
+                                            <small class="text-muted">{{ guia.descricao }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ guia.competencia|date:"F/Y"|capfirst }}</td>
+                                <td>{{ guia.vencimento|date:"d/m/Y" }}</td>
+                                <td class="fw-bold">R$ {{ guia.valor }}</td>
+                                <td>
+                                    {% if guia.status == 'pago' %}
+                                        <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">Pago</span>
+                                    {% elif guia.status == 'atrasado' %}
+                                        <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill">Em Atraso</span>
+                                    {% else %}
+                                        <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill">A Vencer</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-4">
+                                    {% if guia.arquivo_pdf %}
+                                    <a href="{{ guia.arquivo_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-primary" title="Baixar Guia">
+                                        <i class="fas fa-download"></i> Guia
+                                    </a>
+                                    {% endif %}
+                                    
+                                    {% if guia.comprovante %}
+                                    <a href="{{ guia.comprovante.url }}" target="_blank" class="btn btn-sm btn-outline-success ms-1" title="Baixar Comprovante">
+                                        <i class="fas fa-check-circle"></i> Comp.
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5">
+                                    <div class="text-muted">
+                                        <i class="far fa-folder-open fa-3x mb-3"></i>
+                                        <p class="mb-0">Nenhuma guia de imposto encontrada.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

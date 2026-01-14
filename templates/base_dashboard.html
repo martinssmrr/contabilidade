@@ -334,13 +334,16 @@
         </div>
 
         <nav class="sidebar-nav">
+          <!-- 1. INÍCIO (DASHBOARD) -->
           <a
             href="{% url 'users:area_cliente' %}"
             class="sidebar-nav-item {% if request.resolver_match.url_name == 'area_cliente' %}active{% endif %}"
           >
-            <i class="fas fa-tachometer-alt"></i>
-            Painel de Controle
+            <i class="fas fa-home"></i>
+            Início
           </a>
+
+          <!-- 2. NOTAS FISCAIS -->
           <a
             href="{% url 'users:notas_fiscais' %}"
             class="sidebar-nav-item {% if request.resolver_match.url_name == 'notas_fiscais' %}active{% endif %}"
@@ -348,42 +351,26 @@
             <i class="fas fa-file-invoice-dollar"></i>
             Notas Fiscais
           </a>
+
+          <!-- 3. FINANCEIRO (Consolidado) -->
+          <a
+            href="{% url 'finance:dashboard' %}" 
+            class="sidebar-nav-item {% if 'finance' in request.resolver_match.app_names or request.resolver_match.url_name == 'financeiro' %}active{% endif %}"
+          >
+            <i class="fas fa-chart-line"></i>
+            Financeiro
+          </a>
+
+          <!-- 4. IMPOSTOS E OBRIGAÇÕES (Antigo Pendências) -->
           <a
             href="{% url 'users:pendencias' %}"
             class="sidebar-nav-item {% if request.resolver_match.url_name == 'pendencias' %}active{% endif %}"
           >
-            <i class="fas fa-exclamation-triangle"></i>
-            Pendências
-          </a>
-          <a
-            href="{% url 'users:financeiro' %}"
-            class="sidebar-nav-item {% if request.resolver_match.url_name == 'financeiro' %}active{% endif %}"
-          >
-            <i class="fas fa-wallet"></i>
-            Financeiro
-          </a>
-          <a
-            href="{% url 'finance:dashboard' %}"
-            class="sidebar-nav-item {% if 'finance' in request.resolver_match.app_names and request.resolver_match.url_name != 'reconciliation' %}active{% endif %}"
-          >
-            <i class="fas fa-chart-pie"></i>
-            Painel Financeiro
-          </a>
-          <a
-            href="{% url 'finance:reconciliation' %}"
-            class="sidebar-nav-item {% if request.resolver_match.url_name == 'reconciliation' %}active{% endif %}"
-          >
-            <i class="fas fa-university"></i>
-            Conciliação Bancária
+            <i class="fas fa-landmark"></i>
+            Impostos e Obrigações
           </a>
 
-          <a
-            href="{% url 'users:minha_empresa' %}"
-            class="sidebar-nav-item {% if request.resolver_match.url_name == 'minha_empresa' %}active{% endif %}"
-          >
-            <i class="fas fa-building"></i>
-            Minha Empresa
-          </a>
+          <!-- 5. DOCUMENTOS -->
           <a
             href="{% url 'users:documentos' %}"
             class="sidebar-nav-item {% if request.resolver_match.url_name == 'documentos' %}active{% endif %}"
@@ -391,12 +378,23 @@
             <i class="fas fa-folder-open"></i>
             Documentos
           </a>
+
+          <!-- 6. ATENDIMENTO -->
           <a
             href="{% url 'support:dashboard_cliente' %}"
-            class="sidebar-nav-item {% if request.resolver_match.url_name == 'dashboard_cliente' %}active{% endif %}"
+            class="sidebar-nav-item {% if 'support' in request.resolver_match.app_names %}active{% endif %}"
           >
-            <i class="fas fa-ticket-alt"></i>
-            Meus Chamados
+            <i class="fas fa-headset"></i>
+            Atendimento
+          </a>
+          
+          <!-- 7. MINHA EMPRESA -->
+          <a
+            href="{% url 'users:minha_empresa' %}" 
+            class="sidebar-nav-item {% if request.resolver_match.url_name == 'minha_empresa' %}active{% endif %}"
+          >
+          <i class="fas fa-building"></i>
+            Minha Empresa
           </a>
           <a
             href="{% url 'users:contabilidade' %}"

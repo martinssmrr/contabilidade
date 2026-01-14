@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.contrib import messages
 from .models import Document, NotaFiscal, DocumentoEmpresa, ExtratoBancario, DocumentoCliente
+from .models_guia_imposto import GuiaImposto
 
 # Register your models here.
 
@@ -337,3 +338,13 @@ class DocumentoClienteAdmin(admin.ModelAdmin):
                 f'Documento "{obj.titulo}" criado com sucesso! '
                 f'Uma notificação por e-mail será enviada automaticamente para {obj.cliente.email}'
             )
+
+@admin.register(GuiaImposto)
+class GuiaImpostoAdmin(admin.ModelAdmin):
+    list_display = ('tipo', 'get_tipo_display', 'cliente', 'vencimento', 'valor', 'status')
+    list_filter = ('tipo', 'status', 'vencimento')
+    search_fields = ('cliente__username', 'cliente__email', 'descricao')
+    date_hierarchy = 'vencimento'
+    ordering = ('-vencimento',)
+    raw_id_fields = ('cliente',)
+

@@ -4,6 +4,18 @@
 {% block page_title %}Conciliação Bancária{% endblock %}
 
 {% block content %}
+<ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'finance:dashboard' %}">Painel & Lançamentos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="#">Conciliação</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'users:financeiro' %}">Documentos Financeiros</a>
+    </li>
+</ul>
+
 <div class="row">
     <!-- Upload Card -->
     <div class="col-12 mb-4">
