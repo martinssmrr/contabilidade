@@ -2,7 +2,15 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from django.urls import reverse
-from django_ckeditor_5.fields import CKEditor5Field
+try:
+    from django_ckeditor_5.fields import CKEditor5Field
+except ImportError:
+    # Fallback se não estiver instalado
+    class CKEditor5Field(models.TextField):
+        def __init__(self, *args, **kwargs):
+            # Remove custom arguments not supported by TextField
+            kwargs.pop('config_name', None)
+            super().__init__(*args, **kwargs)
 
 User = get_user_model()
 

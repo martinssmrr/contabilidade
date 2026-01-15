@@ -1084,3 +1084,1159 @@ def generate_contract_pdf(processo):
         print(f"Erro ao aplicar papel timbrado: {e}")
         content_buffer.seek(0)
         return content_buffer
+
+
+
+
+
+
+
+# Vetorial Support Dashboard
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Staff - Vetorial</title>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <style>
+    :root {
+        --primary-color: #3B82F6;
+        --primary-hover: #2563EB;
+        --sidebar-bg: #1F2937;
+        --sidebar-text: #D1D5DB;
+        --content-bg: #F9FAFB;
+        --card-bg: #FFFFFF;
+        --text-primary: #111827;
+        --text-secondary: #6B7280;
+        --border-color: #E5E7EB;
+        --success-color: #10B981;
+        --danger-color: #EF4444;
+        --warning-color: #F59E0B;
+    }
+
+    body {
+        background: var(--content-bg);
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* Layout Principal */
+    .staff-dashboard {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 280px;
+        background: var(--sidebar-bg);
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        overflow-y: auto;
+        z-index: 100;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-header {
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .sidebar-logo {
+        height: 45px;
+        width: auto;
+    }
+
+    .sidebar-title {
+        color: white;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .sidebar-subtitle {
+        color: var(--sidebar-text);
+        font-size: 0.875rem;
+        margin-top: 4px;
+    }
+
+    .sidebar-menu {
+        padding: 16px 0;
+    }
+
+    .menu-section {
+        margin-bottom: 24px;
+    }
+
+    .menu-section-title {
+        color: var(--sidebar-text);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 8px 20px;
+        margin-bottom: 8px;
+    }
+
+    .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        color: var(--sidebar-text);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .menu-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+    }
+
+    .menu-item.active {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary-color);
+        border-right: 3px solid var(--primary-color);
+    }
+
+    .menu-item-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+
+    .menu-item-text {
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    .menu-item-badge {
+        margin-left: auto;
+        background: var(--danger-color);
+        color: white;
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    /* Área de Conteúdo */
+    .content-area {
+        margin-left: 280px;
+        flex: 1;
+        padding: 32px;
+        transition: all 0.3s ease;
+    }
+
+    .content-header {
+        margin-bottom: 32px;
+    }
+
+    .content-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 8px 0;
+    }
+
+    .content-subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+    }
+
+    /* Barra de Ações */
+    .actions-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 300px;
+        max-width: 500px;
+        position: relative;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 12px 16px 12px 44px;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        width: 18px;
+        height: 18px;
+    }
+
+    .btn-primary {
+        background: var(--primary-color);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Card de Dados */
+    .data-card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    /* Tabela */
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table thead {
+        background: #F9FAFB;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .data-table th {
+        padding: 16px 20px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .data-table tbody tr {
+        border-bottom: 1px solid var(--border-color);
+        transition: background 0.2s ease;
+    }
+
+    .data-table tbody tr:hover {
+        background: #F9FAFB;
+    }
+
+    .data-table td {
+        padding: 16px 20px;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+    }
+
+    /* Status Badges */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        gap: 6px;
+    }
+
+    .badge-success {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-color);
+    }
+
+    .badge-warning {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning-color);
+    }
+
+    .badge-danger {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger-color);
+    }
+
+    .badge-info {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary-color);
+    }
+
+    /* Botões de Ação */
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn-action {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-edit {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary-color);
+    }
+
+    .btn-edit:hover {
+        background: rgba(59, 130, 246, 0.2);
+    }
+
+    .btn-delete {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger-color);
+    }
+
+    .btn-delete:hover {
+        background: rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-whatsapp {
+        background: rgba(37, 211, 102, 0.1);
+        color: #25D366;
+    }
+
+    .btn-whatsapp:hover {
+        background: rgba(37, 211, 102, 0.2);
+    }
+
+    /* Modal */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 16px;
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-header {
+        padding: 24px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        color: var(--text-secondary);
+        transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+        background: #F3F4F6;
+        color: var(--text-primary);
+    }
+
+    .modal-body {
+        padding: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-control-checkbox {
+        width: auto;
+        margin-right: 8px;
+    }
+
+    .modal-footer {
+        padding: 24px;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+    .btn-secondary {
+        background: #F3F4F6;
+        color: var(--text-primary);
+        padding: 12px 24px;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+        background: #E5E7EB;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 64px 32px;
+    }
+
+    .empty-state-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 24px;
+        opacity: 0.3;
+    }
+
+    .empty-state-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+
+    .empty-state-text {
+        color: var(--text-secondary);
+        margin-bottom: 24px;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .content-area {
+            margin-left: 0;
+        }
+
+        .actions-bar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .search-box {
+            min-width: 100%;
+            max-width: 100%;
+        }
+
+        .data-table {
+            font-size: 0.875rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 16px;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="staff-dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="{% static 'img/logo.webp' %}" alt="Vetorial Logo" class="sidebar-logo">
+            <div>
+                <h2 class="sidebar-title">Dashboard Staff</h2>
+                <p class="sidebar-subtitle">Gerenciamento Administrativo</p>
+            </div>
+        </div>
+
+        <nav class="sidebar-menu">
+            <div class="menu-section">
+                <div class="menu-section-title">Principal</div>
+                <a href="#" class="menu-item active" data-model="leads">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span class="menu-item-text">Leads</span>
+                    <span class="menu-item-badge" id="leads-count">0</span>
+                </a>
+                <a href="#" class="menu-item" data-model="tickets">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
+                    </svg>
+                    <span class="menu-item-text">Tickets</span>
+                </a>
+                <a href="#" class="menu-item" data-model="testimonials">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                    </svg>
+                    <span class="menu-item-text">Depoimentos</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-section-title">Blog</div>
+                <a href="#" class="menu-item" data-model="posts">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                    </svg>
+                    <span class="menu-item-text">Posts</span>
+                </a>
+                <a href="#" class="menu-item" data-model="categories">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                    </svg>
+                    <span class="menu-item-text">Categorias</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-section-title">Serviços</div>
+                <a href="#" class="menu-item" data-model="planos">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="menu-item-text">Planos</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-section-title">Documentos</div>
+                <a href="#" class="menu-item" data-model="documents">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                    <span class="menu-item-text">Documentos</span>
+                </a>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-section-title">Configurações</div>
+                <a href="#" class="menu-item" data-model="users">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    <span class="menu-item-text">Usuários</span>
+                </a>
+                <a href="#" class="menu-item" data-model="social">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+                    </svg>
+                    <span class="menu-item-text">Redes Sociais</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Área de Conteúdo -->
+    <main class="content-area">
+        <div class="content-header">
+            <h1 class="content-title" id="content-title">Leads</h1>
+            <p class="content-subtitle" id="content-subtitle">Gerencie todos os leads capturados do site</p>
+        </div>
+
+        <div class="actions-bar">
+            <div class="search-box">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Buscar...">
+            </div>
+            <button class="btn-primary" id="btnAddNew">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Adicionar Novo
+            </button>
+        </div>
+
+        <div class="data-card" id="dataCard">
+            <table class="data-table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Cidade/Estado</th>
+                        <th>Serviço</th>
+                        <th>Origem</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Dados serão carregados aqui via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<!-- Modal de Formulário -->
+<div class="modal-overlay" id="formModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modalTitle">Adicionar Novo Lead</h3>
+            <button class="modal-close" onclick="closeModal()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="entityForm">
+                <input type="hidden" id="entityId">
+                
+                <div class="form-group">
+                    <label class="form-label" for="nome_completo">Nome Completo *</label>
+                    <input type="text" class="form-control" id="nome_completo" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">E-mail *</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="telefone">Telefone *</label>
+                    <input type="tel" class="form-control" id="telefone" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="estado">Estado *</label>
+                    <input type="text" class="form-control" id="estado" maxlength="2" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="cidade">Cidade *</label>
+                    <input type="text" class="form-control" id="cidade" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="servico_interesse">Serviço de Interesse *</label>
+                    <input type="text" class="form-control" id="servico_interesse" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" class="form-control-checkbox" id="contatado">
+                        Lead foi contatado
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="observacoes">Observações</label>
+                    <textarea class="form-control" id="observacoes" rows="3"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
+            <button class="btn-primary" onclick="saveEntity()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Confirmar Exclusão</h3>
+            <button class="modal-close" onclick="closeDeleteModal()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Você tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
+            <button class="btn-delete" onclick="confirmDelete()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Excluir
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentModel = 'leads';
+    let currentData = [];
+    let deleteId = null;
+
+    // API Base URL
+    const API_BASE = '/support/api';
+
+    // Navegação do Menu
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            currentModel = this.dataset.model;
+            loadModelData(currentModel);
+        });
+    });
+
+    // Carregar dados do modelo
+    async function loadModelData(model) {
+        const titles = {
+            leads: ['Leads', 'Gerencie todos os leads capturados do site'],
+            tickets: ['Tickets', 'Gerencie os tickets de suporte'],
+            testimonials: ['Depoimentos', 'Gerencie os depoimentos dos clientes'],
+            posts: ['Posts do Blog', 'Gerencie os artigos do blog'],
+            categories: ['Categorias', 'Gerencie as categorias do blog'],
+            planos: ['Planos', 'Gerencie os planos de serviço'],
+            documents: ['Documentos', 'Gerencie os documentos dos clientes']
+        };
+
+        const endpoints = {
+            leads: `${API_BASE}/leads/`,
+            tickets: `${API_BASE}/tickets/`,
+            testimonials: `${API_BASE}/testimonials/`,
+            posts: `${API_BASE}/posts/`,
+            categories: `${API_BASE}/categories/`,
+            planos: `${API_BASE}/planos/`,
+            documents: `${API_BASE}/documents/`
+        };
+
+        document.getElementById('content-title').textContent = titles[model][0];
+        document.getElementById('content-subtitle').textContent = titles[model][1];
+
+        try {
+            const response = await fetch(endpoints[model]);
+            const result = await response.json();
+            if (result.success) {
+                currentData = result.data;
+                renderTable();
+                updateCounts();
+            }
+        } catch (error) {
+            console.error('Erro ao carregar dados:', error);
+            currentData = [];
+            renderTable();
+        }
+    }
+
+    // Renderizar tabela
+    function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        
+        if (currentData.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="9">
+                        <div class="empty-state">
+                            <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                            </svg>
+                            <h3 class="empty-state-title">Nenhum registro encontrado</h3>
+                            <p class="empty-state-text">Clique em "Adicionar Novo" para criar o primeiro registro</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        // Renderizar baseado no modelo atual
+        if (currentModel === 'leads') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td>${item.nome_completo}</td>
+                    <td>${item.email}</td>
+                    <td>${item.telefone}</td>
+                    <td>${item.cidade}/${item.estado}</td>
+                    <td>${item.servico_interesse}</td>
+                    <td><span class="badge badge-info">${item.origem}</span></td>
+                    <td>
+                        ${item.contatado 
+                            ? '<span class="badge badge-success">Contatado</span>' 
+                            : '<span class="badge badge-warning">Pendente</span>'
+                        }
+                    </td>
+                    <td>${new Date(item.criado_em).toLocaleDateString('pt-BR')}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-whatsapp" onclick="sendWhatsApp(${item.id}, '${item.nome_completo}', '${item.telefone}', '${item.servico_interesse}')" title="Abrir WhatsApp Web">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                </svg>
+                                WhatsApp
+                            </button>
+                            <button class="btn-action btn-edit" onclick="editEntity(${item.id})">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
+                                Editar
+                            </button>
+                            <button class="btn-action btn-delete" onclick="deleteEntity(${item.id})">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                                Excluir
+                            </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+        } else if (currentModel === 'tickets') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td>${item.titulo}</td>
+                    <td>${item.cliente}</td>
+                    <td>${item.staff || 'Não atribuído'}</td>
+                    <td><span class="badge badge-info">${item.status}</span></td>
+                    <td><span class="badge badge-warning">${item.prioridade}</span></td>
+                    <td>${new Date(item.criado_em).toLocaleDateString('pt-BR')}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-edit" onclick="editEntity(${item.id})">Editar</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        } else if (currentModel === 'posts') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td>${item.title}</td>
+                    <td>${item.category}</td>
+                    <td>${item.author}</td>
+                    <td><span class="badge badge-info">${item.status}</span></td>
+                    <td>${item.is_featured ? '<span class="badge badge-success">Sim</span>' : 'Não'}</td>
+                    <td>${new Date(item.created_at).toLocaleDateString('pt-BR')}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-edit" onclick="editEntity(${item.id})">Editar</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        } else if (currentModel === 'categories') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.slug}</td>
+                    <td>${item.description || 'N/A'}</td>
+                    <td>${new Date(item.created_at).toLocaleDateString('pt-BR')}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-edit" onclick="editEntity(${item.id})">Editar</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        } else if (currentModel === 'testimonials') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.position}</td>
+                    <td>${item.content}</td>
+                    <td>${item.is_active ? '<span class="badge badge-success">Ativo</span>' : '<span class="badge badge-secondary">Inativo</span>'}</td>
+                    <td>${item.order}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-edit" onclick="editEntity(${item.id})">Editar</button>
+                            <button class="btn-action btn-delete" onclick="deleteEntity(${item.id})">Excluir</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        } else if (currentModel === 'planos') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td>${item.nome}</td>
+                    <td>${item.categoria}</td>
+                    <td>R$ ${item.preco}</td>
+                    <td>${item.preco_antigo ? 'R$ ' + item.preco_antigo : 'N/A'}</td>
+                    <td>${item.ativo ? '<span class="badge badge-success">Ativo</span>' : '<span class="badge badge-secondary">Inativo</span>'}</td>
+                    <td>${item.destaque ? '<span class="badge badge-warning">Sim</span>' : 'Não'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-edit" onclick="editEntity(${item.id})">Editar</button>
+                            <button class="btn-action btn-delete" onclick="deleteEntity(${item.id})">Excluir</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        } else if (currentModel === 'documents') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td>${item.titulo}</td>
+                    <td>${item.usuario}</td>
+                    <td><span class="badge badge-info">${item.categoria}</span></td>
+                    <td>${item.visivel_para_cliente ? '<span class="badge badge-success">Sim</span>' : 'Não'}</td>
+                    <td>${new Date(item.criado_em).toLocaleDateString('pt-BR')}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-edit" onclick="editEntity(${item.id})">Ver</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+    }
+
+    // Atualizar contadores
+    function updateCounts() {
+        if (currentModel === 'leads') {
+            const pendingLeads = currentData.filter(l => !l.contatado).length;
+            document.getElementById('leads-count').textContent = pendingLeads;
+        }
+    }
+
+    // Abrir modal de adicionar
+    document.getElementById('btnAddNew').addEventListener('click', function() {
+        document.getElementById('modalTitle').textContent = 'Adicionar Novo Lead';
+        document.getElementById('entityForm').reset();
+        document.getElementById('entityId').value = '';
+        document.getElementById('formModal').classList.add('active');
+    });
+
+    // Editar entidade
+    function editEntity(id) {
+        const entity = currentData.find(item => item.id === id);
+        if (!entity) return;
+
+        document.getElementById('modalTitle').textContent = 'Editar Lead';
+        document.getElementById('entityId').value = entity.id;
+        document.getElementById('nome_completo').value = entity.nome_completo;
+        document.getElementById('email').value = entity.email;
+        document.getElementById('telefone').value = entity.telefone;
+        document.getElementById('estado').value = entity.estado;
+        document.getElementById('cidade').value = entity.cidade;
+        document.getElementById('servico_interesse').value = entity.servico_interesse;
+        document.getElementById('contatado').checked = entity.contatado;
+        document.getElementById('observacoes').value = entity.observacoes || '';
+        
+        document.getElementById('formModal').classList.add('active');
+    }
+
+    // Salvar entidade
+    async function saveEntity() {
+        const entityId = document.getElementById('entityId').value;
+        const formData = {
+            nome_completo: document.getElementById('nome_completo').value,
+            email: document.getElementById('email').value,
+            telefone: document.getElementById('telefone').value,
+            estado: document.getElementById('estado').value,
+            cidade: document.getElementById('cidade').value,
+            servico_interesse: document.getElementById('servico_interesse').value,
+            contatado: document.getElementById('contatado').checked,
+            observacoes: document.getElementById('observacoes').value || ''
+        };
+
+        try {
+            const url = entityId 
+                ? `${API_BASE}/leads/${entityId}/update/` 
+                : `${API_BASE}/leads/create/`;
+
+            // Função para obter o CSRF token do cookie
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            const csrftoken = getCookie('csrftoken');
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                closeModal();
+                alert(entityId ? 'Lead atualizado com sucesso!' : 'Lead criado com sucesso!');
+                loadModelData(currentModel);
+            } else {
+                alert('Erro ao salvar: ' + (result.error || 'Erro desconhecido'));
+            }
+        } catch (error) {
+            console.error('Erro ao salvar:', error);
+            alert('Erro ao salvar lead');
+        }
+    }
+
+    // Enviar mensagem via WhatsApp
+    function sendWhatsApp(leadId, leadName, leadPhone, servicoInteresse) {
+        // Limpar telefone (remover caracteres especiais)
+        const phone = leadPhone.replace(/\D/g, '');
+        
+        // Mensagem padrão
+        const message = `Olá ${leadName}! 👋
+
+Somos da Vetorial Contabilidade e vimos que você demonstrou interesse em nossos serviços de ${servicoInteresse}.
+
+Estamos à disposição para esclarecer qualquer dúvida e apresentar nossas soluções personalizadas para o seu negócio.
+
+Podemos agendar uma conversa?`;
+
+        // Criar URL do WhatsApp Web
+        const whatsappUrl = `https://wa.me/55${phone}?text=${encodeURIComponent(message)}`;
+        
+        // Abrir em nova aba
+        window.open(whatsappUrl, '_blank');
+    }
+
+    // Excluir entidade
+    function deleteEntity(id) {
+        deleteId = id;
+        document.getElementById('deleteModal').classList.add('active');
+    }
+
+    // Confirmar exclusão
+    async function confirmDelete() {
+        if (!deleteId) return;
+
+        try {
+            const response = await fetch(`${API_BASE}/leads/${deleteId}/delete/`, {
+                method: 'DELETE',
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                closeDeleteModal();
+                alert('Lead excluído com sucesso!');
+                loadModelData(currentModel);
+            } else {
+                alert('Erro ao excluir: ' + (result.error || 'Erro desconhecido'));
+            }
+        } catch (error) {
+            console.error('Erro ao excluir:', error);
+            alert('Erro ao excluir lead');
+        }
+    }
+
+    // Fechar modais
+    function closeModal() {
+        document.getElementById('formModal').classList.remove('active');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('active');
+        deleteId = null;
+    }
+
+    // Busca
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const search = e.target.value.toLowerCase();
+        // Implementar lógica de filtro
+        console.log('Buscando:', search);
+    });
+
+    // Carregar dados iniciais
+    loadModelData('leads');
+</script>
+</body>
+</html>

@@ -66,4 +66,10 @@ urlpatterns = [
     path('cliente/abrir-chamado/', views.abrir_chamado, name='abrir_chamado'),
     path('cliente/chamado/<int:pk>/', views.chamado_detail, name='chamado_detail'),
     path('cliente/chamado/<int:pk>/responder/', views.responder_chamado, name='responder_chamado'),
+    
+    # API Endpoints - Novos (Extensão do Dashboard)
+    path('api/guias/', views.api_guias_imposto_list, name='api_guias_imposto_list'),
+    path('api/guias/enviar/', views.api_guia_imposto_enviar, name='api_guia_imposto_enviar'),
+    path('api/cliente-assinatura/<int:cliente_id>/', views.api_cliente_subscription_info, name='api_cliente_subscription_info'),
+    path('api/cliente-assinatura/update/', views.api_cliente_subscription_update, name='api_cliente_subscription_update'),
 ]
