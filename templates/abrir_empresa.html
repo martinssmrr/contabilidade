@@ -15,6 +15,225 @@
 .faq-answer-content { padding: 0 1rem 1rem; }
 .faq-icon { display: inline-flex; align-items: center; transition: transform 0.25s ease; }
 .faq-item.open .faq-icon { transform: rotate(180deg); }
+
+/* Class identical to home.html for consistency */
+.section-title-blue {
+    color: #1A237E;
+    font-weight: 700;
+}
+
+/* Estilos adicionais para os novos cards de serviços */
+.svc-section .svc-center { min-height: 550px; }
+
+.svc-section .box-a { top: 38%; }
+.svc-section .box-b { top: 61%; }
+.svc-section .box-d { top: 38%; }
+.svc-section .box-e { top: 61%; }
+
+.svc-section .box-f { position: absolute; left: calc(50% - 560px); top: 15%; transform: translateY(-50%); }
+.svc-section .box-g { position: absolute; left: calc(50% - 560px); top: 84%; transform: translateY(-50%); }
+.svc-section .box-h { position: absolute; right: calc(50% - 560px); top: 15%; transform: translateY(-50%); }
+.svc-section .box-i { position: absolute; right: calc(50% - 560px); top: 84%; transform: translateY(-50%); }
+
+@media (max-width: 576px) {
+    .svc-section .box-f, .svc-section .box-g, .svc-section .box-h, .svc-section .box-i {
+        position: static;
+        width: calc(100% - 40px);
+        max-width: 520px;
+        margin: 0 auto;
+        justify-content: flex-start;
+    }
+}
+
+/* Contabilidade Facil Grid Section */
+    #contabilidade-facil-grid .grid-container {
+        display: grid;
+        grid-template-columns: minmax(150px, 250px) 1fr 1fr minmax(150px, 250px);
+        grid-template-rows: auto auto auto auto;
+        gap: 20px;
+        align-items: center;
+    }
+    
+    #contabilidade-facil-grid .central-image {
+        grid-area: 2 / 2 / 4 / 4;
+        width: 70%;
+        height: auto;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin: auto;
+    }
+
+    #contabilidade-facil-grid .card-grid {
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        transition: transform 0.3s ease;
+    }
+    
+    #contabilidade-facil-grid .card-grid:hover {
+        transform: translateY(-5px);
+    }
+
+    #contabilidade-facil-grid .card-grid i {
+        font-size: 2.5em;
+        color: #0c63d1;
+        margin-bottom: 15px;
+    }
+
+    #contabilidade-facil-grid .card-grid h3 {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    #contabilidade-facil-grid .card-grid p {
+        font-size: 0.9em;
+        color: #666;
+        margin: 0;
+    }
+
+    /* Positioning Cards */
+    /* Top Row */
+    #contabilidade-facil-grid .card-9 { grid-area: 1 / 1 / 2 / 2; } /* Top Left Vertex */
+    #contabilidade-facil-grid .card-1 { grid-area: 1 / 2 / 2 / 3; }
+    #contabilidade-facil-grid .card-2 { grid-area: 1 / 3 / 2 / 4; }
+    #contabilidade-facil-grid .card-10 { grid-area: 1 / 4 / 2 / 5; } /* Top Right Vertex */
+    
+    /* Middle Rows (Left/Right) */
+    #contabilidade-facil-grid .card-3 { grid-area: 2 / 1 / 3 / 2; }
+    #contabilidade-facil-grid .card-4 { grid-area: 3 / 1 / 4 / 2; }
+    
+    #contabilidade-facil-grid .card-5 { grid-area: 2 / 4 / 3 / 5; }
+    #contabilidade-facil-grid .card-6 { grid-area: 3 / 4 / 4 / 5; }
+    
+    /* Bottom Row */
+    #contabilidade-facil-grid .card-11 { grid-area: 4 / 1 / 5 / 2; } /* Bottom Left Vertex */
+    #contabilidade-facil-grid .card-7 { grid-area: 4 / 2 / 5 / 3; }
+    #contabilidade-facil-grid .card-8 { grid-area: 4 / 3 / 5 / 4; }
+    #contabilidade-facil-grid .card-12 { grid-area: 4 / 4 / 5 / 5; } /* Bottom Right Vertex */
+
+    @media (max-width: 992px) {
+        #contabilidade-facil-grid .grid-container {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto;
+        }
+        #contabilidade-facil-grid .central-image {
+            grid-area: 1 / 1 / 2 / 3;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        #contabilidade-facil-grid .card-grid {
+            grid-area: auto !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+        #contabilidade-facil-grid .grid-container {
+            grid-template-columns: 1fr;
+        }
+        #contabilidade-facil-grid .central-image {
+            grid-area: auto;
+        }
+    }
+
+    /* Depoimentos */
+
+    .autor-foto {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    }
+
+    .depoimento-card {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        position: relative;
+        height: 100%;
+    }
+
+    .depoimento-card::before {
+        content: '"';
+        font-size: 6rem;
+        color: rgba(12, 99, 209, 0.1);
+        position: absolute;
+        top: 10px;
+        left: 25px;
+        font-family: Georgia, serif;
+        line-height: 1;
+    }
+
+    .depoimento-texto {
+        font-style: italic;
+        color: var(--text-light);
+        margin-bottom: 25px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .depoimento-autor {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .autor-avatar {
+        width: 60px;
+        height: 60px;
+        background-size: cover;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .autor-avatar i {
+        font-size: 1.5rem;
+        color: var(--white);
+    }
+
+    .testimonials-scroll {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 20px;
+    }
+
+    .testimonials-scroll::-webkit-scrollbar {
+    height: 8px;
+    }
+
+    .testimonials-scroll::-webkit-scrollbar-thumb {
+    background: #c5c5c5;
+    border-radius: 4px;
+    }
+
+    .depoimento-card-wrapper {
+    min-width: calc(33.33% - 1rem); /* 3 por tela */
+    }
+
+    @media (max-width: 992px) { /* Tablet */
+    .depoimento-card-wrapper {
+        min-width: 50%; /* 2 por tela */
+    }
+    }
+
+    @media (max-width: 576px) { /* Mobile */
+    .depoimento-card-wrapper {
+        min-width: 85%; /* 1 por tela */
+    }
+    }
+
 </style>
 {% endblock %}
 
@@ -125,21 +344,12 @@
         <div class="row align-items-center" style="min-height: 75vh; padding-bottom: 1rem;">
             <!-- Coluna Esquerda - Conteúdo -->
             <div class="col-lg-6 col-12 animate-fade-in px-5">
-                <h1 class="display-3 fw-bold mb-4">Abertura de empresa rápida, sem burocracia e online</h1>
-                <p class="fs-5 mb-4">Abra sua empresa sem sair de casa e conte com o suporte de contadores especialistas que já ajudaram mais de 30 mil empreendedores a evitarem erros e conquistarem tranquilidade. Mais que contabilidade, é parceria.</p>
+                <h1 class="display-3 fw-bold mb-4">A Vetorial abre sua empresa sem custo, 100% online e sem complicação.</h1>
+                <p class="fs-5 mb-4">A Vetorial cuida de toda a abertura da sua empresa, do início ao CNPJ ativo, com clareza, suporte humano e segurança jurídica em cada etapa. Empreender com a Vetorial é mais simples, seguro e acessível. Empreender mudou e você também pode mudar com a Vetorial.</p>
                 <div class="d-grid gap-3 d-sm-flex mb-4">
-                    <button type="button" class="btn btn-light btn-lg px-5" data-bs-toggle="modal" data-bs-target="#contactModal">Abra sua empresa agora</button>
-                    <a href="https://wa.me/5561998311920" target="_blank" class="btn btn-outline-light btn-lg px-5">Falar com um especialista</a>
+                    <button type="button" class="btn btn-light btn-lg px-5" data-bs-toggle="modal" data-bs-target="#contactModal">ABRIR EMPRESA GRÁTIS</button>
+                    <a href="https://wa.me/5561998311920" target="_blank" class="btn btn-outline-light btn-lg px-5">CONSULTAR ESPECIALISTA</a>
                 </div>
-                <!-- Selos de Segurança -->
-                <!-- <div class="d-flex gap-3 align-items-center flex-wrap mt-3">
-                    <div class="selo-badge selo-ra1000">
-                        <img src="{% static 'img/SELO-RA1000.webp' %}" alt="Selo RA1000" class="img-fluid">
-                    </div>
-                    <div class="selo-badge selo-google" style="width: 103.969px !important; height: 37.734px !important;">
-                        <img src="{% static 'img/googlesiteseguro.webp' %}" alt="Google Site Seguro" style="width: 100%; height: 100%; object-fit: contain;">
-                    </div>
-                </div> -->
             </div>
             <!-- Coluna Direita - Vazia (imagem de fundo aparece aqui) -->
             <div class="col-lg-6 d-none d-lg-block">
@@ -151,7 +361,7 @@
 
 
 <!-- Rolagem de logos -->
-<section id="partners" class="partners-section py-4" style="background-color: #ebeef1;">
+<!-- <section id="partners" class="partners-section py-4" style="background-color: #ebeef1;">
     <div class="container-fluid px-0">
         <div class="text-center mb-3">
             <h2 class="display-5 fw-bold">Empresas que confiam em nosso trabalho</h2>
@@ -219,7 +429,7 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 
 <!-- Por que escolher a Vetorial Section -->
@@ -233,11 +443,14 @@
             <div class="col-lg-3 col-md-6 col-12">
                 <div class="card h-100 border-0 shadow-sm feature-card">
                     <div class="card-body p-4 text-center">
-                        <div class="feature-icon mb-4">
-                            <img src="{% static 'img/brasil.webp' %}" alt="Brasil" class="img-fluid">
+                        <div class="feature-icon mb-4 text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-gift-fill" viewBox="0 0 16 16">
+                                <path d="M3 2.5a2.5 2.5 0 0 1 5 0 2.5 2.5 0 0 1 5 0v.006c0 .07 0 .27-.038.494H15a1 1 0 0 1 1 1v1h-1V4h-1v1.5a.5.5 0 0 0 .5.5h.5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5h.5a.5.5 0 0 0 .5-.5V3h-1v1h-1V3a1 1 0 0 1-1-1V.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5V2zm1.5 2.5h3A.5.5 0 0 1 8 5.5v7a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5z"/>
+                                <path d="M3 2.5A2.5 2.5 0 0 1 5.5 0 2.5 2.5 0 0 1 8 2.5c0 .07 0 .27-.038.494H15a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 14.5V7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h2.038A2.968 2.968 0 0 1 3 2.506V2.5zm1.068.5H7v-.5a1.5 1.5 0 1 0-3 0c0 .085.002.274.045.43a.522.522 0 0 0 .023.07zM9 3h2.932a.56.56 0 0 0 .023-.07c.043-.156.045-.345.045-.43a1.5 1.5 0 0 0-3 0V3zM1 4v2h6V4H1zm8 0v2h6V4H9zm5 3H9v8h4.5a.5.5 0 0 0 .5-.5V7zm-7 8V7H2v7.5a.5.5 0 0 0 .5.5H7z"/>
+                            </svg>
                         </div>
-                        <h5 class="card-title fw-bold mb-3">Atendimento em todo o brasil</h5>
-                        <p class="card-text text-muted">Somos uma contabilidade online pronta para atender a sua empresa, em qualquer cidade brasileira.</p>
+                        <h5 class="card-title fw-bold mb-3">É gratuito</h5>
+                        <p class="card-text text-muted">A Vetorial Contabilidade não cobra honorários pela abertura da empresa.</p>
                     </div>
                 </div>
             </div>
@@ -246,11 +459,13 @@
             <div class="col-lg-3 col-md-6 col-12">
                 <div class="card h-100 border-0 shadow-sm feature-card">
                     <div class="card-body p-4 text-center">
-                        <div class="feature-icon mb-4">
-                            <img src="{% static 'img/online.webp' %}" alt="Online" class="img-fluid">
+                        <div class="feature-icon mb-4 text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                                <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+                            </svg>
                         </div>
-                        <h5 class="card-title fw-bold mb-3">Totalmente online</h5>
-                        <p class="card-text text-muted">Todo o atendimento e fluxo de documentos para a contabilidade se dá através do nosso sistema, basta ter acesso à internet.</p>
+                        <h5 class="card-title fw-bold mb-3">Atendimento com contadores especialistas</h5>
+                        <p class="card-text text-muted">Aqui você não fala com robôs.Você é atendido por contadores experientes, com conhecimento técnico e visão estratégica sobre o seu negócio.</p>
                     </div>
                 </div>
             </div>
@@ -259,11 +474,13 @@
             <div class="col-lg-3 col-md-6 col-12">
                 <div class="card h-100 border-0 shadow-sm feature-card">
                     <div class="card-body p-4 text-center">
-                        <div class="feature-icon mb-4">
-                            <img src="{% static 'img/custo.webp' %}" alt="Baixo Custo" class="img-fluid">
+                        <div class="feature-icon mb-4 text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-piggy-bank-fill" viewBox="0 0 16 16">
+                                <path d="M7.964 1.527c-2.977 0-5.571 1.704-6.32 4.125h-.55A1 1 0 0 0 .11 6.824l.254 1.46a1.5 1.5 0 0 0 1.478 1.243h.263c.3.513.688.978 1.145 1.382l-.729 2.477a.5.5 0 0 0 .48.641h2a.5.5 0 0 0 .471-.332l.482-1.351c.635.173 1.31.267 2.011.267.707 0 1.388-.095 2.028-.272l.543 1.372a.5.5 0 0 0 .465.316h2a.5.5 0 0 0 .478-.641l-.761-2.506c.453-.396.833-.846 1.125-1.35v.209a3 3 0 0 0 3 3V7.5a3 3 0 0 0-3-3V1.527zM5.5 10.5A1.5 1.5 0 1 1 7 9a1.5 1.5 0 0 1-1.5 1.5zm6.5 0A1.5 1.5 0 1 1 13.5 9a1.5 1.5 0 0 1-1.5 1.5z"/>
+                            </svg>
                         </div>
-                        <h5 class="card-title fw-bold mb-3">Baixo Custo</h5>
-                        <p class="card-text text-muted">Economize recursos para aplicar no seu negócio, tecnologia de ponta e contadores de primeira trazem para você o melhor custo benefício.</p>
+                        <h5 class="card-title fw-bold mb-3">Menos imposto</h5>
+                        <p class="card-text text-muted">Analisamos seu modelo de negócio e indicamos a estrutura mais eficiente para pagar apenas o imposto necessário, com segurança jurídica.</p>
                     </div>
                 </div>
             </div>
@@ -272,11 +489,13 @@
             <div class="col-lg-3 col-md-6 col-12">
                 <div class="card h-100 border-0 shadow-sm feature-card">
                     <div class="card-body p-4 text-center">
-                        <div class="feature-icon mb-4">
-                            <img src="{% static 'img/atendimento.webp' %}" alt="Atendimento Humanizado" class="img-fluid">
+                        <div class="feature-icon mb-4 text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
+                                <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41 4.157 8.5z"/>
+                            </svg>
                         </div>
-                        <h5 class="card-title fw-bold mb-3">Atendimento Humanizado</h5>
-                        <p class="card-text text-muted">Tenha um contador online pronto para atender e te ajudar na tomada de decisão do seu negócio.</p>
+                        <h5 class="card-title fw-bold mb-3">CNPJ Rápido</h5>
+                        <p class="card-text text-muted">A Vetorial é referência em abertura de empresas, cuidamos de todo o processo com precisão, clareza e foco em eficiência tributária.</p>
                     </div>
                 </div>
             </div>
@@ -289,65 +508,150 @@
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="display-5 fw-bold mb-3">Como é feita a abertura de empresa na Vetorial?</h2>
-            <p class="lead text-muted">Um processo simples, rápido e totalmente online</p>
+            <p class="lead text-muted">Abrir uma empresa não precisa ser complicado, caro ou confuso. Estamos ao seu lado em cada etapa, explicando tudo de forma simples e com atendimento personalizado.</p>
         </div>
-        <div class="row g-4">
-            <!-- Card 1 - Diagnóstico -->
-            <div class="col-lg-3 col-md-6 col-12">
+        <div class="row g-4 justify-content-center">
+            <!-- Card 1 -->
+            <div class="col-lg-4 col-md-6 col-12">
                 <div class="card h-100 border-0 shadow-sm feature-card">
                     <div class="card-body p-4 text-center">
-                        <div class="feature-icon mb-4">
-                            <div class="icon-circle" style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 3.5rem;">🔎</div>
+                        <div class="feature-icon mb-4 text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-1-circle-fill" viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM9.283 4.002H7.971L6.072 5.385v1.271l1.834-1.318h.065V12h1.312V4.002Z"/>
+                            </svg>
                         </div>
-                        <h5 class="card-title fw-bold mb-3">Diagnóstico Completo</h5>
-                        <p class="card-text text-muted">Analisamos seu histórico, documentos e pendências para um plano de transição sem surpresas.</p>
+                        <h5 class="card-title fw-bold mb-3">Planejamento e definição correta</h5>
+                        <p class="card-text text-muted">Antes de qualquer registro, analisamos o seu negócio. Um contador especialista orienta você na escolha do tipo de empresa, CNAE, regime tributário e estrutura mais eficiente, evitando erros que geram impostos desnecessários no futuro.</p>
                     </div>
                 </div>
             </div>
             
-            <!-- Card 2 - Migração -->
-            <div class="col-lg-3 col-md-6 col-12">
+            <!-- Card 2 -->
+            <div class="col-lg-4 col-md-6 col-12">
                 <div class="card h-100 border-0 shadow-sm feature-card">
                     <div class="card-body p-4 text-center">
-                        <div class="feature-icon mb-4">
-                            <div class="icon-circle" style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 3.5rem;">📁</div>
+                        <div class="feature-icon mb-4 text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-2-circle-fill" viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM6.646 6.24c0-.691.493-1.306 1.336-1.306.756 0 1.313.492 1.313 1.236 0 .697-.469 1.23-.902 1.705l-2.971 3.293V12h5.344v-1.107H7.268v-.077l1.974-2.22c.718-.815 1.318-1.577 1.318-2.383 0-1.342-1.024-2.456-2.673-2.456C6.398 3.758 5.38 4.793 5.38 6.24v.266h1.266V6.24Z"/>
+                            </svg>
                         </div>
-                        <h5 class="card-title fw-bold mb-3">Migração de Documentos</h5>
-                        <p class="card-text text-muted">Organizamos e transferimos todos os arquivos e escrituração para nosso sistema integrado.</p>
+                        <h5 class="card-title fw-bold mb-3">Abertura completa do CNPJ</h5>
+                        <p class="card-text text-muted">Com as definições feitas, a Vetorial assume todo o processo de abertura. Cuidamos da documentação, registros e acompanhamos cada etapa até o CNPJ estar ativo sem burocracia e sem você precisar se preocupar com detalhes técnicos.</p>
                     </div>
                 </div>
             </div>
             
-            <!-- Card 3 - Integração -->
-            <div class="col-lg-3 col-md-6 col-12">
+            <!-- Card 3 -->
+            <div class="col-lg-4 col-md-6 col-12">
                 <div class="card h-100 border-0 shadow-sm feature-card">
                     <div class="card-body p-4 text-center">
-                        <div class="feature-icon mb-4">
-                            <div class="icon-circle" style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 3.5rem;">⚙️</div>
+                        <div class="feature-icon mb-4 text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-3-circle-fill" viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-8.082.414c.92 0 1.535.54 1.541 1.318.012.791-.615 1.36-1.588 1.354-.861-.006-1.482-.469-1.54-1.066H5.104c.047 1.177 1.05 2.144 2.754 2.144 1.653 0 2.954-.937 2.93-2.396-.023-1.278-1.031-1.846-1.734-1.916v-.07c.597-.1 1.505-.739 1.482-1.876-.03-1.177-1.043-2.074-2.666-2.074-1.572 0-2.624.912-2.754 2.144h1.295c.078-.544.66-1.033 1.41-1.033.791 0 1.386.602 1.372 1.436C9.13 5.86 8.515 6.446 7.632 6.48H6.551v1.146h1.367Z"/>
+                            </svg>
                         </div>
-                        <h5 class="card-title fw-bold mb-3">Integração Contínua</h5>
-                        <p class="card-text text-muted">Conectamos suas notas, conciliações e obrigações para automatizar processos fiscais.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Card 4 - Acompanhamento -->
-            <div class="col-lg-3 col-md-6 col-12">
-                <div class="card h-100 border-0 shadow-sm feature-card">
-                    <div class="card-body p-4 text-center">
-                        <div class="feature-icon mb-4">
-                            <div class="icon-circle" style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 3.5rem;">🤝</div>
-                        </div>
-                        <h5 class="card-title fw-bold mb-3">Acompanhamento Dedicado</h5>
-                        <p class="card-text text-muted">Um gerente de conta acompanha mês a mês e entrega relatórios com ações práticas.</p>
+                        <h5 class="card-title fw-bold mb-3">Contabilidade ativa e acompanhamento contínuo</h5>
+                        <p class="card-text text-muted">Após a abertura, sua empresa já inicia com a contabilidade organizada. A Vetorial passa a cuidar das obrigações fiscais, apuração de impostos, declarações e relatórios, tudo acessível em uma plataforma online, com suporte humano sempre disponível.</p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="text-center mt-5">
-            <a href="#contato" class="btn btn-primary btn-lg me-2 mb-2" style="background: #3498db; border: none; padding: 12px 32px; border-radius: 8px;">Quero abrir minha empresa</a>
-            <a href="#contato" class="btn btn-outline-primary btn-lg mb-2" style="border-color: #3498db; color: #3498db; padding: 12px 32px; border-radius: 8px;">Falar com especialista</a>
+            <button type="button" class="btn btn-primary btn-lg me-2 mb-2" data-bs-toggle="modal" data-bs-target="#contactModal">Quero Abrir meu CNPJ</button>
+            <a href="https://wa.me/5561998311920" target="_blank" class="btn btn-outline-primary btn-lg mb-2">Falar com Especialista</a>
             <p class="fst-italic text-muted small mt-3">Você não precisa finalizar o ano fiscal para realizar a troca de contabilidade.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Contabilidade Facil Grid Section -->
+<section id="contabilidade-facil-grid" class="py-5 bg-light " style="background-color: #ebeef1 !important;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold section-title-blue">Veja por que somos a Melhor Escolha para o seu negócio</h2>
+            <p class="lead text-muted"><strong>Descubra por que empresas de todo o Brasil escolhem a Vetorial como parceira contábil</strong></p>
+        </div>
+        <div class="grid-container">
+            <!-- Card 9 (Top Left Vertex) -->
+            <div class="card-grid card-9">
+                <i class="fa-solid fa-calculator"></i>
+                <h3>Taxas Reduzidas</h3>
+                <p>Abertura de empresa totalmente gratuita e zero cobrança de 13º. Economia real desde o primeiro mês.</p>
+            </div>
+            <!-- Card 1 -->
+            <div class="card-grid card-1">
+                <i class="fa-solid fa-store"></i>
+                <h3>100% Online</h3>
+                <p>Toda a rotina contábil acontece de forma digital. Zero papelada. Zero deslocamento.</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="card-grid card-2">
+                <i class="fa-solid fa-rotate"></i>
+                <h3>Atendimento em Todo o Brasil</h3>
+                <p>Não importa onde você esteja atendemos empresas de todas as cidades do país com a mesma eficiência.</p>
+            </div>
+            <!-- Card 10 (Top Right Vertex) -->
+            <div class="card-grid card-10">
+                <i class="fa-solid fa-id-card"></i>
+                <h3>Acesso Fácil a Documentos</h3>
+                <p>Organização completa dos seus documentos, armazenados em nuvem e disponíveis de onde você estiver.</p>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card-grid card-3">
+                <i class="fa-solid fa-chart-line"></i>
+                <h3>Atendimento Multicanal</h3>
+                <p>Suporte humano e ágil pelo WhatsApp, e-mail, chat e ligação. Você escolhe o canal, nós respondemos rápido.</p>
+            </div>
+            
+            <!-- Central Image -->
+            <img src="{% static 'img/sectioncrecimento.webp' %}" alt="Contabilidade Fácil" class="central-image" width="679" height="453" loading="lazy">
+            
+            <!-- Card 5 -->
+            <div class="card-grid card-5">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <h3>Consultoria por Vídeo Chamada</h3>
+                <p>Reuniões periódicas com um contador experiente no seu segmento.</p>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="card-grid card-4">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+                <h3>Sem 13º Salário</h3>
+                <p>Economize com nossa política de honorários.</p>
+            </div>
+            
+            <!-- Card 6 -->
+            <div class="card-grid card-6">
+                <i class="fa-solid fa-coins"></i>
+                <h3>Contador Especialista no Seu Nicho</h3>
+                <p>Nada de contabilidade genérica. Você é acompanhado por um profissional que entende profundamente o seu mercado.</p>
+            </div>
+
+            <!-- Card 11 (Bottom Left Vertex) -->
+            <div class="card-grid card-11">
+                <i class="fa-solid fa-briefcase"></i>
+                <h3>Sistema Empresarial 24h/7d</h3>
+                <p>Acesse informações, relatórios e indicadores do seu negócio a qualquer hora. Basta ter internet.</p>
+            </div>
+            <!-- Card 7 -->
+            <div class="card-grid card-7">
+                <i class="fa-solid fa-headset"></i>
+                <h3>Planos Flexíveis, Preços Justos</h3>
+                <p>Ajustamos o plano ao tamanho do seu negócio para que você pague só o essencial nada a mais.</p>
+            </div>
+            <!-- Card 8 -->
+            <div class="card-grid card-8">
+                <i class="fa-solid fa-check-double"></i>
+                <h3>Treinamento para Sua Equipe</h3>
+                <p>Capacitamos sua equipe para dominar o uso de todas as nossas ferramentas.</p>
+            </div>
+            <!-- Card 12 (Bottom Right Vertex) -->
+            <div class="card-grid card-12">
+                <i class="fa-solid fa-user-tie"></i>
+                <h3>Sistema Simples e Intuitivo</h3>
+                <p>Uma plataforma moderna, fácil de usar e desenvolvida para tornar sua rotina mais leve e eficiente.</p>
+            </div>
         </div>
     </div>
 </section>
@@ -540,55 +844,334 @@
                 <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
                 <div class="box-text">Suporte exclusivo para decisões mais assertivas</div>
             </div>
+
+            <!-- New Cards -->
+            <div class="svc-box box-f">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">Atendimento multicanal</div>
+            </div>
+            <div class="svc-box box-g">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">Sem burocracia</div>
+            </div>
+            <div class="svc-box box-h">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">100% Online</div>
+            </div>
+            <div class="svc-box box-i">
+                <svg class="box-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#582e9b"></circle><path d="M6 12.2l3 3.2 9-9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <div class="box-text">Tudo com segurança</div>
+            </div>
         </div>
 
         <p class="svc-close">Mude para uma contabilidade que entrega resultados com <strong>parceria!</strong></p>
     </div>
 </section>
 
-<!-- Testimonials Section -->
-<section class="testimonials-section py-5" style="background-color: #ebeef1;">
+<!-- CTA Card Section -->
+<section class="py-5" style="background-color: #ebeef1;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card border-0 shadow-sm position-relative overflow-hidden" 
+                     style="border-radius: 12px; background-color: #0a4fa3;">
+                    
+                    <!-- Background Icons -->
+                    <div class="position-absolute top-0 start-0 w-100 h-100 overflow-hidden" style="pointer-events: none; z-index: 0;">
+                        <!-- Icon 1: Document -->
+                        <svg class="position-absolute" style="top: -20px; left: -20px; opacity: 0.1; transform: rotate(-15deg);" 
+                             width="150" height="150" fill="white" viewBox="0 0 16 16">
+                             <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                        </svg>
+                        
+                        <!-- Icon 2: Chart -->
+                        <svg class="position-absolute" style="bottom: -30px; right: -10px; opacity: 0.1; transform: rotate(15deg);" 
+                             width="180" height="180" fill="white" viewBox="0 0 16 16">
+                             <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"/>
+                             <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                             <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                        </svg>
+
+                        <!-- Icon 3: Lock/Security -->
+                        <svg class="position-absolute" style="top: 10px; right: 20%; opacity: 0.05;" 
+                             width="80" height="80" fill="white" viewBox="0 0 16 16">
+                            <path d="M8 1a2 2 0 0 1 2 2v2H6V3a2 2 0 0 1 2-2zm3 4V3a3 3 0 1 0-6 0v2H3.36a1.5 1.5 0 0 0-1.483 1.277L.85 13.13A1 1 0 0 0 1.85 14.247h12.3a1 1 0 0 0 1-1.117l-1.027-6.853A1.5 1.5 0 0 0 12.64 5H11zm-1 1v1.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V6h-2zm-3 0v1.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V6H7z"/>
+                        </svg>
+                    </div>
+
+                    <div class="card-body p-4 position-relative" style="z-index: 1;">
+                        <div class="text-center">
+                            <h4 class="fw-bold text-white mb-2 h3">Não encontrou o que procura?</h4>
+                            <p class="text-white-50 mb-3">Fale agora com um consultor Vetorial. Estamos prontos para te ajudar com soluções personalizadas para o seu negócio.</p>
+                            <a href="https://wa.me/5561998311920?text=Ol%C3%A1%2C%20n%C3%A3o%20encontrei%20o%20que%20procurava%20no%20site%20e%20gostaria%20de%20falar%20com%20um%20consultor." target="_blank" class="btn btn-light px-4 py-2 fw-bold rounded-pill shadow transition-all hover-scale" style="color: #0a4fa3;">
+                                <i class="fab fa-whatsapp me-2"></i> Fale Conosco
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section py-5" style="background-color: #ebeef1; min-height: 400px;">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Depoimentos que reforçam o nosso compromisso!</h2>
-            <p class="lead text-muted mb-4">Faça como os mais de 30 mil empreendedores que confiam na Agilize e que descobriram um novo jeito de lidar com a contabilidade, de forma simples, eficiente e humanizada.</p>
-            <img src="{% static 'img/avaliação-google.webp' %}" alt="Avaliação Google" class="img-fluid" style="max-width: 300px;">
+            <h2 class="display-5 section-title-blue mb-4">Perguntas Frequentes</h2>
+            <p class="lead text-muted">Respondemos o que nossos clientes mais perguntam. Precisa de algo específico? Nosso time de contadores está à disposição.</p>
         </div>
         
-        <div class="testimonials-scroll-container">
-            <div class="testimonials-wrapper">
-                {% for testimonial in testimonials %}
-                <div class="testimonial-card">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-center mb-3">
-                                {% if testimonial.photo %}
-                                <img src="{{ testimonial.photo.url }}" alt="{{ testimonial.name }}" class="testimonial-photo me-3">
-                                {% else %}
-                                <div class="testimonial-photo-placeholder me-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                        <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                                    </svg>
-                                </div>
-                                {% endif %}
-                                <div>
-                                    <h5 class="mb-0 fw-bold">{{ testimonial.name }}</h5>
-                                    <small class="text-muted">{{ testimonial.position }}</small>
-                                </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="faq-accordion">
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">O que é necessário para abrir uma empresa?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Você precisa basicamente dos seus documentos pessoais, endereço, definição da atividade e informações dos sócios (se houver). <br>Na Vetorial, analisamos tudo com você, indicamos o melhor enquadramento e cuidamos de todo o processo para evitar erros desde o início.</p>
                             </div>
-                            <p class="card-text text-muted">{{ testimonial.content }}</p>
-                            <div class="stars text-warning">
-                                ★★★★★
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Quanto custa abrir uma empresa?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Os custos dependem do tipo de empresa, da cidade e das taxas da Junta Comercial.
+Na Vetorial, a abertura é <strong>gratuita</strong> (mediante contratação do plano), e você paga apenas as taxas obrigatórias, com total transparência. Os nossos planos são super acessíveis, a partir de R$199,00.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">É obrigatório ter contador para abrir uma empresa?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Sim. Para abrir e manter uma empresa regular (com exceção do MEI), a lei exige a atuação de um contador responsável. O MEI é a única modalidade que não obriga formalmente a contratação de um contador, mas, à medida que o negócio cresce, o acompanhamento contábil se torna essencial.
+A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecendo orientação completa desde a abertura até a gestão contábil contínua, com segurança e clareza.
+</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Como funciona a contabilidade online da Vetorial?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Na Vetorial, sua contabilidade é conduzida por uma equipe de especialistas que assumem todas as rotinas fiscais, contábeis e trabalhistas da sua empresa — desde a apuração de impostos até o cumprimento das obrigações legais. Você acompanha tudo por meio de uma plataforma simples e intuitiva, com total transparência, além de contar com atendimento humano e especializado sempre que precisar.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">A contabilidade online da Vetorial é segura?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Sim. A Vetorial utiliza sistemas modernos, com protocolos de segurança e proteção de dados, além de atuar em total conformidade com as normas do Conselho Regional de Contabilidade (CRC). Suas informações são tratadas com sigilo, responsabilidade e segurança em todas as etapas do processo.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Quanto custa, em média, o serviço de contabilidade?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>O valor da contabilidade varia conforme o tipo de empresa, volume de operações, número de funcionários e complexidade do negócio. Na Vetorial, os planos são flexíveis e ajustados à sua realidade, garantindo um custo justo e transparente, sem pagar por serviços que você não precisa.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">O que significa abertura de empresa 100% online?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Significa que todo o processo de abertura é feito de forma digital, sem a necessidade de deslocamentos ou idas a órgãos públicos. Na Vetorial, cuidamos de todas as etapas enquanto você acompanha tudo com orientação clara e acompanhamento humano.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                {% empty %}
-                <div class="col-12 text-center">
-                    <p class="text-muted">Nenhum depoimento disponível no momento.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section py-5" style="background-color: #ebeef1;">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span style="color: #1a237e !important;" class="counter" data-target="5000">5000</span>+
+                        </h2>
+                        <p class="text-muted mb-0">Cidades atendidas</p>
+                    </div>
                 </div>
-                {% endfor %}
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span class="counter" data-target="8">8</span>+
+                        </h2>
+                        <p class="text-muted mb-0">Anos de Mercado</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span class="counter" data-target="7000">7000</span>+
+                        </h2>
+                        <p class="text-muted mb-0">Empresas abertas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span class="counter" data-target="97.7">97.7</span>%
+                        </h2>
+                        <p class="text-muted mb-0">Satisfação</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Depoimentos Section -->
+<section class="testimonials-section py-5" style="background-color: #ebeef1;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 section-title-blue mb-4">A confiança de milhares de empresas em todo o Brasil</h2>
+            <p class="lead text-muted mb-4">A Vetorial constrói relações duradouras com empresas que buscam alto nível, clareza e tranquilidade na gestão contábil.</p>
+            <img src="{% static 'img/avaliação-google.webp' %}" alt="Avaliação Google" class="img-fluid" style="max-width: 300px; height: auto;" loading="lazy">
+        </div>
+        
+        <div class="testimonials-scroll d-flex gap-4">
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Eu me sentia abandonado pelo meu contador antigo. Mandava mensagem e ficava dias sem resposta. Na Vetorial, sou atendido rápido e com clareza. Hoje sei exatamente o que está acontecendo com minha empresa."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/carlos.webp' %}" alt="Foto do Dr. Ricardo" class="autor-foto" width="60" height="60" loading="lazy">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Carlos Teodoro</h6>
+                            <small class="text-muted">Dono de Mercado, Niterói-RJ/2024</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Descobri com a Vetorial que eu estava pagando imposto errado há meses. Ajustaram meu enquadramento e hoje economizo todo mês, de forma totalmente legal."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/rafael.webp' %}" alt="Foto do Dr. Ricardo" class="autor-foto" width="60" height="60" loading="lazy">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Rafael Antunes</h6>
+                            <small class="text-muted">Produtor Rural, Porto Alegre-RS/2023</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Antes eu não entendia nada dos relatórios. Era tudo técnico e confuso. Na Vetorial, explicam de um jeito simples e hoje consigo tomar decisões com segurança."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/juliana.webp' %}" alt="Foto do Dr. André Oliveira" class="autor-foto" width="60" height="60" loading="lazy">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Juliana Gonçalves</h6>
+                            <small class="text-muted">Cabeleireira, Manaus-AM/2022</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Emitir nota, enviar documento, resolver qualquer coisa era um sofrimento. A Vetorial simplificou tudo e hoje resolvo minha contabilidade em minutos."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/maria.webp' %}" alt="Foto do Dr. André Oliveira" class="autor-foto" width="60" height="60" loading="lazy">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Maria Júlia Paes</h6>
+                            <small class="text-muted">Dentista, São Paulo-SP/2018</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Meu contador antigo usava planilhas e pedia tudo por e-mail. Era bagunçado. A Vetorial trouxe sistema, organização e automação. Mudou completamente minha rotina.”</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/tiago.webp' %}" alt="Foto do Dr. André Oliveira" class="autor-foto" width="60" height="60" loading="lazy">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Thiago Furlan</h6>
+                            <small class="text-muted">Programador, Maceió-AL/2024</small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -683,118 +1266,6 @@
                                 Enviar Mensagem
                             </button>
                         </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- FAQ Section -->
-<section class="faq-section py-5" style="background-color: #ebeef1; min-height: 400px;">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Dúvidas Frequentes sobre os Planos</h2>
-            <p class="lead text-muted">Tire suas principais dúvidas sobre nossos planos</p>
-        </div>
-        
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="faq-accordion">
-                    <div class="faq-item">
-                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">O que é necessário para abrir uma empresa?</span>
-                            <span class="faq-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="faq-answer-content">
-                                <p>Você precisa dos seus documentos pessoais, endereço, atividade da empresa e informações sobre sócios, quando houver.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">Quanto tempo demora para abrir uma empresa?</span>
-                            <span class="faq-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="faq-answer-content">
-                                <p>O processo para abrir uma empresa geralmente leva de 7 a 15 dias úteis, dependendo da complexidade do negócio e da rapidez na entrega dos documentos necessários.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">Quanto custa abrir uma empresa?</span>
-                            <span class="faq-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="faq-answer-content">
-                                <p>Os custos para abrir uma empresa variam conforme o tipo de empresa e a localidade, incluindo taxas de registro, honorários contábeis e outros custos administrativos.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">Posso usar meu endereço residencial?</span>
-                            <span class="faq-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="faq-answer-content">
-                                <p>Sim, você pode usar seu endereço residencial para abrir a empresa, desde que esteja de acordo com as normas municipais e o tipo de atividade exercida.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">É obrigatório ter contador?</span>
-                            <span class="faq-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="faq-answer-content">
-                                <p>Sim, é obrigatório ter um contador para a maioria dos tipos de empresa, pois ele é responsável pela escrituração contábil, cumprimento das obrigações fiscais e orientação financeira.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">É possível abrir empresa online?</span>
-                            <span class="faq-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="faq-answer-content">
-                                <p>Sim. Hoje o processo é 100% digital em quase todos os estados.</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
