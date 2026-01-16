@@ -412,7 +412,7 @@
         right: 0;
         bottom: 0;
         background: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
+        z-index: 3000;
         align-items: center;
         justify-content: center;
         padding: 20px;
@@ -1556,7 +1556,7 @@
                     <div class="panel-section">
                         <div class="panel-section-header">
                             Notas Fiscais Enviadas/Recebidas
-                            <button class="btn-primary" style="margin-left: auto; padding: 4px 12px; font-size: 0.8rem;" onclick="openNFModal()">Nova NF</button>
+                            <button class="btn-primary" style="margin-left: auto; padding: 4px 12px; font-size: 0.8rem;" onclick="openNFModal(currentSelectedClientId)">Nova NF</button>
                         </div>
                         <div class="items-list" id="panelNFsList">Loading...</div>
                     </div>
@@ -1579,12 +1579,15 @@
                      <div class="panel-section">
                         <div class="panel-section-header">
                             Guias de Imposto
-                             <button class="btn-primary" style="margin-left: auto; padding: 4px 12px; font-size: 0.8rem;" onclick="alert('Use Ação Rápida')">Enviar Guia</button>
+                             <button class="btn-primary" style="margin-left: auto; padding: 4px 12px; font-size: 0.8rem;" onclick="openGuiaModal(currentSelectedClientId)">Enviar Guia</button>
                         </div>
                         <div class="items-list" id="panelGuiasList">Loading...</div>
                     </div>
                      <div class="panel-section">
-                        <div class="panel-section-header">Certidões Negativas</div>
+                        <div class="panel-section-header">
+                            Certidões Negativas
+                            <button class="btn-primary" style="margin-left: auto; padding: 4px 12px; font-size: 0.8rem;" onclick="openCertidaoModal(currentSelectedClientId)">Nova Certidão</button>
+                        </div>
                         <div class="items-list" id="panelCertidoesList">Loading...</div>
                     </div>
                 </div>
@@ -1596,7 +1599,10 @@
                         <div id="panelAberturaStatus">Loading...</div>
                     </div>
                     <div class="panel-section">
-                        <div class="panel-section-header">Documentos da Empresa</div>
+                        <div class="panel-section-header">
+                            Documentos da Empresa
+                            <button class="btn-primary" style="margin-left: auto; padding: 4px 12px; font-size: 0.8rem;" onclick="openDocumentoEmpresaModal(currentSelectedClientId)">Enviar Documento</button>
+                        </div>
                          <div class="items-list" id="panelDocsEmpresaList">Loading...</div>
                     </div>
                 </div>
@@ -1744,8 +1750,21 @@
              statusDiv.innerHTML = `
                 <div style="padding: 16px; background: #eff6ff; border-radius: 8px; border: 1px solid #dbeafe;">
                     <div style="color: #1e40af; font-weight: 600; margin-bottom: 4px;">Fase Atual</div>
-                    <div style="font-size: 1.1rem; color: #1e3a8a;">${client.fase_display || 'Não identificada'}</div>
-                    <div style="font-size: 0.8rem; color: #60a5fa; margin-top: 4px;">ID: ${client.fase || '-'}</div>
+                    <div style="font-size: 1.1rem; color: #1e3a8a; margin-bottom: 8px;">${client.fase_display || 'Não identificada'}</div>
+                    
+                    <div style="display: flex; gap: 8px; align-items: center; margin-top: 12px; border-top: 1px solid #dbeafe; padding-top: 12px;">
+                        <div style="flex:1;">
+                            <label style="font-size: 0.8rem; color: #5e6c84; display:block; margin-bottom: 4px;">Alterar Fase:</label>
+                            <select id="changePhaseSelect" class="form-control" style="font-size: 0.9rem; padding: 6px;">
+                                <option value="fase_1" ${client.fase=='fase_1'?'selected':''}>Fase 1 - Planejamento</option>
+                                <option value="fase_2" ${client.fase=='fase_2'?'selected':''}>Fase 2 - Viabilidade</option>
+                                <option value="fase_3" ${client.fase=='fase_3'?'selected':''}>Fase 3 - Registro</option>
+                                <option value="fase_4" ${client.fase=='fase_4'?'selected':''}>Fase 4 - Inscrições</option>
+                                <option value="fase_7" ${client.fase=='fase_7'?'selected':''}>Fase 7 - Ativa</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary" style="padding: 8px 16px; height: 38px; margin-top: 18px;" onclick="updateClientPhase(${client.id})">Salvar</button>
+                    </div>
                 </div>
              `;
         }
@@ -2020,10 +2039,10 @@
         }
         
         container.innerHTML = list.slice(0, 10).map(c => `
-            <div class="list-item">
+            <div class="list-item" onclick="openChamadoModal(${c.id})" style="cursor: pointer; transition: background 0.2s;">
                 <div>
                      <div style="font-weight: 600; font-size: 0.9rem; color: #172b4d;">${c.titulo}</div>
-                     <div style="font-size: 0.8rem; color: #5e6c84;">${c.protocolo} - ${c.status}</div>
+                     <div style="font-size: 0.8rem; color: #5e6c84;">${c.protocolo} - <span class="status-badge status-${c.status_raw || 'aberto'}">${c.status}</span></div>
                 </div>
                 <div style="font-size: 0.8rem; color: #5e6c84;">${c.data_criacao}</div>
             </div>
@@ -3650,7 +3669,7 @@
     }
 
     // Abrir modal de NF
-    async function openNFModal() {
+    async function openNFModal(clientId = null) {
         // Carregar lista de clientes
         try {
             const response = await fetch(`${API_BASE}/clientes/`);
@@ -3661,6 +3680,10 @@
                 select.innerHTML = '<option value="">Selecione um cliente...</option>' + 
                     result.data.map(c => `<option value="${c.id}">${c.nome} (${c.email})</option>`).join('');
                 
+                if (clientId) {
+                    select.value = clientId;
+                }
+
                 document.getElementById('nfModal').classList.add('active');
             }
         } catch (error) {
@@ -3708,7 +3731,7 @@
     });
 
     // Abrir modal de Documento da Empresa
-    async function openDocumentoEmpresaModal() {
+    async function openDocumentoEmpresaModal(clientId = null) {
         // Carregar lista de clientes
         try {
             const response = await fetch(`${API_BASE}/clientes/`);
@@ -3719,6 +3742,10 @@
                 select.innerHTML = '<option value="">Selecione um cliente...</option>' + 
                     result.data.map(c => `<option value="${c.id}">${c.nome} (${c.email})</option>`).join('');
                 
+                if (clientId) {
+                    select.value = clientId;
+                }
+
                 document.getElementById('documentoEmpresaModal').classList.add('active');
             }
         } catch (error) {
@@ -3772,7 +3799,7 @@
     });
 
     // Abrir modal de Certidão
-    async function openCertidaoModal() {
+    async function openCertidaoModal(clientId = null) {
         // Carregar lista de clientes
         try {
             const response = await fetch(`${API_BASE}/clientes/`);
@@ -3783,6 +3810,10 @@
                 select.innerHTML = '<option value="">Selecione um cliente...</option>' + 
                     result.data.map(c => `<option value="${c.id}">${c.nome} (${c.email})</option>`).join('');
                 
+                if (clientId) {
+                    select.value = clientId;
+                }
+
                 document.getElementById('certidaoModal').classList.add('active');
             }
         } catch (error) {
@@ -3835,10 +3866,11 @@
     });
 
     // === GUIA MODAL FUNCTIONS ===
-    function openGuiaModal() {
+    function openGuiaModal(clientId = null) {
         document.getElementById('guiaModal').classList.add('active');
-        if(currentSelectedClientId) {
-             document.getElementById('guiaClienteVal').value = currentSelectedClientId;
+        const idToUse = clientId || currentSelectedClientId;
+        if(idToUse) {
+             document.getElementById('guiaClienteVal').value = idToUse;
         }
     }
     
