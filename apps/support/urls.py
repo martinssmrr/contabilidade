@@ -72,4 +72,9 @@ urlpatterns = [
     path('api/guias/enviar/', views.api_guia_imposto_enviar, name='api_guia_imposto_enviar'),
     path('api/cliente-assinatura/<int:cliente_id>/', views.api_cliente_subscription_info, name='api_cliente_subscription_info'),
     path('api/cliente-assinatura/update/', views.api_cliente_subscription_update, name='api_cliente_subscription_update'),
+
+    # API Endpoints - Staff Tasks
+    path('api/staff-tasks/', views.api_staff_tasks_list, name='api_staff_tasks_list'),
+    path('api/staff-tasks/<int:pk>/update/', views.api_staff_tasks_update, name='api_staff_tasks_update'),
+    path('api/staff-tasks/<int:pk>/delete/', views.api_staff_tasks_delete, name='api_staff_tasks_delete'),
 ]

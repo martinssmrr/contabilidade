@@ -95,9 +95,59 @@
         flex-direction: column;
     }
 
+    /* Barra de Ações */
+    .actions-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        padding: 16px 16px 0;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 300px;
+        max-width: 400px;
+        position: relative;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 8px 12px 8px 36px;
+        border: 1px solid var(--border-color);
+        border-radius: 3px;
+        font-size: 0.9rem;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        width: 16px;
+        height: 16px;
+    }
+
     /* Esconder elementos antigos */
-    .sidebar, .content-header, .actions-bar {
-        display: none !important;
+    .content-header {
+        /* display: none !important;  Let's keep generic header hidden if we use the trello-one, or show it? */
+        /* The user wants the button, which is in actions-bar. */
+        display: block;
+        padding: 16px 16px 0;
+    }
+    
+    .content-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+    
+    .content-subtitle {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
     }
 
     /* Custom Scrollbar */
@@ -243,10 +293,52 @@
         padding-top: 6px;
         margin-top: 2px;
     }
-        transform: translateY(-50%);
+
+    /* Sidebar Styles */
+    .menu-section {
+        margin-bottom: 24px;
+    }
+
+    .menu-section-title {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
         color: var(--text-secondary);
-        width: 18px;
-        height: 18px;
+        margin-bottom: 8px;
+        padding-left: 12px;
+        font-weight: 600;
+    }
+
+    .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 12px;
+        color: var(--text-primary);
+        text-decoration: none;
+        border-radius: 6px;
+        margin-bottom: 2px;
+        transition: all 0.2s;
+    }
+
+    .menu-item:hover {
+        background: #f4f5f7;
+        color: var(--primary-color);
+    }
+
+    .menu-item.active {
+        background: #e6f0f6;
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+
+    .menu-item-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 12px;
+    }
+    
+    .menu-item-text {
+        font-size: 0.95rem;
     }
 
     .btn-primary {
@@ -1088,86 +1180,37 @@
          </div>
     </header>
 
-    <!-- Área de Conteúdo -->
-    <main class="content-area">
-        <div class="content-header" style="display: none;">
-            <h1 class="content-title" id="content-title">Chamados</h1>
-            <p class="content-subtitle" id="content-subtitle">Gerencie todos os leads capturados do site</p>
-        </div>
-
-        <div class="actions-bar" style="display: none;">
-            <div class="search-box">
-                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-                <input type="text" id="searchInput" placeholder="Buscar...">
-            </div>
-            <button class="btn-primary" id="btnAddNew">
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                <span id="btnAddNewText">Adicionar Novo</span>
-            </button>
-        </div>
-
-        <div id="dataCard">
-            <!-- Board will be rendered here -->
-        </div>
-    </main>
-</div>
-                <a href="#" class="menu-item" data-model="certidoes">
+    <div style="display: flex; flex: 1; overflow: hidden;">
+    <aside class="sidebar" style="width: 260px; background: white; border-right: 1px solid #dfe1e6; display: flex; flex-direction: column;">
+        <nav class="sidebar-nav" style="padding: 16px; overflow-y: auto; flex: 1;">
+            <div class="menu-section">
+                <a href="#" class="menu-item active" data-model="clientes">
                     <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                     </svg>
-                    <span class="menu-item-text">Certidões Negativas</span>
-                </a>
-                <a href="#" class="menu-item" data-model="documentos-empresa">
-                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
-                    </svg>
-                    <span class="menu-item-text">Documentos da Empresa</span>
-                </a>
-                <a href="#" class="menu-item" data-model="extratos-bancarios">
-                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                    </svg>
-                    <span class="menu-item-text">Extratos Bancários</span>
-                </a>
-                <a href="#" class="menu-item" data-model="testimonials">
-                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-                    </svg>
-                    <span class="menu-item-text">Depoimentos</span>
+                    <span class="menu-item-text">Início</span>
                 </a>
             </div>
 
             <div class="menu-section">
-                <div class="menu-section-title">Blog</div>
-                <a href="#" class="menu-item" data-model="posts">
-                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
-                    </svg>
-                    <span class="menu-item-text">Posts</span>
+                <div class="menu-section-title">Atendimento</div>
+                <a href="#" class="menu-item" data-model="leads">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    <span class="menu-item-text">Leads</span>
+                </a>
+                <a href="#" class="menu-item" data-model="chamados">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                    <span class="menu-item-text">Chamados</span>
                 </a>
             </div>
 
             <div class="menu-section">
-                <div class="menu-section-title">Serviços</div>
-                <a href="#" class="menu-item" data-model="planos">
+                <div class="menu-section-title">Operacional</div>
+                <a href="#" class="menu-item" data-model="staff-tasks">
                     <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                     </svg>
-                    <span class="menu-item-text">Planos</span>
-                </a>
-            </div>
-
-            <div class="menu-section">
-                <div class="menu-section-title">Documentos</div>
-                <a href="#" class="menu-item" data-model="documents">
-                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                    </svg>
-                    <span class="menu-item-text">Documentos</span>
+                    <span class="menu-item-text">Quadros / Tarefas</span>
                 </a>
             </div>
         </nav>
@@ -1209,6 +1252,7 @@
         </div>
     </main>
 </div>
+</div>
 
 <!-- Modal de Chamado Detalhes -->
 <div class="modal-overlay" id="chamadoModal">
@@ -1243,6 +1287,61 @@
                 </svg>
                 Enviar Resposta
             </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Tarefa Staff -->
+<div class="modal-overlay" id="staffTaskModal">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Nova Tarefa Interna</h3>
+            <button class="modal-close" onclick="closeStaffTaskModal()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="staffTaskForm">
+                <div class="form-group">
+                    <label class="form-label" for="staffTaskTitle">Título da Tarefa *</label>
+                    <input type="text" class="form-control" id="staffTaskTitle" required placeholder="Ex: Pendente da Receita Federal">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="staffTaskClients">Clientes Envolvidos</label>
+                    <select class="form-control" id="staffTaskClients" multiple style="height: 150px;">
+                        <!-- Clientes carregados via JS -->
+                    </select>
+                    <small style="color: var(--text-secondary); display: block; margin-top: 4px;">Segure Ctrl para selecionar múltiplos</small>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="staffTaskPriority">Prioridade</label>
+                        <select class="form-control" id="staffTaskPriority">
+                            <option value="low">Baixa</option>
+                            <option value="medium" selected>Média</option>
+                            <option value="high">Alta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="staffTaskDueDate">Data de Vencimento</label>
+                        <input type="date" class="form-control" id="staffTaskDueDate">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="staffTaskDescription">Descrição Adicional</label>
+                    <textarea class="form-control" id="staffTaskDescription" rows="3" placeholder="Detalhes da tarefa..."></textarea>
+                </div>
+                
+                <div class="modal-footer" style="padding: 0; margin-top: 24px;">
+                    <button type="button" class="btn-secondary" onclick="closeStaffTaskModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Criar Tarefa</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -2039,7 +2138,7 @@
         }
         
         container.innerHTML = list.slice(0, 10).map(c => `
-            <div class="list-item" onclick="openChamadoModal(${c.id})" style="cursor: pointer; transition: background 0.2s;">
+            <div class="list-item" onclick="viewChamado(${c.id})" style="cursor: pointer; transition: background 0.2s;">
                 <div>
                      <div style="font-weight: 600; font-size: 0.9rem; color: #172b4d;">${c.titulo}</div>
                      <div style="font-size: 0.8rem; color: #5e6c84;">${c.protocolo} - <span class="status-badge status-${c.status_raw || 'aberto'}">${c.status}</span></div>
@@ -2089,14 +2188,16 @@
     let currentChamadoId = null;
     const API_BASE = '/support/api';
 
-    // Navegação do Menu (Disabled since UI removed)
-    /*
+    // Navegação do Menu
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', function(e) {
-             // ... logic disabled
+             e.preventDefault();
+             document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+             this.classList.add('active');
+             currentModel = this.dataset.model;
+             loadModelData(currentModel);
         });
     });
-    */
 
     // Função para obter o CSRF token
     function getCookie(name) {
@@ -2202,6 +2303,14 @@
             btnText: null,
             headers: []
         },
+        'staff-tasks': {
+            title: 'Tarefas Internas',
+            subtitle: 'Gerencie tarefas internas da equipe',
+            endpoint: `${API_BASE}/staff-tasks/`,
+            btnText: 'Nova Tarefa',
+            headers: []
+        },
+
         testimonials: {
             title: 'Depoimentos',
             subtitle: 'Gerencie os depoimentos dos clientes',
@@ -2253,6 +2362,8 @@
                 btnAddNew.onclick = openCertidaoModal;
             } else if (model === 'documentos-empresa') {
                 btnAddNew.onclick = openDocumentoEmpresaModal;
+            } else if (model === 'staff-tasks') {
+                btnAddNew.onclick = openStaffTaskModal;
             } else {
                 btnAddNew.onclick = () => alert('Funcionalidade em desenvolvimento');
             }
@@ -2282,7 +2393,9 @@
             try {
                 console.log('Fetching:', config.endpoint);
                 const response = await fetch(config.endpoint);
-                document.getElementById('debug-status').innerHTML += `<br>Status: ${response.status} ${response.statusText}`;
+                
+                const debugStatus = document.getElementById('debug-status');
+                if(debugStatus) debugStatus.innerHTML += `<br>Status: ${response.status} ${response.statusText}`;
                 
                 if (!response.ok) {
                      throw new Error('Network response was not ok: ' + response.statusText);
@@ -2297,7 +2410,8 @@
                     result = JSON.parse(text);
                 } catch(e) {
                     console.error("JSON Parse error", e);
-                    document.getElementById('debug-status').innerHTML += `<br>JSON Parse Error: ${e.message}<br>Snippet: ${text.substring(0, 100)}...`;
+                    if(document.getElementById('debug-status')) 
+                        document.getElementById('debug-status').innerHTML += `<br>JSON Parse Error: ${e.message}<br>Snippet: ${text.substring(0, 100)}...`;
                     throw e;
                 }
                 
@@ -2305,14 +2419,16 @@
                 
                 if (result.success) {
                     currentData = result.data;
-                    document.getElementById('debug-status').innerHTML += `<br>Dados recebidos: ${currentData.length} registros. Renderizando...`;
+                    if(document.getElementById('debug-status'))
+                        document.getElementById('debug-status').innerHTML += `<br>Dados recebidos: ${currentData.length} registros. Renderizando...`;
                     renderClientsBoard();
                 } else {
                     container.innerHTML = '<div style="color:red; padding:20px;">Erro na API: ' + JSON.stringify(result) + '</div>';
                 }
             } catch (error) {
                 console.error('Erro ao carregar clientes:', error);
-                document.getElementById('dataCard').innerHTML += '<div style="color:red; padding:20px; font-weight:bold;">ERRO: ' + error.message + '</div>';
+                const dataCard = document.getElementById('dataCard');
+                if(dataCard) dataCard.innerHTML += '<div style="color:red; padding:20px; font-weight:bold;">ERRO: ' + error.message + '</div>';
             }
             return;
         }
@@ -2338,6 +2454,50 @@
         // Para extratos bancários, mostrar interface customizada
         if (model === 'extratos-bancarios') {
             renderExtratosBancariosInterface();
+            return;
+        }
+
+        // Para tarefas internas (staff-tasks)
+        if (model === 'staff-tasks') {
+            const container = document.getElementById('dataCard');
+            container.innerHTML = `<div style="text-align:center; padding: 40px;">Carregando tarefas...</div>`;
+            try {
+                const response = await fetch(config.endpoint);
+                const result = await response.json();
+                if (result.success) {
+                    currentData = result.data;
+                    renderStaffTasksBoard();
+                } else {
+                    container.innerHTML = `<div style="color:red; padding:20px;">Erro: ${result.error}</div>`;
+                }
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = `<div style="color:red; padding:20px;">Erro de conexão</div>`;
+            }
+            return;
+        }
+
+        // Para chamados (Tickets), usar renderChamadosBoard
+        if (model === 'chamados') {
+            const container = document.getElementById('dataCard');
+            container.innerHTML = `<div style="text-align:center; padding: 40px;">Carregando chamados...</div>`;
+            try {
+                const response = await fetch(config.endpoint);
+                const result = await response.json();
+                if (result.success) {
+                    currentData = result.data;
+                    renderChamadosBoard();
+                    // Update count in sidebar if element exists (optional)
+                    if(document.getElementById('chamados-count')) {
+                         document.getElementById('chamados-count').textContent = currentData.length;
+                    }
+                } else {
+                    container.innerHTML = `<div style="color:red; padding:20px;">Erro na API: ${result.error}</div>`;
+                }
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = `<div style="color:red; padding:20px;">Erro de conexão ao buscar chamados.</div>`;
+            }
             return;
         }
 
@@ -3195,6 +3355,18 @@
         container.style.background = 'transparent';
         container.style.boxShadow = 'none';
 
+        // Add refresh button to header
+        const headerActions = document.querySelector('.actions-bar');
+        if(headerActions && !document.getElementById('btnRefreshBoard')) {
+             const btn = document.createElement('button');
+             btn.id = 'btnRefreshBoard';
+             btn.className = 'btn-secondary';
+             btn.innerHTML = '🔄 Atualizar';
+             btn.onclick = () => loadModelData(currentModel);
+             btn.style.marginLeft = '8px';
+             headerActions.appendChild(btn);
+        }
+
         const columns = [
             { id: 'aberto', title: 'Novos Chamados', color: '#EF4444' },
             { id: 'em_andamento', title: 'Em Análise', color: '#F59E0B' },
@@ -3208,12 +3380,16 @@
         columns.forEach(col => {
             // Filter items for this column
             const colItems = currentData.filter(item => {
-                 if (item.status_value) return item.status_value === col.id;
-                 const s = item.status ? item.status.toLowerCase() : '';
-                 if (col.id === 'aberto' && s.includes('aberto')) return true;
+                 // Try strict match on value
+                 if (item.status_value && item.status_value === col.id) return true;
+                 
+                 // Try header match or loose match on display text
+                 const s = (item.status || item.status_value || '').toLowerCase();
+                 if (col.id === 'aberto' && (s === 'aberto' || s.includes('novo'))) return true;
                  if (col.id === 'em_andamento' && (s.includes('andamento') || s.includes('análise'))) return true;
                  if (col.id === 'resolvido' && (s.includes('resolvido') || s.includes('concluído'))) return true;
-                 if (col.id === 'fechado' && s.includes('fechado')) return true;
+                 if (col.id === 'fechado' && (s.includes('fechado') || s.includes('encerrado'))) return true;
+                 
                  return false;
             });
             
@@ -3907,6 +4083,263 @@
             alert('Erro ao enviar guia');
         }
     });
+
+    // === STAFF TASKS FUNCTIONS ===
+
+    function renderStaffTasksBoard() {
+        const container = document.getElementById('dataCard');
+        container.innerHTML = '';
+        container.classList.remove('data-card');
+        container.style.background = 'transparent';
+        container.style.boxShadow = 'none';
+
+        const columns = [
+            { id: 'todo', title: 'A Fazer', color: '#EF4444' },
+            { id: 'doing', title: 'Em Andamento', color: '#F59E0B' },
+            { id: 'done', title: 'Concluído', color: '#10B981' }
+        ];
+
+        const board = document.createElement('div');
+        board.className = 'kanban-container';
+
+        columns.forEach(col => {
+            const colItems = currentData
+                .filter(item => item.status === col.id)
+                .sort((a, b) => {
+                     // Put items with due_date first
+                     if(a.due_date && !b.due_date) return -1;
+                     if(!a.due_date && b.due_date) return 1;
+                     if(a.due_date && b.due_date) return new Date(a.due_date) - new Date(b.due_date);
+                     return new Date(b.updated_at) - new Date(a.updated_at);
+                });
+
+            const colDiv = document.createElement('div');
+            colDiv.className = 'kanban-column';
+            colDiv.innerHTML = `
+                <div class="kanban-column-header" style="border-top-color: ${col.color}">
+                    <span class="kanban-column-title">${col.title}</span>
+                    <span class="badge kanban-column-count">${colItems.length}</span>
+                </div>
+                <div class="kanban-column-content" id="col-${col.id}" ondrop="staffTaskDrop(event, '${col.id}')" ondragover="kanbanAllowDrop(event)">
+                    ${colItems.map(item => createStaffTaskCardHTML(item)).join('')}
+                </div>
+            `;
+            board.appendChild(colDiv);
+        });
+
+        container.appendChild(board);
+    }
+
+    function createStaffTaskCardHTML(item) {
+        // Render clients as tags
+        const clientsHtml = item.clients.map(c => 
+            `<span style="background: #e5e7eb; color: #374151; font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-right: 4px; margin-bottom: 4px;">${c.nome.split(' ')[0]}</span>`
+        ).join('');
+
+        // Priority Badge
+        let priorityBadge = '';
+        if(item.priority === 'high') priorityBadge = '<span class="badge badge-danger" style="font-size: 0.65rem;">Alta</span>';
+        else if(item.priority === 'medium') priorityBadge = '<span class="badge badge-warning" style="font-size: 0.65rem;">Média</span>';
+        else priorityBadge = '<span class="badge badge-success" style="font-size: 0.65rem;">Baixa</span>';
+
+        // Due Date
+        let dueDateHtml = '';
+        if(item.due_date) {
+             const today = new Date();
+             const due = new Date(item.due_date + 'T00:00:00'); // Assuming YYYY-MM-DD
+             today.setHours(0,0,0,0);
+             const diffTime = due - today;
+             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+             
+             let dateColor = '#6b7280';
+             let icon = '📅';
+             
+             if(diffDays < 0) { dateColor = '#EF4444'; icon = '⚠️'; } // Overdue
+             else if(diffDays === 0) { dateColor = '#F59E0B'; icon = '🕒'; } // Today
+             
+             const formattedDate = new Date(item.due_date + 'T12:00:00').toLocaleDateString('pt-BR');
+             dueDateHtml = `<span style="color: ${dateColor}; font-size: 0.75rem; display: flex; align-items: center; gap: 4px;">${icon} ${formattedDate}</span>`;
+        }
+
+        return `
+        <div class="kanban-card" draggable="true" ondragstart="kanbanDrag(event)" id="task-${item.id}" data-id="${item.id}" data-status="${item.status}" onclick="openStaffTaskModal(${item.id})" style="cursor: pointer; position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                 <div style="font-weight: 600; color: #111827;">${item.title}</div>
+                 ${priorityBadge}
+            </div>
+            ${item.description ? `<div style="font-size: 0.85rem; color: #6b7280; margin-bottom: 8px;">${item.description}</div>` : ''}
+            <div style="margin-bottom: 8px;">${clientsHtml}</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #9ca3af; border-top: 1px solid #f3f4f6; padding-top: 6px; margin-top: 6px;">
+                ${dueDateHtml || '<span>' + item.updated_at + '</span>'}
+                <button onclick="deleteStaffTask(event, ${item.id})" style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 2px;">
+                    🗑
+                </button>
+            </div>
+        </div>
+        `;
+    }
+
+    async function staffTaskDrop(ev, newStatus) {
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData("text/plain");
+        // Ensure we are dragging a task card
+        if (!data.startsWith("task-")) return; 
+        
+        const card = document.getElementById(data);
+        const cardId = card.dataset.id;
+        
+        // Optimistic update
+        ev.currentTarget.appendChild(card);
+        updateColumnCounts();
+
+        try {
+            const response = await fetch(`${API_BASE}/staff-tasks/${cardId}/update/`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
+                body: JSON.stringify({ status: newStatus })
+            });
+            const res = await response.json();
+            if(!res.success) {
+                alert("Erro ao atualizar status: " + res.error);
+                loadModelData('staff-tasks'); // Revert
+            }
+        } catch(e) {
+            console.error(e);
+            alert("Erro de conexão");
+            loadModelData('staff-tasks');
+        }
+    }
+
+    async function deleteStaffTask(e, id) {
+        e.stopPropagation();
+        if(!confirm("Tem certeza que deseja excluir esta tarefa?")) return;
+        
+        try {
+            const response = await fetch(`${API_BASE}/staff-tasks/${id}/delete/`, {
+                method: 'DELETE',
+                headers: {'X-CSRFToken': csrftoken}
+            });
+            if((await response.json()).success) {
+                loadModelData('staff-tasks');
+            } else {
+                alert("Erro ao excluir");
+            }
+        } catch(e) {
+            alert("Erro de conexão");
+        }
+    }
+
+    // Modal Create/Edit Staff Task
+    let currentEditingTaskId = null;
+
+    async function openStaffTaskModal(taskId = null) {
+        // Handle Event object being passed if called from button click
+        if (taskId && (taskId instanceof Event || taskId.type === 'click')) {
+            taskId = null;
+        }
+
+        currentEditingTaskId = taskId;
+        document.getElementById('staffTaskForm').reset();
+        const titleEl = document.querySelector('#staffTaskModal .modal-title');
+        titleEl.textContent = taskId ? 'Editar Tarefa' : 'Nova Tarefa Interna';
+        
+        // Load clients for selection
+        const select = document.getElementById('staffTaskClients');
+        select.innerHTML = '<option>Carregando...</option>';
+        document.getElementById('staffTaskModal').classList.add('active');
+        
+        try {
+            // Load clients
+            const resp = await fetch(`${API_BASE}/clientes/`);
+            const res = await resp.json();
+            if(res.success) {
+                select.innerHTML = res.data.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+            } else {
+                select.innerHTML = '<option>Erro ao carregar clientes</option>';
+            }
+
+            // If editing, load task details
+            if (taskId) {
+                // Find task in currentData (we have it in memory)
+                const task = currentData.find(t => t.id === taskId);
+                if (task) {
+                    document.getElementById('staffTaskTitle').value = task.title;
+                    document.getElementById('staffTaskDescription').value = task.description || '';
+                    
+                    // Priority and Due Date
+                    document.getElementById('staffTaskPriority').value = task.priority || 'medium';
+                    document.getElementById('staffTaskDueDate').value = task.due_date || '';
+
+                    // Select clients
+                    const clientIds = task.clients.map(c => c.id.toString());
+                    Array.from(select.options).forEach(opt => {
+                        if (clientIds.includes(opt.value)) {
+                            opt.selected = true;
+                        }
+                    });
+                }
+            } else {
+                 // Defaults for new task
+                 document.getElementById('staffTaskPriority').value = 'medium';
+            }
+        } catch(e) {
+            select.innerHTML = '<option>Erro ao carregar dados</option>';
+        }
+    }
+
+    function closeStaffTaskModal() {
+        document.getElementById('staffTaskModal').classList.remove('active');
+        currentEditingTaskId = null;
+    }
+
+    document.getElementById('staffTaskForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const title = document.getElementById('staffTaskTitle').value;
+        const description = document.getElementById('staffTaskDescription').value;
+        const priority = document.getElementById('staffTaskPriority').value;
+        const dueDate = document.getElementById('staffTaskDueDate').value;
+        const select = document.getElementById('staffTaskClients');
+        const clientIds = Array.from(select.selectedOptions).map(opt => opt.value);
+
+        try {
+            let url = `${API_BASE}/staff-tasks/`;
+            let method = 'POST';
+            
+            if (currentEditingTaskId) {
+                url = `${API_BASE}/staff-tasks/${currentEditingTaskId}/update/`;
+                // method POST is used for update in my view implementation (api_staff_tasks_update)
+            }
+
+            const response = await fetch(url, {
+                method: method,
+                headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
+                body: JSON.stringify({
+                    title: title,
+                    description: description,
+                    priority: priority,
+                    due_date: dueDate,
+                    client_ids: clientIds
+                })
+            });
+            
+            const res = await response.json();
+            if(res.success) {
+                closeStaffTaskModal();
+                if(currentModel === 'staff-tasks') {
+                    loadModelData('staff-tasks');
+                } else {
+                    alert('Tarefa salva com sucesso!');
+                }
+            } else {
+                alert('Erro: ' + res.error);
+            }
+        } catch(e) {
+            console.error(e);
+            alert('Erro ao salvar tarefa');
+        }
+    });
+
+
 
     // Handle Quick Actions Override (Move startAction here or update existing)
     // Note: startAction was defined earlier in replace_string, but we can override or ensure logic matches.

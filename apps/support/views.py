@@ -9,7 +9,7 @@ from django.forms.models import model_to_dict
 from django.core.cache import cache
 import json
 import logging
-from .models import Lead, Ticket, Cliente, Chamado, ChamadoAttachment, ChamadoMessage
+from .models import Lead, Ticket, Cliente, Chamado, ChamadoAttachment, ChamadoMessage, StaffTask
 from .forms import ChamadoForm, ChamadoMessageForm
 from django.shortcuts import redirect
 from apps.blog.models import Post, Category
@@ -1285,3 +1285,138 @@ def api_cliente_subscription_update(request):
     except Exception as e:
         logger.error(f"Erro ao atualizar plano: {e}")
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+# ==================== STAFF TASKS API ====================
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_staff_tasks_list(request):
+    """
+    GET: Lista tarefas (kanban).
+    POST: Cria nova tarefa.
+    """
+    if request.method == 'GET':
+        tasks = StaffTask.objects.all().order_by('-updated_at')
+        data = []
+        for t in tasks:
+            clients_data = []
+            for c in t.clients.all():
+                clients_data.append({
+                    'id': c.id,
+                    'nome': str(c),
+                    'email': c.user.email
+                })
+            
+            data.append({
+                'id': t.id,
+                'title': t.title,
+                'description': t.description,
+                'status': t.status,
+                'status_display': t.get_status_display(),
+                'priority': t.priority,
+                'priority_display': t.get_priority_display(),
+                'due_date': t.due_date.strftime('%Y-%m-%d') if t.due_date else None,
+                'clients': clients_data,
+                'created_at': t.created_at.strftime('%Y-%m-%d %H:%M'),
+                'updated_at': t.updated_at.strftime('%Y-%m-%d %H:%M'),
+            })
+        return JsonResponse({'success': True, 'data': data})
+
+
+    elif request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            title = data.get('title')
+            if not title:
+                return JsonResponse({'success': False, 'error': 'Título é obrigatório'}, status=400)
+            
+            # Parse due_date safely
+            due_date_val = None
+            if data.get('due_date'):
+                 try:
+                     # Expecting YYYY-MM-DD
+                     from django.utils.dateparse import parse_date
+                     due_date_val = parse_date(data['due_date'])
+                 except:
+                     pass
+
+            task = StaffTask.objects.create(
+                title=title,
+                description=data.get('description', ''),
+                status='todo',
+                priority=data.get('priority', 'medium'),
+                due_date=due_date_val,
+                created_by=request.user
+            )
+            
+            # Adicionar clientes se houver
+            client_ids = data.get('client_ids', [])
+            if client_ids:
+                clients = Cliente.objects.filter(id__in=client_ids)
+                task.clients.set(clients)
+                
+            return JsonResponse({'success': True, 'id': task.id, 'message': 'Tarefa criada com sucesso'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+@login_required
+@user_passes_test(is_staff_user)
+@require_http_methods(["POST"])
+def api_staff_tasks_update(request, pk):
+    """
+    Atualiza status ou dados da tarefa.
+    """
+    task = get_object_or_404(StaffTask, pk=pk)
+    try:
+        data = json.loads(request.body)
+        
+        if 'status' in data:
+            task.status = data['status']
+        
+        if 'title' in data:
+            task.title = data['title']
+            
+        if 'description' in data:
+            task.description = data['description']
+
+        if 'priority' in data:
+            task.priority = data['priority']
+
+        if 'due_date' in data:
+            if data['due_date']:
+                 try:
+                     from django.utils.dateparse import parse_date
+                     task.due_date = parse_date(data['due_date'])
+                 except:
+                     task.due_date = None
+            else:
+                task.due_date = None
+            
+        # Atualizar clientes if provided (full replace)
+        if 'client_ids' in data:
+            # Se for enviado null ou lista vazia, limpa.
+            # Se nao for enviado, não toca.
+            c_ids = data['client_ids']
+            if isinstance(c_ids, list):
+                clients = Cliente.objects.filter(id__in=c_ids)
+                task.clients.set(clients)
+
+        task.save()
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+@login_required
+@user_passes_test(is_staff_user)
+@require_http_methods(["DELETE"])
+def api_staff_tasks_delete(request, pk):
+    """
+    Remove uma tarefa.
+    """
+    task = get_object_or_404(StaffTask, pk=pk)
+    try:
+        task.delete()
+        return JsonResponse({'success': True})
+    except Exception as e:
+         return JsonResponse({'success': False, 'error': str(e)}, status=400)

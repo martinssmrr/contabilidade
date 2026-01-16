@@ -253,3 +253,33 @@ class ChamadoMessage(models.Model):
     def __str__(self):
         autor = self.autor.get_full_name() if self.autor else 'Sistema'
         return f"Mensagem de {autor} em Chamado #{self.chamado.pk}"
+
+
+class StaffTask(models.Model):
+    """
+    Tarefas internas do staff, que podem envolver múltiplos clientes.
+    Ex: 'Pendente receita federal' contendo o cliente 'Naiara'.
+    """
+    STATUS_CHOICES = [
+        ('todo', 'A Fazer'),
+        ('doing', 'Em Andamento'),
+        ('done', 'Concluído'),
+    ]
+
+    title = models.CharField(max_length=200, verbose_name='Título')
+    description = models.TextField(blank=True, null=True, verbose_name='Descrição')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='todo')
+    priority = models.CharField(max_length=20, choices=[('low', 'Baixa'), ('medium', 'Média'), ('high', 'Alta')], default='medium', verbose_name='Prioridade')
+    due_date = models.DateTimeField(null=True, blank=True, verbose_name='Data de Vencimento')
+    clients = models.ManyToManyField(Cliente, related_name='staff_tasks', blank=True, verbose_name='Clientes Envolvidos')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='created_tasks')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Tarefa Interna'
+        verbose_name_plural = 'Tarefas Internas'
+        ordering = ['-updated_at']
+
+    def __str__(self):
+        return self.title
