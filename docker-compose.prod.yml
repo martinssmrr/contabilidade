@@ -163,6 +163,7 @@ services:
 # ==================================
 networks:
   vetorial_network:
+    name: vetorial_prod_network
     driver: bridge
 
 # ==================================
