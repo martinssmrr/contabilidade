@@ -2521,17 +2521,32 @@
         thead.innerHTML = `<tr>${config.headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
 
         try {
+            console.log(`Fetching ${config.endpoint}...`);
             const response = await fetch(config.endpoint);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const result = await response.json();
+            
             if (result.success) {
                 currentData = result.data;
                 renderTable();
                 updateCounts();
+            } else {
+                throw new Error(result.error || 'Erro desconhecido na API');
             }
         } catch (error) {
             console.error('Erro ao carregar dados:', error);
+            const tbody = document.getElementById('tableBody');
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="${config.headers.length}" style="text-align: center; color: red; padding: 20px;">
+                            <strong>Erro ao carregar dados:</strong> ${error.message}
+                            <br><small>Verifique o console para mais detalhes.</small>
+                        </td>
+                    </tr>
+                `;
+            }
             currentData = [];
-            renderTable();
         }
     }
 
@@ -3678,9 +3693,11 @@
     function updateCounts() {
         if (currentModel === 'leads') {
             const pendingLeads = currentData.filter(l => !l.contatado).length;
-            document.getElementById('leads-count').textContent = pendingLeads;
+            const el = document.getElementById('leads-count');
+            if (el) el.textContent = pendingLeads;
         } else if (currentModel === 'chamados') {
-            document.getElementById('chamados-count').textContent = currentData.length;
+            const el = document.getElementById('chamados-count');
+            if (el) el.textContent = currentData.length;
         }
     }
 

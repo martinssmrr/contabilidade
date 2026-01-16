@@ -20,7 +20,30 @@
     .section-title-blue {
         color: #1A237E;
         font-weight: 700;
-}
+    }
+
+    /* Estilos adicionais para os novos cards de serviços */
+    .svc-section .svc-center { min-height: 550px; }
+
+    .svc-section .box-a { top: 38%; }
+    .svc-section .box-b { top: 61%; }
+    .svc-section .box-d { top: 38%; }
+    .svc-section .box-e { top: 61%; }
+
+    .svc-section .box-f { position: absolute; left: calc(50% - 560px); top: 15%; transform: translateY(-50%); }
+    .svc-section .box-g { position: absolute; left: calc(50% - 560px); top: 84%; transform: translateY(-50%); }
+    .svc-section .box-h { position: absolute; right: calc(50% - 560px); top: 15%; transform: translateY(-50%); }
+    .svc-section .box-i { position: absolute; right: calc(50% - 560px); top: 84%; transform: translateY(-50%); }
+
+    @media (max-width: 576px) {
+        .svc-section .box-f, .svc-section .box-g, .svc-section .box-h, .svc-section .box-i {
+            position: static;
+            width: calc(100% - 40px);
+            max-width: 520px;
+            margin: 0 auto;
+            justify-content: flex-start;
+        }
+    }
     
     /* Contabilidade Facil Grid Section */
     #contabilidade-facil-grid .grid-container {
@@ -467,52 +490,6 @@
     </div>
 </section>
 
-<!-- Stats Section -->
-<section class="stats-section py-5 bg-light">
-    <div class="container">
-        <div class="row text-center g-4">
-            <div class="col-md-3 col-sm-6 col-12">
-                <div class="card h-100 border-0 shadow-sm stats-card">
-                    <div class="card-body p-4">
-                        <h2 class="display-4 fw-bold stats-number mb-3">
-                            <span class="counter" data-target="5000">0</span>+
-                        </h2>
-                        <p class="text-muted mb-0">Clientes Ativos</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 col-12">
-                <div class="card h-100 border-0 shadow-sm stats-card">
-                    <div class="card-body p-4">
-                        <h2 class="display-4 fw-bold stats-number mb-3">
-                            <span class="counter" data-target="8">0</span>+
-                        </h2>
-                        <p class="text-muted mb-0">Anos de Experiência</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 col-12">
-                <div class="card h-100 border-0 shadow-sm stats-card">
-                    <div class="card-body p-4">
-                        <h2 class="display-4 fw-bold stats-number mb-3">24/7</h2>
-                        <p class="text-muted mb-0">Suporte Disponível</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 col-12">
-                <div class="card h-100 border-0 shadow-sm stats-card">
-                    <div class="card-body p-4">
-                        <h2 class="display-4 fw-bold stats-number mb-3">
-                            <span class="counter" data-target="100">0</span>%
-                        </h2>
-                        <p class="text-muted mb-0">Satisfação</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- Contabilidade Facil Grid Section -->
 <section id="contabilidade-facil-grid" class="py-5 bg-light " style="background-color: #ebeef1 !important;">
     <div class="container">
@@ -653,7 +630,7 @@
                     
                 </p>
                 <p class="text-muted mb-4">
-                    <strong>Com abertura gratuita, processos 100% online e suporte especializado, você recebe uma gestão moderna, segura e de alta performance onde quer que esteja.</strong>
+                    <strong>Com processos 100% online e suporte especializado, você recebe uma gestão moderna, segura e de alta performance onde quer que esteja.</strong>
                 </p>
                 <p class="text-muted mb-4">
                     <strong>Se sua empresa está no Brasil, a Vetorial está com você.</strong>
@@ -1154,7 +1131,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="faq-accordion">
                     <div class="faq-item">
                         <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">O que é necessário para abrir uma empresa?</span>
+                            <span class="faq-question-text">Preciso pagar para trocar de contador?</span>
                             <span class="faq-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -1163,14 +1140,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         </button>
                         <div class="faq-answer">
                             <div class="faq-answer-content">
-                                <p>Você precisa basicamente dos seus documentos pessoais, endereço, definição da atividade e informações dos sócios (se houver). <br>Na Vetorial, analisamos tudo com você, indicamos o melhor enquadramento e cuidamos de todo o processo para evitar erros desde o início.</p>
+                                <p>Não. A Vetorial não cobra taxa para realizar a troca de contador. Você escolhe o plano mais adequado ao seu negócio e nossa equipe inicia a análise contábil e fiscal para conduzir toda a migração de forma segura e organizada.</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="faq-item">
                         <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">Quanto custa abrir uma empresa?</span>
+                            <span class="faq-question-text">Posso trocar de contador a qualquer momento?</span>
                             <span class="faq-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -1179,15 +1156,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         </button>
                         <div class="faq-answer">
                             <div class="faq-answer-content">
-                                <p>Os custos dependem do tipo de empresa, da cidade e das taxas da Junta Comercial.
-Na Vetorial, a abertura é <strong>gratuita</strong> (mediante contratação do plano), e você paga apenas as taxas obrigatórias, com total transparência. Os nossos planos são super acessíveis, a partir de R$199,00.</p>
+                                <p>Sim. A troca de contador pode ser feita a qualquer momento. Após a formalização da procuração, a Vetorial passa a ser responsável pela gestão contábil e fiscal da sua empresa, garantindo continuidade e conformidade.</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="faq-item">
                         <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">É obrigatório ter contador para abrir uma empresa?</span>
+                            <span class="faq-question-text">O que preciso fazer para trocar de contador?</span>
                             <span class="faq-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -1196,17 +1172,13 @@ Na Vetorial, a abertura é <strong>gratuita</strong> (mediante contratação do 
                         </button>
                         <div class="faq-answer">
                             <div class="faq-answer-content">
-                                <p>Sim. Para abrir e manter uma empresa regular (com exceção do MEI), a lei exige a atuação de um contador responsável. O MEI é a única modalidade que não obriga formalmente a contratação de um contador, mas, à medida que o negócio cresce, o acompanhamento contábil se torna essencial.
-A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecendo orientação completa desde a abertura até a gestão contábil contínua, com segurança e clareza.
-</p>
+                                <p>É simples: basta escolher o plano da Vetorial que melhor atende sua empresa. A partir disso, nosso time entra em contato, solicita as informações necessárias e cuida de todo o processo de migração para você.</p>
                             </div>
                         </div>
                     </div>
-
-
                     <div class="faq-item">
                         <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">Como funciona a contabilidade online da Vetorial?</span>
+                            <span class="faq-question-text">Minha empresa está sem contador. Mesmo assim posso migrar para a Vetorial?</span>
                             <span class="faq-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -1215,14 +1187,14 @@ A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecen
                         </button>
                         <div class="faq-answer">
                             <div class="faq-answer-content">
-                                <p>Na Vetorial, sua contabilidade é conduzida por uma equipe de especialistas que assumem todas as rotinas fiscais, contábeis e trabalhistas da sua empresa — desde a apuração de impostos até o cumprimento das obrigações legais. Você acompanha tudo por meio de uma plataforma simples e intuitiva, com total transparência, além de contar com atendimento humano e especializado sempre que precisar.</p>
+                                <p>Sim. Mesmo que sua empresa esteja sem contador atualmente, você pode contratar a Vetorial normalmente. Nossa equipe fará uma análise completa da situação da empresa e auxiliará em todas as regularizações necessárias.</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="faq-item">
                         <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">A contabilidade online da Vetorial é segura?</span>
+                            <span class="faq-question-text">A Vetorial possui contadores próprios?</span>
                             <span class="faq-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -1231,41 +1203,47 @@ A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecen
                         </button>
                         <div class="faq-answer">
                             <div class="faq-answer-content">
-                                <p>Sim. A Vetorial utiliza sistemas modernos, com protocolos de segurança e proteção de dados, além de atuar em total conformidade com as normas do Conselho Regional de Contabilidade (CRC). Suas informações são tratadas com sigilo, responsabilidade e segurança em todas as etapas do processo.</p>
+                                <p>Sim. A Vetorial conta com uma equipe própria de contadores experientes, especializados em diferentes segmentos e rotinas fiscais, garantindo atendimento qualificado e acompanhamento contínuo.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Minha empresa não tem faturamento. Ainda preciso de um contador?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Sim. Mesmo sem faturamento, as empresas precisam cumprir obrigações legais mensais junto à Receita Federal e à Prefeitura. A ausência dessas entregas pode gerar multas. A Vetorial garante que todas as obrigações sejam cumpridas corretamente, evitando problemas futuros.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Quando é necessário migrar de MEI para ME?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>A migração de MEI para ME é obrigatória quando o faturamento anual ultrapassa o limite legal do MEI. Além disso, outras situações também exigem o desenquadramento, como:
+                                <li>contratação de mais funcionários</li>
+                                <li>entrada de sócios</li>
+                                <li>mudança de atividade não permitida no MEI</li>
+                                <li>abertura de filial</li>
+                                A Vetorial analisa seu caso e orienta o momento certo para a mudança, evitando riscos.</p>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="faq-item">
-                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">Quanto custa, em média, o serviço de contabilidade?</span>
-                            <span class="faq-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="faq-answer-content">
-                                <p>O valor da contabilidade varia conforme o tipo de empresa, volume de operações, número de funcionários e complexidade do negócio. Na Vetorial, os planos são flexíveis e ajustados à sua realidade, garantindo um custo justo e transparente, sem pagar por serviços que você não precisa.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">O que significa abertura de empresa 100% online?</span>
-                            <span class="faq-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="faq-answer-content">
-                                <p>Significa que todo o processo de abertura é feito de forma digital, sem a necessidade de deslocamentos ou idas a órgãos públicos. Na Vetorial, cuidamos de todas as etapas enquanto você acompanha tudo com orientação clara e acompanhamento humano.</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1285,8 +1263,8 @@ A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecen
             <div class="col-lg-5 col-md-8 col-12">
                 <div class="card shadow-lg border-0">
                     <div class="card-body p-4">
-                        <h3 class="fw-bold mb-2">Fale com um Especialista</h3>
-                        <p class="text-muted mb-4">Preencha o formulário e entraremos em contato</p>
+                        <h3 class="fw-bold mb-2">Pensando em trocar de contador?</h3>
+                        <p class="text-muted mb-4">A Vetorial cuida de toda a migração para você, sem riscos, sem burocracia e sem interromper a rotina da sua empresa.</p>
                         
                         <form id="contactFormSection">
                             <div class="mb-3">
@@ -1358,7 +1336,7 @@ A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecen
                             </div>
                             
                             <button type="button" class="btn btn-primary w-100 btn-lg" onclick="enviarFormularioContato()">
-                                Enviar Mensagem
+                                Quero trocar de contador
                             </button>
                         </form>
                     </div>

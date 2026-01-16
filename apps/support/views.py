@@ -41,23 +41,33 @@ def staff_dashboard(request):
 @user_passes_test(is_staff_user)
 def api_leads_list(request):
     """Lista todos os leads"""
-    leads = Lead.objects.all().order_by('-criado_em')
-    data = []
-    for lead in leads:
-        data.append({
-            'id': lead.id,
-            'nome_completo': lead.nome_completo,
-            'email': lead.email,
-            'telefone': lead.telefone,
-            'estado': lead.estado,
-            'cidade': lead.cidade,
-            'servico_interesse': lead.servico_interesse,
-            'origem': lead.origem,
-            'contatado': lead.contatado,
-            'observacoes': lead.observacoes or '',
-            'criado_em': lead.criado_em.strftime('%Y-%m-%d %H:%M:%S')
-        })
-    return JsonResponse({'success': True, 'data': data})
+    print("DEBUG: api_leads_list accessed by user", request.user)
+    try:
+        leads = Lead.objects.all().order_by('-criado_em')
+        count = leads.count()
+        print(f"DEBUG: Found {count} leads")
+        data = []
+        for lead in leads:
+            data.append({
+                'id': lead.id,
+                'nome_completo': lead.nome_completo,
+                'email': lead.email,
+                'telefone': lead.telefone,
+                'estado': lead.estado,
+                'cidade': lead.cidade,
+                'servico_interesse': lead.servico_interesse,
+                'origem': lead.origem,
+                'contatado': lead.contatado,
+                'observacoes': lead.observacoes or '',
+                'criado_em': lead.criado_em.strftime('%Y-%m-%d %H:%M:%S')
+            })
+        print("DEBUG: Returning JSON response")
+        return JsonResponse({'success': True, 'data': data})
+    except Exception as e:
+        import traceback
+        print(f"DEBUG: Error in api_leads_list: {e}")
+        traceback.print_exc()
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 @login_required
 @user_passes_test(is_staff_user)
