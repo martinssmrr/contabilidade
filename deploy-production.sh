@@ -2,7 +2,7 @@
 
 # ==================================
 # SCRIPT DE DEPLOY PARA PRODUÇÃO
-# Vetorial - contabilvetorial.com.br
+# Vetorial - vetorialcontabilidade.com.br
 # ==================================
 
 echo "🚀 Iniciando deploy em produção..."
@@ -120,7 +120,7 @@ echo "  ✓ Arquivos estáticos coletados (CSS + Imagens)"
 echo "  ✓ Permissões ajustadas"
 echo "  ✓ Serviço web reiniciado"
 echo ""
-echo -e "${YELLOW}🌐 Acesse: https://contabilvetorial.com.br${NC}"
+echo -e "${YELLOW}🌐 Acesse: https://vetorialcontabilidade.com.br${NC}"
 echo ""
 echo -e "${YELLOW}💡 Comandos úteis:${NC}"
 echo "  Ver logs: docker-compose -f docker-compose.prod.yml logs -f web"

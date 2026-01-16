@@ -30,14 +30,14 @@ SECRET_KEY = os.getenv('SECRET_KEY', "django-insecure-k6a%y-a)m#2g#ir)y$rob$c4u-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else ['localhost', '127.0.0.1', 'contabilvetorial.com.br', 'www.contabilvetorial.com.br']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else ['localhost', '127.0.0.1', 'vetorialcontabilidade.com.br', 'www.vetorialcontabilidade.com.br']
 
 # CSRF trusted origins for production
 CSRF_TRUSTED_ORIGINS = [
-    'https://contabilvetorial.com.br',
-    'https://www.contabilvetorial.com.br',
-    'http://contabilvetorial.com.br',
-    'http://www.contabilvetorial.com.br',
+    'https://vetorialcontabilidade.com.br',
+    'https://www.vetorialcontabilidade.com.br',
+    'http://vetorialcontabilidade.com.br',
+    'http://www.vetorialcontabilidade.com.br',
 ]
 
 

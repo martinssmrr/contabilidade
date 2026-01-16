@@ -3,7 +3,7 @@
 # ==================================
 # SCRIPT DE DEPLOY - VETORIAL (DOCKER)
 # Deploy na VPS Hostinger com Docker
-# Domínio: contabilvetorial.com.br
+# Domínio: vetorialcontabilidade.com.br
 # ==================================
 
 echo "====================================="
@@ -43,7 +43,7 @@ cat > /var/www/vetorial/.env << 'EOF'
 # Django
 SECRET_KEY=GERE_UMA_SECRET_KEY_SEGURA_AQUI
 DEBUG=False
-ALLOWED_HOSTS=contabilvetorial.com.br,www.contabilvetorial.com.br
+ALLOWED_HOSTS=vetorialcontabilidade.com.br,www.vetorialcontabilidade.com.br
 
 # Database
 DB_NAME=vetorial_db
@@ -106,8 +106,8 @@ docker run -it --rm \
   --email seu-email@exemplo.com \
   --agree-tos \
   --no-eff-email \
-  -d contabilvetorial.com.br \
-  -d www.contabilvetorial.com.br
+  -d vetorialcontabilidade.com.br \
+  -d www.vetorialcontabilidade.com.br
 
 # Reiniciar nginx
 docker-compose -f docker-compose.prod.yml start nginx
@@ -125,7 +125,7 @@ echo "====================================="
 echo "DEPLOY CONCLUÍDO!"
 echo "====================================="
 echo "Seu site está disponível em:"
-echo "https://contabilvetorial.com.br"
+echo "https://vetorialcontabilidade.com.br"
 echo ""
 echo "Comandos úteis Docker:"
 echo "- Ver logs: docker-compose -f docker-compose.prod.yml logs -f"

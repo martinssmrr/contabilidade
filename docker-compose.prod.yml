@@ -1,6 +1,6 @@
 # ==================================
 # DOCKER COMPOSE PARA PRODUÇÃO
-# Vetorial - contabilvetorial.com.br
+# Vetorial - vetorialcontabilidade.com.br
 # ==================================
 
 version: '3.8'

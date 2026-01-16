@@ -52,5 +52,5 @@ docker-compose -f docker-compose.prod.yml ps
 echo ""
 echo "✅ Restauração concluída!"
 echo ""
-echo "Acesse: http://contabilvetorial.com.br"
-echo "Admin: http://contabilvetorial.com.br/admin/"
+echo "Acesse: http://vetorialcontabilidade.com.br"
+echo "Admin: http://vetorialcontabilidade.com.br/admin/"

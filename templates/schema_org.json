@@ -3,8 +3,8 @@
   "@type": "Organization",
   "name": "Vetorial Contabilidade",
   "alternateName": "Vetorial",
-  "url": "https://contabilvetorial.com.br",
-  "logo": "https://contabilvetorial.com.br/static/img/logo.png",
+  "url": "https://vetorialcontabilidade.com.br",
+  "logo": "https://vetorialcontabilidade.com.br/static/img/logo.png",
   "description": "Contabilidade online especializada em abertura de empresas, planejamento tributário e gestão contábil completa.",
   "address": {
     "@type": "PostalAddress",

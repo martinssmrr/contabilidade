@@ -319,7 +319,7 @@ def processar_pagamento(request):
             notification_url = f"{site_url}/payments/webhook/mercadopago/"
         else:
             # Fallback para URL de produção se SITE_URL não estiver configurado
-            notification_url = "https://contabilvetorial.com.br/payments/webhook/mercadopago/"
+            notification_url = "https://vetorialcontabilidade.com.br/payments/webhook/mercadopago/"
             logger.warning(f"SITE_URL não configurado ou inválido: '{settings.SITE_URL}'. Usando fallback: {notification_url}")
         
         logger.info(f"notification_url: {notification_url}")

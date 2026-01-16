@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://contabilvetorial.com.br/sitemap.xml
+Sitemap: https://vetorialcontabilidade.com.br/sitemap.xml
 
 # Diretórios permitidos
 Allow: /blog/
