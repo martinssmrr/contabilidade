@@ -233,6 +233,99 @@
         min-width: 85%; /* 1 por tela */
     }
     }
+
+    /* Orbita Section Styles - Nova Seção */
+    .orbit-bg {
+        background-color: #ebeef1; /* Light background */
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .orbit-card {
+        background: rgba(255, 255, 255, 0.85); /* Semi-transparent */
+        backdrop-filter: blur(5px);
+        border-radius: 16px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.6);
+    }
+    
+    .orbit-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        background: rgba(255, 255, 255, 0.98);
+        border-color: #fff;
+    }
+    
+    .orbit-main-img {
+        width: 380px;
+        height: 380px;
+        object-fit: cover;
+        border: 10px solid rgba(255,255,255,0.8);
+        box-shadow: 0 20px 40px rgba(26, 35, 126, 0.15);
+        z-index: 10;
+        position: relative;
+    }
+
+    .orbit-image-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Orbit Rings Effect */
+    .orbit-image-container::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 140%;
+        height: 140%;
+        border: 1px dashed rgba(26, 35, 126, 0.1);
+        border-radius: 50%;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    @media (min-width: 992px) {
+        .orbit-col-left .orbit-card {
+            text-align: right;
+            margin-right: 0; 
+            position: relative;
+        }
+        
+        /* Curve Effect - Middle card pushed OUTWARD */
+        .orbit-col-left .orbit-card:nth-child(2) {
+            margin-right: 60px; 
+            z-index: 5;
+        }
+        
+        .orbit-col-right .orbit-card {
+            text-align: left;
+            margin-left: 0;
+            position: relative;
+        }
+
+        /* Curve Effect - Middle card pushed OUTWARD */
+        .orbit-col-right .orbit-card:nth-child(2) {
+            margin-left: 60px; 
+            z-index: 5;
+        }
+    }
+    
+    @media (max-width: 991px) {
+        .orbit-main-img {
+             width: 250px;
+             height: 250px;
+             margin-bottom: 2rem;
+        }
+        .orbit-card {
+            text-align: center;
+            background: #ffffff; /* Solid on mobile for better reading */
+        }
+        .orbit-image-container::before {
+            display: none;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -362,6 +455,132 @@
             <!-- Coluna Direita - Vazia (imagem de fundo aparece aqui) -->
             <div class="col-lg-6 d-none d-lg-block">
                 <!-- Espaço para a imagem de fundo aparecer -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Nova Seção: Obstáculos / Orbita Layout -->
+<section id="obstaculos-crescimento" class="orbit-bg py-5">
+    <div class="container position-relative py-lg-5">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold section-title-blue mb-3">Os obstáculos que podem estar travando o crescimento da sua empresa</h2>
+        </div>
+
+        <div class="row align-items-center justify-content-center position-relative">
+            <!-- Central Image (Shown in center on desktop, top on mobile) -->
+            <div class="col-lg-4 order-lg-2 text-center mb-4 mb-lg-0 position-relative">
+                <div class="orbit-image-container">
+                    <img src="{% static 'img/section2.jpg' %}" alt="Problemas que resolvemos" class="img-fluid rounded-circle orbit-main-img">
+                </div>
+            </div>
+
+            <!-- Left Cards -->
+            <div class="col-lg-4 col-md-6 order-lg-1">
+                <div class="d-flex flex-column gap-3 gap-lg-4 orbit-col-left">
+                    <!-- Card 1 -->
+                    <div class="card orbit-card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold text-primary mb-2">Impostos pagos sem critério</h5>
+                            <p class="mb-0 text-muted small">Sem planejamento tributário, sua empresa continua pagando mais do que deveria, mês após mês sem sequer saber onde está o erro.</p>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="card orbit-card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold text-primary mb-2">Riscos fiscais invisíveis que crescem em silêncio</h5>
+                            <p class="mb-0 text-muted small">Obrigações mal apuradas hoje viram multas, autos de infração e bloqueios amanhã. Quando o problema aparece, já é caro demais.</p>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="card orbit-card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold text-primary mb-2">Decisões tomadas no escuro</h5>
+                            <p class="mb-0 text-muted small">Sem números confiáveis, relatórios atualizados e visão clara do negócio, você decide no achismo e isso trava o crescimento.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Cards -->
+            <div class="col-lg-4 col-md-6 order-lg-3">
+                <div class="d-flex flex-column gap-3 gap-lg-4 orbit-col-right">
+                    <!-- Card 4 -->
+                    <div class="card orbit-card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold text-primary mb-2">Benefícios fiscais desperdiçados</h5>
+                            <p class="mb-0 text-muted small">Incentivos, enquadramentos corretos e oportunidades legais simplesmente passam despercebidos quando não há uma contabilidade ativa e inteligente.</p>
+                        </div>
+                    </div>
+                    <!-- Card 5 -->
+                    <div class="card orbit-card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold text-primary mb-2">Processos lentos que consomem tempo e energia</h5>
+                            <p class="mb-0 text-muted small">Burocracia excessiva rouba seu foco do que realmente importa: vender, escalar e lucrar.</p>
+                        </div>
+                    </div>
+                    <!-- Card 6 -->
+                    <div class="card orbit-card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold text-primary mb-2">Falta de preparo para a Reforma Tributária</h5>
+                            <p class="mb-0 text-muted small">Quem não se antecipa vai sentir o impacto primeiro e no caixa. A mudança já começou para quem está atento.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text Block - Moved closer to the cards -->
+        <div class="text-center mt-4">
+            <h6 class="fw-bold text-muted mb-2">Reconheceu algum desses pontos no seu negócio?</h6>
+            <p class="text-muted small mx-auto mb-0" style="max-width: 800px;">
+                A Vetorial pode ajudar a corrigir, organizar e preparar sua empresa para crescer com segurança.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Card Section -->
+<section class="py-5" style="background-color: #ebeef1;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card border-0 shadow-sm position-relative overflow-hidden" 
+                     style="border-radius: 12px; background-color: #0a4fa3;">
+                    
+                    <!-- Background Icons -->
+                    <div class="position-absolute top-0 start-0 w-100 h-100 overflow-hidden" style="pointer-events: none; z-index: 0;">
+                        <!-- Icon 1: Document -->
+                        <svg class="position-absolute" style="top: -20px; left: -20px; opacity: 0.1; transform: rotate(-15deg);" 
+                             width="150" height="150" fill="white" viewBox="0 0 16 16">
+                             <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                        </svg>
+                        
+                        <!-- Icon 2: Chart -->
+                        <svg class="position-absolute" style="bottom: -30px; right: -10px; opacity: 0.1; transform: rotate(15deg);" 
+                             width="180" height="180" fill="white" viewBox="0 0 16 16">
+                             <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"/>
+                             <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                             <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                        </svg>
+
+                        <!-- Icon 3: Lock/Security -->
+                        <svg class="position-absolute" style="top: 10px; right: 20%; opacity: 0.05;" 
+                             width="80" height="80" fill="white" viewBox="0 0 16 16">
+                            <path d="M8 1a2 2 0 0 1 2 2v2H6V3a2 2 0 0 1 2-2zm3 4V3a3 3 0 1 0-6 0v2H3.36a1.5 1.5 0 0 0-1.483 1.277L.85 13.13A1 1 0 0 0 1.85 14.247h12.3a1 1 0 0 0 1-1.117l-1.027-6.853A1.5 1.5 0 0 0 12.64 5H11zm-1 1v1.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V6h-2zm-3 0v1.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V6H7z"/>
+                        </svg>
+                    </div>
+
+                    <div class="card-body p-4 position-relative" style="z-index: 1;">
+                        <div class="text-center">
+                            <h4 class="fw-bold text-white mb-2 h3"> </h4>
+                            <p class="text-white-50 mb-3">Fale com um especialista e descubra como transformar esses desafios em controle, economia e estratégia.</p>
+                            <a href="https://wa.me/5561998311920?text=Ol%C3%A1%2C%20n%C3%A3o%20encontrei%20o%20que%20procurava%20no%20site%20e%20gostaria%20de%20falar%20com%20um%20consultor." target="_blank" class="btn btn-light px-4 py-2 fw-bold rounded-pill shadow transition-all hover-scale" style="color: #0a4fa3;">
+                                <i class="fab fa-whatsapp me-2"></i> Fale Conosco
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
