@@ -4,6 +4,13 @@
 
 {% block content %}
 
+<style>
+    /* Remove top border/line from pricing section */
+    .pricing-section::before {
+        display: none !important;
+    }
+</style>
+
 <!-- Hero Section -->
 <section class="hero-section text-white position-relative" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/abrirherosection.webp' %}'); height: 650px; width: 100%; padding: 0; background-size: cover; background-position: center right;">
     <div class="container-fluid" style="height: 100%;">
