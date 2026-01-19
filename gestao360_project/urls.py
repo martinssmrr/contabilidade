@@ -23,7 +23,7 @@ from django.views.generic import TemplateView
 from django.contrib.sitemaps.views import sitemap
 from django.http import JsonResponse
 from apps.testimonials.models import Testimonial
-from apps.services.views import calculadora_clt_pj
+from apps.services.views import calculadora_clt_pj, servicos_view
 from apps.blog.sitemaps import StaticViewSitemap, BlogPostSitemap, ServicesSitemap, ImagesSitemap
 
 # Customização do Admin
@@ -195,7 +195,7 @@ urlpatterns = [
     path("contabilidade-online/", TemplateView.as_view(template_name='services/contabilidade_online.html'), name='contabilidade_online'),
 
     # Segmentos
-    path("segmentos/servicos/", TemplateView.as_view(template_name='segments/servicos.html'), name='segmentos_servicos'),
+    path("segmentos/servicos/", servicos_view, name='segmentos_servicos'),
     path("segmentos/comercio/", TemplateView.as_view(template_name='segments/comercio.html'), name='segmentos_comercio'),
     path("segmentos/saude/", TemplateView.as_view(template_name='segments/saude.html'), name='segmentos_saude'),
     path("segmentos/direito/", TemplateView.as_view(template_name='segments/direito.html'), name='segmentos_direito'),

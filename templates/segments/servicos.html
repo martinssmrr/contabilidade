@@ -1374,3 +1374,23 @@
         </div>
     </section>
 {% endblock %}
+<script>
+    // JavaScript da home.html necessário para toggle de planos
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle entre planos
+    const toggleButtons = document.querySelectorAll('.toggle-btn');
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetType = this.getAttribute('data-toggle');
+            
+            // Remover active de todos
+            toggleButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Mostrar/esconder planos
+            document.getElementById('planos-servicos').style.display = targetType === 'servicos' ? 'block' : 'none';
+            document.getElementById('planos-comercio').style.display = targetType === 'comercio' ? 'block' : 'none';
+        });
+    });
+});
+</script>

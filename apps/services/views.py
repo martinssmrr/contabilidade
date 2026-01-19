@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 from django.http import JsonResponse, FileResponse
-from .models import ProcessoAbertura, Socio
+from .models import ProcessoAbertura, Socio, Plano
 from .forms import (
     Etapa1DadosPessoaisForm, Etapa2EnderecoForm, Etapa3DadosEmpresaForm,
     SocioFormSet, Etapa5DocumentosForm, Etapa6InformacoesFiscaisForm,
@@ -436,3 +436,18 @@ def contrato_test_view(request):
         )
         
     return render(request, 'contrato_test.html')
+
+def servicos_view(request):
+    """
+    View para a página de serviços (segmentos/servicos)
+    Lista os planos disponíveis.
+    """
+    planos_servicos = Plano.objects.filter(categoria='servicos', ativo=True).order_by('ordem', 'preco')
+    planos_comercio = Plano.objects.filter(categoria='comercio', ativo=True).order_by('ordem', 'preco')
+    
+    context = {
+        'planos_servicos': planos_servicos,
+        'planos_comercio': planos_comercio,
+    }
+    
+    return render(request, 'segments/servicos.html', context)
