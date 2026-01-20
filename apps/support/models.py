@@ -304,3 +304,42 @@ class StaffTask(models.Model):
 
     def __str__(self):
         return self.title
+
+class Agenda(models.Model):
+    """
+    Agenda de compromissos e tarefas do staff com suporte a recorrência.
+    """
+    STATUS_CHOICES = [
+        ('pendente', 'Pendente'),
+        ('concluido', 'Concluído'),
+        ('cancelado', 'Cancelado'),
+    ]
+    
+    titulo = models.CharField(max_length=200, verbose_name='Título')
+    descricao = models.TextField(blank=True, null=True, verbose_name='Descrição')
+    data_inicio = models.DateTimeField(verbose_name='Data e Hora')
+    data_fim = models.DateTimeField(null=True, blank=True, verbose_name='Data Fim (opcional)')
+    responsavel = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name='agenda_itens',
+        verbose_name='Responsável'
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente', verbose_name='Status')
+    recorrente = models.BooleanField(default=False, verbose_name='Recorrente?')
+    # Se recorrente, qual a periodicidade? Por simplicidade, assumirei mensal conforme pedido.
+    
+    # Integração Google Calendar
+    google_event_id = models.CharField(max_length=255, blank=True, null=True, verbose_name='Google Event ID')
+    google_html_link = models.URLField(max_length=500, blank=True, null=True, verbose_name='Link do Evento')
+    
+    criado_em = models.DateTimeField(auto_now_add=True)
+    atualizado_em = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = 'Item de Agenda'
+        verbose_name_plural = 'Itens de Agenda'
+        ordering = ['data_inicio']
+    
+    def __str__(self):
+        return f"{self.titulo} - {self.data_inicio}"

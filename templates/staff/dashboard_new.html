@@ -7,6 +7,8 @@
     <title>Dashboard Staff - Vetorial</title>
     <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FullCalendar -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
     <style>
     :root {
         --primary-color: #0079bf; /* Trello Blue */
@@ -1262,6 +1264,12 @@
 
             <div class="menu-section">
                 <div class="menu-section-title">Operacional</div>
+                <a href="#" class="menu-item" data-model="agenda">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span class="menu-item-text">Agenda</span>
+                </a>
                 <a href="#" class="menu-item" data-model="staff-tasks">
                     <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
@@ -1337,6 +1345,11 @@
                     <!-- Dados serão carregados aqui via JavaScript -->
                 </tbody>
             </table>
+        </div>
+        
+        <!-- Container do Calendário (Agenda) -->
+        <div id="calendarContainer" style="display: none; height: 800px; padding: 20px; background: white; border-radius: 8px;">
+            <div id="calendar"></div>
         </div>
     </main>
 </div>
@@ -1428,6 +1441,55 @@
                 <div class="modal-footer" style="padding: 0; margin-top: 24px;">
                     <button type="button" class="btn-secondary" onclick="closeStaffTaskModal()">Cancelar</button>
                     <button type="submit" class="btn-primary">Criar Tarefa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Nova Agenda -->
+<div class="modal-overlay" id="agendaModal">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Nova Agenda</h3>
+            <button class="modal-close" onclick="closeAgendaModal()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="agendaForm">
+                <input type="hidden" id="agendaId">
+                <div class="form-group">
+                    <label class="form-label" for="agendaTitulo">Título da Agenda *</label>
+                    <input type="text" class="form-control" id="agendaTitulo" required placeholder="Ex: Reunião Mensal">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="agendaDataInicio">Data/Hora Início *</label>
+                        <input type="datetime-local" class="form-control" id="agendaDataInicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="agendaDataFim">Data/Hora Fim</label>
+                        <input type="datetime-local" class="form-control" id="agendaDataFim">
+                    </div>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                    <input type="checkbox" id="agendaRecorrente" style="width: auto;">
+                    <label for="agendaRecorrente" style="margin-bottom: 0;">Repetir Mensalmente (Recorrente)</label>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="agendaDescricao">Descrição</label>
+                    <textarea class="form-control" id="agendaDescricao" rows="3" placeholder="Detalhes da agenda..."></textarea>
+                </div>
+                
+                <div class="modal-footer" style="padding: 0; margin-top: 24px;">
+                    <button type="button" class="btn-secondary" onclick="closeAgendaModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar Agenda</button>
                 </div>
             </form>
         </div>
@@ -2293,6 +2355,7 @@
         }
     }
     let currentData = [];
+    let calendar = null; 
     let currentChamadoId = null;
     let currentActiveRegime = 'all'; // For the modal
 
@@ -2344,17 +2407,6 @@
         }, 5000);
     }
 
-    // Navegação do Menu
-    document.querySelectorAll('.menu-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-            this.classList.add('active');
-            currentModel = this.dataset.model;
-            loadModelData(currentModel);
-        });
-    });
-
     // Configurações dos modelos
     const modelConfig = {
         clientes: {
@@ -2398,6 +2450,13 @@
             endpoint: null,
             btnText: 'Enviar Nova Certidão',
             headers: []
+        },
+        agenda: {
+            title: 'Agenda',
+            subtitle: 'Gerencie compromissos e tarefas',
+            endpoint: `${API_BASE}/agenda/`,
+            btnText: 'Adicionar Agenda',
+            headers: ['Data', 'Título', 'Descrição', 'Responsável', 'Recorrente', 'Status', 'Ações']
         },
         'documentos-empresa': {
             title: 'Documentos da Empresa',
@@ -2474,6 +2533,19 @@
     }
     
     // Função para atualizar status do Lead
+    function formatStatus(status) {
+        if (!status) return '-';
+        // Map common status codes to labels
+        const labels = {
+            'pendente': 'Pendente',
+            'em_progresso': 'Em Progresso',
+            'concluido': 'Concluído',
+            'cancelado': 'Cancelado',
+            'atrasado': 'Atrasado'
+        };
+        return labels[status] || status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+
     async function updateLeadStatus(id, newStatus) {
         try {
             const response = await fetch(`/support/api/leads/${id}/update/`, {
@@ -2561,6 +2633,21 @@
 
     // Carregar dados do modelo
     async function loadModelData(model) {
+        currentModel = model;
+        
+        // Hide/Show correct containers
+        const dataCard = document.getElementById('dataCard');
+        const calContainer = document.getElementById('calendarContainer');
+        
+        if (model === 'agenda') {
+             if(dataCard) dataCard.style.display = 'none';
+             if(calContainer) calContainer.style.display = 'block';
+             // Render calendar later after fetching
+        } else {
+             if(dataCard) dataCard.style.display = 'block';
+             if(calContainer) calContainer.style.display = 'none';
+        }
+
         // Toggle Stats
         const statsContainer = document.getElementById('dashboardStats');
         if (statsContainer) {
@@ -2598,11 +2685,35 @@
                 btnAddNew.onclick = openDocumentoEmpresaModal;
             } else if (model === 'staff-tasks') {
                 btnAddNew.onclick = openStaffTaskModal;
+            } else if (model === 'agenda') {
+                 // Pass null explicitly to avoid passing execution Event as ID
+                 btnAddNew.onclick = () => openAgendaModal(null);
+                 
+                 // Adicionar botão de Sincronizar (HACK: inserir dinamicamente se não existir)
+                 if (!document.getElementById('btnSyncGoogle')) {
+                     const btnSync = document.createElement('button');
+                     btnSync.id = 'btnSyncGoogle';
+                     btnSync.className = 'btn-secondary';
+                     btnSync.style.marginLeft = '10px';
+                     btnSync.innerHTML = `
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        Sync Google
+                     `;
+                     btnSync.onclick = syncGoogleCalendar;
+                     btnAddNew.parentNode.insertBefore(btnSync, btnAddNew.nextSibling);
+                 } else {
+                     document.getElementById('btnSyncGoogle').style.display = 'inline-flex';
+                 }
+                 
             } else {
                 btnAddNew.onclick = () => alert('Funcionalidade em desenvolvimento');
+                if(document.getElementById('btnSyncGoogle')) document.getElementById('btnSyncGoogle').style.display = 'none';
             }
         } else {
             btnAddNew.style.display = 'none';
+            if(document.getElementById('btnSyncGoogle')) document.getElementById('btnSyncGoogle').style.display = 'none';
         }
 
         // Para notas fiscais, mostrar interface customizada
@@ -2682,6 +2793,45 @@
             return;
         }
 
+        // Para agenda (FullCalendar)
+        if (model === 'agenda') {
+            const dataCard = document.getElementById('dataCard');
+            if(dataCard) {
+                dataCard.style.display = 'none';
+                dataCard.innerHTML = '';
+            }
+
+            const calContainer = document.getElementById('calendarContainer');
+            if(calContainer) {
+                calContainer.style.display = 'block';
+                calContainer.style.height = 'auto'; // Ensure visibility
+                calContainer.style.minHeight = '700px';
+                calContainer.style.visibility = 'visible';
+            }
+            
+            // Clear current data to avoid showing wrong data
+            currentData = [];
+
+            // Show loading if needed, or just wait for fetch
+            try {
+                const response = await fetch(config.endpoint);
+                const result = await response.json();
+                if (result.success) {
+                    currentData = result.data || [];
+                } else {
+                    console.error('Erro ao carregar agenda:', result);
+                    alert('Não foi possível carregar os dados da agenda: ' + (result.error || 'Erro desconhecido'));
+                }
+            } catch (error) {
+                console.error('Erro ao buscar agenda:', error);
+                alert('Erro de conexão ao buscar agenda.');
+            } finally {
+                // Always render the calendar, even if empty, so the user sees the grid
+                setTimeout(renderFullCalendar, 100);
+            }
+            return;
+        }
+
         // Para chamados (Tickets), usar renderChamadosBoard
         if (model === 'chamados') {
             const container = document.getElementById('dataCard');
@@ -2707,6 +2857,12 @@
             }
             return;
         }
+
+        // --- FIX FOR AGENDA ---
+        // Se chegamos aqui e o modelo é agenda, nao fazemos nada (o bloco acima ja tratou e retornou)
+        // Porem, se por algum motivo o bloco acima nao retornou, vamos garantir
+        if (model === 'agenda') return;
+
 
         // Restaurar tabela se necessário (caso tenha vindo de uma view customizada como Kanban ou Notas Fiscais)
         let thead = document.getElementById('tableHead');
@@ -3757,9 +3913,20 @@
     }
 
     function renderTable() {
-        // Ensure container is visible
+        const calendarContainer = document.getElementById('calendarContainer');
         const dataCard = document.getElementById('dataCard');
-        if(dataCard && currentModel !== 'clientes') dataCard.style.display = 'block';
+
+        // Toggle Calendar Visibility
+        if (currentModel === 'agenda') {
+            if(calendarContainer) calendarContainer.style.display = 'block';
+            if(dataCard) dataCard.style.display = 'none';
+            renderFullCalendar();
+            return;
+        } else {
+            if(calendarContainer) calendarContainer.style.display = 'none';
+            // Reset dataCard if it was hidden by agenda
+            if(dataCard && currentModel !== 'clientes') dataCard.style.display = 'block';
+        }
 
         if (currentModel === 'chamados') {
             renderChamadosBoard();
@@ -3853,6 +4020,46 @@
                                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                                 </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        } else if (currentModel === 'agenda') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            ${item.titulo}
+                            ${item.google_link ? `
+                                <a href="${item.google_link}" target="_blank" title="Ver no Google Calendar" style="color: #4285F4;">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5v-5z"/>
+                                    </svg>
+                                </a>
+                            ` : ''}
+                        </div>
+                    </td>
+                    <td>${item.data_inicio ? new Date(item.data_inicio).toLocaleString('pt-BR') : '-'}</td>
+                    <td>${item.data_fim ? new Date(item.data_fim).toLocaleString('pt-BR') : '-'}</td>
+                    <td>Staff ID: ${item.responsavel_id || '-'}</td>
+                    <td>
+                        <span class="badge" style="background-color: ${item.recorrente ? '#DBEAFE' : '#F3F4F6'}; color: ${item.recorrente ? '#1E40AF' : '#4B5563'};">
+                            ${item.recorrente ? 'Mensal' : 'Única'}
+                        </span>
+                    </td>
+                    <td>
+                       <span class="badge" style="background-color: ${item.status === 'concluido' ? '#D1FAE5' : '#FEF3C7'}; color: ${item.status === 'concluido' ? '#065F46' : '#D97706'};">
+                            ${formatStatus(item.status)}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-edit" onclick="openAgendaModal(${item.id})">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            </button>
+                            <button class="btn-action btn-delete" onclick="deleteItem(${item.id})">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                             </button>
                         </div>
                     </td>
@@ -4363,6 +4570,164 @@
         }
     });
 
+    // calendar logic
+    function renderFullCalendar() {
+        const container = document.getElementById('calendarContainer');
+        const dataCard = document.getElementById('dataCard');
+        
+        console.log('Rendering FullCalendar', currentData);
+
+        if (container) {
+            container.style.display = 'block';
+            container.classList.remove('hidden'); 
+        }
+        if (dataCard) dataCard.style.display = 'none';
+
+        const calendarEl = document.getElementById('calendar');
+        if (!calendarEl) {
+            console.error('Calendar element not found');
+            return;
+        }
+
+        // Verify if FullCalendar is loaded
+        if (typeof FullCalendar === 'undefined') {
+            console.error('FullCalendar library not loaded');
+            calendarEl.innerHTML = '<div style="color:red; padding:20px;">Erro: Biblioteca FullCalendar não carregada. Verifique a conexão com a internet.</div>';
+            return;
+        }
+
+        // Ensure calendar element has height
+        calendarEl.style.height = '100%';
+
+        // Clear previous instance if exists to prevent duplicates
+        if (calendar) {
+            calendar.destroy();
+        }
+
+        try {
+            // Define events from currentData
+            const events = currentData.map(item => {
+                let color = '#3B82F6'; // Default primary
+                const statusKey = item.status_value || item.status; 
+                
+                if (statusKey === 'concluido') color = '#059669'; // Success
+                else if (statusKey === 'cancelado') color = '#EF4444'; // Danger
+                else if (item.recorrente) color = '#7C3AED'; // Purple for recurring
+
+                // Handle date formatting 'YYYY-MM-DD HH:MM:SS' to ISO 'YYYY-MM-DDTHH:MM:SS'
+                const start = item.data_inicio ? item.data_inicio.replace(' ', 'T') : null;
+                const end = item.data_fim ? item.data_fim.replace(' ', 'T') : null;
+
+                return {
+                    id: item.id,
+                    title: item.titulo,
+                    start: start,
+                    end: end,
+                    backgroundColor: color,
+                    borderColor: color,
+                    extendedProps: {
+                        raw: item
+                    }
+                };
+            });
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'pt-br',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                buttonText: {
+                    today: 'Hoje',
+                    month: 'Mês',
+                    week: 'Semana',
+                    day: 'Dia'
+                },
+                events: events,
+                editable: true, 
+                selectable: true,
+                height: '100%',
+                contentHeight: 'auto',
+                select: function(info) {
+                    // Open create modal with selected dates
+                    document.getElementById('agendaForm').reset();
+                    // Format to YYYY-MM-DDTHH:mm for input type datetime-local
+                    let startStr = info.startStr;
+                    let endStr = info.endStr;
+                    
+                    // If selecting multiple days in month view, end has no time. Add default times.
+                    if(startStr.indexOf('T') === -1) startStr += 'T09:00';
+                    if(endStr && endStr.indexOf('T') === -1) endStr += 'T10:00';
+
+                    document.getElementById('agendaDataInicio').value = startStr;
+                    document.getElementById('agendaDataFim').value = endStr;
+                    
+                    currentAgendaId = null;
+                    document.getElementById('agendaModal').classList.add('active');
+                },
+                eventClick: function(info) {
+                    // Open edit modal
+                    openAgendaModal(info.event.id);
+                },
+                eventDrop: async function(info) {
+                    // Update dates on drag
+                    if (!confirm("Deseja mover este agendamento?")) {
+                        info.revert();
+                        return;
+                    }
+                    
+                    const event = info.event;
+                    const toLocalISO = (date) => {
+                        const offset = date.getTimezoneOffset() * 60000;
+                        return new Date(date - offset).toISOString().slice(0, 16).replace('T', ' ');
+                    };
+
+                    const newStart = event.start ? toLocalISO(event.start) : null;
+                    const newEnd = event.end ? toLocalISO(event.end) : null;
+
+                    // Call API to update
+                    try {
+                        const payload = {
+                            titulo: event.extendedProps.raw.titulo, // Keep title
+                            data_inicio: newStart, 
+                            data_fim: newEnd,
+                            descricao: event.extendedProps.raw.descricao,
+                            recorrente: event.extendedProps.raw.recorrente
+                        };
+
+                        const response = await fetch(`${API_BASE}/agenda/${event.id}/update/`, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
+                            body: JSON.stringify(payload)
+                        });
+                        
+                        const res = await response.json();
+                        if(!res.success) {
+                            alert('Erro ao mover evento: ' + res.error);
+                            info.revert();
+                        } else {
+                            // Update local data raw props
+                            event.setExtendedProp('raw', { ...event.extendedProps.raw, data_inicio: payload.data_inicio, data_fim: payload.data_fim });
+                        }
+                    } catch(e) {
+                        console.error(e);
+                        alert('Erro de conexão ao mover evento');
+                        info.revert();
+                    }
+                }
+            });
+
+            calendar.render();
+            console.log('Calendar rendered successfully');
+        
+        } catch(e) {
+            console.error('Error instantiating FullCalendar:', e);
+            calendarEl.innerHTML = `<div style='color:red;'>Erro ao criar calendário: ${e.message}</div>`;
+        }
+    }
+
     // === STAFF TASKS FUNCTIONS ===
 
     function renderStaffTasksBoard() {
@@ -4619,6 +4984,146 @@
     });
 
 
+
+    async function deleteItem(id) {
+        if(!confirm('Tem certeza que deseja excluir este item?')) return;
+        
+        try {
+            // Adjust endpoint format based on existing patterns
+            // Patterns seen: /api/leads/<id>/delete/
+            // My agenda urls: /api/agenda/<id>/delete/
+            
+            const url = `${API_BASE}/${currentModel}/${id}/delete/`;
+            const response = await fetch(url, {
+                method: 'POST', // Django views usually require POST for side-effects unless using DRF generic views with DELETE method enabled
+                headers: {'X-CSRFToken': csrftoken}
+            });
+            // Note: My views usually return JsonResponse.
+            
+            if (response.ok) {
+                 const res = await response.json();
+                 if(res.success) {
+                    loadModelData(currentModel);
+                 } else {
+                    alert('Erro ao excluir: ' + (res.error || 'Erro desconhecido'));
+                 }
+            } else {
+                alert('Erro na requisição de exclusão');
+            }
+        } catch(e) {
+            console.error(e);
+            alert('Erro ao excluir item');
+        }
+    }
+
+    // --- Funções de Agenda (Novo) ---
+
+    async function syncGoogleCalendar() {
+        const btn = document.getElementById('btnSyncGoogle');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Sincronizando...';
+        btn.disabled = true;
+
+        try {
+            const response = await fetch(`${API_BASE}/agenda/sync/`);
+            const res = await response.json();
+            
+            if(res.success) {
+                alert(res.message);
+                loadModelData('agenda');
+            } else {
+                alert('Erro: ' + (res.error || 'Erro desconhecido'));
+            }
+        } catch(e) {
+            console.error(e);
+            alert('Erro ao sincronizar com Google Calendar');
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    let currentAgendaId = null;
+
+    async function openAgendaModal(id = null) {
+        currentAgendaId = id;
+        document.getElementById('agendaForm').reset();
+        
+        if (id) {
+             // Find item in currentData
+             const item = currentData.find(i => i.id == id);
+             if(item) {
+                 document.getElementById('agendaTitulo').value = item.titulo;
+                 // Format date for datetime-local input: YYYY-MM-DDTHH:mm
+                 // item.data_inicio comes as "2023-10-27 10:00" from backend strftime, or ISO?
+                 // My view sends strftime('%Y-%m-%d %H:%M').
+                 // datetime-local expects "YYYY-MM-DDTHH:mm". So replace ' ' with 'T'.
+                 
+                 document.getElementById('agendaDataInicio').value = item.data_inicio ? item.data_inicio.replace(' ', 'T') : '';
+                 document.getElementById('agendaDataFim').value = item.data_fim ? item.data_fim.replace(' ', 'T') : '';
+                 document.getElementById('agendaDescricao').value = item.descricao || '';
+                 document.getElementById('agendaRecorrente').checked = item.recorrente;
+             }
+        } else {
+             // Default values if needed
+        }
+        
+        document.getElementById('agendaModal').classList.add('active');
+    }
+
+    function closeAgendaModal() {
+        document.getElementById('agendaModal').classList.remove('active');
+        currentAgendaId = null;
+    }
+
+    document.getElementById('agendaForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const titulo = document.getElementById('agendaTitulo').value;
+        const dataInicio = document.getElementById('agendaDataInicio').value;
+        const dataFim = document.getElementById('agendaDataFim').value;
+        const descricao = document.getElementById('agendaDescricao').value;
+        const recorrente = document.getElementById('agendaRecorrente').checked;
+        
+        const payload = {
+            titulo: titulo,
+            data_inicio: dataInicio,
+            data_fim: dataFim,
+            descricao: descricao,
+            recorrente: recorrente
+        };
+
+        try {
+            let url = `${API_BASE}/agenda/create/`; 
+            
+            if (currentAgendaId) {
+                url = `${API_BASE}/agenda/${currentAgendaId}/update/`;
+            }
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
+                body: JSON.stringify(payload)
+            });
+            
+            const res = await response.json();
+            if(res.success) {
+                if (res.warning) {
+                    alert('Atenção: ' + res.warning);
+                }
+                closeAgendaModal();
+                if(currentModel === 'agenda') {
+                    loadModelData('agenda');
+                }
+                // Optional: Show success toast
+            } else {
+                alert('Erro: ' + (res.error || 'Erro desconhecido'));
+            }
+        } catch(e) {
+            console.error(e);
+            alert('Erro ao salvar agenda');
+        }
+    });
 
     // Handle Quick Actions Override (Move startAction here or update existing)
     // Note: startAction was defined earlier in replace_string, but we can override or ensure logic matches.

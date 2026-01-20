@@ -282,6 +282,15 @@ CKEDITOR_5_CONFIGS = {
 CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 # ==================================
+# GOOGLE CALENDAR API
+# ==================================
+# Caminho para o arquivo JSON de credenciais da conta de serviço
+GOOGLE_CALENDAR_CREDENTIALS = os.path.join(BASE_DIR, 'credentials.json')
+# ID do calendário principal (geralmente o email da conta de serviço ou ID específico)
+GOOGLE_CALENDAR_ID = os.getenv('GOOGLE_CALENDAR_ID', 'primary')
+
+
+# ==================================
 # CACHE CONFIGURATION (Redis)
 # ==================================
 CACHES = {

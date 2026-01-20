@@ -78,4 +78,12 @@ urlpatterns = [
     path('api/staff-tasks/', views.api_staff_tasks_list, name='api_staff_tasks_list'),
     path('api/staff-tasks/<int:pk>/update/', views.api_staff_tasks_update, name='api_staff_tasks_update'),
     path('api/staff-tasks/<int:pk>/delete/', views.api_staff_tasks_delete, name='api_staff_tasks_delete'),
+
+    # API Endpoints - Agenda
+    path('api/agenda/', views.api_agenda_list, name='api_agenda_list'),
+    path('api/agenda/sync/', views.api_agenda_sync_google, name='api_agenda_sync_google'),
+    path('api/agenda/create/', views.api_agenda_create, name='api_agenda_create'),
+    path('api/agenda/<int:pk>/update/', views.api_agenda_update, name='api_agenda_update'),
+    path('api/agenda/<int:pk>/update-status/', views.api_agenda_update_status, name='api_agenda_update_status'),
+    path('api/agenda/<int:pk>/delete/', views.api_agenda_delete, name='api_agenda_delete'),
 ]

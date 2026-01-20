@@ -8,9 +8,10 @@ from django.core.serializers import serialize
 from django.forms.models import model_to_dict
 from django.core.cache import cache
 from django.db.models import Count, Q
+from django.utils.dateparse import parse_datetime
 import json
 import logging
-from .models import Lead, Ticket, Cliente, Chamado, ChamadoAttachment, ChamadoMessage, StaffTask
+from .models import Lead, Ticket, Cliente, Chamado, ChamadoAttachment, ChamadoMessage, StaffTask, Agenda
 from .forms import ChamadoForm, ChamadoMessageForm
 from django.shortcuts import redirect
 from apps.blog.models import Post, Category
@@ -237,6 +238,264 @@ Podemos agendar uma conversa?"""
             
     except Exception as e:
         logger.error(f"Erro ao enviar WhatsApp para lead {pk}: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+# ==================== AGENDA API ====================
+from .models import Agenda
+from django.utils.dateparse import parse_datetime
+from .google_calendar import GoogleCalendarService
+import threading
+
+def sync_with_google(action, agenda_item, raise_error=False):
+    """Executa sincronização (pode ser bg ou fg)"""
+    try:
+        service = GoogleCalendarService()
+        if action == 'create':
+            event_id, link = service.create_event(agenda_item)
+            if event_id:
+                agenda_item.google_event_id = event_id
+                agenda_item.google_html_link = link
+                agenda_item.save(update_fields=['google_event_id', 'google_html_link'])
+            elif raise_error:
+                raise Exception("Falha ao criar evento no Google (verifique logs ou permissões)")
+
+        elif action == 'update':
+            updated = service.update_event(agenda_item)
+            if not updated and raise_error:
+                 raise Exception("Falha ao atualizar evento no Google")
+
+        elif action == 'delete' and agenda_item.google_event_id:
+            service.delete_event(agenda_item.google_event_id)
+            
+    except Exception as e:
+        logger.error(f"Sync Error ({action}): {e}")
+        if raise_error:
+            raise e
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_agenda_list(request):
+    """Lista itens da agenda"""
+    itens = Agenda.objects.all().select_related('responsavel').order_by('data_inicio')
+    data = []
+    for item in itens:
+        data.append({
+            'id': item.id,
+            'titulo': item.titulo,
+            'descricao': item.descricao,
+            'data_inicio': item.data_inicio.strftime('%Y-%m-%d %H:%M'),
+            'data_fim': item.data_fim.strftime('%Y-%m-%d %H:%M') if item.data_fim else None,
+            'responsavel': item.responsavel.get_full_name() or item.responsavel.username,
+            'status': item.get_status_display(),
+            'status_value': item.status,
+            'recorrente': item.recorrente,
+            'google_link': item.google_html_link,
+        })
+    return JsonResponse({'success': True, 'data': data})
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_agenda_sync_google(request):
+    """Sincroniza (importa) eventos do Google Calendar para o sistema"""
+    try:
+        service = GoogleCalendarService()
+        events = service.list_events(max_results=50)
+        
+        count_created = 0
+        count_updated = 0
+        
+        for event in events:
+            google_id = event.get('id')
+            summary = event.get('summary', 'Sem Título')
+            description = event.get('description', '')
+            html_link = event.get('htmlLink')
+            
+            # Datas podem vir como dateTime (pontual) ou date (dia inteiro)
+            start = event.get('start', {})
+            end = event.get('end', {})
+            
+            dt_inicio_str = start.get('dateTime') or start.get('date')
+            dt_fim_str = end.get('dateTime') or end.get('date')
+
+            # Tratamento de datas (Se for date 'YYYY-MM-DD', não tem hora)
+            if dt_inicio_str and 'T' not in dt_inicio_str: # Dia inteiro
+                dt_inicio_str += 'T08:00:00'
+            
+            if dt_fim_str and 'T' not in dt_fim_str:
+                 dt_fim_str += 'T18:00:00'
+
+            try:
+                dt_inicio = parse_datetime(dt_inicio_str) if dt_inicio_str else None
+                dt_fim = parse_datetime(dt_fim_str) if dt_fim_str else None
+                
+                # Fallback se parse Falhar
+                if dt_inicio is None and dt_inicio_str:
+                     # Tentar formatar manualmente se necessário ou ignorar
+                     pass
+            except Exception as e:
+                logger.warning(f"Erro parse data evento google {summary}: {e}")
+                continue
+
+            if not dt_inicio:
+                continue
+            
+            # Verificar se já existe (pelo google_event_id)
+            agenda_item, created = Agenda.objects.update_or_create(
+                google_event_id=google_id,
+                defaults={
+                    'titulo': summary,
+                    'descricao': description,
+                    'data_inicio': dt_inicio,
+                    'data_fim': dt_fim,
+                    'google_html_link': html_link,
+                    'responsavel': request.user, # Atribui a quem sincronizou, ou um usuário 'sistema'
+                    # Mantemos status e recorrente como estão ou default
+                }
+            )
+            
+            if created:
+                count_created += 1
+            else:
+                count_updated += 1
+                
+        return JsonResponse({'success': True, 'message': f'Sincronização concluída. {count_created} criados, {count_updated} atualizados.'})
+
+    except Exception as e:
+        logger.error(f"Erro na sincronização manual: {e}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+@login_required
+@user_passes_test(is_staff_user)
+@require_http_methods(["POST"])
+def api_agenda_create(request):
+    """Cria item na agenda / tarefa"""
+    try:
+        data = json.loads(request.body)
+        
+        # Criação do item
+        agenda_item = Agenda.objects.create(
+            titulo=data.get('titulo'),
+            descricao=data.get('descricao', ''),
+            data_inicio=parse_datetime(data.get('data_inicio')), # Formato ISO esperado: YYYY-MM-DDTHH:MM
+            responsavel=request.user, # Por padrão, quem cria. Pode ser alterado se necessário receber no JSON
+            status='pendente',
+            recorrente=data.get('recorrente', False)
+        )
+        
+        # Sync com Google Calendar SÍNCRONO para debug
+        # threading.Thread(target=sync_with_google, args=('create', agenda_item)).start()
+        
+        # Tenta sincronizar imediatamente e logar erro se falhar
+        try:
+             sync_with_google('create', agenda_item, raise_error=True)
+        except Exception as e_sync:
+             # Se falhar no Google, vamos avisar mas manter o item local?
+             # Usuário quer "funcionalidade", se falhar é melhor avisar.
+             # O item já foi criado no banco local.
+             return JsonResponse({'success': True, 'id': agenda_item.id, 'warning': f'Item criado localmente, mas falha ao sincronizar Google: {str(e_sync)}'})
+
+        # Se for recorrente, criar automaticamente a do próximo mês
+        if agenda_item.recorrente:
+            from dateutil.relativedelta import relativedelta
+            
+            proxima_data = agenda_item.data_inicio + relativedelta(months=1)
+            
+            proximo_item = Agenda.objects.create(
+                titulo=agenda_item.titulo,
+                descricao=agenda_item.descricao,
+                data_inicio=proxima_data,
+                responsavel=agenda_item.responsavel,
+                status='pendente',
+                recorrente=True 
+            )
+            # Sync do próximo item também
+            threading.Thread(target=sync_with_google, args=('create', proximo_item)).start()
+
+        return JsonResponse({'success': True, 'id': agenda_item.id})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+@login_required
+@user_passes_test(is_staff_user)
+@require_http_methods(["POST"])
+def api_agenda_update(request, pk):
+    """Atualiza item da agenda"""
+    try:
+        agenda_item = get_object_or_404(Agenda, pk=pk)
+        data = json.loads(request.body)
+        
+        agenda_item.titulo = data.get('titulo', agenda_item.titulo)
+        agenda_item.descricao = data.get('descricao', agenda_item.descricao)
+        if data.get('data_inicio'):
+            agenda_item.data_inicio = parse_datetime(data.get('data_inicio'))
+        if data.get('data_fim'):
+             val = data.get('data_fim')
+             if val:
+                 agenda_item.data_fim = parse_datetime(val)
+             else:
+                 agenda_item.data_fim = None
+                 
+        if 'recorrente' in data:
+            agenda_item.recorrente = data.get('recorrente')
+            
+        agenda_item.save()
+        
+        # Sync Update
+        threading.Thread(target=sync_with_google, args=('update', agenda_item)).start()
+        
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+@login_required
+@user_passes_test(is_staff_user)
+@require_http_methods(["POST"])
+def api_agenda_update_status(request, pk):
+    """Atualiza status da tarefa"""
+    try:
+        item = get_object_or_404(Agenda, pk=pk)
+        data = json.loads(request.body)
+        novo_status = data.get('status')
+        
+        if novo_status:
+            item.status = novo_status
+            item.save()
+        
+        # Não precisamos syncar status com o Google Calendar, pois a API de eventos não tem campo de status "tarefa" tão simples.
+        # Poderíamos alterar a cor ou título, mas vamos manter simples.
+            
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+@login_required
+@user_passes_test(is_staff_user)
+@require_http_methods(["POST", "DELETE"])
+def api_agenda_delete(request, pk):
+    """Remove item da agenda"""
+    try:
+        item = get_object_or_404(Agenda, pk=pk)
+        
+        # Sync Delete (fazer antes de deletar do DB para ter o ID)
+        if item.google_event_id:
+             sync_with_google('delete', item) # Executar síncrono ou extrair ID
+             
+        # Ou melhor, extrair ID e mandar thread
+        google_id = item.google_event_id
+        if google_id:
+            # Precisa de uma instância mock ou mudar a assinatura da função sync
+            # Vamos simplificar e instanciar o serviço direto na thread
+            def delete_async(gid):
+                try:
+                    GoogleCalendarService().delete_event(gid)
+                except: pass
+            threading.Thread(target=delete_async, args=(google_id,)).start()
+
+        item.delete()
+        return JsonResponse({'success': True})
+    except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
 # ==================== TICKETS API ====================
