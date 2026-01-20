@@ -5,6 +5,7 @@ app_name = 'support'
 
 urlpatterns = [
     path('dashboard/', views.staff_dashboard, name='staff_dashboard'),
+    path('api/dashboard/stats/', views.api_dashboard_stats, name='api_dashboard_stats'),
     path('capturar-lead/', views.capturar_lead, name='capturar_lead'),
     
     # API Endpoints - Leads

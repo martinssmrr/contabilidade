@@ -131,6 +131,62 @@
         height: 16px;
     }
 
+    /* Stats Cards */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        padding: 0 16px 16px;
+        margin-bottom: 8px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-left: 4px solid transparent;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .stat-card.active {
+        background-color: #f0f9ff;
+        border-color: var(--primary-color);
+    }
+
+    .stat-title {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+    
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 8px;
+        background-color: rgba(0, 121, 191, 0.1);
+        color: var(--primary-color);
+    }
+
     /* Esconder elementos antigos */
     .content-header {
         /* display: none !important;  Let's keep generic header hidden if we use the trello-one, or show it? */
@@ -1240,7 +1296,39 @@
             </button>
         </div>
 
-        <div class="data-card" id="dataCard">
+        <!-- Dashboard Stats Section -->
+        <div class="stats-container" id="dashboardStats" style="display: none;">
+            <!-- Dados carregados via JS -->
+            <div class="stat-card" onclick="openActiveClientsModal()">
+                <div class="stat-title">Clientes Ativos</div>
+                <div class="stat-value" id="stat-total">0</div>
+            </div>
+            <div class="stat-card" onclick="openRegimeModal('MEI', 'Microempreendedor (MEI)')">
+                <div class="stat-title">Microempreendedor (MEI)</div>
+                <div class="stat-value" id="stat-mei">0</div>
+            </div>
+            <div class="stat-card" onclick="openRegimeModal('SN', 'Simples Nacional')">
+                <div class="stat-title">Simples Nacional</div>
+                <div class="stat-value" id="stat-simples">0</div>
+            </div>
+            <div class="stat-card" onclick="openRegimeModal('LP', 'Lucro Presumido')">
+                <div class="stat-title">Lucro Presumido</div>
+                <div class="stat-value" id="stat-presumido">0</div>
+            </div>
+            <div class="stat-card" onclick="openRegimeModal('LR', 'Lucro Real')">
+                <div class="stat-title">Lucro Real</div>
+                <div class="stat-value" id="stat-real">0</div>
+            </div>
+            <div class="stat-card" style="cursor: default;" onclick="event.stopPropagation()">
+                <div class="stat-title">Por Plano</div>
+                <div style="font-size: 0.8rem; color: #4b5563;" id="stat-planos">
+                    <!-- Lista de planos -->
+                    Carregando...
+                </div>
+            </div>
+        </div>
+
+        <div class="data-card" id="dataCard" style="display: none;">
             <table class="data-table" id="dataTable">
                 <thead id="tableHead">
                     <!-- Headers serão carregados dinamicamente -->
@@ -1342,6 +1430,26 @@
                     <button type="submit" class="btn-primary">Criar Tarefa</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Clientes Ativos e Regimes (Popup) -->
+<div class="modal-overlay" id="activeClientsModal">
+    <div class="modal-content" style="max-width: 800px; height: 80vh; display:flex; flex-direction:column;">
+        <div class="modal-header">
+            <h3 class="modal-title" id="activeClientsModalTitle">Clientes Ativos</h3>
+            <button class="modal-close" onclick="closeActiveClientsModal()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="modal-body" style="flex:1; overflow-y:auto; padding:0;">
+             <div style="padding: 16px; border-bottom: 1px solid #dfe1e6; position:sticky; top:0; background:white;">
+                <input type="text" id="activeClientsSearch" placeholder="Buscar cliente por nome..." class="form-control" onkeyup="filterActiveClientsList()">
+             </div>
+             <div id="activeClientsList" class="items-list" style="padding: 16px;">
+                <!-- Lista -->
+             </div>
         </div>
     </div>
 </div>
@@ -2186,6 +2294,8 @@
     }
     let currentData = [];
     let currentChamadoId = null;
+    let currentActiveRegime = 'all'; // For the modal
+
     const API_BASE = '/support/api';
 
     // Navegação do Menu
@@ -2341,8 +2451,132 @@
         }
     };
 
+    let currentRegimeFilter = 'all';
+
+    // Função auxiliar para atualizar badge do menu
+    function updateMenuBadge(model, count) {
+        const menuItem = document.querySelector(`a[data-model="${model}"]`);
+        if (!menuItem) return;
+        
+        let badge = menuItem.querySelector('.notification-badge');
+        if (count > 0) {
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.className = 'notification-badge';
+                badge.style.cssText = 'background: #EF4444; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; margin-left: auto;';
+                menuItem.appendChild(badge);
+            }
+            badge.innerText = count;
+            badge.style.display = 'inline-block';
+        } else {
+            if (badge) badge.style.display = 'none';
+        }
+    }
+    
+    // Função para atualizar status do Lead
+    async function updateLeadStatus(id, newStatus) {
+        try {
+            const response = await fetch(`/support/api/leads/${id}/update/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+            const result = await response.json();
+            if (result.success) {
+                // Atualizar dados locais
+                const lead = currentData.find(l => l.id === id);
+                if (lead) lead.status = newStatus;
+                
+                // Recarregar estatísticas para atualizar o badge
+                loadDashboardStats();
+
+                // Feedback visual
+                const selectElement = document.getElementById(`status-select-${id}`);
+                if(selectElement) {
+                    selectElement.style.border = '1px solid green';
+                    setTimeout(() => { selectElement.style.border = '1px solid #dfe1e6'; }, 1000);
+                }
+            } else {
+                alert('Erro ao atualizar status: ' + (result.error || 'Erro desconhecido'));
+            }
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+            alert('Erro ao conectar com o servidor.');
+        }
+    }
+
+    async function loadDashboardStats() {
+        try {
+            const res = await fetch('/support/api/dashboard/stats/');
+            const result = await res.json();
+            if (result.success) {
+                const d = result.data;
+                const setTxt = (id, val) => { const el = document.getElementById(id); if(el) el.innerText = val; };
+                setTxt('stat-total', d.clientes_ativos || 0);
+                setTxt('stat-mei', d.regimes.MEI || 0);
+                setTxt('stat-simples', d.regimes['Simples Nacional'] || d.regimes.SN || 0);
+                setTxt('stat-presumido', d.regimes['Lucro Presumido'] || d.regimes.LP || 0);
+                setTxt('stat-real', d.regimes['Lucro Real'] || d.regimes.LR || 0);
+                
+                // Atualizar badge de leads pendentes
+                updateMenuBadge('leads', d.leads_pendentes || 0);
+                
+                const plansContainer = document.getElementById('stat-planos');
+                if(plansContainer) {
+                    let plansHtml = '';
+                    if (Array.isArray(d.planos)) {
+                         plansHtml = d.planos.map(p => 
+                            `<div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>${p.nome}</span> <strong>${p.total}</strong></div>`
+                        ).join('');
+                    } else {
+                        plansHtml = Object.entries(d.planos || {}).map(([k,v]) => 
+                            `<div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>${k}</span> <strong>${v}</strong></div>`
+                        ).join('');
+                    }
+                    plansContainer.innerHTML = plansHtml || 'Sem planos ativos';
+                }
+            }
+        } catch(e) { console.error(e); }
+    }
+
+    function filterByRegime(regime, card) {
+        currentRegimeFilter = regime;
+        document.querySelectorAll('.stat-card').forEach(el => {
+             el.style.borderColor = 'transparent';
+             el.style.backgroundColor = 'white';
+        });
+        if(card) {
+             card.style.borderColor = 'var(--primary-color)';
+             card.style.backgroundColor = '#eff6ff';
+        }
+        renderTable();
+    }
+
+    function viewClient(id) {
+        alert('Visualização de detalhes do cliente ' + id + ' em desenvolvimento.');
+    }
+
     // Carregar dados do modelo
     async function loadModelData(model) {
+        // Toggle Stats
+        const statsContainer = document.getElementById('dashboardStats');
+        if (statsContainer) {
+            if (model === 'clientes') {
+                statsContainer.style.display = 'grid';
+                loadDashboardStats();
+            } else {
+                statsContainer.style.display = 'none';
+            }
+        }
+        currentRegimeFilter = 'all';
+        document.querySelectorAll('.stat-card').forEach(el => {
+             el.style.borderColor = 'transparent';
+             el.style.backgroundColor = 'white';
+        });
+
         const config = modelConfig[model];
         if (!config) return;
 
@@ -2377,58 +2611,27 @@
             return;
         }
 
-        // Para clientes, mostrar Board customizada
+        // Para clientes, buscar dados para os Modals mas não exibir tabela principal
         if (model === 'clientes') {
             const container = document.getElementById('dataCard');
-            container.innerHTML = `
-                <div style="padding: 40px; text-align: center;">
-                    <div style="font-size: 24px; margin-bottom: 20px;">🔄 Buscando clientes no sistema...</div>
-                    <div style="max-width: 600px; margin: 0 auto; background: #f0f0f0; padding: 15px; border-radius: 8px; text-align: left; font-family: monospace;">
-                        <div>Endpoint: ${config.endpoint}</div>
-                        <div id="debug-status">Aguardando resposta...</div>
-                    </div>
-                </div>
-            `;
+            if(container) {
+                container.innerHTML = ''; // Limpar tabela
+                container.style.display = 'none'; // Esconder container
+            }
             
             try {
-                console.log('Fetching:', config.endpoint);
+                // Fetch data quietly for popups
                 const response = await fetch(config.endpoint);
-                
-                const debugStatus = document.getElementById('debug-status');
-                if(debugStatus) debugStatus.innerHTML += `<br>Status: ${response.status} ${response.statusText}`;
-                
-                if (!response.ok) {
-                     throw new Error('Network response was not ok: ' + response.statusText);
-                }
-                
-                // Get text first to debug if JSON is invalid
-                const text = await response.text();
-                // document.getElementById('debug-status').innerHTML += `<br>Raw length: ${text.length}`;
-                
-                let result;
-                try {
-                    result = JSON.parse(text);
-                } catch(e) {
-                    console.error("JSON Parse error", e);
-                    if(document.getElementById('debug-status')) 
-                        document.getElementById('debug-status').innerHTML += `<br>JSON Parse Error: ${e.message}<br>Snippet: ${text.substring(0, 100)}...`;
-                    throw e;
-                }
-                
-                console.log('Result:', result);
+                const result = await response.json();
                 
                 if (result.success) {
                     currentData = result.data;
-                    if(document.getElementById('debug-status'))
-                        document.getElementById('debug-status').innerHTML += `<br>Dados recebidos: ${currentData.length} registros. Renderizando...`;
-                    renderClientsBoard();
+                    // Não chamamos renderTable() nem renderClientsBoard() pois a visualização é via Cards/Popups
                 } else {
-                    container.innerHTML = '<div style="color:red; padding:20px;">Erro na API: ' + JSON.stringify(result) + '</div>';
+                    console.error('Erro na API Clientes:', result);
                 }
             } catch (error) {
-                console.error('Erro ao carregar clientes:', error);
-                const dataCard = document.getElementById('dataCard');
-                if(dataCard) dataCard.innerHTML += '<div style="color:red; padding:20px; font-weight:bold;">ERRO: ' + error.message + '</div>';
+                console.error('Erro ao carregar dados de clientes:', error);
             }
             return;
         }
@@ -2460,6 +2663,8 @@
         // Para tarefas internas (staff-tasks)
         if (model === 'staff-tasks') {
             const container = document.getElementById('dataCard');
+            if(container) container.style.display = 'block';
+
             container.innerHTML = `<div style="text-align:center; padding: 40px;">Carregando tarefas...</div>`;
             try {
                 const response = await fetch(config.endpoint);
@@ -2480,6 +2685,8 @@
         // Para chamados (Tickets), usar renderChamadosBoard
         if (model === 'chamados') {
             const container = document.getElementById('dataCard');
+            if(container) container.style.display = 'block';
+
             container.innerHTML = `<div style="text-align:center; padding: 40px;">Carregando chamados...</div>`;
             try {
                 const response = await fetch(config.endpoint);
@@ -2514,6 +2721,7 @@
              dataCard.className = 'data-card';
              dataCard.style.background = '';
              dataCard.style.boxShadow = '';
+             dataCard.style.display = 'block'; // Ensure it's visible
              thead = document.getElementById('tableHead');
         }
 
@@ -2553,6 +2761,7 @@
     // Renderizar interface de Notas Fiscais
     function renderNotasFiscaisInterface() {
         const dataCard = document.getElementById('dataCard');
+        if(dataCard) dataCard.style.display = 'block';
         
         // Buscar histórico de notas fiscais
         fetch('/support/api/notas-fiscais/')
@@ -2644,6 +2853,7 @@
     // Renderizar interface de Contabilidade
     function renderContabilidadeInterface() {
         const dataCard = document.getElementById('dataCard');
+        if(dataCard) dataCard.style.display = 'block';
         
         // Buscar clientes com movimentações
         fetch('/support/api/contabilidade/clientes/')
@@ -2905,6 +3115,7 @@
     // Renderizar interface de Extratos Bancários
     function renderExtratosBancariosInterface() {
         const dataCard = document.getElementById('dataCard');
+        if(dataCard) dataCard.style.display = 'block';
         
         // Buscar clientes com extratos
         fetch('/support/api/extratos-bancarios/clientes/')
@@ -3077,6 +3288,7 @@
     // Renderizar interface de Documentos da Empresa
     function renderDocumentosEmpresaInterface() {
         const dataCard = document.getElementById('dataCard');
+        if(dataCard) dataCard.style.display = 'block';
         
         // Buscar histórico de documentos e clientes
         Promise.all([
@@ -3261,6 +3473,7 @@
     // Renderizar interface de Certidões Negativas
     function renderCertidoesInterface() {
         const dataCard = document.getElementById('dataCard');
+        if(dataCard) dataCard.style.display = 'block';
         
         // Buscar histórico de certidões
         fetch('/support/api/certidoes/')
@@ -3544,6 +3757,10 @@
     }
 
     function renderTable() {
+        // Ensure container is visible
+        const dataCard = document.getElementById('dataCard');
+        if(dataCard && currentModel !== 'clientes') dataCard.style.display = 'block';
+
         if (currentModel === 'chamados') {
             renderChamadosBoard();
             return;
@@ -3569,7 +3786,51 @@
         }
 
         // Renderizar baseado no modelo atual
-        if (currentModel === 'leads') {
+        if (currentModel === 'clientes') {
+             // Dynamic headers for Clients
+             if(modelConfig.clientes.headers.length === 0) {
+                 modelConfig.clientes.headers = ['Nome', 'Email', 'CPF/CNPJ', 'Regime', 'Plano', 'Fase', 'Ações'];
+                  document.getElementById('tableHead').innerHTML = `<tr>${modelConfig.clientes.headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+            }
+
+            let filtered = currentData;
+            if (typeof currentRegimeFilter !== 'undefined' && currentRegimeFilter !== 'all') {
+                filtered = currentData.filter(c => c.regime === currentRegimeFilter);
+            }
+            
+            if (filtered.length === 0) {
+                 tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px;">Nenhum cliente encontrado com este filtro.</td></tr>`;
+            } else {
+                tbody.innerHTML = filtered.map(item => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-primary);">${item.nome}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">${item.responsavel_nome ? 'Contador: ' + item.responsavel_nome : ''}</div>
+                        </td>
+                        <td>${item.email}</td>
+                        <td>${item.cpf_cnpj}</td>
+                        <td>
+                            <span class="badge" style="background-color: #DBEAFE; color: #1E40AF;">
+                                ${item.regime || 'N/A'}
+                            </span>
+                        </td>
+                        <td>${item.plano_nome || '-'}</td>
+                        <td>
+                            <span class="badge badge-secondary" style="font-size: 0.75rem;">
+                                ${item.fase ? item.fase.replace('fase_', 'Fase ').replace('_', ' ') : '-'}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-action btn-edit" title="Detalhes">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        } else if (currentModel === 'leads') {
             tbody.innerHTML = currentData.map(item => `
                 <tr>
                     <td>${item.nome_completo}</td>
@@ -3579,10 +3840,11 @@
                     <td>${item.servico_interesse}</td>
                     <td><span class="badge badge-info">${item.origem}</span></td>
                     <td>
-                        ${item.contatado 
-                            ? '<span class="badge badge-success">Contatado</span>' 
-                            : '<span class="badge badge-warning">Pendente</span>'
-                        }
+                        <select id="status-select-${item.id}" onchange="updateLeadStatus(${item.id}, this.value)" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #dfe1e6; background-color: #f4f5f7;">
+                            <option value="pendente" ${!item.status || item.status === 'pendente' ? 'selected' : ''}>Pendente</option>
+                            <option value="em_atendimento" ${item.status === 'em_atendimento' ? 'selected' : ''}>Em Atendimento</option>
+                            <option value="finalizado" ${item.status === 'finalizado' ? 'selected' : ''}>Finalizado</option>
+                        </select>
                     </td>
                     <td>${new Date(item.criado_em).toLocaleDateString('pt-BR')}</td>
                     <td>
@@ -4360,6 +4622,74 @@
 
     // Handle Quick Actions Override (Move startAction here or update existing)
     // Note: startAction was defined earlier in replace_string, but we can override or ensure logic matches.
+
+    function openActiveClientsModal() {
+        currentActiveRegime = 'all';
+        document.getElementById('activeClientsModalTitle').textContent = 'Clientes Ativos';
+        document.getElementById('activeClientsModal').classList.add('active');
+        renderActiveClientsList();
+    }
+
+    function openRegimeModal(regimeCode, regimeTitle) {
+        currentActiveRegime = regimeCode;
+        document.getElementById('activeClientsModalTitle').textContent = regimeTitle;
+        document.getElementById('activeClientsModal').classList.add('active');
+        renderActiveClientsList();
+    }
+
+    function closeActiveClientsModal() {
+        document.getElementById('activeClientsModal').classList.remove('active');
+    }
+
+    function renderActiveClientsList(filterText = '') {
+        const list = document.getElementById('activeClientsList');
+        if(!currentData) { list.innerHTML = '<div style="padding:20px; text-align:center;">Carregando...</div>'; return; }
+        
+        let filtered = currentData;
+        
+        // Filter by Regime if set
+        if (currentActiveRegime !== 'all') {
+            filtered = filtered.filter(c => c.regime === currentActiveRegime);
+        }
+
+        // Filter by search text
+        if(filterText) {
+            const ft = filterText.toLowerCase();
+            filtered = filtered.filter(c => c.nome.toLowerCase().includes(ft));
+        }
+        
+        if(filtered.length === 0) {
+             list.innerHTML = '<div style="padding:20px; text-align:center;">Nenhum cliente encontrado.</div>';
+             return;
+        }
+
+        list.innerHTML = filtered.map(c => `
+            <div style="padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-weight: 600; color:#172b4d;">${c.nome}</div>
+                    <div style="font-size: 0.85rem; color: #5e6c84;">${c.email}</div>
+                </div>
+                <div style="display:flex; align-items:center; gap: 8px;">
+                    <span class="badge" style="background:#e0e7ff; color:#3730a3; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;">${c.regime || '-'}</span>
+                    <button class="btn button" style="background:var(--primary-color); color:white; border:none; border-radius:4px; padding:6px 12px; cursor:pointer;" onclick="openClientDetailFromModal(${c.id}, '${c.nome.replace(/'/g, "\\'")}', '${c.email}')">
+                        Detalhes
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    function openClientDetailFromModal(id, nome, email) {
+        // Close modal first
+        closeActiveClientsModal();
+        // Open detailed panel
+        openClientPanel(id, nome, email);
+    }
+
+    function filterActiveClientsList() {
+        const val = document.getElementById('activeClientsSearch').value;
+        renderActiveClientsList(val);
+    }
     
     // Carregar dados iniciais e forçar modo Board
     loadModelData('clientes'); // Carregar clientes

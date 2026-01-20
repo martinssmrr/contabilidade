@@ -547,12 +547,98 @@
         color: var(--accent-green);
         font-size: 1rem;
     }
+
+    /* Reforma Tributaria Banner */
+    .reform-tax-section {
+        padding: 80px 0;
+        background-color: transparent; /* Assuming section background is handled by page or utility classes */
+    }
+
+    .reform-tax-card {
+        background-color: #F8F8F8;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        padding: 60px 40px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05); /* Modern soft shadow for card */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .reform-tax-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-width: 50%; /* Pattern surgindo da esquerda */
+        /* Pattern suavizado (pontilhado) */
+        background-image: radial-gradient(#0F2D57 1.5px, transparent 1.5px);
+        background-size: 24px 24px;
+        opacity: 0.08; /* Sutil */
+        /* Dissipando em direção ao centro */
+        mask-image: linear-gradient(to right, black, transparent);
+        -webkit-mask-image: linear-gradient(to right, black, transparent);
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .reform-tax-content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 900px;
+    }
+
+    .reform-text {
+        color: #0F2D57;
+        font-family: 'Poppins', 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 1.6rem;
+        line-height: 1.6;
+        letter-spacing: -0.01em;
+        margin-bottom: 40px;
+    }
+
+    .btn-reform-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #C0EB4E;
+        color: #FFFFFF !important; /* Branco conforme solicitado */
+        font-weight: 600;
+        font-size: 1.1rem;
+        padding: 16px 40px;
+        border-radius: 24px;
+        text-decoration: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1); 
+    }
+
+    .btn-reform-cta:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        background-color: #b3df3d; 
+    }
+
+    @media (max-width: 768px) {
+        .reform-text {
+            font-size: 1.25rem;
+        }
+        .reform-tax-card {
+            padding: 40px 20px;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
     <!-- 1. Hero Section -->
-    <section class="hero-section">
+    <section class="hero-section" style="background-color: #ebeef1 !important;">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-8">
@@ -568,7 +654,7 @@
     </section>
 
     <!-- CNAE Consultation Card -->
-    <section class="cnae-section">
+    <section class="cnae-section" style="background-color: #ebeef1 !important;">
         <div class="container">
             <div class="cnae-card">
                 <div class="cnae-left">
@@ -586,7 +672,7 @@
     </section>
 
     <!-- 2. Para Quem É -->
-    <section class="section-padding bg-white">
+    <section class="section-padding bg-white" style="background-color: #ebeef1 !important;">
         <div class="container">
             <h2 class="section-title">Para Quem É Esse Serviço?</h2>
             <p class="section-subtitle">Soluções ideais para profissionais e empresas.</p>
@@ -695,6 +781,26 @@
                             <li>Serviços de guincho</li>
                             <li>Gestão logística</li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reforma Tributaria Banner -->
+    <section class="reform-tax-section" style="background-color: #ebeef1;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-12"> <!-- Full width within container for card impact -->
+                    <div class="reform-tax-card">
+                        <div class="reform-tax-content">
+                            <p class="reform-text">
+                                O segmento de prestação de serviços será um dos mais impactados pela Reforma Tributária, com aumento significativo da carga fiscal e mudanças profundas na forma de apuração dos tributos. Sem orientação técnica, o risco de pagar mais imposto do que o necessário é real e imediato.
+                            </p>
+                            <a href="#contato" class="btn-reform-cta">
+                                Fale com nossa equipe.
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1119,7 +1225,7 @@
     </section>
 
     <!-- 3. Dores -->
-    <section class="section-padding bg-light">
+    <section class="section-padding bg-light" style="background-color: #ebeef1 !important;">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-5 mb-lg-0">
@@ -1176,7 +1282,7 @@
     </section>
 
     <!-- 4. Soluções -->
-    <section class="section-padding bg-white">
+    <section class="section-padding bg-white" style="background-color: #ebeef1 !important;">
         <div class="container">
             <h2 class="section-title">Soluções para Serviços</h2>
             <p class="section-subtitle">Tudo o que você precisa para crescer com segurança.</p>
@@ -1241,7 +1347,7 @@
     </section>
 
     <!-- 5. Benefícios -->
-    <section class="section-padding bg-light">
+    <section class="section-padding bg-light" style="background-color: #ebeef1 !important;">
         <div class="container">
             <h2 class="section-title">Por que nos escolher?</h2>
             <p class="section-subtitle">Vantagens reais para o seu negócio.</p>

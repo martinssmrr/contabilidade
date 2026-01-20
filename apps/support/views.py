@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.core.serializers import serialize
 from django.forms.models import model_to_dict
 from django.core.cache import cache
+from django.db.models import Count, Q
 import json
 import logging
 from .models import Lead, Ticket, Cliente, Chamado, ChamadoAttachment, ChamadoMessage, StaffTask
@@ -35,6 +36,59 @@ def staff_dashboard(request):
     """
     return render(request, 'staff/dashboard_new.html')
 
+# ==================== DASHBOARD API ====================
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_dashboard_stats(request):
+    """Retorna estatísticas para o dashboard"""
+    try:
+        # Clientes Ativos (consideramos todos que possuem usuário ativo)
+        clientes_ativos = Cliente.objects.filter(user__is_active=True).count()
+        
+        # Clientes por Regime
+        # MEI, Simples Nacional (SN), Lucro Presumido (LP), Lucro Real (LR)
+        # Assumindo que o campo regime_tributario existe no model Cliente (adicionado anteriormente)
+        
+        clientes_mei = Cliente.objects.filter(regime_tributario='MEI', user__is_active=True).count()
+        clientes_simples = Cliente.objects.filter(regime_tributario='SN', user__is_active=True).count()
+        clientes_presumido = Cliente.objects.filter(regime_tributario='LP', user__is_active=True).count()
+        clientes_real = Cliente.objects.filter(regime_tributario='LR', user__is_active=True).count()
+        
+        # Clientes por Plano (... existing code ...)
+        # Vamos pegar da Subscription ativa
+        planos_stats = Subscription.objects.filter(status='ativa') \
+            .values('plano__nome') \
+            .annotate(total=Count('id')) \
+            .order_by('-total')
+            
+        planos_data = []
+        for p in planos_stats:
+            planos_data.append({
+                'nome': p['plano__nome'],
+                'total': p['total']
+            })
+
+        # Contagem de Leads Pendentes
+        leads_pendentes = Lead.objects.filter(status='pendente').count()
+            
+        data = {
+            'clientes_ativos': clientes_ativos,
+            'leads_pendentes': leads_pendentes,
+            'regimes': {
+                'MEI': clientes_mei,
+                'Simples Nacional': clientes_simples,
+                'Lucro Presumido': clientes_presumido,
+                'Lucro Real': clientes_real
+            },
+            'planos': planos_data
+        }
+        
+        return JsonResponse({'success': True, 'data': data})
+    except Exception as e:
+        logger.error(f"Erro ao buscar estatísticas do dashboard: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
 # ==================== LEADS API ====================
 
 @login_required
@@ -58,6 +112,7 @@ def api_leads_list(request):
                 'servico_interesse': lead.servico_interesse,
                 'origem': lead.origem,
                 'contatado': lead.contatado,
+                'status': getattr(lead, 'status', 'pendente'),
                 'observacoes': lead.observacoes or '',
                 'criado_em': lead.criado_em.strftime('%Y-%m-%d %H:%M:%S')
             })
@@ -111,6 +166,11 @@ def api_leads_update(request, pk):
         if isinstance(contatado_val, str):
             contatado_val = contatado_val.lower() in ['true', '1', 'on']
         lead.contatado = bool(contatado_val)
+        
+        # Atualizar status se fornecido
+        if 'status' in data:
+            lead.status = data['status']
+            
         lead.observacoes = data.get('observacoes', lead.observacoes)
         
         lead.save()
@@ -629,9 +689,11 @@ def api_clientes_list(request):
     for cliente in clientes:
         # Tentar obter o profile
         fase = 'fase_1' # Default fallback
+        regime = 'SN' # Default fallback
         try:
             if hasattr(cliente, 'cliente_profile'):
                fase = cliente.cliente_profile.fase_abertura or 'fase_1'
+               regime = cliente.cliente_profile.regime_tributario or 'SN'
         except Exception:
             pass
 
@@ -641,6 +703,7 @@ def api_clientes_list(request):
             'email': cliente.email,
             'telefone': getattr(cliente.cliente_profile, 'telefone', 'N/D') if hasattr(cliente, 'cliente_profile') else 'N/D',
             'fase': fase,
+            'regime': regime,
             'fase_display': dict(getattr(Cliente.FASE_ABERTURA_CHOICES, 'choices', [])) if 0 else fase # Simplificado
         })
     return JsonResponse({'success': True, 'data': data})

@@ -28,6 +28,13 @@ class Lead(models.Model):
         verbose_name = 'Lead'
         verbose_name_plural = 'Leads'
         ordering = ['-criado_em']
+
+    STATUS_CHOICES = [
+        ('pendente', 'Pendente'),
+        ('em_atendimento', 'Em Atendimento'),
+        ('finalizado', 'Finalizado'),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente', verbose_name='Status')
     
     def __str__(self):
         return f"{self.nome_completo} - {self.email}"
@@ -155,6 +162,20 @@ class Cliente(models.Model):
         choices=FASE_ABERTURA_CHOICES,
         default='fase_1',
         verbose_name='Fase de Abertura'
+    )
+    
+    REGIME_CHOICES = [
+        ('MEI', 'MEI'),
+        ('SN', 'Simples Nacional'),
+        ('LP', 'Lucro Presumido'),
+        ('LR', 'Lucro Real'),
+    ]
+    
+    regime_tributario = models.CharField(
+        max_length=5,
+        choices=REGIME_CHOICES,
+        default='SN',
+        verbose_name='Regime Tributário'
     )
 
     class Meta:
