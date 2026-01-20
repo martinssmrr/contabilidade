@@ -3,8 +3,7 @@ comandos quando troca apenas html e imagens
 
 # Link SSH
 ssh root@72.60.144.18
-contabilvetorial.com.br
-
+vetorialcontabilidade.com.br
 
 # 1. Primeiro, vamos fazer o deploy das alterações nos templates
 cd /root/vetorial

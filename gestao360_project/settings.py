@@ -36,7 +36,14 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else ['localhost', '127.0.0.1', 'vetorialcontabilidade.com.br', 'www.vetorialcontabilidade.com.br']
+# Configuração robusta de ALLOWED_HOSTS para evitar erro 400
+env_hosts = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else []
+default_hosts = ['localhost', '127.0.0.1', 'vetorialcontabilidade.com.br', 'www.vetorialcontabilidade.com.br', 'web']
+ALLOWED_HOSTS = list(set(env_hosts + default_hosts))
+
+# Configurações de Proxy - Essencial para Nginx/Docker
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # CSRF trusted origins for production
 CSRF_TRUSTED_ORIGINS = [

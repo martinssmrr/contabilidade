@@ -49,6 +49,12 @@ class EvolutionAPIService:
         # Adiciona @s.whatsapp.net (formato Evolution API)
         return f'{phone_digits}@s.whatsapp.net'
     
+    def send_welcome_message(self, phone, name):
+        """
+        Envia mensagem de boas-vindas (Alias para send_text).
+        """
+        return self.send_text(phone, name)
+
     def send_text(self, phone, name='Cliente'):
         """
         Envia uma mensagem de texto de boas-vindas para o cliente.
