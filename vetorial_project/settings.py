@@ -188,6 +188,7 @@ MERCADO_PAGO_ACCESS_TOKEN = os.getenv('MP_ACCESS_TOKEN', '')
 
 # Configurações de segurança (produção)
 if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True

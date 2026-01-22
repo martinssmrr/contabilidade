@@ -1097,7 +1097,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p class="text-muted">
                                     Abertura rápida, gratuita e com enquadramento tributário ideal para você começar certo e já preparado para crescer.
                                 </p>
-                                <a href="https://wa.me/551131642284?text=Olá%2C%20gostaria%20de%20saber%20mais%20sobre%20a%20abertura%20de%20empresa%20online." target="_blank" class="fw-bold text-primary">Saiba mais →</a>
+                                <a href="/abrir-empresa" class="fw-bold text-primary">Saiba mais →</a>
 
                                 <div class="text-center mt-4">
                                     <img src="{% static 'img/aberturaempresa.svg' %}" 
@@ -1115,7 +1115,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p class="text-muted">
                                     Migração rápida, organizada e sem burocracia. A Vetorial assume tudo e você não precisa se preocupar com nada.
                                 </p>
-                                <a href="https://wa.me/551131642284?text=Olá%2C%20gostaria%20de%20saber%20mais%20sobre%20a%20mudança%20de%20contador." target="_blank" class="fw-bold text-primary">Saiba mais →</a>
+                                <a href="/trocar-contador" class="fw-bold text-primary">Saiba mais →</a>
 
                                 <div class="text-center mt-4">
                                     <img src="{% static 'img/trocarcontador.svg' %}" 
@@ -1133,7 +1133,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p class="text-muted">
                                     Sistema simples e intuitivo para emitir notas com agilidade e conformidade total.
                                 </p>
-                                <a href="https://wa.me/551131642284?text=Olá%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20emissor%20de%20nota%20fiscal." target="_blank" class="fw-bold text-primary">Saiba mais →</a>
+                                <a href="{% url 'emissor_nota_fiscal' %}" class="fw-bold text-primary">Saiba mais →</a>
 
                                 <div class="text-center mt-4">
                                     <img src="{% static 'img/emissor.svg' %}" 
@@ -1143,7 +1143,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </div>
                             </div>
                         </div>
-
                         <!-- CARD 4 -->
                         <div class="col-md-3">
                             <div class="card solucoes-card h-100 p-3">
@@ -1151,8 +1150,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p class="text-muted">
                                     Solução profissional e econômica para registro da sua empresa, ideal para quem busca autoridade, privacidade e credibilidade.
                                 </p>
-                                <a href="https://wa.me/551131642284?text=Olá%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20endereço%20virtual." target="_blank" class="fw-bold text-primary">Saiba mais →</a>
-
+                                <a href="{% url 'endereco_virtual' %}" class="fw-bold text-primary">Saiba mais →</a>
                                 <div class="text-center mt-4">
                                     <img src="{% static 'img/endereço.svg' %}" 
                                         alt="Ícone Endereço Virtual"
@@ -1223,7 +1221,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p class="text-muted">
                                     Emissão prática, segura e totalmente online para garantir operação sem interrupções.
                                 </p>
-                                <a href="https://wa.me/551131642284?text=Olá%2C%20gostaria%20de%20saber%20mais%20sobre%20certificado%20digital." target="_blank" class="fw-bold text-primary">Saiba mais →</a>
+                                <a href="{% url 'certificado_digital' %}" class="fw-bold text-primary">Saiba mais →</a>
 
                                 <div class="text-center mt-4">
                                     <img src="{% static 'img/certificado.svg' %}" 
