@@ -9,33 +9,7 @@
     </div>
     <div class="card-body bg-white" style="max-height: 400px; overflow-y: auto; font-size: 0.9rem; line-height: 1.6;">
         <div class="contract-content p-2">
-            <h4 class="text-center mb-4">CONTRATO DE PRESTAÇÃO DE SERVIÇOS CONTÁBEIS</h4>
-            
-            <p><strong>CONTRATANTE:</strong> {{ processo.nome_completo|default:"____________________" }}, 
-            CPF {{ processo.cpf|default:"____________________" }}, 
-            residente em {{ processo.endereco|default:"____________________" }}, {{ processo.numero }}, {{ processo.bairro }}, {{ processo.cidade }}-{{ processo.estado }}.</p>
-            
-            <p><strong>CONTRATADA:</strong> VETORIAL CONTABILIDADE LTDA, CNPJ 00.000.000/0000-00, estabelecida em...</p>
-            
-            <p><strong>CLÁUSULA PRIMEIRA - DO OBJETO</strong><br>
-            O presente contrato tem por objeto a prestação de serviços de abertura de empresa e assessoria contábil, conforme as normas brasileiras de contabilidade e a legislação vigente.</p>
-            
-            <p><strong>CLÁUSULA SEGUNDA - DAS OBRIGAÇÕES DA CONTRATADA</strong><br>
-            I - Elaborar o contrato social e demais documentos necessários para o registro da empresa;<br>
-            II - Protocolar os documentos nos órgãos competentes (Junta Comercial, Receita Federal, Prefeitura, etc.);<br>
-            III - Manter o CONTRATANTE informado sobre o andamento do processo.</p>
-            
-            <p><strong>CLÁUSULA TERCEIRA - DAS OBRIGAÇÕES DO CONTRATANTE</strong><br>
-            I - Fornecer documentos e informações verdadeiras e dentro do prazo solicitado;<br>
-            II - Pagar as taxas governamentais e os honorários da CONTRATADA;<br>
-            III - Responsabilizar-se pela veracidade dos documentos enviados.</p>
-            
-            <p><strong>CLÁUSULA QUARTA - DA ASSINATURA DIGITAL</strong><br>
-            As partes reconhecem a validade jurídica da assinatura digital/eletrônica aposta neste documento, nos termos da MP 2.200-2/2001.</p>
-            
-            <p class="text-center mt-5">
-                {{ processo.cidade|default:"Cidade" }} - {{ processo.estado|default:"UF" }}, {% now "d \d\e F \d\e Y" %}
-            </p>
+            {% include 'services/partials/contrato_full.html' %}
         </div>
     </div>
 </div>

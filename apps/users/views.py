@@ -8,6 +8,9 @@ from django.views.decorators.http import require_POST
 from django.utils.dateparse import parse_date
 from django.utils import timezone
 from decimal import Decimal, InvalidOperation
+import random
+from django.core.mail import send_mail
+from django.urls import reverse
 
 from .models import MovimentacaoFinanceira
 from .models import TransmissaoMensal
@@ -707,3 +710,90 @@ def meu_perfil(request):
         return redirect('users:meu_perfil')
         
     return render(request, 'users/meu_perfil.html')
+
+
+def forgot_password_view(request):
+    """View para solicitar recuperação de senha"""
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email)
+            
+            # Gerar código de 6 dígitos
+            code = str(random.randint(100000, 999999))
+            
+            # Salvar na sessão
+            request.session['reset_code'] = code
+            request.session['reset_email'] = email
+            request.session.set_expiry(600)  # Expira em 10 minutos
+            
+            # Enviar e-mail (usando configuração existente)
+            subject = 'Seu código de verificação - Vetorial'
+            message = f'Olá, {user.first_name}.\n\nSeu código de verificação para redefinir a senha é: {code}\n\nEste código expira em 10 minutos.'
+            from_email = settings.DEFAULT_FROM_EMAIL
+            recipient_list = [email]
+            
+            send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+            
+            messages.success(request, 'Código de verificação enviado para seu e-mail.')
+            return redirect('users:verify_code')
+            
+        except User.DoesNotExist:
+            # Por segurança, não informamos se o e-mail não existe, mas neste caso
+            # para UX vamos informar ou fingir que enviou.
+            # Vamos informar erro para facilitar.
+            messages.error(request, 'E-mail não encontrado.')
+    
+    return render(request, 'users/forgot_password.html')
+
+
+def verify_code_view(request):
+    """View para verificar o código de 6 dígitos"""
+    if 'reset_code' not in request.session:
+        messages.error(request, 'Sessão expirada. Solicite um novo código.')
+        return redirect('users:forgot_password')
+        
+    if request.method == 'POST':
+        code = request.POST.get('code')
+        session_code = request.session.get('reset_code')
+        
+        if code == session_code:
+            request.session['reset_verified'] = True
+            return redirect('users:reset_password')
+        else:
+            messages.error(request, 'Código inválido. Tente novamente.')
+            
+    return render(request, 'users/verify_code.html')
+
+
+def reset_password_view(request):
+    """View para definir a nova senha"""
+    if not request.session.get('reset_verified'):
+        messages.error(request, 'Acesso não autorizado.')
+        return redirect('users:login')
+        
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+        
+        if password != confirm_password:
+            messages.error(request, 'As senhas não conferem.')
+        else:
+            email = request.session.get('reset_email')
+            try:
+                user = User.objects.get(email=email)
+                user.set_password(password)
+                user.save()
+                
+                # Limpar sessão
+                del request.session['reset_code']
+                del request.session['reset_email']
+                del request.session['reset_verified']
+                
+                messages.success(request, 'Senha alterada com sucesso! Faça login.')
+                return redirect('users:login')
+                
+            except User.DoesNotExist:
+                messages.error(request, 'Erro ao localizar usuário.')
+                
+    return render(request, 'users/reset_password.html')

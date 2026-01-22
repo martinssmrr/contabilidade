@@ -1263,6 +1263,16 @@
             </div>
 
             <div class="menu-section">
+                <div class="menu-section-title">Processos</div>
+                <a href="#" class="menu-item" data-model="abertura">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span class="menu-item-text">Abertura de Empresa</span>
+                </a>
+            </div>
+
+            <div class="menu-section">
                 <div class="menu-section-title">Operacional</div>
                 <a href="#" class="menu-item" data-model="agenda">
                     <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1353,6 +1363,23 @@
         </div>
     </main>
 </div>
+</div>
+
+<!-- Modal de Detalhes do Processo de Abertura -->
+<div class="modal-overlay" id="processoAberturaModal">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+            <h3 class="modal-title" id="processoTitle">Detalhes do Processo</h3>
+            <button class="modal-close" onclick="closeProcessoAberturaModal()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body" id="processoBody">
+            <div style="text-align: center; padding: 20px;">Carregando...</div>
+        </div>
+    </div>
 </div>
 
 <!-- Modal de Chamado Detalhes -->
@@ -2429,6 +2456,13 @@
             endpoint: `${API_BASE}/chamados/`,
             btnText: null,
             headers: ['Protocolo', 'Cliente', 'Assunto', 'Status', 'Prioridade', 'Mensagens', 'Data', 'Ações']
+        },
+        abertura: {
+            title: 'Abertura de Empresa',
+            subtitle: 'Gerencie os processos de abertura de empresa em andamento',
+            endpoint: `${API_BASE}/processos-abertura/`,
+            btnText: null,
+            headers: ['ID', 'Cliente', 'Email', 'Telefone', 'Etapa', 'Status', 'Data Início', 'Ações']
         },
         'notas-fiscais': {
             title: 'Enviar Notas Fiscais',
@@ -4091,6 +4125,42 @@
                     </td>
                 </tr>
             `).join('');
+        } else if (currentModel === 'abertura') {
+            tbody.innerHTML = currentData.map(item => `
+                <tr>
+                    <td><strong>#${item.id}</strong></td>
+                    <td>
+                        <div style="font-weight: 600;">${item.cliente || 'Não Informado'}</div>
+                    </td>
+                    <td>${item.email || '-'}</td>
+                    <td>${item.telefone || '-'}</td>
+                    <td>
+                        <span class="badge badge-info">${item.etapa}</span>
+                    </td>
+                    <td>
+                        <span class="badge" style="background-color: ${item.status_code === 'concluido' ? '#D1FAE5' : '#FEF3C7'}; color: ${item.status_code === 'concluido' ? '#065F46' : '#D97706'};">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td>${item.criado_em}</td>
+                    <td>
+                        <div class="action-buttons">
+                           <button class="btn-action btn-view" onclick="openProcessoDetails(${item.id})" title="Ver Detalhes">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                           </button>
+                           <button class="btn-action btn-whatsapp" onclick="sendWhatsApp('${(item.cliente || '').replace(/'/g, "\\'")}', '${item.telefone || ''}', 'Abertura de Empresa')" title="Abrir WhatsApp">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                </svg>
+                            </button>
+                            <!-- Futuro: Botão de detalhes completos do processo -->
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
         } else if (currentModel === 'posts') {
             tbody.innerHTML = currentData.map(item => `
                 <tr>
@@ -5124,6 +5194,140 @@
             alert('Erro ao salvar agenda');
         }
     });
+
+    // --- Funções de Processo Abertura ---
+    async function openProcessoDetails(id) {
+        const modal = document.getElementById('processoAberturaModal');
+        const body = document.getElementById('processoBody');
+        const title = document.getElementById('processoTitle');
+        
+        modal.classList.add('active');
+        title.textContent = `Processo #${id}`;
+        body.innerHTML = '<div style="text-align: center; padding: 20px;">Carregando detalhes...</div>';
+        
+        try {
+            const response = await fetch(`${API_BASE}/processos-abertura/${id}/`);
+            const res = await response.json();
+            
+            if (res.success) {
+                const d = res.data;
+                
+                // Construir lista de documentos
+                let docsHtml = '';
+                if (Object.keys(d.documentos).length > 0) {
+                    docsHtml = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">`;
+                    for (const [docName, docUrl] of Object.entries(d.documentos)) {
+                        docsHtml += `
+                            <a href="${docUrl}" target="_blank" style="display: block; padding: 10px; border: 1px solid #dfe1e6; border-radius: 8px; text-decoration: none; color: inherit; text-align: center; transition: all 0.2s;">
+                                <div style="font-size: 24px;">📄</div>
+                                <div style="font-size: 0.85rem; font-weight: 500; margin-top: 5px;">${docName}</div>
+                            </a>
+                        `;
+                    }
+                    docsHtml += `</div>`;
+                } else {
+                    docsHtml = '<div style="color: #6b7280; font-style: italic;">Nenhum documento enviado ainda.</div>';
+                }
+                
+                // Construir lista de sócios
+                let sociosHtml = '';
+                if (d.socios.length > 0) {
+                    sociosHtml = `<ul style="list-style: none; padding: 0; margin-top: 10px;">`;
+                    d.socios.forEach(socio => {
+                        sociosHtml += `
+                            <li style="padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9rem; background: #f9fafb; border-radius: 6px; margin-bottom: 8px;">
+                                <div style="font-weight: 600; color: #374151; margin-bottom: 6px; display: flex; justify-content: space-between;">
+                                    ${socio.nome} 
+                                    <span style="font-weight: 500; color: var(--primary-color); background: #e0e7ff; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem;">${socio.participacao}</span>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; color: #4b5563; font-size: 0.85rem;">
+                                    <div><strong>CPF:</strong> ${socio.cpf}</div>
+                                    <div><strong>RG:</strong> ${socio.rg || '-'}</div>
+                                    <div style="grid-column: span 2;"><strong>Estado Civil:</strong> ${socio.estado_civil || '-'}</div>
+                                </div>
+                                <div style="margin-top: 6px; color: #4b5563; font-size: 0.85rem; border-top: 1px solid #eee; padding-top: 6px;">
+                                    <strong>Endereço:</strong> ${socio.endereco || '-'}
+                                </div>
+                            </li>
+                        `;
+                    });
+                    sociosHtml += `</ul>`;
+                } else {
+                    sociosHtml = '<div style="color: #6b7280;">Sem sócios cadastrados.</div>';
+                }
+                
+                body.innerHTML = `
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div>
+                            <h4 style="border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; margin-bottom: 16px; color: var(--primary-color);">Dados Pessoais</h4>
+                            <div style="margin-bottom: 12px;"><strong>Responsável:</strong> ${d.responsavel.nome || '-'}</div>
+                            <div style="margin-bottom: 12px;"><strong>CPF:</strong> ${d.responsavel.cpf || '-'}</div>
+                             <div style="margin-bottom: 12px;"><strong>RG:</strong> ${d.responsavel.rg || '-'}</div>
+                            <div style="margin-bottom: 12px;"><strong>Email:</strong> ${d.responsavel.email || '-'}</div>
+                            <div style="margin-bottom: 12px;"><strong>Telefone:</strong> ${d.responsavel.telefone || '-'}</div>
+                             <div style="margin-bottom: 12px;">
+                                <strong>Endereço:</strong><br>
+                                <span style="color: #4b5563; font-size: 0.9rem;">${d.responsavel.endereco || 'Não informado'}</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style="border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; margin-bottom: 16px; color: var(--primary-color);">Dados da Empresa</h4>
+                            <div style="margin-bottom: 12px;"><strong>Tipo:</strong> ${d.empresa.tipo || '-'}</div>
+                            <div style="margin-bottom: 12px;"><strong>Nome Fantasia:</strong> ${d.empresa.nome_fantasia}</div>
+                            ${d.empresa.razao_social !== '-' ? `<div style="margin-bottom: 12px;"><strong>Razão Social:</strong> ${d.empresa.razao_social}</div>` : ''}
+                            <div style="margin-bottom: 12px;"><strong>Atividade Principal:</strong> ${d.empresa.atividade_principal}</div>
+                            ${d.empresa.area_atuacao ? `<div style="margin-bottom: 12px;"><strong>Área de Atuação:</strong> ${d.empresa.area_atuacao}</div>` : ''}
+                            <div style="margin-bottom: 12px;"><strong>Regime:</strong> ${d.empresa.regime_tributario}</div>
+                            <div style="margin-bottom: 12px;">
+                                <strong>Endereço Comercial:</strong><br>
+                                <span style="color: #4b5563; font-size: 0.9rem;">${d.empresa.endereco_comercial}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+                         <div>
+                            <h4 style="border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; margin-bottom: 16px; color: var(--primary-color);">Dados Fiscais</h4>
+                            <div style="margin-bottom: 8px;"><strong>Tipo Atividade:</strong> ${d.fiscal.tipo_atividade || '-'}</div>
+                            <div style="margin-bottom: 8px;"><strong>Usa Nota Fiscal:</strong> ${d.fiscal.usa_nota_fiscal}</div>
+                            <div style="margin-bottom: 8px;"><strong>Precisa Alvará:</strong> ${d.fiscal.precisa_alvara}</div>
+                            <div style="margin-bottom: 8px;"><strong>Conta PJ:</strong> ${d.fiscal.deseja_conta_pj}</div>
+                        </div>
+                        <div>
+                            <h4 style="border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; margin-bottom: 16px; color: var(--primary-color);">Contratação</h4>
+                             <div style="margin-bottom: 8px;"><strong>Plano:</strong> ${d.pagamento.plano}</div>
+                             <div style="margin-bottom: 8px;"><strong>Valor Pago:</strong> ${d.pagamento.valor}</div>
+                             <div style="margin-bottom: 8px;"><strong>Data:</strong> ${d.pagamento.data}</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 24px;">
+                        <h4 style="border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; margin-bottom: 16px; color: var(--primary-color);">Documentos</h4>
+                        ${docsHtml}
+                    </div>
+                    
+                    <div style="margin-top: 24px;">
+                        <h4 style="border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; margin-bottom: 16px; color: var(--primary-color);">Sócios</h4>
+                        ${sociosHtml}
+                    </div>
+
+                    <div style="margin-top: 24px; text-align: right; border-top: 1px solid #eee; padding-top: 16px;">
+                        <span style="margin-right: 16px; font-weight: 600;">Status Atual: ${d.status} (Etapa ${d.etapa})</span>
+                    </div>
+                `;
+            } else {
+                body.innerHTML = `<div style="color: red; text-align: center;">Erro: ${res.error}</div>`;
+            }
+        } catch (e) {
+            console.error(e);
+            body.innerHTML = `<div style="color: red; text-align: center;">Erro de conexão ao buscar detalhes.</div>`;
+        }
+    }
+
+    function closeProcessoAberturaModal() {
+        document.getElementById('processoAberturaModal').classList.remove('active');
+    }
 
     // Handle Quick Actions Override (Move startAction here or update existing)
     // Note: startAction was defined earlier in replace_string, but we can override or ensure logic matches.

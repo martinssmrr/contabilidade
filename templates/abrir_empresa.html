@@ -353,7 +353,7 @@
                 <p class="fs-5 mb-4">A Vetorial cuida de toda a abertura da sua empresa, do início ao CNPJ ativo, com clareza, suporte humano e segurança jurídica em cada etapa. Empreender com a Vetorial é mais simples, seguro e acessível. Empreender mudou e você também pode mudar com a Vetorial.</p>
                 <div class="d-grid gap-3 d-sm-flex mb-4">
                     <button type="button" class="btn btn-light btn-lg px-5" data-bs-toggle="modal" data-bs-target="#contactModal">ABRIR EMPRESA GRÁTIS</button>
-                    <a href="https://wa.me/5561998311920" target="_blank" class="btn btn-outline-light btn-lg px-5">CONSULTAR ESPECIALISTA</a>
+                    <a href="https://wa.me/551131642284?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20um%20especialista%20da%20Vetorial." target="_blank" class="btn btn-outline-light btn-lg px-5">CONSULTAR ESPECIALISTA</a>
                 </div>
             </div>
             <!-- Coluna Direita - Vazia (imagem de fundo aparece aqui) -->
@@ -481,7 +481,7 @@
         </div>
         <div class="text-center mt-5">
             <button type="button" class="btn btn-primary btn-lg me-2 mb-2" data-bs-toggle="modal" data-bs-target="#contactModal">Quero Abrir meu CNPJ</button>
-            <a href="https://wa.me/5561998311920" target="_blank" class="btn btn-outline-primary btn-lg mb-2">Falar com Especialista</a>
+            <a href="https://wa.me/551131642284?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20um%20especialista." target="_blank" class="btn btn-outline-primary btn-lg mb-2">Falar com Especialista</a>
         </div>
     </div>
 </section>
@@ -631,7 +631,7 @@
                 <p class="text-muted mb-4">
                     <strong>Se sua empresa está no Brasil, a Vetorial está com você.</strong>
                 </p>
-                <a href="https://wa.me/5561998311920" target="_blank" rel="noopener" class="btn btn-primary btn-lg px-5">
+                <a href="https://wa.me/551131642284" target="_blank" rel="noopener" class="btn btn-primary btn-lg px-5">
                     <i class="fab fa-whatsapp me-2"></i>Consultar Especialista
                 </a>
             </div>
@@ -799,7 +799,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </ul>
                         </div>
                         <div class="pricing-card-footer">
-                            <a href="#contato" class="btn btn-pricing {% if plano.destaque %}btn-pricing-popular{% endif %}">Contratar Agora</a>
+                            <a href="{% url 'payments:pre_checkout' plano.id %}" class="btn btn-pricing {% if plano.destaque %}btn-pricing-popular{% endif %}">Contratar Agora</a>
                         </div>
                     </div>
                 </div>
@@ -885,7 +885,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="svc-image-wrap" role="img" aria-label="Profissional contábil">
                     <img src="{% static 'img/midcta.jpg' %}" alt="Profissional contábil" class="svc-image">
                 </div>
-                <a href="https://wa.me/5561998311920" target="_blank" rel="noopener noreferrer" class="svc-cta-bottom-btn" role="button">Quero ser Vetorial</a>
+                <a href="https://wa.me/551131642284" target="_blank" rel="noopener noreferrer" class="svc-cta-bottom-btn" role="button">Quero ser Vetorial</a>
             </div>
 
             <div class="svc-box box-a">
@@ -971,7 +971,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="text-center">
                             <h4 class="fw-bold text-white mb-2 h3">Não encontrou o que procura?</h4>
                             <p class="text-white-50 mb-3">Fale agora com um consultor Vetorial. Estamos prontos para te ajudar com soluções personalizadas para o seu negócio.</p>
-                            <a href="https://wa.me/5561998311920?text=Ol%C3%A1%2C%20n%C3%A3o%20encontrei%20o%20que%20procurava%20no%20site%20e%20gostaria%20de%20falar%20com%20um%20consultor." target="_blank" class="btn btn-light px-4 py-2 fw-bold rounded-pill shadow transition-all hover-scale" style="color: #0a4fa3;">
+                            <a href="https://wa.me/551131642284?text=Ol%C3%A1%2C%20n%C3%A3o%20encontrei%20o%20que%20procurava%20no%20site%20e%20gostaria%20de%20falar%20com%20um%20consultor." target="_blank" class="btn btn-light px-4 py-2 fw-bold rounded-pill shadow transition-all hover-scale" style="color: #0a4fa3;">
                                 <i class="fab fa-whatsapp me-2"></i> Fale Conosco
                             </a>
                         </div>
@@ -1528,7 +1528,7 @@ async function enviarWhatsApp() {
                     `Localização: ${cidade} - ${estado}\n` +
                     `Serviço: ${servicoText}`;
 
-    const whatsappNumber = '5561998311920';
+    const whatsappNumber = '551131642284';
     const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(mensagem)}`;
     window.open(url, '_blank');
     

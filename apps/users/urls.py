@@ -7,6 +7,12 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('cadastro/', views.register_view, name='register'),
     path('logout/', views.logout_view, name='logout'),
+    
+    # Password Reset Flow
+    path('esqueci-senha/', views.forgot_password_view, name='forgot_password'),
+    path('verificar-codigo/', views.verify_code_view, name='verify_code'),
+    path('redefinir-senha/', views.reset_password_view, name='reset_password'),
+
     path('area-cliente/', views.area_cliente, name='area_cliente'),
     path('notas-fiscais/', views.notas_fiscais, name='notas_fiscais'),
     path('pendencias/', views.pendencias, name='pendencias'),

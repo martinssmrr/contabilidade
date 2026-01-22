@@ -20,7 +20,7 @@ from apps.services.models import Plano
 from apps.documents.models import Document
 from .whatsapp_service import whatsapp_service
 from apps.documents.models_guia_imposto import GuiaImposto
-from apps.services.models import Subscription, Plan, Plano
+from apps.services.models import Subscription, Plan, Plano, ProcessoAbertura
 
 logger = logging.getLogger(__name__)
 
@@ -124,6 +124,142 @@ def api_leads_list(request):
         print(f"DEBUG: Error in api_leads_list: {e}")
         traceback.print_exc()
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@login_required
+@user_passes_test(is_staff_user)
+@login_required
+@user_passes_test(is_staff_user)
+def api_processos_abertura_list(request):
+    """Lista processos de abertura de empresa"""
+    try:
+        # Mostrar todos os processos para staff ou aplicar filtro se necessario
+        processos = ProcessoAbertura.objects.all().order_by('-atualizado_em')
+        
+        data = []
+        for proc in processos:
+            cliente_nome = proc.nome_completo or "Não informado"
+            if proc.usuario:
+                 cliente_nome += f" ({proc.usuario.email})"
+            
+            # Verificar se tem documentos
+            tem_docs = bool(proc.doc_identidade_frente or proc.comprovante_residencia)
+            
+            data.append({
+                'id': proc.id,
+                'cliente': cliente_nome,
+                'email': proc.email or proc.usuario.email,
+                'telefone': proc.telefone_whatsapp,
+                'status': proc.get_status_display(),
+                'status_code': proc.status,
+                'etapa': f"Etapa {proc.etapa_atual}",
+                'tipo_societario': proc.get_tipo_societario_display() or '-',
+                'tem_documentos': tem_docs,
+                'criado_em': proc.criado_em.strftime('%d/%m/%Y %H:%M'),
+                'atualizado_em': proc.atualizado_em.strftime('%d/%m/%Y %H:%M'),
+            })
+            
+        return JsonResponse({'success': True, 'data': data})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_processos_abertura_detail(request, pk):
+    """Retorna detalhes de um processo de abertura específico"""
+    try:
+        proc = ProcessoAbertura.objects.get(pk=pk)
+        
+        # Coletar documentos
+        docs = {}
+        if proc.doc_identidade_frente: docs['Identidade Frente'] = proc.doc_identidade_frente.url
+        if proc.doc_identidade_verso: docs['Identidade Verso'] = proc.doc_identidade_verso.url
+        if proc.comprovante_residencia: docs['Comp. Residência'] = proc.comprovante_residencia.url
+        if proc.selfie_com_documento: docs['Selfie'] = proc.selfie_com_documento.url
+        if proc.iptu_imovel: docs['IPTU'] = proc.iptu_imovel.url
+        
+        # Coletar Sócios
+        socios_list = []
+        for socio in proc.socios.all():
+            socios_list.append({
+                'nome': socio.nome_completo,
+                'cpf': socio.cpf,
+                'rg': socio.rg,
+                'estado_civil': socio.get_estado_civil_display(),
+                'endereco': socio.endereco_completo,
+                'participacao': f"{socio.percentual_participacao}%"
+            })
+
+        # Preparar Endereço Comercial
+        if proc.endereco_comercial_diferente:
+             endereco_comercial_str = f"{proc.endereco_comercial}, {proc.numero_comercial} {proc.complemento_comercial or ''} - {proc.bairro_comercial} - {proc.cidade_comercial}/{proc.estado_comercial} (CEP: {proc.cep_comercial})".strip()
+        else:
+             endereco_comercial_str = f"{proc.endereco}, {proc.numero} {proc.complemento or ''} - {proc.bairro} - {proc.cidade}/{proc.estado} (CEP: {proc.cep}) (Mesmo endereço residencial)".strip()
+            
+        data = {
+            'id': proc.id,
+            'status': proc.get_status_display(),
+            'etapa': proc.etapa_atual,
+            'criado_em': proc.criado_em.strftime('%d/%m/%Y'),
+            
+            # Dados Pessoais
+            'responsavel': {
+                'nome': proc.nome_completo,
+                'cpf': proc.cpf,
+                'rg': proc.rg,
+                'orgao_emissor': f"{proc.orgao_emissor or ''}/{proc.uf_emissao or ''}",
+                'data_nascimento': proc.data_nascimento.strftime('%d/%m/%Y') if proc.data_nascimento else None,
+                'nome_mae': proc.nome_mae,
+                'email': proc.email,
+                'telefone': proc.telefone_whatsapp,
+                'estado_civil': proc.get_estado_civil_display(),
+                'profissao': proc.profissao,
+                'endereco': f"{proc.endereco}, {proc.numero} {proc.complemento or ''} - {proc.bairro} - {proc.cidade}/{proc.estado} (CEP: {proc.cep})".strip()
+            },
+            
+            # Dados da Empresa
+            'empresa': {
+                'tipo': proc.get_tipo_societario_display(),
+                'nome_fantasia': proc.nome_fantasia_mei or proc.nome_fantasia_me or '-',
+                'razao_social': proc.razao_social or '-',
+                'capital_social': f"R$ {proc.capital_social}" if proc.capital_social else None,
+                'atividade_principal': proc.cnae_principal_mei or proc.cnae_principal_me or '-',
+                'atividades_secundarias': proc.cnaes_secundarios_mei or proc.cnaes_secundarios_me or '-',
+                'area_atuacao': proc.area_atuacao_mei,
+                'forma_atuacao': proc.get_forma_atuacao_mei_display(),
+                'local_atuacao': proc.get_local_empresa_mei_display(),
+                'regime_tributario': proc.get_regime_tributario_display() or '-',
+                'endereco_comercial': endereco_comercial_str,
+            },
+
+            # Dados Fiscais e Extras
+            'fiscal': {
+                'tipo_atividade': proc.get_tipo_atividade_display(),
+                'usa_nota_fiscal': 'Sim' if proc.usa_nota_fiscal else 'Não',
+                'precisa_alvara': 'Sim' if proc.precisa_alvara else 'Não',
+                'deseja_conta_pj': 'Sim' if proc.deseja_conta_pj else 'Não',
+            },
+
+            # Dados Pagamento
+            'pagamento': {
+                'plano': proc.plano_selecionado.nome if proc.plano_selecionado else '-',
+                'valor': f"R$ {proc.valor_pago}" if proc.valor_pago else '-',
+                'data': proc.data_pagamento.strftime('%d/%m/%Y %H:%M') if proc.data_pagamento else '-',
+                'confirmado': 'Sim' if proc.pagamento_confirmado else 'Não'
+            },
+            
+            # Documentos
+            'documentos': docs,
+            
+            # Sócios
+            'socios': socios_list
+        }
+        
+        return JsonResponse({'success': True, 'data': data})
+    except ProcessoAbertura.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Processo não encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
 
 @login_required
 @user_passes_test(is_staff_user)
@@ -1087,14 +1223,13 @@ def api_certidao_enviar(request):
         status_certidao = request.POST.get('status', 'negativa')
         
         if not cliente_id or not tipo_certidao or not arquivo:
-            return JsonResponse({'success': False, 'error': 'Cliente, tipo e arquivo são obrigatórios.'}, status=400)
+            return JsonResponse({'success': False, 'error': 'Campos obrigatórios faltando.'}, status=400)
         
-        cliente = get_object_or_404(User, pk=cliente_id, is_staff=False)
+        cliente = get_object_or_404(User, pk=cliente_id)
         
         # Validar tipo de arquivo
         valid_extensions = ['.pdf', '.zip']
-        file_ext = arquivo.name[arquivo.name.rfind('.'):].lower()
-        if file_ext not in valid_extensions:
+        if not arquivo.name.lower().endswith(tuple(valid_extensions)):
             return JsonResponse({'success': False, 'error': 'Tipo de arquivo inválido. Use PDF ou ZIP.'}, status=400)
         
         # Validar tipo de certidão

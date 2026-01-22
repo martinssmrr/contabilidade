@@ -53,7 +53,7 @@ class EmailService:
         self.nome_empresa = "Contabilidade Vetorial"
         self.url_login = settings.SITE_URL + "/usuarios/login/"
         self.url_documentos = settings.SITE_URL + "/usuarios/documentos/"
-        self.email_suporte = "contabilidadevetorial@hotmail.com"
+        self.email_suporte = "contabilidadevetorial@gmail.com"
     
     def enviar_email_simples(
         self,

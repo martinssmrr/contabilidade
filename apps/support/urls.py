@@ -6,10 +6,13 @@ app_name = 'support'
 urlpatterns = [
     path('dashboard/', views.staff_dashboard, name='staff_dashboard'),
     path('api/dashboard/stats/', views.api_dashboard_stats, name='api_dashboard_stats'),
+    path('api/processos-abertura/', views.api_processos_abertura_list, name='api_processos_abertura_list'),
+    path('api/processos-abertura/<int:pk>/', views.api_processos_abertura_detail, name='api_processos_abertura_detail'),
     path('capturar-lead/', views.capturar_lead, name='capturar_lead'),
     
     # API Endpoints - Leads
     path('api/leads/', views.api_leads_list, name='api_leads_list'),
+    # path('api/processos-abertura/', views.api_processos_abertura_list, name='api_processos_abertura_list'), # Moved up
     path('api/leads/create/', views.api_leads_create, name='api_leads_create'),
     path('api/leads/<int:pk>/update/', views.api_leads_update, name='api_leads_update'),
     path('api/leads/<int:pk>/delete/', views.api_leads_delete, name='api_leads_delete'),

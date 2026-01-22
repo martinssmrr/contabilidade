@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     :root {
+        --primary-color: #3ef47c;
+        --secondary-color: #0c63d1;
         --primary-blue: #0c63d1;
         --primary-dark: #0a4fa3;
         --accent-green: #2ed66b;
@@ -549,7 +551,7 @@
                 <h1 class="mb-4">Contabilidade Especializada<br>para Profissionais da Saúde</h1>
                 <p class="lead mb-5">Pague menos impostos de forma legal, tenha mais tempo para seus pacientes e conte com um contador que realmente entende a sua rotina.</p>
                 <div class="d-flex gap-3 flex-wrap">
-                    <a href="https://wa.me/5561998311920" target="_blank" class="btn-cta-primary">
+                    <a href="https://wa.me/551131642284" target="_blank" class="btn-cta-primary">
                         <i class="fab fa-whatsapp me-2"></i>Fale com um Especialista
                     </a>
                     <a href="#planos" class="btn-cta-secondary">
@@ -788,7 +790,7 @@
             <div class="col-lg-5 mb-5 mb-lg-0">
                 <h2 class="section-title text-start">A Parceria Certa<br>Traz Resultados Reais</h2>
                 <p class="text-muted mb-4">Quando você tem um contador especialista ao seu lado, os benefícios vão muito além da simples "entrega de obrigações".</p>
-                <a href="https://wa.me/5561998311920" target="_blank" class="btn-cta-primary">
+                <a href="https://wa.me/551131642284" target="_blank" class="btn-cta-primary">
                     <i class="fab fa-whatsapp me-2"></i>Quero Esses Benefícios
                 </a>
             </div>
@@ -959,72 +961,158 @@
     </div>
 </section>
 
-<!-- 8. PLANOS -->
-<!-- <section id="planos" class="section-padding">
+
+<!-- Pricing Planos Section -->
+<style>
+    .pricing-section::before {
+        display: none !important;
+    }
+</style>
+<section id="planos" class="pricing-section py-5" style="background-color: #ebeef1;">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="section-title">Temos o Plano Ideal<br>para Cada Momento da Sua Carreira</h2>
-            <p class="section-subtitle">Do profissional autônomo à clínica com equipe completa, temos a solução certa para você.</p>
+            <h2 class="display-5 section-title-blue mb-4">Nossos Planos</h2>
+            <p class="lead text-muted mb-4">A Vetorial é a escolha de empresas exigentes que evoluem e economizam de forma inteligente e segura.</p>
+            
+            <!-- Toggle de Modalidades -->
+            <div class="pricing-toggle d-inline-flex p-1 mb-5">
+                <button class="toggle-btn active" data-toggle="servicos">
+                    <span class="toggle-content">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                            <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                            <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1-1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319z"/>
+                        </svg>
+                        Serviços
+                    </span>
+                </button>
+                <button class="toggle-btn" data-toggle="comercio">
+                    <span class="toggle-content">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                            <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0zM1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5zM4 15h3v-5H4v5zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3zm3 0h-2v3h2v-3z"/>
+                        </svg>
+                        Comércio
+                    </span>
+                </button>
+            </div>
         </div>
 
-        <div class="row g-4 justify-content-center">
-            <div class="col-lg-4 col-md-6">
-                <div class="plano-card">
-                    <div class="plano-icon">
-                        <i class="fas fa-user"></i>
+        <!-- Planos de SERVIÇOS (DINÂMICO) -->
+        <div class="pricing-cards-container" id="planos-servicos">
+            <div class="row g-4 justify-content-center">
+                {% for plano in planos_servicos %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="pricing-card {% if plano.destaque %}pricing-card-popular{% endif %}">
+                        {% if plano.destaque %}
+                        <div class="popular-badge">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                            </svg>
+                            Mais Popular
+                        </div>
+                        {% endif %}
+                        <div class="pricing-card-header">
+                            <h3 class="pricing-plan-name">{{ plano.nome }}</h3>
+                            <p class="pricing-description">{{ plano.descricao }}</p>
+                        </div>
+                        <div class="pricing-card-price">
+                            {% if plano.tem_desconto %}
+                            <span class="price-old">R$ {{ plano.preco_antigo|floatformat:2 }}</span>
+                            {% endif %}
+                            <div class="price-current">
+                                <span class="price-currency">R$</span>
+                                <span class="price-value">{{ plano.preco|floatformat:2 }}</span>
+                                <span class="price-period">/mês</span>
+                            </div>
+                        </div>
+                        <div class="pricing-card-body">
+                            <ul class="pricing-features">
+                                {% for item in plano.features %}
+                                    {% if item.included %}
+                                    <li class="feature-included">
+                                        <span class="feature-icon">✔</span>
+                                        <span>{{ item.feature }}</span>
+                                    </li>
+                                    {% else %}
+                                    <li class="feature-excluded">
+                                        <span class="feature-icon">✖</span>
+                                        <span>{{ item.feature }}</span>
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="pricing-card-footer">
+                            <a href="{% url 'services:abertura_empresa' %}" class="btn btn-pricing {% if plano.destaque %}btn-pricing-popular{% endif %}">Contratar Agora</a>
+                        </div>
                     </div>
-                    <h4>Profissional Autônomo</h4>
-                    <p class="text-muted">Ideal para quem atende como pessoa física ou está começando</p>
-                    <ul class="plano-features">
-                        <li><i class="fas fa-check"></i> Carnê-Leão organizado</li>
-                        <li><i class="fas fa-check"></i> Declaração de IRPF</li>
-                        <li><i class="fas fa-check"></i> Orientação para migração PJ</li>
-                        <li><i class="fas fa-check"></i> Suporte via WhatsApp</li>
-                        <li><i class="fas fa-check"></i> Relatórios mensais</li>
-                    </ul>
-                    <a href="https://wa.me/5561998311920?text=Olá! Tenho interesse no Plano Profissional Autônomo para área da saúde." target="_blank" class="btn-plano">Solicitar Orçamento</a>
                 </div>
+                {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">Nenhum plano de serviços disponível no momento.</p>
+                </div>
+                {% endfor %}
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="plano-card destaque">
-                    <span class="plano-badge">Mais Popular</span>
-                    <div class="plano-icon">
-                        <i class="fas fa-briefcase-medical"></i>
+        </div>
+
+        <!-- Planos de COMÉRCIO (DINÂMICO) -->
+        <div class="pricing-cards-container" id="planos-comercio" style="display: none;">
+            <div class="row g-4 justify-content-center">
+                {% for plano in planos_comercio %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="pricing-card {% if plano.destaque %}pricing-card-popular{% endif %}">
+                        {% if plano.destaque %}
+                        <div class="popular-badge">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                            </svg>
+                            Mais Popular
+                        </div>
+                        {% endif %}
+                        <div class="pricing-card-header">
+                            <h3 class="pricing-plan-name">{{ plano.nome }}</h3>
+                            <p class="pricing-description">{{ plano.descricao }}</p>
+                        </div>
+                        <div class="pricing-card-price">
+                            {% if plano.tem_desconto %}
+                            <span class="price-old">R$ {{ plano.preco_antigo|floatformat:2 }}</span>
+                            {% endif %}
+                            <div class="price-current">
+                                <span class="price-currency">R$</span>
+                                <span class="price-value">{{ plano.preco|floatformat:2 }}</span>
+                                <span class="price-period">/mês</span>
+                            </div>
+                        </div>
+                        <div class="pricing-card-body">
+                            <ul class="pricing-features">
+                                {% for item in plano.features %}
+                                    {% if item.included %}
+                                    <li class="feature-included">
+                                        <span class="feature-icon">✔</span>
+                                        <span>{{ item.feature }}</span>
+                                    </li>
+                                    {% else %}
+                                    <li class="feature-excluded">
+                                        <span class="feature-icon">✖</span>
+                                        <span>{{ item.feature }}</span>
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="pricing-card-footer">
+                            <a href="{% url 'payments:pre_checkout' plano.id %}" class="btn btn-pricing {% if plano.destaque %}btn-pricing-popular{% endif %}">Contratar Agora</a>
+                        </div>
                     </div>
-                    <h4>Empresa (PJ Unipessoal)</h4>
-                    <p class="text-muted">Para profissionais que já têm ou querem abrir seu CNPJ</p>
-                    <ul class="plano-features">
-                        <li><i class="fas fa-check"></i> Abertura de empresa inclusa</li>
-                        <li><i class="fas fa-check"></i> Planejamento tributário</li>
-                        <li><i class="fas fa-check"></i> Emissão de notas fiscais</li>
-                        <li><i class="fas fa-check"></i> Gestão fiscal completa</li>
-                        <li><i class="fas fa-check"></i> DMED e obrigações acessórias</li>
-                        <li><i class="fas fa-check"></i> Suporte prioritário</li>
-                    </ul>
-                    <a href="https://wa.me/5561998311920?text=Olá! Tenho interesse no Plano Empresa (PJ) para profissional da saúde." target="_blank" class="btn-plano">Solicitar Orçamento</a>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="plano-card">
-                    <div class="plano-icon">
-                        <i class="fas fa-hospital-user"></i>
-                    </div>
-                    <h4>Clínicas (Com Equipe)</h4>
-                    <p class="text-muted">Para clínicas e consultórios com funcionários</p>
-                    <ul class="plano-features">
-                        <li><i class="fas fa-check"></i> Tudo do plano Empresa</li>
-                        <li><i class="fas fa-check"></i> Gestão de folha de pagamento</li>
-                        <li><i class="fas fa-check"></i> Admissões e rescisões</li>
-                        <li><i class="fas fa-check"></i> Gestão de convênios</li>
-                        <li><i class="fas fa-check"></i> Relatórios gerenciais</li>
-                        <li><i class="fas fa-check"></i> Assessoria estratégica</li>
-                    </ul>
-                    <a href="https://wa.me/5561998311920?text=Olá! Tenho interesse no Plano Clínicas para minha clínica/consultório." target="_blank" class="btn-plano">Solicitar Orçamento</a>
+                {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">Nenhum plano de comércio disponível no momento.</p>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-</section> -->
+</section>
 
 <!-- 9. FAQ -->
 <section class="section-padding" style="background-color: #f8fafc;">
@@ -1105,7 +1193,7 @@
     <div class="container">
         <h2>Transforme Sua Gestão Financeira<br>e Tributária Hoje Mesmo</h2>
         <p>Junte-se a centenas de profissionais da saúde que já economizam tempo e dinheiro com a Vetorial. Seu primeiro passo é uma conversa sem compromisso.</p>
-        <a href="https://wa.me/5561998311920?text=Olá! Sou profissional da saúde e gostaria de falar com um contador especialista." target="_blank" class="btn-cta-final">
+        <a href="https://wa.me/551131642284?text=Olá! Sou profissional da saúde e gostaria de falar com um contador especialista." target="_blank" class="btn-cta-final">
             <i class="fab fa-whatsapp me-2"></i>Falar com um Contador Especialista
         </a>
     </div>
@@ -1134,5 +1222,24 @@ function toggleFaq(button) {
         answer.style.maxHeight = answer.scrollHeight + 'px';
     }
 }
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButtons = document.querySelectorAll('.toggle-btn');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetType = this.getAttribute('data-toggle');
+                toggleButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                const planosServicos = document.getElementById('planos-servicos');
+                const planosComercio = document.getElementById('planos-comercio');
+                if (planosServicos) planosServicos.style.display = targetType === 'servicos' ? 'block' : 'none';
+                if (planosComercio) planosComercio.style.display = targetType === 'comercio' ? 'block' : 'none';
+            });
+        });
+    });
 </script>
 {% endblock %}

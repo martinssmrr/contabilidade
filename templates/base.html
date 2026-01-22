@@ -134,6 +134,13 @@
     </script>
     
     {% block extra_css %}{% endblock %}
+
+    <style>
+        .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; }
+        .form-control:focus, .form-select:focus { border-color: #3ef47c; box-shadow: 0 0 0 0.25rem rgba(62, 244, 124, 0.25); }
+        .modal-content { border: none; }
+    </style>
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -172,66 +179,93 @@
     <!-- Modal de Captura de Lead WhatsApp -->
     <div class="modal fade" id="whatsappLeadModal" tabindex="-1" aria-labelledby="whatsappLeadModalLabel" aria-hidden="true" style="z-index: 10000;">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-          <div class="modal-header bg-success text-white">
-            <h5 class="modal-title fw-bold" id="whatsappLeadModalLabel"><i class="fab fa-whatsapp me-2"></i>Falar com Consultor</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+          <!-- Header Personalizado -->
+          <div class="modal-header text-white border-0" style="background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%); padding: 1.5rem 1.5rem 1rem;">
+            <div class="d-flex align-items-center w-100">
+                <div class="me-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 50%; backdrop-filter: blur(5px);">
+                    <i class="fab fa-whatsapp fa-xl"></i>
+                </div>
+                <div>
+                    <h5 class="modal-title fw-bold mb-0" id="whatsappLeadModalLabel" style="font-size: 1.25rem;">Falar com Consultor</h5>
+                    <p class="mb-0 small" style="opacity: 0.9;">Atendimento ágil pelo WhatsApp</p>
+                </div>
+            </div>
+            <button type="button" class="btn-close btn-close-white align-self-start" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body p-4">
-            <p class="text-muted mb-4 small">Preencha seus dados para ser redirecionado(a) ao nosso atendimento prioritário no WhatsApp.</p>
+          
+          <div class="modal-body p-4" style="background-color: #f8f9fa;">
+            <p class="text-center mb-4" style="color: #6c757d; font-size: 0.95rem;">
+                Preencha seus dados para ser redirecionado(a) ao nosso atendimento prioritário.
+            </p>
+            
             <form id="leadCaptureForm">
               <div class="mb-3">
-                <label for="leadNome" class="form-label fw-semibold small">Nome Completo *</label>
-                <input type="text" class="form-control" id="leadNome" required>
+                <label for="leadNome" class="form-label small fw-bold text-uppercase text-secondary" style="font-size: 0.75rem; letter-spacing: 0.5px;">Nome Completo *</label>
+                <div class="input-group shadow-sm" style="border-radius: 8px; overflow: hidden;">
+                    <span class="input-group-text bg-white border-end-0 text-muted ps-3"><i class="fas fa-user"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-2 py-2" id="leadNome" placeholder="Digite seu nome" required style="border-left: none;">
+                </div>
               </div>
+              
               <div class="mb-3">
-                <label for="leadEmail" class="form-label fw-semibold small">E-mail *</label>
-                <input type="email" class="form-control" id="leadEmail" required>
+                <label for="leadEmail" class="form-label small fw-bold text-uppercase text-secondary" style="font-size: 0.75rem; letter-spacing: 0.5px;">E-mail *</label>
+                <div class="input-group shadow-sm" style="border-radius: 8px; overflow: hidden;">
+                    <span class="input-group-text bg-white border-end-0 text-muted ps-3"><i class="fas fa-envelope"></i></span>
+                    <input type="email" class="form-control border-start-0 ps-2 py-2" id="leadEmail" placeholder="seu@email.com" required style="border-left: none;">
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="leadTelefone" class="form-label fw-semibold small">Telefone (com DDD) *</label>
-                <input type="text" class="form-control" id="leadTelefone" placeholder="(11) 99999-9999" required>
-              </div>
-              <div class="mb-3">
-                <label for="leadEstado" class="form-label fw-semibold small">Estado *</label>
-                <select class="form-select" id="leadEstado" required>
-                  <option value="" selected disabled>Selecione seu estado</option>
-                  <option value="AC">Acre</option>
-                  <option value="AL">Alagoas</option>
-                  <option value="AP">Amapá</option>
-                  <option value="AM">Amazonas</option>
-                  <option value="BA">Bahia</option>
-                  <option value="CE">Ceará</option>
-                  <option value="DF">Distrito Federal</option>
-                  <option value="ES">Espírito Santo</option>
-                  <option value="GO">Goiás</option>
-                  <option value="MA">Maranhão</option>
-                  <option value="MT">Mato Grosso</option>
-                  <option value="MS">Mato Grosso do Sul</option>
-                  <option value="MG">Minas Gerais</option>
-                  <option value="PA">Pará</option>
-                  <option value="PB">Paraíba</option>
-                  <option value="PR">Paraná</option>
-                  <option value="PE">Pernambuco</option>
-                  <option value="PI">Piauí</option>
-                  <option value="RJ">Rio de Janeiro</option>
-                  <option value="RN">Rio Grande do Norte</option>
-                  <option value="RS">Rio Grande do Sul</option>
-                  <option value="RO">Rondônia</option>
-                  <option value="RR">Roraima</option>
-                  <option value="SC">Santa Catarina</option>
-                  <option value="SP">São Paulo</option>
-                  <option value="SE">Sergipe</option>
-                  <option value="TO">Tocantins</option>
-                </select>
+              
+              <div class="row g-2">
+                  <div class="col-7 mb-3">
+                    <label for="leadTelefone" class="form-label small fw-bold text-uppercase text-secondary" style="font-size: 0.75rem; letter-spacing: 0.5px;">Telefone (DDD) *</label>
+                    <div class="input-group shadow-sm" style="border-radius: 8px; overflow: hidden;">
+                        <span class="input-group-text bg-white border-end-0 text-muted ps-3"><i class="fab fa-whatsapp"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-2 py-2" id="leadTelefone" placeholder="(11) 99999-9999" required style="border-left: none;">
+                    </div>
+                  </div>
+                  <div class="col-5 mb-3">
+                    <label for="leadEstado" class="form-label small fw-bold text-uppercase text-secondary" style="font-size: 0.75rem; letter-spacing: 0.5px;">Estado *</label>
+                    <select class="form-select shadow-sm py-2" id="leadEstado" required style="border-radius: 8px;">
+                      <option value="" selected disabled>UF</option>
+                      <option value="AC">AC</option>
+                      <option value="AL">AL</option>
+                      <option value="AP">AP</option>
+                      <option value="AM">AM</option>
+                      <option value="BA">BA</option>
+                      <option value="CE">CE</option>
+                      <option value="DF">DF</option>
+                      <option value="ES">ES</option>
+                      <option value="GO">GO</option>
+                      <option value="MA">MA</option>
+                      <option value="MT">MT</option>
+                      <option value="MS">MS</option>
+                      <option value="MG">MG</option>
+                      <option value="PA">PA</option>
+                      <option value="PB">PB</option>
+                      <option value="PR">PR</option>
+                      <option value="PE">PE</option>
+                      <option value="PI">PI</option>
+                      <option value="RJ">RJ</option>
+                      <option value="RN">RN</option>
+                      <option value="RS">RS</option>
+                      <option value="RO">RO</option>
+                      <option value="RR">RR</option>
+                      <option value="SC">SC</option>
+                      <option value="SP">SP</option>
+                      <option value="SE">SE</option>
+                      <option value="TO">TO</option>
+                    </select>
+                  </div>
               </div>
             </form>
           </div>
-          <div class="modal-footer border-0 p-4 pt-0">
-            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-success fw-bold w-100" id="btnSubmitLead">
-                Continuar para o WhatsApp <i class="fas fa-arrow-right ms-2"></i>
+          
+          <div class="modal-footer border-0 p-4 pt-0 bg-light justify-content-center flex-column">
+            <button type="button" class="btn btn-success w-100 py-3 fw-bold shadow hover-lift" id="btnSubmitLead" style="border-radius: 12px; font-size: 1.1rem; background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); border: none;">
+                Iniciar Conversa <i class="fas fa-paper-plane ms-2"></i>
             </button>
+            <button type="button" class="btn btn-link text-muted btn-sm text-decoration-none mt-2" data-bs-dismiss="modal">Cancelar e fechar</button>
           </div>
         </div>
       </div>

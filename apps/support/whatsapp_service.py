@@ -22,7 +22,7 @@ class EvolutionAPIService:
         self.base_url = os.getenv('EVOLUTION_API_URL', '')
         self.api_key = os.getenv('EVOLUTION_API_KEY', '')
         self.instance_name = os.getenv('EVOLUTION_INSTANCE_NAME', '')
-        self.sender_number = os.getenv('WHATSAPP_SENDER_NUMBER', '5561998311920')
+        self.sender_number = os.getenv('WHATSAPP_SENDER_NUMBER', '551131642284')
         
         # Evolution API removida do projeto - usando wa.me para WhatsApp
         self.enabled = False
@@ -34,10 +34,10 @@ class EvolutionAPIService:
         Formata o número de telefone para o padrão da Evolution API.
         
         Args:
-            phone (str): Número de telefone com DDD (ex: (61) 99831-1920 ou 61998311920)
+            phone (str): Número de telefone com DDD (ex: (11) 3164-2284 ou 1131642284)
         
         Returns:
-            str: Número formatado no padrão internacional (ex: 5561998311920)
+            str: Número formatado no padrão internacional (ex: 551131642284)
         """
         # Remove caracteres não numéricos
         phone_digits = ''.join(filter(str.isdigit, phone))
