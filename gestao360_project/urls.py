@@ -192,7 +192,6 @@ urlpatterns = [
     path("endereco-virtual/", TemplateView.as_view(template_name='services/endereco_virtual.html'), name='endereco_virtual'),
     path("certificado-digital/", TemplateView.as_view(template_name='services/certificado_digital.html'), name='certificado_digital'),
     path("emissor-nota-fiscal/", TemplateView.as_view(template_name='services/emissor_nota_fiscal.html'), name='emissor_nota_fiscal'),
-    path("contabilidade-online/", TemplateView.as_view(template_name='services/contabilidade_online.html'), name='contabilidade_online'),
 
     # Segmentos
     path("segmentos/servicos/", servicos_view, name='segmentos_servicos'),
@@ -204,11 +203,6 @@ urlpatterns = [
     path("segmentos/turismo/", TemplateView.as_view(template_name='segments/turismo.html'), name='segmentos_turismo'),
     path("segmentos/tecnologia/", TemplateView.as_view(template_name='segments/tecnologia.html'), name='segmentos_tecnologia'),
     path("segmentos/outros/", TemplateView.as_view(template_name='segments/outros.html'), name='segmentos_outros'),
-
-    # Conteúdos
-    path("conteudos/ebooks/", TemplateView.as_view(template_name='contents/ebooks.html'), name='conteudos_ebooks'),
-    path("conteudos/educacao/", TemplateView.as_view(template_name='contents/educacao.html'), name='conteudos_educacao'),
-    path("conteudos/regime-tributario/", TemplateView.as_view(template_name='contents/regime_tributario.html'), name='conteudos_regime_tributario'),
 
     path("obrigado/", TemplateView.as_view(template_name='obrigado.html'), name='obrigado'),
     # Páginas institucionais estáticas
