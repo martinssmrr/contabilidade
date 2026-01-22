@@ -646,3 +646,64 @@ def servicos_avulsos(request):
 def indique_ganhe(request):
     """View para Indique e Ganhe"""
     return render(request, 'users/indique_ganhe.html')
+
+
+@login_required
+def meu_perfil(request):
+    """View para visualizar e editar o perfil do usuário"""
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'update_profile':
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            email = request.POST.get('email')
+            telefone = request.POST.get('telefone')
+            cpf_cnpj = request.POST.get('cpf_cnpj')
+            
+            # Validações básicas
+            if not first_name or not email:
+                messages.error(request, 'Nome e e-mail são obrigatórios.')
+                return redirect('users:meu_perfil')
+            
+            # Verificar se e-mail já existe (se foi alterado)
+            if email != request.user.email and User.objects.filter(email=email).exists():
+                messages.error(request, 'Este e-mail já está sendo utilizado por outro usuário.')
+                return redirect('users:meu_perfil')
+                
+            try:
+                request.user.first_name = first_name
+                request.user.last_name = last_name
+                request.user.email = email
+                # Se o username for o email, atualiza também
+                if '@' in request.user.username: 
+                    request.user.username = email
+                
+                request.user.telefone = telefone
+                request.user.cpf_cnpj = cpf_cnpj
+                request.user.save()
+                
+                messages.success(request, 'Dados pessoais atualizados com sucesso!')
+            except Exception as e:
+                messages.error(request, f'Erro ao atualizar perfil: {str(e)}')
+                
+        elif action == 'change_password':
+            current_password = request.POST.get('current_password')
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+            
+            if not request.user.check_password(current_password):
+                messages.error(request, 'A senha atual está incorreta.')
+            elif new_password != confirm_password:
+                messages.error(request, 'A nova senha e a confirmação não coincidem.')
+            elif len(new_password) < 6:
+                messages.error(request, 'A nova senha deve ter pelo menos 6 caracteres.')
+            else:
+                request.user.set_password(new_password)
+                request.user.save()
+                login(request, request.user) # Manter usuário logado após mudar senha
+                messages.success(request, 'Senha alterada com sucesso!')
+        
+        return redirect('users:meu_perfil')
+        
+    return render(request, 'users/meu_perfil.html')

@@ -30,4 +30,5 @@ urlpatterns = [
     path('meu-plano/', views.meu_plano, name='meu_plano'),
     path('servicos-avulsos/', views.servicos_avulsos, name='servicos_avulsos'),
     path('indique-ganhe/', views.indique_ganhe, name='indique_ganhe'),
+    path('meu-perfil/', views.meu_perfil, name='meu_perfil'),
 ]

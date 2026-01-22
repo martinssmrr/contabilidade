@@ -6,6 +6,109 @@
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+
+    /* Orbita Section Styles - Nova Seção */
+    .orbit-bg {
+        background-color: #ebeef1; /* Light background */
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .orbit-card {
+        background: rgba(255, 255, 255, 0.85); /* Semi-transparent */
+        backdrop-filter: blur(5px);
+        border-radius: 16px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.6);
+    }
+    
+    .orbit-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        background: rgba(255, 255, 255, 0.98);
+        border-color: #fff;
+    }
+    
+    .orbit-main-img {
+        width: 380px;
+        height: 380px;
+        object-fit: cover;
+        border: 10px solid rgba(255,255,255,0.8);
+        box-shadow: 0 20px 40px rgba(26, 35, 126, 0.15);
+        z-index: 10;
+        position: relative;
+    }
+
+    .orbit-image-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Orbit Rings Effect */
+    .orbit-image-container::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 140%;
+        height: 140%;
+        border: 1px dashed rgba(26, 35, 126, 0.1);
+        border-radius: 50%;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    @media (min-width: 992px) {
+        .orbit-col-left .orbit-card {
+            text-align: right;
+            margin-right: 0; 
+            position: relative;
+        }
+        
+        /* Curve Effect - Middle card pushed OUTWARD */
+        .orbit-col-left .orbit-card:nth-child(2) {
+            margin-right: 60px; 
+            z-index: 5;
+        }
+        
+        .orbit-col-right .orbit-card {
+            text-align: left;
+            margin-left: 0;
+            position: relative;
+        }
+
+        /* Curve Effect - Middle card pushed OUTWARD */
+        .orbit-col-right .orbit-card:nth-child(2) {
+            margin-left: 60px; 
+            z-index: 5;
+        }
+    }
+    
+    @media (max-width: 991px) {
+        .orbit-main-img {
+             width: 250px;
+             height: 250px;
+             margin-bottom: 2rem;
+        }
+        .orbit-card {
+            text-align: center;
+            background: #ffffff; /* Solid on mobile for better reading */
+        }
+        .orbit-image-container::before {
+            display: none;
+        }
+    }
+
+    /* FAQ expand/collapse */
+    .faq-item { border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .faq-question { background: transparent; border: 0; width: 100%; text-align: left; padding: 1rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .faq-item.open .faq-answer { /* when open, max-height updated by JS to scrollHeight for smooth animation */ }
+    .faq-answer-content { padding: 0 1rem 1rem; }
+    .faq-icon { display: inline-flex; align-items: center; transition: transform 0.25s ease; }
+    .faq-item.open .faq-icon { transform: rotate(180deg); }
+
     .text-primary-dark {
         color: #0a4fa3;
     }
@@ -116,6 +219,102 @@
         color: #0c63d1;
         background: white;
     }
+
+    /* Hiring Process Section Styles */
+    .section-hiring-process {
+        background-color: #fff;
+    }
+    .section-hiring-process .organic-bg-shape {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        bottom: 20px;
+        left: 20px;
+        background-color: #2C5AE8;
+        border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+        z-index: 0;
+    }
+    .section-hiring-process .specialist-img {
+        position: relative;
+        z-index: 1;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        max-height: 500px;
+        object-fit: cover;
+        object-position: top;
+    }
+    .section-hiring-process .float-card {
+        z-index: 2;
+        border-radius: 12px;
+        color: white;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        animation: floatCard 4s ease-in-out infinite;
+    }
+    .section-hiring-process .float-card.name-card {
+        background-color: #2C5AE8;
+        bottom: 80px;
+        left: -20px;
+    }
+    .section-hiring-process .float-card.details-card {
+        background-color: #4B7CE4;
+        bottom: 20px;
+        left: 40px;
+        animation-delay: 1s;
+    }
+    @keyframes floatCard {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+    
+    .section-hiring-process .step-circle {
+        width: 45px;
+        height: 45px;
+        background-color: #2C5AE8;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        z-index: 1;
+        position: relative;
+    }
+    .section-hiring-process .step-line {
+        position: absolute;
+        width: 2px;
+        background-color: #2C5AE8;
+        top: 45px;
+        bottom: -20px;
+        left: 22.5px; /* Center with circle (45/2) */
+        transform: translateX(-50%);
+        z-index: 0;
+    }
+    .section-hiring-process .step-item:last-child .step-line {
+        display: none;
+    }
+    .section-hiring-process .cta-btn-process {
+        background-color: #00E6B8;
+        color: white;
+        font-weight: bold;
+        padding: 1rem 3rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    .section-hiring-process .cta-btn-process:hover {
+        background-color: #00cca4;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 230, 184, 0.4);
+        color: white;
+    }
+    
+    @media (max-width: 991.98px) {
+        .section-hiring-process .float-card.name-card { left: 0; bottom: 70px; }
+        .section-hiring-process .float-card.details-card { left: 20px; bottom: 10px; }
+        .section-hiring-process .organic-bg-shape { left: 0; right: 0; }
+    }
 </style>
 {% endblock %}
 
@@ -126,21 +325,12 @@
         <div class="row align-items-center" style="min-height: 75vh; padding-bottom: 1rem;">
             <!-- Coluna Esquerda - Conteúdo -->
             <div class="col-lg-6 col-12 animate-fade-in px-5">
-                <h1 class="display-3 fw-bold mb-4">Endereço Virtual para Empresas Credibilidade e Regularidade Sem Custos Fixos</h1>
-                <p class="fs-5 mb-4">Garanta um endereço fiscal profissional para abrir, regularizar ou manter sua empresa sem precisar alugar um espaço físico. Uma solução econômica, segura e 100% online para quem deseja formalidade e credibilidade no CNPJ.</p>
+                <h1 class="display-3 fw-bold mb-4">Escritório Virtual para Empresas Credibilidade e Regularidade Sem Custos Fixos</h1>
+                <p class="fs-5 mb-4">Garanta um escritório fiscal profissional para abrir, regularizar ou manter sua empresa sem precisar alugar um espaço físico. Uma solução econômica, segura e 100% online para quem deseja formalidade e credibilidade no CNPJ.</p>
                 <div class="d-grid gap-3 d-sm-flex mb-4">
                     <button type="button" class="btn btn-light btn-lg px-5" data-bs-toggle="modal" data-bs-target="#contactModal">Abra sua empresa agora</button>
                     <a href="https://wa.me/5561998311920" target="_blank" class="btn btn-outline-light btn-lg px-5">Falar com um especialista</a>
                 </div>
-                <!-- Selos de Segurança -->
-                <!-- <div class="d-flex gap-3 align-items-center flex-wrap mt-3">
-                    <div class="selo-badge selo-ra1000">
-                        <img src="{% static 'img/SELO-RA1000.webp' %}" alt="Selo RA1000" class="img-fluid">
-                    </div>
-                    <div class="selo-badge selo-google" style="width: 103.969px !important; height: 37.734px !important;">
-                        <img src="{% static 'img/googlesiteseguro.webp' %}" alt="Google Site Seguro" style="width: 100%; height: 100%; object-fit: contain;">
-                    </div>
-                </div> -->
             </div>
             <!-- Coluna Direita - Vazia (imagem de fundo aparece aqui) -->
             <div class="col-lg-6 d-none d-lg-block">
@@ -150,44 +340,257 @@
     </div>
 </section>
 
-<!-- How It Works Section -->
-<section class="py-5 bg-light" style="background-color: #ebeef1 !important;">
+<!-- Por que escolher a Vetorial Section -->
+<section id="por-que-escolher" class="features-section py-5" style="background-color: #ebeef1;">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold text-primary-dark">Como Funciona</h2>
-            <p class="lead text-muted">Simples, rápido e 100% online. Veja como é fácil contratar.</p>
+            <h2 class="display-5 fw-bold mb-3">Descubra as vantagens de ter o escritório fiscal da Vetorial</h2>
+            <h6>Tenha um endereço fiscal estratégico, regular e seguro para a sua empresa sem expor sua residência e sem burocracia.</h6>
         </div>
+        <div class="row g-4 mb-4">
+            <!-- Card 1 - Endereço fiscal separado do seu pessoal -->
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/enderecovirtual.svg' %}" alt="Ícone Endereço Fiscal" style="width: 64px; height: 64px;">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Endereço fiscal separado do seu pessoal</h5>
+                        <p class="card-text text-muted">Proteja sua privacidade. Seu CNPJ fica vinculado a um endereço fiscal regular, sem usar ou expor seu endereço residencial.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 2 - Liberdade geográfica e operacional -->
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/brazil.svg' %}" alt="Ícone Liberdade Geográfica" style="width: 64px; height: 64px;">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Liberdade geográfica e operacional</h5>
+                        <p class="card-text text-muted">Mude de cidade ou estado sem burocracia. Seu endereço fiscal permanece o mesmo, sem custos extras ou impactos contratuais.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 3 - Aumente a credibilidade do seu negócio -->
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/assessoriacontabil.svg' %}" alt="Ícone Credibilidade" style="width: 64px; height: 64px;">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Aumente a credibilidade do seu negócio</h5>
+                        <p class="card-text text-muted">Transmita profissionalismo desde o primeiro contato. Use um endereço empresarial confiável para contratos, bancos e clientes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row g-4">
-            <!-- Step 1 -->
-            <div class="col-md-3">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <h4 class="h5 fw-bold mb-3">Contratação Online</h4>
-                    <p class="text-muted small">Escolha o plano ideal para o seu negócio e faça a contratação diretamente pelo nosso site, em poucos cliques.</p>
+            <!-- Card 4 - Abertura de empresa mais rápida -->
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/abrirempresa.svg' %}" alt="Ícone Abertura Rápida" style="width: 64px; height: 64px;">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Abertura de empresa mais rápida</h5>
+                        <p class="card-text text-muted">Com endereço fiscal definido, o CNPJ é regularizado com mais agilidade e menos exigências.</p>
+                    </div>
                 </div>
             </div>
-            <!-- Step 2 -->
-            <div class="col-md-3">
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <h4 class="h5 fw-bold mb-3">Envio de Documentos</h4>
-                    <p class="text-muted small">Envie seus documentos pessoais e da empresa de forma 100% digital e segura através da nossa plataforma.</p>
+
+            <!-- Card 5 - Gestão online de correspondências físicas -->
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/contabilidadeonline.svg' %}" alt="Ícone Gestão Online" style="width: 64px; height: 64px;">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Gestão online de correspondências físicas</h5>
+                        <p class="card-text text-muted">Recebemos, digitalizamos e encaminhamos suas correspondências para o seu e-mail, garantindo praticidade, controle e segurança.</p>
+                    </div>
                 </div>
             </div>
-            <!-- Step 3 -->
-            <div class="col-md-3">
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <h4 class="h5 fw-bold mb-3">Liberação do Endereço</h4>
-                    <p class="text-muted small">Após análise rápida, liberamos seu endereço fiscal e comercial para você regularizar seu CNPJ imediatamente.</p>
+            
+            <!-- Card 6 - Elimine os custos de um espaço físico -->
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon mb-4">
+                            <img src="{% static 'img/reducao.svg' %}" alt="Ícone Redução de Custos" style="width: 64px; height: 64px;">
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Elimine os custos de um espaço físico</h5>
+                        <p class="card-text text-muted">Evite despesas elevadas com escritório físico. Reduza despesas fixas e encargos como IPTU e aluguel.</p>
+                    </div>
                 </div>
             </div>
-            <!-- Step 4 -->
-            <div class="col-md-3">
-                <div class="step-card">
-                    <div class="step-number">4</div>
-                    <h4 class="h5 fw-bold mb-3">Gestão Completa</h4>
-                    <p class="text-muted small">Pronto! Nós recebemos suas correspondências e notificamos você. Foque no seu negócio enquanto cuidamos do resto.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Nova Seção: Obstáculos / Orbita Layout -->
+<section id="obstaculos-crescimento" class="orbit-bg py-5">
+    <div class="container position-relative py-lg-5">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold section-title-blue mb-3">Veja os riscos de usar o endereço errado no CNPJ</h2>
+            <h6>A escolha errada do endereço fiscal gera custos ocultos, trava o crescimento e expõe você a problemas legais.</h6>
+        </div>
+
+        <div class="row align-items-center justify-content-center position-relative">
+            <!-- Central Image (Shown in center on desktop, top on mobile) -->
+            <div class="col-lg-4 order-lg-2 text-center mb-4 mb-lg-0 position-relative">
+                <div class="orbit-image-container">
+                    <img src="{% static 'img/section2.jpg' %}" alt="Problemas que resolvemos" class="img-fluid rounded-circle orbit-main-img">
+                </div>
+            </div>
+
+            <!-- Left Cards -->
+            <div class="col-lg-4 col-md-6 order-lg-1">
+                <div class="d-flex flex-column gap-3 gap-lg-4 orbit-col-left">
+                    <!-- Card 1 -->
+                    <div class="card orbit-card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold text-primary mb-2">Aumento do IPTU do seu imóvel</h5>
+                            <p class="mb-0 text-muted small">Vincular o CNPJ ao endereço residencial pode elevar IPTU e taxas, além de gerar conflitos com condomínio e prefeitura.</p>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="card orbit-card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold text-primary mb-2">Exposição da sua privacidade e da sua família</h5>
+                            <p class="mb-0 text-muted small">Qualquer pessoa pode consultar o endereço do CNPJ. Seu lar vira público — e isso é risco real.</p>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="card orbit-card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold text-primary mb-2">Burocracia para abrir ou alterar o CNPJ</h5>
+                            <p class="mb-0 text-muted small">Endereço incompatível pode barrar registros, gerar exigências e atrasar a regularização da empresa.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Cards -->
+            <div class="col-lg-4 col-md-6 order-lg-3">
+                <div class="d-flex flex-column gap-3 gap-lg-4 orbit-col-right">
+                    <!-- Card 4 -->
+                    <div class="card orbit-card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold text-primary mb-2">Falta de mobilidade para crescer</h5>
+                            <p class="mb-0 text-muted small">Mudou de casa? Prepare-se para custos, alterações contratuais e retrabalho fiscal.</p>
+                        </div>
+                    </div>
+                    <!-- Card 5 -->
+                    <div class="card orbit-card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold text-primary mb-2">Risco em fiscalizações</h5>
+                            <p class="mb-0 text-muted small">Endereço inadequado aumenta chances de autuação, multas e bloqueios no CNPJ.</p>
+                        </div>
+                    </div>
+                    <!-- Card 6 -->
+                    <div class="card orbit-card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold text-primary mb-2">Dificuldade para abrir conta PJ</h5>
+                            <p class="mb-0 text-muted small">Bancos exigem endereço comercial confiável. Endereço residencial pode impedir a aprovação.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text Block - Moved closer to the cards -->
+        <div class="text-center mt-4">
+            <h6 class="fw-bold text-muted mb-2">Não espere fiscalização para corrigir o que é obrigatório. Faça do jeito certo. Fale com a Vetorial agora.</h6>
+            <a href="https://wa.me/5511999999999" class="btn btn-primary">Fale Conosco</a>
+        </div>
+    </div>
+</section>
+
+<!-- Contratar escritorio virtual -->
+<section class="section-hiring-process py-5 position-relative" style="background-color: #ebeef1;">
+    <div class="container py-4">
+        <!-- Title -->
+        <div class="text-center mb-5">
+            <h5 class="fw-bold mb-2" style="color: #2C5AE8;">Contrate e receba toda a documentação em instantes</h5>
+            <h2 class="display-6 fw-bold mb-3" style="color: #1A202C;">Como contratar o seu Escritório Virtual?</h2>
+        </div>
+
+        <div class="row align-items-center g-5">
+            <!-- Left Column: Image -->
+            <div class="col-lg-5 order-lg-1 order-1 mb-4 mb-lg-0">
+                <div class="position-relative p-3">
+                    <div class="organic-bg-shape"></div>
+                    <img src="{% static 'img/camila.webp' %}" alt="Especialista Vetorial" class="img-fluid w-100 specialist-img">
+                    
+                    <!-- Floating Cards -->
+                    <div class="float-card name-card position-absolute p-3" style="min-width: 180px;">
+                        <span class="d-block fw-bold display-6 fs-6">Camila Antunes</span>
+                        <small style="opacity: 0.9;">Contadora</small>
+                    </div>
+                    
+                    <div class="float-card details-card position-absolute p-3" style="min-width: 200px;">
+                        <div class="d-block fw-bold small">Especialista Vetorial</div>
+                        <div class="small">CRC Regular</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Steps -->
+            <div class="col-lg-6 offset-lg-1 order-lg-2 order-2">
+                <div class="steps-list">
+                    <!-- Step 1 -->
+                    <div class="step-item d-flex mb-5 position-relative">
+                        <!-- Circle & Line -->
+                        <div class="me-4 d-flex flex-column align-items-center" style="min-width: 45px;">
+                            <div class="step-circle">1</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <!-- Content -->
+                        <div>
+                            <h4 class="fw-bold mb-2" style="color: #333;">Inicie seu atendimento</h4>
+                            <p class="text-secondary mb-0">Preencha o formulário e nossa equipe especializada entrará em contato para entender sua necessidade e orientar os próximos passos.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="step-item d-flex mb-5 position-relative">
+                        <!-- Circle & Line -->
+                        <div class="me-4 d-flex flex-column align-items-center" style="min-width: 45px;">
+                            <div class="step-circle">2</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <!-- Content -->
+                        <div>
+                            <h4 class="fw-bold mb-2" style="color: #333;">Envie a documentação necessária</h4>
+                            <p class="text-secondary mb-0">Após a análise inicial, solicitamos seus documentos e encaminhamos o contrato digital para conferência e assinatura.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="step-item d-flex position-relative">
+                        <!-- Circle & Line -->
+                        <div class="me-4 d-flex flex-column align-items-center" style="min-width: 45px;">
+                            <div class="step-circle">3</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <!-- Content -->
+                        <div>
+                            <h4 class="fw-bold mb-2" style="color: #333;">Pronto! Endereço fiscal seguro e regular</h4>
+                            <p class="text-secondary mb-0">Com a assinatura eletrônica concluída, seu endereço fiscal é ativado.
+                            Você só começa a pagar após a abertura do seu CNPJ, com total transparência.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="mt-5 text-center text-lg-start ps-lg-5 ms-lg-3">
+                    <button type="button" class="btn cta-btn-process" data-bs-toggle="modal" data-bs-target="#contactModal">
+                        FALE COM UM ESPECIALISTA
+                    </button>
                 </div>
             </div>
         </div>
@@ -262,9 +665,10 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="faq-accordion">
+                    <!-- FAQ 1 -->
                     <div class="faq-item">
                         <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">O que é necessário para abrir uma empresa?</span>
+                            <span class="faq-question-text">O que é endereço fiscal?</span>
                             <span class="faq-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -273,14 +677,17 @@
                         </button>
                         <div class="faq-answer">
                             <div class="faq-answer-content">
-                                <p>Você precisa dos seus documentos pessoais, endereço, atividade da empresa e informações sobre sócios, quando houver.</p>
+                                <p>O endereço fiscal é o local oficialmente vinculado ao CNPJ da empresa nos órgãos públicos, como Receita Federal, Junta Comercial e Prefeitura. É esse endereço que consta nos registros legais, contratos, notas fiscais e cadastros tributários.</p>
+                                <p>Durante a abertura da empresa, o endereço fiscal passa por uma análise de viabilidade municipal, que verifica se a atividade exercida é permitida naquele local. Além disso, é nele que a empresa recebe comunicações e notificações oficiais dos órgãos competentes.</p>
+                                <p>Ter um endereço fiscal adequado é essencial para manter o CNPJ regular e evitar impedimentos legais.</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- FAQ 2 -->
                     <div class="faq-item">
                         <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">Quanto tempo demora para abrir uma empresa?</span>
+                            <span class="faq-question-text">O uso de escritório virtual é permitido por lei?</span>
                             <span class="faq-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -289,14 +696,18 @@
                         </button>
                         <div class="faq-answer">
                             <div class="faq-answer-content">
-                                <p>O processo para abrir uma empresa geralmente leva de 7 a 15 dias úteis, dependendo da complexidade do negócio e da rapidez na entrega dos documentos necessários.</p>
+                                <p>Sim. O escritório virtual é uma solução legalmente aceita no Brasil, desde que o endereço utilizado seja real, físico e regularizado.</p>
+                                <p>Essa modalidade é indicada para empresas que não necessitam de um espaço físico para atendimento ao público, como prestadores de serviços, profissionais PJ, negócios digitais e empresas administrativas.</p>
+                                <p>O escritório virtual permite registrar o CNPJ em um endereço compatível, reduzindo custos com estrutura física e mantendo total conformidade legal.</p>
+                                <p><strong>Importante:</strong> a aceitação pode variar conforme a atividade e as regras do município, por isso a Vetorial avalia cada caso antes da contratação.</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- FAQ 3 -->
                     <div class="faq-item">
                         <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">Quanto custa abrir uma empresa?</span>
+                            <span class="faq-question-text">Preciso ser cliente da Vetorial para contratar o endereço fiscal?</span>
                             <span class="faq-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -305,14 +716,17 @@
                         </button>
                         <div class="faq-answer">
                             <div class="faq-answer-content">
-                                <p>Os custos para abrir uma empresa variam conforme o tipo de empresa e a localidade, incluindo taxas de registro, honorários contábeis e outros custos administrativos.</p>
+                                <p>Sim. O serviço de endereço fiscal da Vetorial é oferecido prioritariamente para clientes que realizam abertura de empresa conosco.</p>
+                                <p>Para empresas já ativas, a contratação pode ser avaliada conforme o perfil do negócio, atividade exercida e regras municipais.</p>
+                                <p>Nossa equipe analisa a elegibilidade antes de seguir com o processo, garantindo segurança jurídica.</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- FAQ 4 -->
                     <div class="faq-item">
                         <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">Posso usar meu endereço residencial?</span>
+                            <span class="faq-question-text">Como vou receber minhas correspondências?</span>
                             <span class="faq-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -321,14 +735,23 @@
                         </button>
                         <div class="faq-answer">
                             <div class="faq-answer-content">
-                                <p>Sim, você pode usar seu endereço residencial para abrir a empresa, desde que esteja de acordo com as normas municipais e o tipo de atividade exercida.</p>
+                                <p>A Vetorial recebe suas correspondências oficiais, faz a digitalização dos documentos e envia tudo diretamente para o seu e-mail cadastrado.</p>
+                                <p>Esse processo garante:</p>
+                                <ul>
+                                    <li>praticidade</li>
+                                    <li>organização</li>
+                                    <li>segurança</li>
+                                    <li>acesso rápido às informações importantes</li>
+                                </ul>
+                                <p>Caso precise de orientações adicionais sobre algum documento recebido, nosso time está à disposição.</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- FAQ 5 -->
                     <div class="faq-item">
                         <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">É obrigatório ter contador?</span>
+                            <span class="faq-question-text">Posso utilizar fisicamente o endereço do escritório virtual?</span>
                             <span class="faq-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -337,14 +760,22 @@
                         </button>
                         <div class="faq-answer">
                             <div class="faq-answer-content">
-                                <p>Sim, é obrigatório ter um contador para a maioria dos tipos de empresa, pois ele é responsável pela escrituração contábil, cumprimento das obrigações fiscais e orientação financeira.</p>
+                                <p>Não. O endereço fiscal disponibilizado pela Vetorial não inclui uso de espaço físico, salas ou atendimento presencial.</p>
+                                <p>O serviço é destinado exclusivamente para:</p>
+                                <ul>
+                                    <li>registro do CNPJ</li>
+                                    <li>recebimento de correspondências oficiais</li>
+                                    <li>fins legais e tributários</li>
+                                </ul>
+                                <p>Também não são aceitas encomendas ou itens com valor declarado.</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- FAQ 6 -->
                     <div class="faq-item">
                         <button class="faq-question" type="button" onclick="toggleFaq(this)">
-                            <span class="faq-question-text">É possível abrir empresa online?</span>
+                            <span class="faq-question-text">Qual a diferença entre endereço fiscal e endereço comercial?</span>
                             <span class="faq-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -353,11 +784,28 @@
                         </button>
                         <div class="faq-answer">
                             <div class="faq-answer-content">
-                                <p>Sim. Hoje o processo é 100% digital em quase todos os estados.</p>
+                                <p>O endereço fiscal é utilizado para fins legais, tributários e cadastrais:</p>
+                                <ul>
+                                    <li>abertura da empresa</li>
+                                    <li>emissão de notas fiscais</li>
+                                    <li>registros nos órgãos públicos</li>
+                                </ul>
+                                <p>Já o endereço comercial é aquele utilizado para atendimento presencial de clientes, funcionamento de loja ou operação física do negócio.</p>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5" id="contato" style="background-color: #ebeef1;">
+    <div class="container">
+        <div class="card bg-primary text-white text-center border-0 shadow-lg" style="border-radius: 1rem;">
+            <div class="card-body p-5">
+                <h2 class="mb-4 text-white fw-bold">Garanta o endereço fiscal legal para o seu negócio</h2>
+                <a href="#pricing" class="btn btn-light btn-lg px-5 fw-bold">CONTRATAR AGORA</a>
             </div>
         </div>
     </div>
@@ -482,4 +930,43 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Função para abrir/fechar FAQ
+function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    if (!item) return;
+    const answer = item.querySelector('.faq-answer');
+    if (!answer) return;
+
+    const isOpen = item.classList.contains('open');
+    if (isOpen) {
+        // fechar
+        answer.style.maxHeight = null;
+        item.classList.remove('open');
+    } else {
+        // fechar outros abertos
+        document.querySelectorAll('.faq-item.open').forEach(el => {
+            el.classList.remove('open');
+            const a = el.querySelector('.faq-answer');
+            if (a) a.style.maxHeight = null;
+        });
+
+        // abrir este
+        item.classList.add('open');
+        // forçar maxHeight para permitir transição suave
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+}
+
+// Garantir que todas as respostas iniciem fechadas ao carregar
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.faq-answer').forEach(a => {
+        a.style.maxHeight = null;
+    });
+});
+
+</script>
 {% endblock %}

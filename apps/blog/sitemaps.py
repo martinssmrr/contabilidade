@@ -20,6 +20,11 @@ class StaticViewSitemap(Sitemap):
             'sobre',
             'termos_de_uso',
             'politica_de_privacidade',
+            'contabilidade_mei',
+            'endereco_virtual',
+            'certificado_digital',
+            'emissor_nota_fiscal',
+            'contabilidade_online',
         ]
 
     def location(self, item):

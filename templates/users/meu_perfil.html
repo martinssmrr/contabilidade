@@ -1,0 +1,114 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Meu Perfil - Vetorial{% endblock %}
+
+{% block page_title %}Meu Perfil{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Dados Pessoais -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <h5 class="mb-0 fw-bold"><i class="fas fa-user-circle me-2 text-primary"></i>Dados Pessoais</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="/users/meu-perfil/">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_profile">
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="first_name" class="form-label fw-semibold">Nome</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="last_name" class="form-label fw-semibold">Sobrenome</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="email" class="form-label fw-semibold">E-mail</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telefone" class="form-label fw-semibold">Telefone/WhatsApp</label>
+                            <input type="text" class="form-control phone-mask" id="telefone" name="telefone" value="{{ user.telefone|default:'' }}" placeholder="(00) 00000-0000">
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <label for="cpf_cnpj" class="form-label fw-semibold">CPF/CNPJ</label>
+                            <input type="text" class="form-control" id="cpf_cnpj" name="cpf_cnpj" value="{{ user.cpf_cnpj|default:'' }}">
+                            <div class="form-text">Este documento é utilizado para emissão de notas e contratos.</div>
+                        </div>
+
+                        <div class="col-12 text-end mt-4">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-2"></i>Salvar Alterações
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Alterar Senha -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <h5 class="mb-0 fw-bold"><i class="fas fa-lock me-2 text-primary"></i>Alterar Senha</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="/users/meu-perfil/">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="change_password">
+                    
+                    <div class="mb-3">
+                        <label for="current_password" class="form-label fw-semibold">Senha Atual</label>
+                        <input type="password" class="form-control" id="current_password" name="current_password" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="new_password" class="form-label fw-semibold">Nova Senha</label>
+                        <input type="password" class="form-control" id="new_password" name="new_password" required minlength="6">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label fw-semibold">Confirmar Nova Senha</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required minlength="6">
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fas fa-key me-2"></i>Atualizar Senha
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Info Card -->
+        <div class="card border-0 shadow-sm bg-primary text-white">
+            <div class="card-body p-4 text-center">
+                <div class="mb-3 display-4">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h5 class="card-title fw-bold">Precisa de Ajuda?</h5>
+                <p class="card-text opacity-75">Se precisar alterar dados sensíveis ou tiver dúvidas sobre sua conta, entre em contato com nosso suporte.</p>
+                <a href="{% url 'support:abrir_chamado' %}" class="btn btn-light text-primary fw-bold mt-2">Falar com Suporte</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.phone-mask').mask('(00) 00000-0000');
+    });
+</script>
+{% endblock %}
