@@ -3081,3 +3081,8 @@ section.recent-posts-section {
 /* Cores de texto para os ícones */
 .text-purple { color: #6f42c1; }
 
+
+.section-title-blue {
+    color: #1A237E !important;
+    font-weight: 700;
+}

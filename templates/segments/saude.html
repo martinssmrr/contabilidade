@@ -26,7 +26,7 @@
 
     /* Hero Section */
     .hero-saude {
-        background: linear-gradient(135deg, rgba(12, 99, 209, 0.85) 0%, rgba(10, 79, 163, 0.9) 100%), url('{% static "img/herosection.webp" %}');
+        background: linear-gradient(135deg, rgba(12, 99, 209, 0.85) 0%, rgba(10, 79, 163, 0.9) 100%), url('{% static "img/jaleco.webp" %}');
         background-size: cover;
         background-position: center;
         min-height: 100vh;
@@ -138,7 +138,7 @@
 
     /* Problemas/Dores */
     .dores-section {
-        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        background-color: #ebeef1;
     }
 
     .dor-item {
@@ -246,6 +246,11 @@
         text-align: center;
         position: relative;
         padding: 30px 20px;
+    }
+
+    .section-title-blue {
+        color: #1A237E;
+        font-weight: 700;
     }
 
     .passo-numero {
@@ -564,10 +569,10 @@
 </section>
 
 <!-- 2. PARA QUEM É -->
-<section class="section-padding">
+<section class="section-padding" style="background-color: #ebeef1;">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="section-title">Nossa Expertise é Dedicada a Você</h2>
+            <h2 class="section-title-blue">Nossa Expertise é Dedicada a Você</h2>
             <p class="section-subtitle">Somos especialistas em contabilidade para profissionais da saúde. Entendemos suas particularidades, sua rotina e suas necessidades.</p>
         </div>
 
@@ -649,11 +654,11 @@
 </section>
 
 <!-- 3. PROBLEMAS/DORES -->
-<section class="section-padding dores-section">
+<section class="section-padding dores-section" style="background-color: #ebeef1 !important">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-5 mb-5 mb-lg-0">
-                <h2 class="section-title text-start">Você se Identifica com Algum Destes Desafios?</h2>
+                <h2 class="section-title-blue text-start">Você se Identifica com Algum Destes Desafios?</h2>
                 <p class="text-muted">Se você é profissional da saúde, provavelmente já enfrentou pelo menos um desses problemas. A boa notícia? Todos eles têm solução.</p>
             </div>
             <div class="col-lg-7">
@@ -717,10 +722,10 @@
 </section>
 
 <!-- 4. SOLUÇÃO/SERVIÇOS -->
-<section class="section-padding">
+<section class="section-padding" style="background-color: #ebeef1;">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="section-title">Deixe a Burocracia Conosco<br>e Foque nos Seus Pacientes</h2>
+            <h2 class="section-title-blue">Deixe a Burocracia Conosco<br>e Foque nos Seus Pacientes</h2>
             <p class="section-subtitle">Oferecemos soluções completas para você ter tranquilidade e economia. Cada serviço foi pensado para resolver os problemas reais que você enfrenta.</p>
         </div>
 
@@ -784,11 +789,11 @@
 </section>
 
 <!-- 5. BENEFÍCIOS -->
-<section class="section-padding" style="background-color: #f8fafc;">
+<section class="section-padding" style="background-color: #ebeef1;">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-5 mb-5 mb-lg-0">
-                <h2 class="section-title text-start">A Parceria Certa<br>Traz Resultados Reais</h2>
+                <h2 class="section-title-blue text-start">A Parceria Certa<br>Traz Resultados Reais</h2>
                 <p class="text-muted mb-4">Quando você tem um contador especialista ao seu lado, os benefícios vão muito além da simples "entrega de obrigações".</p>
                 <a href="https://wa.me/551131642284" target="_blank" class="btn-cta-primary">
                     <i class="fab fa-whatsapp me-2"></i>Quero Esses Benefícios
@@ -828,7 +833,7 @@
                     </div>
                     <div>
                         <h5 class="mb-1">Contador Especialista na Sua Área</h5>
-                        <p class="text-muted mb-0">Trabalhamos exclusivamente com profissionais da saúde. Sabemos exatamente o que você precisa.</p>
+                        <p class="text-muted mb-0">Temos contadores especialistas na área na área médica e de saúde, aqui você conversa com quem entende da sua área.</p>
                     </div>
                 </div>
                 <div class="beneficio-item">
@@ -849,16 +854,34 @@
                         <p class="text-muted mb-0">Tudo online, sem papelada. Você resolve de onde estiver, a qualquer hora.</p>
                     </div>
                 </div>
+                <div class="beneficio-item">
+                    <div class="beneficio-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">Licenciamentos na Área da Saúde</h5>
+                        <p class="text-muted mb-0">Apoiamos a obtenção e regularização das licenças exigidas para clínicas, consultórios e empresas da saúde, garantindo conformidade legal.</p>
+                    </div>
+                </div>
+                <div class="beneficio-item">
+                    <div class="beneficio-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">Atualização Cadastral</h5>
+                        <p class="text-muted mb-0">Mantemos seus registros atualizados junto aos órgãos reguladores, evitando riscos, multas e interrupções.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- 6. COMO FUNCIONA -->
-<section class="section-padding">
+<section class="py-5" style="background-color: #ebeef1;">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="section-title">Começar é Mais Simples<br>do Que Você Imagina</h2>
+            <h2 class="section-title-blue">Começar é Mais Simples<br>do Que Você Imagina</h2>
             <p class="section-subtitle">Em 5 etapas, você terá uma contabilidade especializada cuidando de tudo para você.</p>
         </div>
 
@@ -906,21 +929,22 @@
     </div>
 </section>
 
-<!-- 7. DEPOIMENTOS -->
-<section class="section-padding" style="background-color: #f8fafc;">
+<!-- Depoimentos Section -->
+<section class="testimonials-section py-5" style="background-color: #ebeef1;">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="section-title">O Que Nossos Clientes Dizem</h2>
-            <p class="section-subtitle">Profissionais da saúde que transformaram sua gestão financeira com a Vetorial.</p>
+            <h2 class="display-5 section-title-blue mb-4">O Que Nossos Clientes Dizem</h2>
+            <p class="lead text-muted mb-4">Profissionais da saúde que transformaram sua gestão financeira com a Vetorial.</p>
+            <img src="{% static 'img/avaliação-google.webp' %}" alt="Avaliação Google" class="img-fluid" style="max-width: 300px; height: auto;" loading="lazy">
         </div>
-
-        <div class="row g-4">
-            <div class="col-lg-4">
+        
+        <div class="testimonials-scroll d-flex gap-4">
+            <div class="depoimento-card-wrapper">
                 <div class="depoimento-card">
                     <p class="depoimento-texto">"Eu pagava quase 15% de imposto. Depois que a Vetorial fez meu planejamento tributário, caiu para menos de 8%. Em um ano, economizei mais de R$ 25 mil. Melhor decisão que tomei."</p>
                     <div class="depoimento-autor">
                         <div class="autor-avatar">
-                            <img src="{% static 'img/ricardo.webp' %}" alt="Foto do Dr. Ricardo" class="autor-foto">
+                            <img src="{% static 'img/ricardo.webp' %}" alt="Foto do Dr. Ricardo" class="autor-foto" width="60" height="60" loading="lazy">
                         </div>
                         <div>
                             <h6 class="mb-0">Dr. Ricardo Mendes</h6>
@@ -929,12 +953,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="depoimento-card-wrapper">
                 <div class="depoimento-card">
                     <p class="depoimento-texto">"Finalmente encontrei uma contabilidade que entende minha rotina. Resposta rápida pelo WhatsApp, notas emitidas sem eu precisar me preocupar. Tranquilidade total."</p>
                     <div class="depoimento-autor">
                         <div class="autor-avatar">
-                            <img src="{% static 'img/camila.webp' %}" alt="Foto do Dr. Ricardo" class="autor-foto">
+                            <img src="{% static 'img/camila.webp' %}" alt="Foto da Dra. Camila" class="autor-foto" width="60" height="60" loading="lazy">
                         </div>
                         <div>
                             <h6 class="mb-0">Dra. Camila Ferreira</h6>
@@ -943,16 +967,44 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="depoimento-card-wrapper">
                 <div class="depoimento-card">
                     <p class="depoimento-texto">"Meu contador anterior não sabia nem o que era Fator R. A Vetorial reorganizou minha empresa e hoje pago muito menos imposto, tudo dentro da lei. Super recomendo!"</p>
                     <div class="depoimento-autor">
                         <div class="autor-avatar">
-                            <img src="{% static 'img/andre.webp' %}" alt="Foto do Dr. André Oliveira" class="autor-foto">
+                            <img src="{% static 'img/andre.webp' %}" alt="Foto do Dr. André Oliveira" class="autor-foto" width="60" height="60" loading="lazy">
                         </div>
                         <div>
                             <h6 class="mb-0">Dr. André Oliveira</h6>
                             <small class="text-muted">Psicólogo Clínico - Rio de Janeiro/RJ</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Antes eu não entendia nada dos relatórios. Era tudo técnico e confuso. Na Vetorial, explicam de um jeito simples e hoje consigo tomar decisões com segurança."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/juliana.webp' %}" alt="Foto da Juliana" class="autor-foto" width="60" height="60" loading="lazy">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Juliana Gonçalves</h6>
+                            <small class="text-muted">Fisioterapeuta, Manaus-AM</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Emitir nota, enviar documento, resolver qualquer coisa era um sofrimento. A Vetorial simplificou tudo e hoje resolvo minha contabilidade em minutos."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/maria.webp' %}" alt="Foto da Maria Julia" class="autor-foto" width="60" height="60" loading="lazy">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Maria Júlia Paes</h6>
+                            <small class="text-muted">Dentista, São Paulo-SP</small>
                         </div>
                     </div>
                 </div>
@@ -1115,71 +1167,93 @@
 </section>
 
 <!-- 9. FAQ -->
-<section class="section-padding" style="background-color: #f8fafc;">
+<section class="faq-section py-5" style="background-color: #ebeef1; min-height: 400px;">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="section-title">Perguntas Frequentes</h2>
-            <p class="section-subtitle">Tire suas principais dúvidas sobre contabilidade para profissionais da saúde.</p>
+            <h2 class="section-title-blue display-5 mb-4">Perguntas Frequentes</h2>
+            <p class="lead text-muted">Tire suas principais dúvidas sobre contabilidade para profissionais da saúde.</p>
         </div>
 
         <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <span>Qual o melhor tipo de empresa (CNPJ) para médicos?</span>
-                        <i class="fas fa-chevron-down faq-icon"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            <p>Para a maioria dos médicos, a melhor opção é uma <strong>Sociedade Limitada Unipessoal (SLU)</strong> ou uma <strong>Sociedade Simples</strong>. A SLU permite que você tenha uma empresa individual com responsabilidade limitada, protegendo seu patrimônio pessoal. A escolha do melhor tipo depende do seu faturamento, se pretende ter sócios e da sua estratégia tributária. Nós analisamos seu caso específico para recomendar a estrutura ideal.</p>
+            <div class="col-lg-10">
+                <div class="faq-accordion">
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Qual o melhor tipo de empresa (CNPJ) para médicos?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Para a maioria dos médicos, a melhor opção é uma <strong>Sociedade Limitada Unipessoal (SLU)</strong> ou uma <strong>Sociedade Simples</strong>. A SLU permite que você tenha uma empresa individual com responsabilidade limitada, protegendo seu patrimônio pessoal. A escolha do melhor tipo depende do seu faturamento, se pretende ter sócios e da sua estratégia tributária. Nós analisamos seu caso específico para recomendar a estrutura ideal.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <span>Profissional da saúde pode ser MEI?</span>
-                        <i class="fas fa-chevron-down faq-icon"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            <p><strong>Não.</strong> Médicos, dentistas, psicólogos, fisioterapeutas, nutricionistas e a maioria dos profissionais da saúde exercem atividades regulamentadas por conselhos de classe, o que os impede de serem MEI (Microempreendedor Individual). A legislação do MEI exclui explicitamente profissões que exigem formação técnica específica e registro profissional. A alternativa mais comum é abrir uma empresa no Simples Nacional como ME (Microempresa).</p>
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Profissional da saúde pode ser MEI?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p><strong>Não.</strong> Médicos, dentistas, psicólogos, fisioterapeutas, nutricionistas e a maioria dos profissionais da saúde exercem atividades regulamentadas por conselhos de classe, o que os impede de serem MEI (Microempreendedor Individual). A legislação do MEI exclui explicitamente profissões que exigem formação técnica específica e registro profissional. A alternativa mais comum é abrir uma empresa no Simples Nacional como ME (Microempresa).</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <span>Quanto um profissional da saúde paga de imposto no Simples Nacional?</span>
-                        <i class="fas fa-chevron-down faq-icon"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            <p>Depende do seu faturamento e da aplicação do <strong>Fator R</strong>. No Simples Nacional, profissionais da saúde podem ser tributados no Anexo III (a partir de 6%) ou Anexo V (a partir de 15,5%). A diferença está no Fator R: se sua folha de pagamento (pró-labore + encargos) representar pelo menos 28% do faturamento, você é tributado no Anexo III, pagando bem menos impostos. Por isso, o planejamento tributário é essencial para garantir a menor alíquota possível. Em média, nossos clientes pagam entre <strong>6% e 11%</strong> de imposto total.</p>
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Quanto um profissional da saúde paga de imposto no Simples Nacional?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>Depende do seu faturamento e da aplicação do <strong>Fator R</strong>. No Simples Nacional, profissionais da saúde podem ser tributados no Anexo III (a partir de 6%) ou Anexo V (a partir de 15,5%). A diferença está no Fator R: se sua folha de pagamento (pró-labore + encargos) representar pelo menos 28% do faturamento, você é tributado no Anexo III, pagando bem menos impostos. Por isso, o planejamento tributário é essencial para garantir a menor alíquota possível. Em média, nossos clientes pagam entre <strong>6% e 11%</strong> de imposto total.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <span>Como funciona a emissão de notas fiscais para consultas?</span>
-                        <i class="fas fa-chevron-down faq-icon"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            <p>A emissão de notas fiscais para consultas é feita através do sistema da prefeitura do seu município (NFS-e). Cada consulta particular deve ter uma nota emitida para o paciente. Para convênios, geralmente é emitida uma nota consolidada mensal. Nós cuidamos de todo esse processo: configuramos seu acesso, orientamos sobre os códigos de serviço corretos e podemos até emitir as notas por você, liberando seu tempo para focar nos atendimentos.</p>
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Como funciona a emissão de notas fiscais para consultas?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>A emissão de notas fiscais para consultas é feita através do sistema da prefeitura do seu município (NFS-e). Cada consulta particular deve ter uma nota emitida para o paciente. Para convênios, geralmente é emitida uma nota consolidada mensal. Nós cuidamos de todo esse processo: configuramos seu acesso, orientamos sobre os códigos de serviço corretos e podemos até emitir as notas por você, liberando seu tempo para focar nos atendimentos.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <span>Vocês atendem em todo o Brasil?</span>
-                        <i class="fas fa-chevron-down faq-icon"></i>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            <p><strong>Sim!</strong> Somos uma contabilidade 100% digital e atendemos profissionais da saúde em todo o território nacional. Todo o processo é feito online: documentos são enviados pela nossa plataforma, reuniões são por videoconferência e o suporte é via WhatsApp. Não importa onde você esteja, terá o mesmo atendimento de qualidade.</p>
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span class="faq-question-text">Vocês atendem em todo o Brasil?</span>
+                            <span class="faq-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p><strong>Sim!</strong> Somos uma contabilidade 100% digital e atendemos profissionais da saúde em todo o território nacional. Todo o processo é feito online: documentos são enviados pela nossa plataforma, reuniões são por videoconferência e o suporte é via WhatsApp. Não importa onde você esteja, terá o mesmo atendimento de qualidade.</p>
+                            </div>
                         </div>
                     </div>
                 </div>

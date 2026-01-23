@@ -7,6 +7,105 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+
+    /* FAQ expand/collapse */
+    .faq-item { border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .faq-question { background: transparent; border: 0; width: 100%; text-align: left; padding: 1rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .faq-item.open .faq-answer { /* when open, max-height updated by JS to scrollHeight for smooth animation */ }
+    .faq-answer-content { padding: 0 1rem 1rem; }
+    .faq-icon { display: inline-flex; align-items: center; transition: transform 0.25s ease; }
+    .faq-item.open .faq-icon { transform: rotate(180deg); }
+
+    /* Depoimentos */
+
+    .autor-foto {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    }
+
+    .depoimento-card {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        position: relative;
+        height: 100%;
+    }
+
+    .depoimento-card::before {
+        content: '"';
+        font-size: 6rem;
+        color: rgba(12, 99, 209, 0.1);
+        position: absolute;
+        top: 10px;
+        left: 25px;
+        font-family: Georgia, serif;
+        line-height: 1;
+    }
+
+    .depoimento-texto {
+        font-style: italic;
+        color: var(--text-light);
+        margin-bottom: 25px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .depoimento-autor {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .autor-avatar {
+        width: 60px;
+        height: 60px;
+        background-size: cover;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .autor-avatar i {
+        font-size: 1.5rem;
+        color: var(--white);
+    }
+
+    .testimonials-scroll {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 20px;
+    }
+
+    .testimonials-scroll::-webkit-scrollbar {
+    height: 8px;
+    }
+
+    .testimonials-scroll::-webkit-scrollbar-thumb {
+    background: #c5c5c5;
+    border-radius: 4px;
+    }
+
+    .depoimento-card-wrapper {
+    min-width: calc(33.33% - 1rem); /* 3 por tela */
+    }
+
+    @media (max-width: 992px) { /* Tablet */
+    .depoimento-card-wrapper {
+        min-width: 50%; /* 2 por tela */
+    }
+    }
+
+    @media (max-width: 576px) { /* Mobile */
+    .depoimento-card-wrapper {
+        min-width: 85%; /* 1 por tela */
+    }
+    }
+
     :root {
         --primary-color: #3ef47c;
         --secondary-color: #0c63d1;
@@ -26,7 +125,7 @@
 
     /* Hero Section */
     .hero-section {
-        background: linear-gradient(135deg, rgba(12, 99, 209, 0.9) 0%, rgba(10, 79, 163, 0.95) 100%), url('https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+        background: linear-gradient(135deg, rgba(12, 99, 209, 0.9) 0%, rgba(10, 79, 163, 0.95) 100%), url('{% static "img/adv.webp" %}');
         background-size: cover;
         background-position: center;
         min-height: 80vh;
@@ -96,6 +195,11 @@
         background-color: var(--bg-light) !important;
     }
 
+    .section-title-blue {
+        color: #1A237E;
+        font-weight: 700;
+    }
+    
     .section-title {
         font-size: 2.5rem;
         font-weight: 700;
@@ -215,6 +319,385 @@
         border-radius: 1rem;
         z-index: 0;
     }
+
+    /* Fiscal Alert Section Styles */
+    .fiscal-alert-section {
+        background-color: #f8f9fa; /* Off-white base */
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Decorative circle for "life" */
+    .fiscal-alert-section::before {
+        content: '';
+        position: absolute;
+        top: -10%;
+        left: -5%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(12, 99, 209, 0.05) 0%, rgba(255,255,255,0) 70%);
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .fiscal-badge {
+        display: inline-flex;
+        align-items: center;
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+    
+    .fiscal-badge i {
+        color: #dc3545; /* Red alert icon */
+    }
+
+    .fiscal-title {
+        color: var(--text-dark);
+        font-weight: 700;
+        font-size: 2.5rem;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+    }
+    
+    @media (max-width: 768px) {
+        .fiscal-title {
+            font-size: 1.8rem;
+        }
+    }
+
+    .fiscal-subtitle {
+        font-size: 1.15rem;
+        color: var(--text-light);
+        line-height: 1.7;
+        max-width: 900px;
+    }
+
+    /* Visualization Placeholder styling */
+    .fiscal-image-container {
+        position: relative;
+        z-index: 1;
+        padding: 1rem;
+    }
+
+    .fiscal-img-styled {
+        border-radius: 1.5rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        transform: perspective(1000px) rotateY(2deg);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 4px solid var(--white);
+    }
+    
+    .fiscal-image-container:hover .fiscal-img-styled {
+        transform: perspective(1000px) rotateY(0deg) translateY(-5px);
+        box-shadow: 0 30px 60px -12px rgba(12, 99, 209, 0.2);
+    }
+    
+    /* Decorative elements behind image */
+    .fiscal-image-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 80%;
+        height: 80%;
+        background: linear-gradient(135deg, rgba(12, 99, 209, 0.1) 0%, rgba(12, 99, 209, 0) 100%);
+        border-radius: 1.5rem;
+        z-index: -1;
+        transform: translate(15px, -15px);
+    }
+
+    /* Benefits List */
+    .fiscal-list-title {
+        color: var(--text-dark);
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .fiscal-benefits-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .fiscal-benefits-list li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.2rem;
+        color: var(--text-dark);
+        font-size: 1.05rem;
+    }
+
+    .fiscal-benefits-list li:last-child {
+        margin-bottom: 0;
+    }
+
+    .fiscal-benefits-list .icon-wrapper {
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        margin-right: 15px;
+        color: #fff;
+        background: linear-gradient(135deg, #c53030 0%, #a71d1d 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 6px rgba(197, 48, 48, 0.2);
+    }
+
+    /* Reinforcement Box */
+    .fiscal-reinforce-box {
+        background: var(--white);
+        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    }
+
+    .fiscal-reinforce-text {
+        font-size: 1.1rem;
+        color: var(--text-light);
+        line-height: 1.6;
+        font-weight: 500;
+    }
+
+    /* CTA Button */
+    .btn-fiscal-cta {
+        background-color: #c53030; /* Cherry Red */
+        color: white !important;
+        font-weight: 700;
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(197, 48, 48, 0.3);
+        transition: all 0.3s ease;
+        display: inline-block;
+        border: none;
+        text-decoration: none;
+    }
+
+    .btn-fiscal-cta:hover {
+        background-color: #9b2c2c;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(197, 48, 48, 0.4);
+    }
+
+    /* Competition Section (PF vs PJ) */
+    .competition-section {
+        background-color: #fff;
+        padding: 50px 0;
+    }
+
+    .competition-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .competition-header h1 {
+        color: var(--primary-blue);
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .competition-header h6 {
+        color: var(--text-light);
+        font-size: 0.95rem;
+        font-weight: 400;
+        line-height: 1.6;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .simulation-title {
+        text-align: center;
+        margin: 30px 0 20px;
+        color: var(--text-dark);
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+    
+    .simulation-subtitle {
+        color: var(--primary-blue);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.8rem;
+        text-align: center;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .competition-container {
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        gap: 10px;
+        position: relative;
+    }
+
+    @media (max-width: 991px) {
+        .competition-container {
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+    }
+
+    .competition-card {
+        background: #fff;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.05);
+        width: 100%;
+        max-width: 380px;
+        position: relative;
+        transition: transform 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .competition-card.pf-card {
+        border-top: 4px solid #dc3545; /* Red for Bad/High cost */
+    }
+
+    .competition-card.pj-card {
+        border-top: 4px solid #28a745; /* Green for Good/Savings */
+        background: #fdfdfd;
+    }
+    
+    .competition-card h3 {
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        min-height: 2.5rem; 
+        display: flex; align-items: center; justify-content: center;
+        line-height: 1.2;
+    }
+
+    .pf-card h3 { color: #dc3545; }
+    .pj-card h3 { color: #0c63d1; }
+
+    .calc-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 0.85rem;
+        color: var(--text-light);
+        border-bottom: 1px dashed #eee;
+        padding-bottom: 5px;
+    }
+
+    .calc-row:last-of-type {
+        border-bottom: none;
+    }
+
+    .calc-separator {
+        text-align: center;
+        color: #ccc;
+        font-weight: bold;
+        margin: 2px 0;
+        font-size: 0.8rem;
+    }
+
+    .total-row {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 800;
+        font-size: 1rem;
+    }
+
+    .pf-card .total-row { color: #dc3545; }
+    .pj-card .total-row { color: #28a745; }
+
+    /* The "X" Separator */
+    .competition-vs {
+        width: 40px;
+        height: 40px;
+        background: var(--text-dark);
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 1rem;
+        z-index: 2;
+        box-shadow: 0 0 0 6px rgba(255,255,255,0.8);
+        flex-shrink: 0;
+    }
+
+    /* Economy Section */
+    .economy-highlight {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        border: 1px solid #c3e6cb;
+        border-radius: 12px;
+        padding: 20px;
+        max-width: 600px;
+        margin: 30px auto 0;
+        text-align: center;
+    }
+
+    .economy-title {
+        color: #155724;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    .economy-values {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .economy-item {
+        background: rgba(255,255,255,0.6);
+        padding: 10px 20px;
+        border-radius: 8px;
+        min-width: 200px;
+    }
+    
+    .economy-label {
+        display: block;
+        font-size: 0.8rem;
+        color: #155724;
+        margin-bottom: 4px;
+    }
+    
+    .economy-value {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #28a745;
+    }
+
+    .competition-footer {
+        text-align: center;
+        max-width: 700px;
+        margin: 30px auto 0;
+    }
+
+    .disclaimer-text {
+        font-size: 0.75rem;
+        color: #999;
+        font-style: italic;
+        margin: 15px 0;
+    }
 </style>
 {% endblock %}
 
@@ -224,13 +707,180 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-8">
-                    <h1>Contabilidade Especializada para Advogados e Sociedades</h1>
-                    <p class="lead">Reduza sua carga tributária legalmente e proteja seu patrimônio com a estrutura correta de Sociedade Unipessoal de Advocacia.</p>
+                    <h1>Contabilidade Estratégica para Advogados e Sociedades de Advocacia</h1>
+                    <p class="lead">Pague menos impostos <strong>de forma legal</strong>, organize sua estrutura jurídica e proteja seu patrimônio com uma contabilidade especializada no universo da advocacia. Mais controle. Mais economia. Mais tranquilidade para focar no que realmente importa: advogar.</p>
                     <div class="d-flex gap-3">
-                        <a href="https://wa.me/551131642284" class="btn-cta-primary">Quero Pagar Menos Impostos</a>
-                        <a href="{% url 'services:planos' %}" class="btn-cta-secondary">Ver Planos</a>
+                        <a href="https://wa.me/551131642284" class="btn-cta-primary">QUERO PAGAR MENOS IMPOSTOS</a>
+                        <a href="{% url 'services:planos' %}" class="btn-cta-secondary">VER PLANOS</a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Alerta Fiscal -->
+    <section class="section-padding fiscal-alert-section">
+        <div class="container">
+            <!-- Badge -->
+            <div class="row justify-content-center mb-3">
+                <div class="col-auto">
+                    <div class="fiscal-badge" style="background-color: rgba(12, 99, 209, 0.1); color: var(--primary-blue); border-color: rgba(12, 99, 209, 0.2);">
+                        <i class="fas fa-exclamation-triangle me-2" style="color: var(--primary-blue);"></i> EVITE MULTAS E RISCOS
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Headline & Subtitle -->
+            <div class="text-center mb-5">
+                <h2 class="section-title-blue mb-4">ALERTA FISCAL: SUA ATUAÇÃO ESTÁ REALMENTE SEGURA?</h2>
+                <p class="section-subtitle">A fiscalização está mais rigorosa do que nunca. E continuar atuando como pessoa física aumenta significativamente o risco de inconsistências, autuações e problemas com a malha fina. Trabalhar sem CNPJ hoje significa exposição fiscal constante, falta de previsibilidade e vulnerabilidade jurídica.</p>
+            </div>
+
+            <!-- 2 Columns -->
+            <div class="row align-items-center mb-5">
+                <!-- Left: Visual -->
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="fiscal-image-container">
+                       <img src="{% static 'img/adv2.jpg' %}" alt="Advogado analisando documentos" class="img-fluid fiscal-img-styled">
+                    </div>
+                </div>
+                
+                <!-- Right: List -->
+                <div class="col-lg-6">
+                    <!-- Optional Title -->
+                    <h3 class="fiscal-list-title mb-4" style="color: var(--primary-blue);">Com a estrutura certa, você pode:</h3>
+                    <ul class="fiscal-benefits-list">
+                        <li>
+                            <span class="icon-wrapper" style="background: rgba(12, 99, 209, 0.1); color: var(--primary-blue); box-shadow: none;"><i class="fas fa-check"></i></span>
+                            <span>Reduzir drasticamente o risco de cair na malha fina</span>
+                        </li>
+                        <li>
+                             <span class="icon-wrapper" style="background: rgba(12, 99, 209, 0.1); color: var(--primary-blue); box-shadow: none;"><i class="fas fa-chart-line"></i></span>
+                            <span>Construir solidez financeira e credibilidade profissional</span>
+                        </li>
+                        <li>
+                             <span class="icon-wrapper" style="background: rgba(12, 99, 209, 0.1); color: var(--primary-blue); box-shadow: none;"><i class="fas fa-ban"></i></span>
+                            <span>Evitar multas, autos de infração e cobranças retroativas</span>
+                        </li>
+                        <li>
+                             <span class="icon-wrapper" style="background: rgba(12, 99, 209, 0.1); color: var(--primary-blue); box-shadow: none;"><i class="fas fa-balance-scale"></i></span>
+                            <span>Atuar dentro da lei, com tranquilidade e segurança</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Reinforcement -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="fiscal-reinforce-box text-center text-lg-start p-5 rounded-4 border-0 shadow-sm" style="background-color: var(--white);">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8 mb-4 mb-lg-0">
+                                <p class="fiscal-reinforce-text mb-0">Formalize sua atuação com um CNPJ e transforme risco em estratégia. Estrutura correta, economia tributária e suporte especializado para quem não pode errar. Abra seu CNPJ agora e atue com segurança total.</p>
+                            </div>
+                            <div class="col-lg-4 text-center text-lg-end">
+                                <a href="https://wa.me/551131642284" class="btn btn-cta-primary">ABRIR CNPJ</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Competition Section: PF vs PJ -->
+    <section class="competition-section">
+        <div class="container">
+            <div class="competition-header">
+                <h1>Por que advogados que pensam no futuro escolhem uma contabilidade especializada?</h1>
+                <h6>Atuar como advogado sem uma estrutura contábil adequada pode significar pagar muito mais imposto do que o necessário — de forma silenciosa e recorrente.<br>
+                Com uma contabilidade especializada em advocacia, é possível reduzir a carga tributária, organizar os recebimentos e manter total conformidade com a Receita Federal.</h6>
+                
+                <span class="simulation-subtitle mt-5">Veja um exemplo prático</span>
+                <h4 class="simulation-title">Simulação de impostos Faturamento mensal: R$ 12.000,00</h4>
+            </div>
+
+            <div class="competition-container">
+                <!-- Card 1: PF -->
+                <div class="competition-card pf-card">
+                    <h3>IMPOSTO COMO PESSOA FÍSICA</h3>
+                    
+                    <div class="calc-row">
+                        <span>INSS</span>
+                        <span>R$ 303,60</span>
+                    </div>
+                    <div class="calc-separator">+</div>
+                    <div class="calc-row">
+                        <span>IRPF</span>
+                        <span>R$ 2.109,34</span>
+                    </div>
+                    <div class="calc-separator">=</div>
+                    
+                    <div class="total-row">
+                        <span>TOTAL</span>
+                        <span>R$ 2.412,94</span>
+                    </div>
+                </div>
+
+                <!-- VS Separator -->
+                <div class="competition-vs">X</div>
+
+                <!-- Card 2: PJ -->
+                <div class="competition-card pj-card">
+                    <h3>Atuando como Pessoa Jurídica (com contabilidade)</h3>
+                    
+                    <div class="calc-row">
+                        <span>INSS</span>
+                        <span>R$ 166,98</span>
+                    </div>
+                    <div class="calc-separator">+</div>
+                    <div class="calc-row">
+                        <span>CPP</span>
+                        <span>R$ 303,60</span>
+                    </div>
+                    <div class="calc-separator">+</div>
+                    <div class="calc-row">
+                        <span>SIMPLES NACIONAL (ESTIMADO)</span>
+                        <span>R$ 540,00</span>
+                    </div>
+                    <div class="calc-separator">+</div>
+                    <div class="calc-row">
+                        <span>CONTABILIDADE</span>
+                        <span>R$ 159,00</span>
+                    </div>
+                    <div class="calc-separator">=</div>
+                    
+                    <div class="total-row">
+                        <span>TOTAL</span>
+                        <span>R$ 1.169,58</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Economy Highlight -->
+            <div class="economy-highlight">
+                <div class="economy-title">Economia ao atuar como PJ</div>
+                <div class="economy-values">
+                    <div class="economy-item">
+                        <span class="economy-label">Economia mensal</span>
+                        <span class="economy-value">R$ 1.243,36</span>
+                    </div>
+                    <div class="economy-item">
+                        <span class="economy-label">Economia anual</span>
+                        <span class="economy-value">R$ 14.920,32</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Text -->
+            <div class="competition-footer">
+                <p class="lead mb-2" style="font-size: 1.1rem; color: var(--text-dark);">Mesmo considerando o custo da contabilidade, o ganho financeiro ao atuar como PJ é expressivo — e totalmente dentro da lei.</p>
+                <p class="disclaimer-text">*Os valores podem variar conforme o enquadramento tributário, CNAE e estrutura do CNPJ.</p>
+                
+                <h5 class="fw-bold mt-4 mb-3" style="color: var(--primary-blue);">Quer saber quanto você pode economizar no seu caso?</h5>
+                <p class="mb-4 text-muted">Solicite agora uma simulação personalizada e gratuita e descubra o caminho mais inteligente para pagar menos impostos e exercer a advocacia com segurança fiscal.</p>
+                
+                <a href="https://wa.me/551131642284" class="btn-cta-primary">SOLICITAR SIMULAÇÃO GRATUITA</a>
             </div>
         </div>
     </section>
@@ -238,7 +888,7 @@
     <!-- 2. Para Quem É -->
     <section class="section-padding bg-white">
         <div class="container">
-            <h2 class="section-title">Para Quem é Nossa Assessoria?</h2>
+            <h2 class="section-title-blue">Para Quem é Nossa Assessoria?</h2>
             <p class="section-subtitle">Soluções desenhadas para o momento da sua carreira jurídica.</p>
             
             <div class="row g-4">
@@ -288,11 +938,11 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-5 mb-lg-0">
                     <div class="img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Advogado trabalhando" class="img-fluid img-styled">
+                        <img src="{% static 'img/adv.jpg' %}" alt="Advogado trabalhando" class="img-fluid img-styled">
                     </div>
                 </div>
                 <div class="col-lg-6 ps-lg-5">
-                    <h2 class="section-title text-start">Desafios que Resolvemos</h2>
+                    <h2 class="section-title-blue text-start">Desafios que Resolvemos</h2>
                     <p class="mb-4 text-muted">A advocacia exige foco total nos processos e clientes. Não perca tempo com burocracia.</p>
                     
                     <div class="d-flex mb-4">
@@ -332,7 +982,7 @@
     <!-- 4. Soluções -->
     <section class="section-padding bg-white">
         <div class="container">
-            <h2 class="section-title">Nossas Soluções</h2>
+            <h2 class="section-title-blue">Nossas Soluções</h2>
             <p class="section-subtitle">Tudo o que seu escritório precisa para crescer com segurança.</p>
             
             <div class="row g-4">
@@ -367,46 +1017,6 @@
         </div>
     </section>
 
-    <!-- 5. Como Funciona -->
-    <section class="section-padding bg-light">
-        <div class="container">
-            <h2 class="section-title">Como Funciona</h2>
-            <p class="section-subtitle">Processo simplificado para migrar sua contabilidade.</p>
-            
-            <div class="row g-4 text-center">
-                <div class="col-md-3">
-                    <div class="position-relative">
-                        <div class="display-1 fw-bold text-primary opacity-25 mb-3">1</div>
-                        <h4 class="fw-bold">Diagnóstico</h4>
-                        <p class="text-muted">Analisamos sua situação atual (PF ou PJ).</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="position-relative">
-                        <div class="display-1 fw-bold text-primary opacity-25 mb-3">2</div>
-                        <h4 class="fw-bold">Proposta</h4>
-                        <p class="text-muted">Apresentamos o plano ideal de tributação.</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="position-relative">
-                        <div class="display-1 fw-bold text-primary opacity-25 mb-3">3</div>
-                        <h4 class="fw-bold">Execução</h4>
-                        <p class="text-muted">Realizamos a abertura ou migração.</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="position-relative">
-                        <div class="display-1 fw-bold text-primary opacity-25 mb-3">4</div>
-                        <h4 class="fw-bold">Gestão</h4>
-                        <p class="text-muted">Acompanhamento mensal contínuo.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    
 <!-- Pricing Planos Section -->
 <style>
     .pricing-section::before {
@@ -559,48 +1169,308 @@
     </div>
 </section>
 
-<!-- 6. FAQ -->
-    <section class="section-padding bg-white">
+<!-- Stats Section -->
+<section class="stats-section py-5" style="background-color: #ebeef1;">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span style="color: #1a237e !important;" class="counter" data-target="5000">5000</span>+
+                        </h2>
+                        <p class="text-muted mb-0">Cidades atendidas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span class="counter" data-target="8">8</span>+
+                        </h2>
+                        <p class="text-muted mb-0">Anos de Mercado</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span class="counter" data-target="7000">7000</span>+
+                        </h2>
+                        <p class="text-muted mb-0">Empresas abertas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="card h-100 border-0 shadow-sm stats-card">
+                    <div class="card-body p-4">
+                        <h2 class="display-4 fw-bold stats-number mb-3">
+                            <span class="counter" data-target="97.7">97.7</span>%
+                        </h2>
+                        <p class="text-muted mb-0">Satisfação</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Depoimentos Section -->
+<section class="testimonials-section py-5" style="background-color: #ebeef1;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 section-title-blue mb-4">A confiança de milhares de empresas em todo o Brasil</h2>
+            <p class="lead text-muted mb-4">A Vetorial constrói relações duradouras com empresas que buscam alto nível, clareza e tranquilidade na gestão contábil.</p>
+            <img src="{% static 'img/avaliação-google.webp' %}" alt="Avaliação Google" class="img-fluid" style="max-width: 300px; height: auto;" loading="lazy">
+        </div>
+        
+        <div class="testimonials-scroll d-flex gap-4">
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Eu me sentia abandonado pelo meu contador antigo. Mandava mensagem e ficava dias sem resposta. Na Vetorial, sou atendido rápido e com clareza. Hoje sei exatamente o que está acontecendo com minha empresa."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/carlos.webp' %}" alt="Foto do Dr. Ricardo" class="autor-foto" width="60" height="60" loading="lazy">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Carlos Teodoro</h6>
+                            <small class="text-muted">Dono de Mercado, Niterói-RJ/2024</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Descobri com a Vetorial que eu estava pagando imposto errado há meses. Ajustaram meu enquadramento e hoje economizo todo mês, de forma totalmente legal."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/rafael.webp' %}" alt="Foto do Dr. Ricardo" class="autor-foto" width="60" height="60" loading="lazy">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Rafael Antunes</h6>
+                            <small class="text-muted">Produtor Rural, Porto Alegre-RS/2023</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Antes eu não entendia nada dos relatórios. Era tudo técnico e confuso. Na Vetorial, explicam de um jeito simples e hoje consigo tomar decisões com segurança."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/juliana.webp' %}" alt="Foto do Dr. André Oliveira" class="autor-foto" width="60" height="60" loading="lazy">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Juliana Gonçalves</h6>
+                            <small class="text-muted">Cabeleireira, Manaus-AM/2022</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Emitir nota, enviar documento, resolver qualquer coisa era um sofrimento. A Vetorial simplificou tudo e hoje resolvo minha contabilidade em minutos."</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/maria.webp' %}" alt="Foto do Dr. André Oliveira" class="autor-foto" width="60" height="60" loading="lazy">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Maria Júlia Paes</h6>
+                            <small class="text-muted">Dentista, São Paulo-SP/2018</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="depoimento-card-wrapper">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"Meu contador antigo usava planilhas e pedia tudo por e-mail. Era bagunçado. A Vetorial trouxe sistema, organização e automação. Mudou completamente minha rotina.”</p>
+                    <div class="depoimento-autor">
+                        <div class="autor-avatar">
+                            <img src="{% static 'img/tiago.webp' %}" alt="Foto do Dr. André Oliveira" class="autor-foto" width="60" height="60" loading="lazy">
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Thiago Furlan</h6>
+                            <small class="text-muted">Programador, Maceió-AL/2024</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section py-5" style="background-color: #ebeef1; min-height: 400px;">
         <div class="container">
-            <h2 class="section-title">Perguntas Frequentes</h2>
-            <p class="section-subtitle">Tire suas dúvidas sobre contabilidade para advogados.</p>
+            <div class="text-center mb-5">
+                <h2 class="display-5 section-title-blue mb-4">Perguntas Frequentes</h2>
+                <p class="lead text-muted">Respondemos o que nossos clientes mais perguntam. Precisa de algo específico? Nosso time de contadores está à disposição.</p>
+            </div>
             
             <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="accordion" id="faqAccordion">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                    Vale a pena abrir CNPJ para advogado?
-                                </button>
-                            </h2>
-                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body">
-                                    Sim! Enquanto na Pessoa Física o IR chega a 27,5%, na Pessoa Jurídica (Simples Nacional) a alíquota inicial é de apenas 4,5%. A economia é imediata.
+                <div class="col-lg-10">
+                    <div class="faq-accordion">
+                        <div class="faq-item">
+                            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                                <span class="faq-question-text">Vale a pena abrir CNPJ para advogado ?</span>
+                                <span class="faq-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </span>
+                            </button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Sim! Enquanto na Pessoa Física o IR chega a 27,5%, na Pessoa Jurídica (Simples Nacional) a alíquota inicial é de apenas 4,5%. A economia é imediata.</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                    O que é Sociedade Unipessoal de Advocacia?
-                                </button>
-                            </h2>
-                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body">
-                                    É um tipo jurídico que permite ao advogado atuar como empresa individualmente, sem precisar de sócios, e usufruir dos benefícios tributários do Simples Nacional.
+
+                        <div class="faq-item">
+                            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                                <span class="faq-question-text">O que é uma sociedade Unipessoal de Advocacia?</span>
+                                <span class="faq-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </span>
+                            </button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>É um tipo jurídico que permite ao advogado atuar como empresa individualmente, sem precisar de sócios, e usufruir dos benefícios tributários do Simples Nacional.</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                    Como funciona a emissão de notas fiscais?
-                                </button>
-                            </h2>
-                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body">
-                                    Nós cuidamos da configuração do seu emissor e orientamos sobre como emitir as notas para seus clientes, ou podemos fazer isso por você no BPO Financeiro.
+
+                        <div class="faq-item">
+                            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                                <span class="faq-question-text">Como funciona a emissão de notas fiscais?</span>
+                                <span class="faq-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </span>
+                            </button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Nós cuidamos da configuração do seu emissor e orientamos sobre como emitir as notas para seus clientes, ou podemos fazer isso por você no BPO Financeiro.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                                <span class="faq-question-text">O que é necessário para abrir uma empresa?</span>
+                                <span class="faq-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </span>
+                            </button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Você precisa basicamente dos seus documentos pessoais, endereço, definição da atividade e informações dos sócios (se houver). <br>Na Vetorial, analisamos tudo com você, indicamos o melhor enquadramento e cuidamos de todo o processo para evitar erros desde o início.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                                <span class="faq-question-text">Quanto custa abrir uma empresa?</span>
+                                <span class="faq-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </span>
+                            </button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Os custos dependem do tipo de empresa, da cidade e das taxas da Junta Comercial.
+    Na Vetorial, a abertura é <strong>gratuita</strong> (mediante contratação do plano), e você paga apenas as taxas obrigatórias, com total transparência. Os nossos planos são super acessíveis, a partir de R$199,00.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                                <span class="faq-question-text">É obrigatório ter contador para abrir uma empresa?</span>
+                                <span class="faq-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </span>
+                            </button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Sim. Para abrir e manter uma empresa regular (com exceção do MEI), a lei exige a atuação de um contador responsável. O MEI é a única modalidade que não obriga formalmente a contratação de um contador, mas, à medida que o negócio cresce, o acompanhamento contábil se torna essencial.
+    A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecendo orientação completa desde a abertura até a gestão contábil contínua, com segurança e clareza.
+    </p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="faq-item">
+                            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                                <span class="faq-question-text">Como funciona a contabilidade online da Vetorial?</span>
+                                <span class="faq-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </span>
+                            </button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Na Vetorial, sua contabilidade é conduzida por uma equipe de especialistas que assumem todas as rotinas fiscais, contábeis e trabalhistas da sua empresa — desde a apuração de impostos até o cumprimento das obrigações legais. Você acompanha tudo por meio de uma plataforma simples e intuitiva, com total transparência, além de contar com atendimento humano e especializado sempre que precisar.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                                <span class="faq-question-text">A contabilidade online da Vetorial é segura?</span>
+                                <span class="faq-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </span>
+                            </button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Sim. A Vetorial utiliza sistemas modernos, com protocolos de segurança e proteção de dados, além de atuar em total conformidade com as normas do Conselho Regional de Contabilidade (CRC). Suas informações são tratadas com sigilo, responsabilidade e segurança em todas as etapas do processo.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                                <span class="faq-question-text">Quanto custa, em média, o serviço de contabilidade?</span>
+                                <span class="faq-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </span>
+                            </button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>O valor da contabilidade varia conforme o tipo de empresa, volume de operações, número de funcionários e complexidade do negócio. Na Vetorial, os planos são flexíveis e ajustados à sua realidade, garantindo um custo justo e transparente, sem pagar por serviços que você não precisa.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                                <span class="faq-question-text">O que significa abertura de empresa 100% online?</span>
+                                <span class="faq-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </span>
+                            </button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Significa que todo o processo de abertura é feito de forma digital, sem a necessidade de deslocamentos ou idas a órgãos públicos. Na Vetorial, cuidamos de todas as etapas enquanto você acompanha tudo com orientação clara e acompanhamento humano.</p>
                                 </div>
                             </div>
                         </div>
@@ -633,6 +1503,40 @@
                 if (planosServicos) planosServicos.style.display = targetType === 'servicos' ? 'block' : 'none';
                 if (planosComercio) planosComercio.style.display = targetType === 'comercio' ? 'block' : 'none';
             });
+        });
+    });
+
+    // Função para abrir/fechar FAQ
+    function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    if (!item) return;
+    const answer = item.querySelector('.faq-answer');
+    if (!answer) return;
+
+    const isOpen = item.classList.contains('open');
+    if (isOpen) {
+        // fechar
+        answer.style.maxHeight = null;
+        item.classList.remove('open');
+    } else {
+        // fechar outros abertos
+        document.querySelectorAll('.faq-item.open').forEach(el => {
+            el.classList.remove('open');
+            const a = el.querySelector('.faq-answer');
+            if (a) a.style.maxHeight = null;
+        });
+
+        // abrir este
+        item.classList.add('open');
+        // forçar maxHeight para permitir transição suave
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+}
+
+    // Garantir que todas as respostas iniciem fechadas ao carregar
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.faq-answer').forEach(a => {
+            a.style.maxHeight = null;
         });
     });
 </script>
