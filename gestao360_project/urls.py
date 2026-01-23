@@ -169,6 +169,19 @@ def assessoria_view(request):
         'planos_comercio': planos_comercio,
     })
     
+def render_segmento(request, template_name):
+    """Renderiza a página para um segmento específico com os planos."""
+    from django.shortcuts import render
+    from apps.services.models import Plano
+    
+    # Buscar planos ativos separados por categoria
+    planos_servicos = Plano.objects.filter(ativo=True, categoria='servicos').order_by('ordem', 'preco')
+    planos_comercio = Plano.objects.filter(ativo=True, categoria='comercio').order_by('ordem', 'preco')
+    
+    return render(request, template_name, {
+        'planos_servicos': planos_servicos,
+        'planos_comercio': planos_comercio,
+    })
 
 # Configuração dos Sitemaps
 sitemaps = {
@@ -195,13 +208,13 @@ urlpatterns = [
 
     # Segmentos
     path("segmentos/servicos/", servicos_view, name='segmentos_servicos'),
-    path("segmentos/comercio/", TemplateView.as_view(template_name='segments/comercio.html'), name='segmentos_comercio'),
-    path("segmentos/saude/", TemplateView.as_view(template_name='segments/saude.html'), name='segmentos_saude'),
-    path("segmentos/direito/", TemplateView.as_view(template_name='segments/direito.html'), name='segmentos_direito'),
-    path("segmentos/engenharia/", TemplateView.as_view(template_name='segments/engenharia.html'), name='segmentos_engenharia'),
-    path("segmentos/agronegocio/", TemplateView.as_view(template_name='segments/agronegocio.html'), name='segmentos_agronegocio'),
-    path("segmentos/turismo/", TemplateView.as_view(template_name='segments/turismo.html'), name='segmentos_turismo'),
-    path("segmentos/tecnologia/", TemplateView.as_view(template_name='segments/tecnologia.html'), name='segmentos_tecnologia'),
+    path("segmentos/comercio/", render_segmento, {'template_name': 'segments/comercio.html'}, name='segmentos_comercio'),
+    path("segmentos/saude/", render_segmento, {'template_name': 'segments/saude.html'}, name='segmentos_saude'),
+    path("segmentos/direito/", render_segmento, {'template_name': 'segments/direito.html'}, name='segmentos_direito'),
+    path("segmentos/engenharia/", render_segmento, {'template_name': 'segments/engenharia.html'}, name='segmentos_engenharia'),
+    path("segmentos/agronegocio/", render_segmento, {'template_name': 'segments/agronegocio.html'}, name='segmentos_agronegocio'),
+    path("segmentos/turismo/", render_segmento, {'template_name': 'segments/turismo.html'}, name='segmentos_turismo'),
+    path("segmentos/tecnologia/", render_segmento, {'template_name': 'segments/tecnologia.html'}, name='segmentos_tecnologia'),
     path("segmentos/outros/", TemplateView.as_view(template_name='segments/outros.html'), name='segmentos_outros'),
 
     path("obrigado/", TemplateView.as_view(template_name='obrigado.html'), name='obrigado'),

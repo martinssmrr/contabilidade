@@ -71,6 +71,15 @@ docker-compose -f docker-compose.prod.yml logs --tail 50 web
 # 8. Reconstruir a imagem 
 docker-compose -f docker-compose.prod.yml build --no-cache
 
+# Apagar containers orfãos
+docker-compose -f docker-compose.prod.yml down --remove-orphans
+
+# verificar se cairam
+docker ps -a
+
+# subir forçado
+docker-compose -f docker-compose.prod.yml up -d --build --force-recreate 
+
 # 9. Subir os containers
 docker-compose -f docker-compose.prod.yml up -d
 
