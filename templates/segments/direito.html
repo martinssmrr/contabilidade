@@ -1097,7 +1097,7 @@
                             </ul>
                         </div>
                         <div class="pricing-card-footer">
-                            <a href="{% url 'services:abertura_empresa' %}" class="btn btn-pricing {% if plano.destaque %}btn-pricing-popular{% endif %}">Contratar Agora</a>
+                            <a href="{% url 'payments:pre_checkout' plano.id %}" class="btn btn-pricing {% if plano.destaque %}btn-pricing-popular{% endif %}">Contratar Agora</a>
                         </div>
                     </div>
                 </div>
