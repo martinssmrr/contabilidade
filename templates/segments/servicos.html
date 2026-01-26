@@ -1392,100 +1392,101 @@
     </section>
 
     <!-- 10. CTA Final -->
-    <section id="contato" class="contact-section position-relative py-5">
-        <div class="container position-relative">
-            <div class="row justify-content-end align-items-center h-100">
-                <!-- Coluna Esquerda - Vazia (background aparece) -->
-                <div class="col-lg-7 d-none d-lg-block">
-                    <!-- Espaço para o background aparecer -->
-                </div>
-                
-                <!-- Coluna Direita - Formulário -->
-                <div class="col-lg-5 col-md-8 col-12">
-                    <div class="card shadow-lg border-0">
-                        <div class="card-body p-4">
-                            <h3 class="fw-bold mb-2">Pensando em trocar de contador?</h3>
-                            <p class="text-muted mb-4">A Vetorial cuida de toda a migração para você, sem riscos, sem burocracia e sem interromper a rotina da sua empresa.</p>
+    <!-- Contact Section -->
+<section id="contato" class="contact-section position-relative py-5" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/abrirempresactt.webp' %}')">
+    <div class="container position-relative">
+        <div class="row justify-content-end align-items-center h-100">
+            <!-- Coluna Esquerda - Vazia (background aparece) -->
+            <div class="col-lg-7 d-none d-lg-block">
+                <!-- Espaço para o background aparecer -->
+            </div>
+            
+            <!-- Coluna Direita - Formulário -->
+            <div class="col-lg-5 col-md-8 col-12">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-4">
+                        <h3 class="fw-bold mb-2">Vai abrir empresa? Comece do jeito certo.</h3>
+                        <p class="text-muted mb-4">Converse com um especialista Vetorial e descubra a melhor estrutura para pagar menos impostos, evitar erros e abrir seu CNPJ com segurança. Abra sua empresa com clareza, segurança e zero burocracia.</p>
+                        
+                        <form id="contactFormSection">
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Nome *</label>
+                                <input type="text" class="form-control" id="nome" required>
+                            </div>
                             
-                            <form id="contactFormSection">
-                                <div class="mb-3">
-                                    <label for="nome" class="form-label">Nome *</label>
-                                    <input type="text" class="form-control" id="nome" required>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="emailForm" class="form-label">E-mail *</label>
+                                    <input type="email" class="form-control" id="emailForm" required>
                                 </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="emailForm" class="form-label">E-mail *</label>
-                                        <input type="email" class="form-control" id="emailForm" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="telefoneForm" class="form-label">Telefone *</label>
-                                        <input type="tel" class="form-control" id="telefoneForm" placeholder="(00) 00000-0000" required>
-                                    </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="telefoneForm" class="form-label">Telefone *</label>
+                                    <input type="tel" class="form-control" id="telefoneForm" placeholder="(00) 00000-0000" required>
                                 </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="estadoForm" class="form-label">Estado *</label>
-                                        <select class="form-select" id="estadoForm" required>
-                                            <option value="">Selecione...</option>
-                                            <option value="AC">Acre</option>
-                                            <option value="AL">Alagoas</option>
-                                            <option value="AP">Amapá</option>
-                                            <option value="AM">Amazonas</option>
-                                            <option value="BA">Bahia</option>
-                                            <option value="CE">Ceará</option>
-                                            <option value="DF">Distrito Federal</option>
-                                            <option value="ES">Espírito Santo</option>
-                                            <option value="GO">Goiás</option>
-                                            <option value="MA">Maranhão</option>
-                                            <option value="MT">Mato Grosso</option>
-                                            <option value="MS">Mato Grosso do Sul</option>
-                                            <option value="MG">Minas Gerais</option>
-                                            <option value="PA">Pará</option>
-                                            <option value="PB">Paraíba</option>
-                                            <option value="PR">Paraná</option>
-                                            <option value="PE">Pernambuco</option>
-                                            <option value="PI">Piauí</option>
-                                            <option value="RJ">Rio de Janeiro</option>
-                                            <option value="RN">Rio Grande do Norte</option>
-                                            <option value="RS">Rio Grande do Sul</option>
-                                            <option value="RO">Rondônia</option>
-                                            <option value="RR">Roraima</option>
-                                            <option value="SC">Santa Catarina</option>
-                                            <option value="SP">São Paulo</option>
-                                            <option value="SE">Sergipe</option>
-                                            <option value="TO">Tocantins</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="cidadeForm" class="form-label">Cidade *</label>
-                                        <input type="text" class="form-control" id="cidadeForm" required>
-                                    </div>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="servicoForm" class="form-label">Qual serviço deseja? *</label>
-                                    <select class="form-select" id="servicoForm" required>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="estadoForm" class="form-label">Estado *</label>
+                                    <select class="form-select" id="estadoForm" required>
                                         <option value="">Selecione...</option>
-                                        <option value="abrir_empresa">Abrir uma empresa</option>
-                                        <option value="trocar_contador">Trocar de contador</option>
-                                        <option value="mei_para_me">Mudar de MEI para ME</option>
-                                        <option value="contabilidade_mei">Contabilidade para MEI</option>
-                                        <option value="abrir_mei">Abrir MEI</option>
+                                        <option value="AC">Acre</option>
+                                        <option value="AL">Alagoas</option>
+                                        <option value="AP">Amapá</option>
+                                        <option value="AM">Amazonas</option>
+                                        <option value="BA">Bahia</option>
+                                        <option value="CE">Ceará</option>
+                                        <option value="DF">Distrito Federal</option>
+                                        <option value="ES">Espírito Santo</option>
+                                        <option value="GO">Goiás</option>
+                                        <option value="MA">Maranhão</option>
+                                        <option value="MT">Mato Grosso</option>
+                                        <option value="MS">Mato Grosso do Sul</option>
+                                        <option value="MG">Minas Gerais</option>
+                                        <option value="PA">Pará</option>
+                                        <option value="PB">Paraíba</option>
+                                        <option value="PR">Paraná</option>
+                                        <option value="PE">Pernambuco</option>
+                                        <option value="PI">Piauí</option>
+                                        <option value="RJ">Rio de Janeiro</option>
+                                        <option value="RN">Rio Grande do Norte</option>
+                                        <option value="RS">Rio Grande do Sul</option>
+                                        <option value="RO">Rondônia</option>
+                                        <option value="RR">Roraima</option>
+                                        <option value="SC">Santa Catarina</option>
+                                        <option value="SP">São Paulo</option>
+                                        <option value="SE">Sergipe</option>
+                                        <option value="TO">Tocantins</option>
                                     </select>
                                 </div>
-                                
-                                <button type="button" class="btn btn-primary w-100 btn-lg" onclick="enviarFormularioContato()">
-                                    Quero trocar de contador
-                                </button>
-                            </form>
-                        </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="cidadeForm" class="form-label">Cidade *</label>
+                                    <input type="text" class="form-control" id="cidadeForm" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="servicoForm" class="form-label">Qual serviço deseja? *</label>
+                                <select class="form-select" id="servicoForm" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="abrir_empresa">Abrir uma empresa</option>
+                                    <option value="trocar_contador">Trocar de contador</option>
+                                    <option value="mei_para_me">Mudar de MEI para ME</option>
+                                    <option value="contabilidade_mei">Contabilidade para MEI</option>
+                                    <option value="abrir_mei">Abrir MEI</option>
+                                </select>
+                            </div>
+                            
+                            <button type="button" class="btn btn-primary w-100 btn-lg" onclick="enviarFormularioContato()">
+                                Falar com Contador
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 {% endblock %}
 
 {% block extra_js %}

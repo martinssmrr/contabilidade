@@ -415,6 +415,135 @@
         justify-content: center;
         color: #0d47a1;
     }
+
+    /* Hero Section Base */
+    .hero-section {
+        background-attachment: scroll !important;
+        position: relative !important;
+        overflow: hidden !important;
+        background-size: cover !important;
+        background-position: center right !important;
+    }
+
+    /* Desktop */
+    @media (min-width: 992px) {
+        .hero-section {
+            background-position: center right !important;
+        }
+    }
+
+    /* Tablet e Mobile - Ajustes progressivos */
+    @media (max-width: 991px) {
+        .hero-section {
+            background-position: 60% center !important;
+        }
+        .hero-section .container-fluid .row {
+            min-height: 70vh !important;
+        }
+        .hero-section .display-3 {
+            font-size: 2.5rem !important;
+        }
+        .hero-section .fs-5 {
+            font-size: 1.1rem !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            background-position: 65% center !important;
+            min-height: 70vh !important;
+        }
+        .hero-section .container-fluid .row {
+            min-height: 70vh !important;
+            padding-top: 2rem !important;
+            padding-bottom: 2rem !important;
+        }
+        .hero-section .display-3 {
+            font-size: 2rem !important;
+            line-height: 1.2 !important;
+            margin-bottom: 1rem !important;
+        }
+        .hero-section p.fs-5 {
+            font-size: 1rem !important;
+            margin-bottom: 1.5rem !important;
+        }
+        .hero-section .btn-lg {
+            padding: 0.75rem 1.5rem !important;
+            font-size: 0.9rem !important;
+        }
+        .hero-section .selo-badge img {
+            max-width: 100px !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .hero-section {
+            background-position: 70% center !important;
+            min-height: 75vh !important;
+        }
+        .hero-section .container-fluid {
+            padding: 0 !important;
+            height: 100%;
+        }
+        .hero-section .container-fluid .row {
+            min-height: 75vh !important;
+            padding-top: 2.5rem !important;
+            padding-bottom: 2rem !important;
+            margin: 0 !important;
+        }
+        .hero-section .col-12 {
+            padding-left: 1.25rem !important;
+            padding-right: 1.25rem !important;
+        }
+        .hero-section .display-3 {
+            font-size: 1.65rem !important;
+            line-height: 1.25 !important;
+            margin-bottom: 0.75rem !important;
+        }
+        .hero-section p.fs-5 {
+            font-size: 0.9rem !important;
+            line-height: 1.5 !important;
+            margin-bottom: 1.25rem !important;
+        }
+        .hero-section .d-grid {
+            gap: 0.75rem !important;
+        }
+        .hero-section .btn-lg {
+            padding: 0.65rem 1.25rem !important;
+            font-size: 0.8rem !important;
+            white-space: normal !important;
+            line-height: 1.3 !important;
+        }
+        .hero-section .d-sm-flex {
+            display: grid !important;
+        }
+        .hero-section .selo-badge {
+            max-width: 85px !important;
+        }
+        .hero-section .selo-badge img {
+            max-width: 85px !important;
+            width: 85px !important;
+        }
+        .hero-section .mt-3 {
+            margin-top: 0.75rem !important;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .hero-section {
+            background-position: 75% center !important;
+        }
+        .hero-section .display-3 {
+            font-size: 1.5rem !important;
+        }
+        .hero-section p.fs-5 {
+            font-size: 0.85rem !important;
+        }
+        .hero-section .btn-lg {
+            font-size: 0.75rem !important;
+            padding: 0.6rem 1rem !important;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -435,6 +564,7 @@
                         <p>Preencha o formulário e entraremos em contato</p>
                         
                         <form id="contactForm">
+                            {% csrf_token %}
                             <div class="mb-3">
                                 <label for="nomeCompleto" class="form-label">Nome Completo *</label>
                                 <input type="text" class="form-control" id="nomeCompleto" required>
@@ -526,11 +656,11 @@
 </div>
 
 <!-- Hero Section -->
-<section class="hero-section text-white position-relative" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.75) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/herosection.webp' %}'); background-size: cover; background-position: center right;">
+<section class="hero-section text-white position-relative" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.75) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/herosection.webp' %}'); background-size: cover; background-position: center right; background-repeat: no-repeat;">
     <div class="container-fluid">
-        <div class="row align-items-center" style="min-height: 75vh; padding-bottom: 1rem;">
+        <div class="row align-items-center justify-content-start" style="min-height: 75vh; padding-bottom: 1rem;">
             <!-- Coluna Esquerda - Conteúdo -->
-            <div class="col-lg-6 col-12 animate-fade-in px-5">
+            <div class="col-lg-6 col-md-8 col-12 animate-fade-in px-lg-5 px-md-4 px-3">
                 <h1 class="display-3 fw-bold mb-4">Empreender agora é Simples, Seguro e Acessível</h1>
                 <p class="fs-5 mb-4">Da abertura à gestão eficiente da sua empresa, a Vetorial Contabilidade oferece uma experiência personalizada e um ecossistema completo, projetado para escalar seu negócio com segurança e simplicidade.</p>
                 <div class="d-grid gap-3 d-sm-flex mb-4">
@@ -1957,6 +2087,7 @@ A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecen
                         <p class="text-muted mb-4">Preencha o formulário e entraremos em contato</p>
                         
                         <form id="contactFormSection">
+                            {% csrf_token %}
                             <div class="mb-3">
                                 <label for="nome" class="form-label">Nome *</label>
                                 <input type="text" class="form-control" id="nome" required>
@@ -2158,6 +2289,22 @@ A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecen
         e.target.value = value;
     });
 
+    // Função para obter cookie CSRF
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
     // Validação do formulário
     function validarFormulario() {
         const nome = document.getElementById('nomeCompleto').value;
@@ -2204,7 +2351,7 @@ A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecen
                 estado: estado,
                 cidade: cidade,
                 servico_interesse: servicoValue,
-                origem: 'popup_home'
+                origem: 'popup'
             });
             
             const response = await fetch('/support/capturar-lead/', {
@@ -2220,7 +2367,7 @@ A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecen
                     estado: estado,
                     cidade: cidade,
                     servico_interesse: servicoValue,
-                    origem: 'popup_home'
+                    origem: 'popup'
                 })
             });
 
@@ -2274,7 +2421,7 @@ A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecen
                     estado: estado,
                     cidade: cidade,
                     servico_interesse: servicoValue,
-                    origem: 'popup_home'
+                    origem: 'popup'
                 })
             });
 
@@ -2313,6 +2460,7 @@ A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecen
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
                 },
                 body: JSON.stringify({
                     nome_completo: nome,
@@ -2320,7 +2468,7 @@ A Vetorial atua justamente apoiando micro, pequenas e médias empresas, oferecen
                     telefone: telefone,
                     estado: estado,
                     cidade: cidade,
-                    servico: servicoValue,
+                    servico_interesse: servicoValue,
                     origem: 'contato'
                 })
             });

@@ -882,7 +882,9 @@ footer {
     }
 
     .popup-image {
-        min-height: 200px;
+        min-height: 250px;
+        background-position: center top;
+        background-size: cover;
     }
 
     .popup-form {
