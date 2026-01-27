@@ -45,6 +45,9 @@ ALLOWED_HOSTS = list(set(env_hosts + default_hosts))
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# Desabilitar redirecionamento automático de www (Nginx cuida disso)
+PREPEND_WWW = False
+
 # CSRF trusted origins for production
 CSRF_TRUSTED_ORIGINS = [
     'https://vetorialcontabilidade.com.br',

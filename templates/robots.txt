@@ -8,18 +8,16 @@ Sitemap: https://vetorialcontabilidade.com.br/sitemap.xml
 Allow: /blog/
 Allow: /services/
 Allow: /abrir-empresa/
+Allow: /sitemap.xml
 
 # Diretórios bloqueados
 Disallow: /admin/
 Disallow: /dashboard/
 Disallow: /ckeditor5/
 Disallow: /media/uploads/
-Disallow: /static/
 
 # Arquivos bloqueados
 Disallow: /*.json$
-Disallow: /*.xml$
-Disallow: /backup_banco.sql
 
 # Crawl-delay
-Crawl-delay: 10
+Crawl-delay: 5
