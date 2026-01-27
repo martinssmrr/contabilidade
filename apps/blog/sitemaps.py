@@ -51,7 +51,7 @@ class ServicesSitemap(Sitemap):
     priority = 0.7
 
     def items(self):
-        return ['services_list', 'planos']
+        return ['/services/', '/services/planos/']
 
     def location(self, item):
-        return reverse(item)
+        return item
