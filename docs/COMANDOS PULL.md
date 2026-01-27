@@ -6,7 +6,7 @@ ssh root@72.60.144.18
 vetorialcontabilidade.com.br
 
 # 1. Primeiro, vamos fazer o deploy das alterações nos templates
-cd /root/vetorial
+cd /root/contabilidade
 git pull origin master
 
 # 2. Copiar os arquivos de media do container para o host (se existirem no container)

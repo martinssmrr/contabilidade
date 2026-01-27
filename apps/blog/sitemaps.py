@@ -51,22 +51,7 @@ class ServicesSitemap(Sitemap):
     priority = 0.7
 
     def items(self):
-        return ['/services/', '/services/planos/']
+        return ['services_list', 'planos']
 
     def location(self, item):
-        return item
-
-
-class ImagesSitemap(Sitemap):
-    """Sitemap para imagens principais (logo, etc)"""
-    changefreq = 'yearly'
-    priority = 0.5
-
-    def items(self):
-        return [
-            '/static/img/logo.webp',
-            '/static/img/logo.png',
-        ]
-
-    def location(self, item):
-        return item
+        return reverse(item)
