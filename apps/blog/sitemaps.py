@@ -24,7 +24,6 @@ class StaticViewSitemap(Sitemap):
             'endereco_virtual',
             'certificado_digital',
             'emissor_nota_fiscal',
-            'contabilidade_online',
         ]
 
     def location(self, item):
