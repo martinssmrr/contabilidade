@@ -11,6 +11,7 @@ class StaticViewSitemap(Sitemap):
     def items(self):
         return [
             'home',
+            'blog:post_list',  # Página principal do blog
             'abrir_empresa',
             'deixar_mei',
             'trocar_contador',
