@@ -243,6 +243,113 @@
 {% endblock %}
 
 {% block content %}
+<!-- Modal de Seleção de Tipo de Empresa -->
+<div class="modal fade" id="tipoEmpresaModal" tabindex="-1" aria-labelledby="tipoEmpresaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+            <!-- Header com gradiente -->
+            <div class="modal-header border-0 text-white py-4" style="background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);">
+                <div class="w-100 text-center">
+                    <i class="fas fa-rocket mb-2" style="font-size: 2.5rem;"></i>
+                    <h4 class="modal-title fw-bold mb-0" id="tipoEmpresaModalLabel">Qual tipo de empresa deseja abrir?</h4>
+                    <p class="mb-0 mt-2 opacity-75">Escolha a melhor opção para o seu negócio</p>
+                </div>
+                <button type="button" class="btn-close btn-close-white position-absolute" style="top: 15px; right: 15px;" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 p-md-5">
+                <div class="row g-4">
+                    <!-- Opção MEI -->
+                    <div class="col-12 col-md-6">
+                        <a href="{% url 'services:abrir_mei' %}" class="tipo-empresa-card d-block text-decoration-none h-100">
+                            <div class="card border-0 h-100 text-center p-4" style="border-radius: 16px; background: linear-gradient(145deg, #f8f9fa 0%, #e9ecef 100%); transition: all 0.3s ease;">
+                                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                    <div class="icon-wrapper mb-3" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-user-tie text-white" style="font-size: 2rem;"></i>
+                                    </div>
+                                    <h5 class="fw-bold text-dark mb-2">ABRIR EMPRESA MEI</h5>
+                                    <p class="text-muted mb-3 small">Microempreendedor Individual</p>
+                                    <ul class="list-unstyled text-start small text-muted mb-3">
+                                        <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Faturamento até R$ 81 mil/ano</li>
+                                        <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Impostos reduzidos</li>
+                                        <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Abertura simplificada</li>
+                                    </ul>
+                                    <span class="btn btn-success btn-sm px-4 mt-auto">Quero ser MEI <i class="fas fa-arrow-right ms-2"></i></span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Opção CNPJ sem limite -->
+                    <div class="col-12 col-md-6">
+                        <div class="tipo-empresa-card d-block h-100" id="btnCnpjSemLimite" style="cursor: pointer;">
+                            <div class="card border-0 h-100 text-center p-4" style="border-radius: 16px; background: linear-gradient(145deg, #f8f9fa 0%, #e9ecef 100%); transition: all 0.3s ease;">
+                                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                    <div class="icon-wrapper mb-3" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%); display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-building text-white" style="font-size: 2rem;"></i>
+                                    </div>
+                                    <h5 class="fw-bold text-dark mb-2">CNPJ SEM LIMITE</h5>
+                                    <p class="text-muted mb-3 small">ME, EPP, LTDA e outras</p>
+                                    <ul class="list-unstyled text-start small text-muted mb-3">
+                                        <li class="mb-1"><i class="fas fa-check text-primary me-2"></i>Sem limite de faturamento</li>
+                                        <li class="mb-1"><i class="fas fa-check text-primary me-2"></i>Contrate funcionários</li>
+                                        <li class="mb-1"><i class="fas fa-check text-primary me-2"></i>Múltiplas atividades</li>
+                                    </ul>
+                                    <span class="btn btn-primary btn-sm px-4 mt-auto">Falar com especialista <i class="fas fa-arrow-right ms-2"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-muted small mt-4 mb-0">
+                    <i class="fas fa-lock me-1"></i> Seus dados estão seguros conosco
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Estilos do Modal de Tipo de Empresa */
+#tipoEmpresaModal .tipo-empresa-card .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(12, 99, 209, 0.2) !important;
+}
+
+#tipoEmpresaModal .tipo-empresa-card:hover .icon-wrapper {
+    transform: scale(1.1);
+}
+
+#tipoEmpresaModal .icon-wrapper {
+    transition: transform 0.3s ease;
+}
+
+@media (max-width: 767.98px) {
+    #tipoEmpresaModal .modal-body {
+        padding: 1.5rem !important;
+    }
+    
+    #tipoEmpresaModal .modal-header {
+        padding: 1.25rem !important;
+    }
+    
+    #tipoEmpresaModal .modal-header i {
+        font-size: 2rem !important;
+    }
+    
+    #tipoEmpresaModal .modal-header h4 {
+        font-size: 1.25rem;
+    }
+    
+    #tipoEmpresaModal .icon-wrapper {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    
+    #tipoEmpresaModal .icon-wrapper i {
+        font-size: 1.5rem !important;
+    }
+}
+</style>
+
 <!-- Modal Popup de Contato -->
 <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -352,7 +459,7 @@
                 <h1 class="display-3 fw-bold mb-4">A Vetorial abre sua empresa sem custo, 100% online e sem complicação.</h1>
                 <p class="fs-5 mb-4">A Vetorial cuida de toda a abertura da sua empresa, do início ao CNPJ ativo, com clareza, suporte humano e segurança jurídica em cada etapa. Empreender com a Vetorial é mais simples, seguro e acessível. Empreender mudou e você também pode mudar com a Vetorial.</p>
                 <div class="d-grid gap-3 d-sm-flex mb-4">
-                    <button type="button" class="btn btn-light btn-lg px-5" data-bs-toggle="modal" data-bs-target="#contactModal">ABRIR EMPRESA GRÁTIS</button>
+                    <button type="button" class="btn btn-light btn-lg px-5" data-bs-toggle="modal" data-bs-target="#tipoEmpresaModal">ABRIR EMPRESA GRÁTIS</button>
                     <a href="https://wa.me/551131642284?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20um%20especialista%20da%20Vetorial." target="_blank" class="btn btn-outline-light btn-lg px-5">CONSULTAR ESPECIALISTA</a>
                 </div>
             </div>
@@ -1607,6 +1714,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 value = value.replace(/(\d)(\d{4})$/, '$1-$2');
             }
             e.target.value = value;
+        });
+    }
+    
+    // Botão CNPJ sem limite - fecha modal de seleção e abre modal de contato
+    const btnCnpjSemLimite = document.getElementById('btnCnpjSemLimite');
+    if (btnCnpjSemLimite) {
+        btnCnpjSemLimite.addEventListener('click', function() {
+            // Fecha o modal de seleção de tipo de empresa
+            var tipoEmpresaModal = bootstrap.Modal.getInstance(document.getElementById('tipoEmpresaModal'));
+            tipoEmpresaModal.hide();
+            
+            // Aguarda o modal fechar e abre o modal de contato
+            setTimeout(function() {
+                var contactModal = new bootstrap.Modal(document.getElementById('contactModal'));
+                contactModal.show();
+            }, 300);
         });
     }
 });
