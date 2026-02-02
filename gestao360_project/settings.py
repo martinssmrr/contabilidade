@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    "django_celery_beat", # Agendamento de tarefas no BD
     
     # Editor WYSIWYG
     "django_ckeditor_5",

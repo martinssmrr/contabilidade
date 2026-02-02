@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_celery_beat",
     
     # Apps do projeto Gestão 360
     "apps.users",
@@ -190,7 +191,7 @@ MERCADO_PAGO_ACCESS_TOKEN = os.getenv('MP_ACCESS_TOKEN', '')
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     # SECURE_SSL_REDIRECT desabilitado - Nginx cuida dos redirecionamentos
-    # SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True

@@ -39,6 +39,7 @@ ofxparse>=0.21  # Parser de arquivos OFX (Financeiro)
 celery>=5.3.0  # Task queue assíncrono
 celery[redis]>=5.3.0  # Suporte Redis para Celery
 flower>=2.0.0  # Monitoramento web do Celery
+django-celery-beat>=2.5.0 # Agendador de tarefas via banco de dados
 
 # ==================================
 # GOOGLE APIS
