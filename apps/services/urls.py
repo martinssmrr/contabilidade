@@ -8,7 +8,12 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='services.html'), name='services_list'),
     
     # Serviços
-    path('abrir-mei/', TemplateView.as_view(template_name='services/abrir_mei.html'), name='abrir_mei'),
+    path('abrir-mei/', views.abrir_mei_view, name='abrir_mei'),
+    path('abrir-mei/solicitar/', views.solicitar_abertura_mei_view, name='solicitar_abertura_mei'),
+    path('abrir-mei/checkout/<int:solicitacao_id>/', views.checkout_mei_view, name='checkout_mei'),
+    path('abrir-mei/processar-pagamento/<int:solicitacao_id>/', views.processar_pagamento_mei, name='processar_pagamento_mei'),
+    path('abrir-mei/sucesso/<int:solicitacao_id>/', views.mei_sucesso_view, name='mei_sucesso'),
+    
     path('contabilidade-online/', TemplateView.as_view(template_name='services/contabilidade_online.html'), name='contabilidade_online'),
     
     # Planos

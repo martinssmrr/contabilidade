@@ -1,0 +1,497 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pagamento - Abertura MEI | Vetorial Contabilidade{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ========================================
+       ESTILOS DA PÁGINA DE CHECKOUT MEI
+       ======================================== */
+    
+    .checkout-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .checkout-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-top: 2rem;
+    }
+    
+    .checkout-header h1 {
+        color: #1A237E;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .checkout-header p {
+        color: #6b7280;
+        font-size: 1.1rem;
+    }
+    
+    .checkout-grid {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 2rem;
+        align-items: start;
+    }
+    
+    @media (max-width: 900px) {
+        .checkout-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    /* Resumo do Pedido */
+    .order-summary {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+    }
+    
+    .order-summary h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1A237E;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .service-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 12px;
+    }
+    
+    .service-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #0C63D1 0%, #0A4FA3 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+    
+    .service-details h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0;
+    }
+    
+    .service-details p {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin: 0.25rem 0 0;
+    }
+    
+    .client-info {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .client-info h4 {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+    
+    .client-info p {
+        margin: 0;
+        font-size: 0.95rem;
+        color: #4b5563;
+    }
+    
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        color: #4b5563;
+        font-size: 0.95rem;
+    }
+    
+    .price-row.total {
+        border-top: 2px solid #e5e7eb;
+        margin-top: 0.5rem;
+        padding-top: 1rem;
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: #0C63D1;
+    }
+    
+    /* Payment Section */
+    .payment-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+    }
+    
+    .payment-card h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1A237E;
+        margin-bottom: 1.5rem;
+    }
+
+    #payment-brick-container {
+        min-height: 400px;
+    }
+
+    .loading-spinner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 300px;
+        color: #6b7280;
+    }
+    
+    .loading-spinner .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #e5e7eb;
+        border-top-color: #0C63D1;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+        text-decoration: none;
+        margin-bottom: 1.5rem;
+        transition: color 0.2s;
+    }
+    
+    .back-link:hover {
+        color: #0C63D1;
+    }
+    
+    /* Incluídos no Serviço */
+    .included-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1.5rem;
+    }
+    
+    .included-list li {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        color: #4b5563;
+        font-size: 0.95rem;
+    }
+    
+    .included-list li i {
+        color: #10b981;
+        font-size: 1rem;
+    }
+
+    .error-message {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        padding: 1rem;
+        color: #dc2626;
+        margin-bottom: 1rem;
+    }
+
+    .security-badges {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+    }
+    
+    .security-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+        font-size: 0.85rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="checkout-container">
+    <!-- Header -->
+    <div class="checkout-header">
+        <h1><i class="bi bi-credit-card me-2"></i>Finalizar Pagamento</h1>
+        <p>Complete o pagamento para iniciar a abertura do seu MEI</p>
+    </div>
+    
+    <!-- Link Voltar -->
+    <a href="{% url 'services:abrir_mei' %}" class="back-link">
+        <i class="bi bi-arrow-left"></i>
+        Voltar ao formulário
+    </a>
+    
+    <div class="checkout-grid">
+        <!-- Coluna Esquerda - Formas de Pagamento (MERCADO PAGO) -->
+        <div class="payment-card">
+            <h2><i class="bi bi-wallet2 me-2"></i>Escolha a forma de pagamento</h2>
+            
+            <div id="payment-loading" class="loading-spinner">
+                <div class="spinner"></div>
+                <p class="mt-3">Carregando formas de pagamento...</p>
+            </div>
+
+            <div id="payment-brick-container"></div>
+            
+            <!-- Segurança -->
+            <div class="security-badges">
+                <div class="security-badge">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    Pagamento 100% Seguro
+                </div>
+                <div class="security-badge">
+                   <img src="https://www.mercadopago.com/org-img/Manual/ManualMP/imgs/logo-mp-100.png" alt="Mercado Pago" height="20">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Coluna Direita - Resumo do Pedido -->
+        <div class="order-summary">
+            <h2><i class="bi bi-receipt me-2"></i>Resumo do Pedido</h2>
+            
+            <!-- Serviço -->
+            <div class="service-info">
+                <div class="service-icon">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div class="service-details">
+                    <h3>Abertura de MEI</h3>
+                    <p>Microempreendedor Individual</p>
+                </div>
+            </div>
+            
+            <!-- Dados do Cliente -->
+            <div class="client-info">
+                <h4><i class="bi bi-person me-2"></i>Seus Dados</h4>
+                <p><strong>{{ solicitacao.nome_completo }}</strong></p>
+                <p>{{ solicitacao.email }}</p>
+                <p>CPF: {{ solicitacao.cpf_formatado }}</p>
+            </div>
+            
+            <!-- O que está incluído -->
+            <h4 class="mb-3" style="font-size: 0.95rem; font-weight: 600; color: #374151;">
+                <i class="bi bi-check2-circle me-2" style="color: #10b981;"></i>Incluído no serviço:
+            </h4>
+            <ul class="included-list">
+                <li><i class="bi bi-check-lg"></i>Abertura do CNPJ MEI</li>
+                <li><i class="bi bi-check-lg"></i>Inscrição na Junta Comercial</li>
+                <li><i class="bi bi-check-lg"></i>Cadastro na Prefeitura</li>
+                <li><i class="bi bi-check-lg"></i>Emissão do CCMEI</li>
+                <li><i class="bi bi-check-lg"></i>Orientação sobre obrigações</li>
+                <li><i class="bi bi-check-lg"></i>Suporte por WhatsApp</li>
+            </ul>
+            
+            <!-- Preços -->
+            <div class="price-row">
+                <span>Serviço de Abertura MEI</span>
+                <span>R$ {{ valor_servico|floatformat:2 }}</span>
+            </div>
+            <div class="price-row">
+                <span>Taxas governamentais</span>
+                <span class="text-success">Grátis</span>
+            </div>
+            <div class="price-row total">
+                <span>Total</span>
+                <span class="price-value">R$ {{ valor_servico|floatformat:2 }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- SDK do Mercado Pago -->
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Configurações do Backend
+    const publicKey = "{{ mp_public_key }}";
+    const preferenceId = "{{ preference_id }}";
+    const externalReference = "{{ pagamento.external_reference }}";
+    const amount = parseFloat("{{ valor_servico|stringformat:'f' }}".replace(',', '.'));
+    
+    // Dados do usuário para o SDK
+    const userEmail = "{{ solicitacao.email }}";
+    const userFirstName = "{{ solicitacao.nome_completo.split.0 }}";
+    const userLastName = "{{ solicitacao.nome_completo.split.1|default:'' }}";
+    const userCPF = "{{ solicitacao.cpf|cut:'.'|cut:'-' }}";
+    
+    if (!publicKey) {
+        document.getElementById('payment-brick-container').innerHTML = `
+            <div class="error-message">
+                <strong>Erro de configuração:</strong> Chave pública do Mercado Pago não configurada.
+            </div>
+        `;
+        document.getElementById('payment-loading').style.display = 'none';
+        return;
+    }
+    
+    // Inicializar Mercado Pago
+    const mp = new MercadoPago(publicKey, {
+        locale: 'pt-BR'
+    });
+    
+    // Configurar e renderizar Payment Brick
+    const bricksBuilder = mp.bricks();
+    
+    const renderPaymentBrick = async () => {
+        // Configurações do Payer
+        const payerConfig = {
+            email: userEmail,
+            firstName: userFirstName,
+            lastName: userLastName,
+            identification: {
+                type: 'CPF',
+                number: userCPF
+            },
+            entityType: 'individual'
+        };
+        
+        const settings = {
+            initialization: {
+                amount: amount,
+                preferenceId: preferenceId, // Usando a preferência criada no backend se disponível
+                payer: payerConfig,
+            },
+            customization: {
+                visual: {
+                    style: {
+                        theme: 'default',
+                        customVariables: {
+                            formBackgroundColor: '#ffffff',
+                            baseColor: '#0c63d1',
+                        }
+                    },
+                    hideFormTitle: true,
+                    hidePaymentButton: false, 
+                    // Se preferir que o botão diga "Pagar R$ X", false é melhor
+                },
+                paymentMethods: {
+                    creditCard: 'all',
+                    debitCard: 'all',
+                    ticket: 'all',   // Boleto
+                    bankTransfer: ['pix'],  // PIX
+                },
+                installments: 3 // Máximo de parcelas sugerido
+            },
+            callbacks: {
+                onReady: () => {
+                    console.log('Payment Brick carregado');
+                    document.getElementById('payment-loading').style.display = 'none';
+                },
+                onSubmit: async (formData) => {
+                    console.log('Iniciando processamento...', formData);
+                    
+                    // Enriquecer dados para garantir que o backend receba info do pagador
+                    const enrichedData = {
+                        ...formData,
+                        userInfo: {
+                            firstName: userFirstName,
+                            lastName: userLastName,
+                            email: userEmail,
+                        }
+                    };
+                    
+                    try {
+                        const response = await fetch("{% url 'payments:processar_pagamento' %}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                external_reference: externalReference,
+                                payment_data: enrichedData,
+                            }),
+                        });
+                        
+                        const result = await response.json();
+                        console.log('Resultado do pagamento:', result);
+                        
+                        if (result.status === 'approved') {
+                            // Aprovado - Redirecionar para página de sucesso do MEI
+                            window.location.href = "{% url 'services:mei_sucesso' solicitacao.id %}";
+                        } else if (result.status === 'pending' || result.status === 'in_process') {
+                            // Pendente (PIX, Boleto ou análise)
+                            if (result.redirect_url) {
+                                window.location.href = result.redirect_url;
+                            } else if (result.payment_method_id === 'pix' && result.pix_data) {
+                                // Redirecionar para página de exibição do PIX genérica
+                                window.location.href = "{% url 'payments:pagamento_pix' %}?external_reference=" + externalReference;
+                            } else {
+                                // Genérico pendente
+                                window.location.href = "{% url 'payments:pagamento_pendente' %}?external_reference=" + externalReference;
+                            }
+                        } else {
+                            // Erro / Rejeitado
+                            const errorMessages = {
+                                'cc_rejected_bad_filled_card_number': 'Número do cartão inválido',
+                                'cc_rejected_bad_filled_date': 'Data de validade inválida',
+                                'cc_rejected_bad_filled_other': 'Dados do cartão inválidos',
+                                'cc_rejected_bad_filled_security_code': 'Código de segurança inválido',
+                                'cc_rejected_blacklist': 'Cartão não autorizado',
+                                'cc_rejected_call_for_authorize': 'Ligue para autorizar',
+                                'cc_rejected_card_disabled': 'Cartão desabilitado',
+                                'cc_rejected_insufficient_amount': 'Saldo insuficiente',
+                                'cc_rejected_other_reason': 'Pagamento não aprovado',
+                            };
+                            const errorMsg = errorMessages[result.status_detail] || result.status_detail || 'Pagamento recusado. Tente outro cartão.';
+                            alert(errorMsg);
+                        }
+                        
+                    } catch (error) {
+                        console.error('Erro de comunicação:', error);
+                        alert('Houve um erro ao processar seu pagamento. Verifique sua conexão e tente novamente.');
+                    }
+                },
+                onError: (error) => {
+                    console.error('Erro no Brick:', error);
+                },
+            },
+        };
+        
+        window.paymentBrickController = await bricksBuilder.create(
+            'payment',
+            'payment-brick-container',
+            settings
+        );
+    };
+    
+    renderPaymentBrick();
+});
+</script>
+{% endblock %}

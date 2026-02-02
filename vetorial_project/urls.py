@@ -69,6 +69,7 @@ urlpatterns = [
     path('sobre', TemplateView.as_view(template_name='pages/sobre.html'), name='sobre'),
     path('termos-de-uso', TemplateView.as_view(template_name='pages/termos_de_uso.html'), name='termos_de_uso'),
     path('politica-de-privacidade', TemplateView.as_view(template_name='pages/politica_de_privacidade.html'), name='politica_de_privacidade'),
+    path('obrigado/', TemplateView.as_view(template_name='obrigado.html'), name='obrigado'),
     path("admin/", admin.site.urls),
     path("dashboard/", include('apps.dashboard.urls')),
     # Adicionar mais URLs conforme necessário:

@@ -20,7 +20,7 @@ from apps.services.models import Plano
 from apps.documents.models import Document
 from .whatsapp_service import whatsapp_service
 from apps.documents.models_guia_imposto import GuiaImposto
-from apps.services.models import Subscription, Plan, Plano, ProcessoAbertura
+from apps.services.models import Subscription, Plan, Plano, ProcessoAbertura, SolicitacaoAberturaMEI
 
 logger = logging.getLogger(__name__)
 
@@ -132,31 +132,67 @@ def api_leads_list(request):
 def api_processos_abertura_list(request):
     """Lista processos de abertura de empresa"""
     try:
-        # Mostrar todos os processos para staff ou aplicar filtro se necessario
-        processos = ProcessoAbertura.objects.all().order_by('-atualizado_em')
-        
         data = []
+        
+        # 1. Processos Abertura (Padrão)
+        processos = ProcessoAbertura.objects.all()
         for proc in processos:
             cliente_nome = proc.nome_completo or "Não informado"
             if proc.usuario:
                  cliente_nome += f" ({proc.usuario.email})"
             
-            # Verificar se tem documentos
             tem_docs = bool(proc.doc_identidade_frente or proc.comprovante_residencia)
             
             data.append({
-                'id': proc.id,
+                'id': f"proc-{proc.id}",
                 'cliente': cliente_nome,
-                'email': proc.email or proc.usuario.email,
+                'email': proc.email or (proc.usuario.email if proc.usuario else ''),
                 'telefone': proc.telefone_whatsapp,
                 'status': proc.get_status_display(),
                 'status_code': proc.status,
                 'etapa': f"Etapa {proc.etapa_atual}",
                 'tipo_societario': proc.get_tipo_societario_display() or '-',
                 'tem_documentos': tem_docs,
-                'criado_em': proc.criado_em.strftime('%d/%m/%Y %H:%M'),
-                'atualizado_em': proc.atualizado_em.strftime('%d/%m/%Y %H:%M'),
+                'criado_em': proc.criado_em,
+                'atualizado_em': proc.atualizado_em,
+                'timestamp': proc.atualizado_em.timestamp() if proc.atualizado_em else 0
             })
+            
+        # 2. Solicitações MEI
+        solicitacoes_mei = SolicitacaoAberturaMEI.objects.all()
+        for mei in solicitacoes_mei:
+            data.append({
+                'id': f"mei-{mei.id}",
+                'cliente': mei.nome_completo,
+                'email': mei.email,
+                'telefone': mei.telefone,
+                'status': mei.get_status_display(),
+                'status_code': mei.status,
+                'etapa': "Solicitação MEI",
+                'tipo_societario': 'MEI',
+                'tem_documentos': False,
+                'criado_em': mei.criado_em,
+                'atualizado_em': mei.atualizado_em,
+                'timestamp': mei.atualizado_em.timestamp() if mei.atualizado_em else 0
+            })
+            
+        # Ordenar por data de atualização (mais recente primeiro)
+        data.sort(key=lambda x: x['timestamp'], reverse=True)
+        
+        # Formatar datas para string e remover timestamp
+        for item in data:
+            if item.get('criado_em'):
+                item['criado_em'] = item['criado_em'].strftime('%d/%m/%Y %H:%M')
+            else:
+                item['criado_em'] = '-'
+                
+            if item.get('atualizado_em'):
+                item['atualizado_em'] = item['atualizado_em'].strftime('%d/%m/%Y %H:%M')
+            else:
+                item['atualizado_em'] = '-'
+                
+            if 'timestamp' in item:
+                del item['timestamp']
             
         return JsonResponse({'success': True, 'data': data})
     except Exception as e:
@@ -167,95 +203,164 @@ def api_processos_abertura_list(request):
 def api_processos_abertura_detail(request, pk):
     """Retorna detalhes de um processo de abertura específico"""
     try:
-        proc = ProcessoAbertura.objects.get(pk=pk)
+        pk_str = str(pk)
+        data = {}
         
-        # Coletar documentos
-        docs = {}
-        if proc.doc_identidade_frente: docs['Identidade Frente'] = proc.doc_identidade_frente.url
-        if proc.doc_identidade_verso: docs['Identidade Verso'] = proc.doc_identidade_verso.url
-        if proc.comprovante_residencia: docs['Comp. Residência'] = proc.comprovante_residencia.url
-        if proc.selfie_com_documento: docs['Selfie'] = proc.selfie_com_documento.url
-        if proc.iptu_imovel: docs['IPTU'] = proc.iptu_imovel.url
-        
-        # Coletar Sócios
-        socios_list = []
-        for socio in proc.socios.all():
-            socios_list.append({
-                'nome': socio.nome_completo,
-                'cpf': socio.cpf,
-                'rg': socio.rg,
-                'estado_civil': socio.get_estado_civil_display(),
-                'endereco': socio.endereco_completo,
-                'participacao': f"{socio.percentual_participacao}%"
-            })
+        # === CASO 1: Solicitação MEI ===
+        if pk_str.startswith('mei-'):
+            mei_id = pk_str.split('-')[1]
+            try:
+                mei = SolicitacaoAberturaMEI.objects.get(pk=mei_id)
+            except SolicitacaoAberturaMEI.DoesNotExist:
+                return JsonResponse({'success': False, 'error': 'Solicitação MEI não encontrada'}, status=404)
+            
+            data = {
+                'id': f"mei-{mei.id}",
+                'status': mei.get_status_display(),
+                'etapa': 'MEI',
+                'criado_em': mei.criado_em.strftime('%d/%m/%Y'),
+                
+                'responsavel': {
+                    'nome': mei.nome_completo,
+                    'cpf': mei.cpf,
+                    'rg': mei.rg or '-',
+                    'orgao_emissor': f"{mei.orgao_expedidor_rg or ''}/{mei.uf_orgao_expedidor or ''}",
+                    'data_nascimento': '-', 
+                    'nome_mae': '-',
+                    'email': mei.email,
+                    'telefone': mei.telefone,
+                    'estado_civil': '-',
+                    'profissao': '-',
+                    'endereco': mei.endereco_completo()
+                },
+                
+                'empresa': {
+                    'tipo': 'MEI',
+                    'nome_fantasia': '-',
+                    'razao_social': f"{mei.nome_completo} {mei.cpf_formatado()}",
+                    'capital_social': f"R$ {mei.capital_social}" if mei.capital_social else '-',
+                    'atividade_principal': mei.cnae_primario,
+                    'atividades_secundarias': mei.cnae_secundario or '-',
+                    'area_atuacao': '-',
+                    'forma_atuacao': mei.get_forma_atuacao_display(),
+                    'local_atuacao': '-',
+                    'regime_tributario': 'Simples Nacional (MEI)',
+                    'endereco_comercial': 'Mesmo endereço residencial',
+                },
+                
+                'fiscal': {
+                    'tipo_atividade': '-',
+                    'usa_nota_fiscal': '-',
+                    'precisa_alvara': '-',
+                    'deseja_conta_pj': '-',
+                },
+                
+                'pagamento': {},
+                'documentos': {},
+                'socios': []
+            }
+            
+            if mei.pagamento:
+                data['pagamento'] = {
+                    'plano': 'Abertura MEI',
+                    'valor': f"R$ {mei.pagamento.valor}",
+                    'data': mei.pagamento.data_aprovacao.strftime('%d/%m/%Y %H:%M') if mei.pagamento.data_aprovacao else '-',
+                    'confirmado': 'Sim' if mei.pagamento.status == 'approved' else 'Não'
+                }
+                
+            return JsonResponse({'success': True, 'data': data})
 
-        # Preparar Endereço Comercial
-        if proc.endereco_comercial_diferente:
-             endereco_comercial_str = f"{proc.endereco_comercial}, {proc.numero_comercial} {proc.complemento_comercial or ''} - {proc.bairro_comercial} - {proc.cidade_comercial}/{proc.estado_comercial} (CEP: {proc.cep_comercial})".strip()
+        # === CASO 2: Processo Abertura (Padrão) ===
         else:
-             endereco_comercial_str = f"{proc.endereco}, {proc.numero} {proc.complemento or ''} - {proc.bairro} - {proc.cidade}/{proc.estado} (CEP: {proc.cep}) (Mesmo endereço residencial)".strip()
+            # Suporta tanto 'proc-123' quanto '123' (legado)
+            proc_id = pk_str.replace('proc-', '')
+            proc = ProcessoAbertura.objects.get(pk=proc_id)
             
-        data = {
-            'id': proc.id,
-            'status': proc.get_status_display(),
-            'etapa': proc.etapa_atual,
-            'criado_em': proc.criado_em.strftime('%d/%m/%Y'),
+            # Coletar documentos
+            docs = {}
+            if proc.doc_identidade_frente: docs['Identidade Frente'] = proc.doc_identidade_frente.url
+            if proc.doc_identidade_verso: docs['Identidade Verso'] = proc.doc_identidade_verso.url
+            if proc.comprovante_residencia: docs['Comp. Residência'] = proc.comprovante_residencia.url
+            if proc.selfie_com_documento: docs['Selfie'] = proc.selfie_com_documento.url
+            if proc.iptu_imovel: docs['IPTU'] = proc.iptu_imovel.url
             
-            # Dados Pessoais
-            'responsavel': {
-                'nome': proc.nome_completo,
-                'cpf': proc.cpf,
-                'rg': proc.rg,
-                'orgao_emissor': f"{proc.orgao_emissor or ''}/{proc.uf_emissao or ''}",
-                'data_nascimento': proc.data_nascimento.strftime('%d/%m/%Y') if proc.data_nascimento else None,
-                'nome_mae': proc.nome_mae,
-                'email': proc.email,
-                'telefone': proc.telefone_whatsapp,
-                'estado_civil': proc.get_estado_civil_display(),
-                'profissao': proc.profissao,
-                'endereco': f"{proc.endereco}, {proc.numero} {proc.complemento or ''} - {proc.bairro} - {proc.cidade}/{proc.estado} (CEP: {proc.cep})".strip()
-            },
-            
-            # Dados da Empresa
-            'empresa': {
-                'tipo': proc.get_tipo_societario_display(),
-                'nome_fantasia': proc.nome_fantasia_mei or proc.nome_fantasia_me or '-',
-                'razao_social': proc.razao_social or '-',
-                'capital_social': f"R$ {proc.capital_social}" if proc.capital_social else None,
-                'atividade_principal': proc.cnae_principal_mei or proc.cnae_principal_me or '-',
-                'atividades_secundarias': proc.cnaes_secundarios_mei or proc.cnaes_secundarios_me or '-',
-                'area_atuacao': proc.area_atuacao_mei,
-                'forma_atuacao': proc.get_forma_atuacao_mei_display(),
-                'local_atuacao': proc.get_local_empresa_mei_display(),
-                'regime_tributario': proc.get_regime_tributario_display() or '-',
-                'endereco_comercial': endereco_comercial_str,
-            },
+            # Coletar Sócios
+            socios_list = []
+            for socio in proc.socios.all():
+                socios_list.append({
+                    'nome': socio.nome_completo,
+                    'cpf': socio.cpf,
+                    'rg': socio.rg,
+                    'estado_civil': socio.get_estado_civil_display(),
+                    'endereco': socio.endereco_completo,
+                    'participacao': f"{socio.percentual_participacao}%"
+                })
 
-            # Dados Fiscais e Extras
-            'fiscal': {
-                'tipo_atividade': proc.get_tipo_atividade_display(),
-                'usa_nota_fiscal': 'Sim' if proc.usa_nota_fiscal else 'Não',
-                'precisa_alvara': 'Sim' if proc.precisa_alvara else 'Não',
-                'deseja_conta_pj': 'Sim' if proc.deseja_conta_pj else 'Não',
-            },
+            # Preparar Endereço Comercial
+            if proc.endereco_comercial_diferente:
+                endereco_comercial_str = f"{proc.endereco_comercial}, {proc.numero_comercial} {proc.complemento_comercial or ''} - {proc.bairro_comercial} - {proc.cidade_comercial}/{proc.estado_comercial} (CEP: {proc.cep_comercial})".strip()
+            else:
+                endereco_comercial_str = f"{proc.endereco}, {proc.numero} {proc.complemento or ''} - {proc.bairro} - {proc.cidade}/{proc.estado} (CEP: {proc.cep}) (Mesmo endereço residencial)".strip()
+                
+            data = {
+                'id': f"proc-{proc.id}",
+                'status': proc.get_status_display(),
+                'etapa': proc.etapa_atual,
+                'criado_em': proc.criado_em.strftime('%d/%m/%Y'),
+                
+                # Dados Pessoais
+                'responsavel': {
+                    'nome': proc.nome_completo,
+                    'cpf': proc.cpf,
+                    'rg': proc.rg,
+                    'orgao_emissor': f"{proc.orgao_emissor or ''}/{proc.uf_emissao or ''}",
+                    'data_nascimento': proc.data_nascimento.strftime('%d/%m/%Y') if proc.data_nascimento else None,
+                    'nome_mae': proc.nome_mae,
+                    'email': proc.email,
+                    'telefone': proc.telefone_whatsapp,
+                    'estado_civil': proc.get_estado_civil_display(),
+                    'profissao': proc.profissao,
+                    'endereco': f"{proc.endereco}, {proc.numero} {proc.complemento or ''} - {proc.bairro} - {proc.cidade}/{proc.estado} (CEP: {proc.cep})".strip()
+                },
+                
+                # Dados da Empresa
+                'empresa': {
+                    'tipo': proc.get_tipo_societario_display(),
+                    'nome_fantasia': proc.nome_fantasia_mei or proc.nome_fantasia_me or '-',
+                    'razao_social': proc.razao_social or '-',
+                    'capital_social': f"R$ {proc.capital_social}" if proc.capital_social else None,
+                    'atividade_principal': proc.cnae_principal_mei or proc.cnae_principal_me or '-',
+                    'atividades_secundarias': proc.cnaes_secundarios_mei or proc.cnaes_secundarios_me or '-',
+                    'area_atuacao': proc.area_atuacao_mei,
+                    'forma_atuacao': proc.get_forma_atuacao_mei_display(),
+                    'local_atuacao': proc.get_local_empresa_mei_display(),
+                    'regime_tributario': proc.get_regime_tributario_display() or '-',
+                    'endereco_comercial': endereco_comercial_str,
+                },
 
-            # Dados Pagamento
-            'pagamento': {
-                'plano': proc.plano_selecionado.nome if proc.plano_selecionado else '-',
-                'valor': f"R$ {proc.valor_pago}" if proc.valor_pago else '-',
-                'data': proc.data_pagamento.strftime('%d/%m/%Y %H:%M') if proc.data_pagamento else '-',
-                'confirmado': 'Sim' if proc.pagamento_confirmado else 'Não'
-            },
+                # Dados Fiscais e Extras
+                'fiscal': {
+                    'tipo_atividade': proc.get_tipo_atividade_display(),
+                    'usa_nota_fiscal': 'Sim' if proc.usa_nota_fiscal else 'Não',
+                    'precisa_alvara': 'Sim' if proc.precisa_alvara else 'Não',
+                    'deseja_conta_pj': 'Sim' if proc.deseja_conta_pj else 'Não',
+                },
+
+                # Dados Pagamento
+                'pagamento': {
+                    'plano': proc.plano_selecionado.nome if proc.plano_selecionado else '-',
+                    'valor': f"R$ {proc.valor_pago}" if proc.valor_pago else '-',
+                    'data': proc.data_pagamento.strftime('%d/%m/%Y %H:%M') if proc.data_pagamento else '-',
+                    'confirmado': 'Sim' if proc.pagamento_confirmado else 'Não'
+                },
+                
+                'documentos': docs,
+                'socios': socios_list
+            }
             
-            # Documentos
-            'documentos': docs,
+            return JsonResponse({'success': True, 'data': data})
             
-            # Sócios
-            'socios': socios_list
-        }
-        
-        return JsonResponse({'success': True, 'data': data})
-    except ProcessoAbertura.DoesNotExist:
+    except (ProcessoAbertura.DoesNotExist, SolicitacaoAberturaMEI.DoesNotExist):
         return JsonResponse({'success': False, 'error': 'Processo não encontrado'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)

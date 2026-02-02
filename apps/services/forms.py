@@ -1,7 +1,8 @@
 from django import forms
 from django.core.validators import RegexValidator
 from django.forms import formset_factory
-from .models import ProcessoAbertura, Socio
+from .models import ProcessoAbertura, Socio, SolicitacaoAberturaMEI
+from .cnae_choices import MEI_CNAES
 
 
 # Validators
@@ -321,4 +322,254 @@ class Etapa8AssinaturaForm(forms.ModelForm):
 class Etapa8RevisaoForm(forms.Form):
     """Etapa 8: Revisão e Conclusão (Sem campos, apenas confirmação)"""
     pass
+
+
+# =============================================================================
+# FORMULÁRIO DE ABERTURA MEI (Página /abrir-mei/)
+# =============================================================================
+
+class AberturaMEIForm(forms.ModelForm):
+    """
+    Formulário para coleta de dados de abertura de MEI.
+    Inclui validações de CPF, telefone e campos obrigatórios.
+    Valor do serviço: R$ 129,90
+    """
+    
+    class Meta:
+        from .models import SolicitacaoAberturaMEI
+        model = SolicitacaoAberturaMEI
+        fields = [
+            # Dados pessoais obrigatórios
+            'nome_completo', 'email', 'telefone', 'cpf',
+            # Documentos opcionais
+            'rg', 'orgao_expedidor_rg', 'uf_orgao_expedidor',
+            # Atividades
+            'cnae_primario', 'cnae_secundario',
+            # Forma de atuação
+            'forma_atuacao',
+            # Capital social
+            'capital_social',
+            # Endereço
+            'cep', 'logradouro', 'numero', 'complemento', 
+            'bairro', 'cidade', 'estado',
+        ]
+        widgets = {
+            # Dados pessoais
+            'nome_completo': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Digite seu nome completo',
+                'required': True,
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'seuemail@exemplo.com',
+                'required': True,
+            }),
+            'telefone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': '(00) 00000-0000',
+                'data-mask': '(00) 00000-0000',
+                'required': True,
+            }),
+            'cpf': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': '000.000.000-00',
+                'data-mask': '000.000.000-00',
+                'required': True,
+            }),
+            # Documentos
+            'rg': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Número do RG',
+            }),
+            'orgao_expedidor_rg': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ex: SSP, DETRAN',
+            }),
+            'uf_orgao_expedidor': forms.Select(attrs={
+                'class': 'form-select',
+            }),
+            # Atividades
+            'cnae_primario': forms.Select(choices=MEI_CNAES, attrs={ 
+                'class': 'form-select select2-cnae',
+                'required': True, 
+            }),
+            'cnae_secundario': forms.Select(choices=MEI_CNAES, attrs={ 
+                'class': 'form-select select2-cnae',
+            }),
+            # Forma de atuação
+            'forma_atuacao': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True,
+            }),
+            # Capital social
+            'capital_social': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ex: 5000.00',
+                'step': '0.01',
+                'min': '0',
+            }),
+            # Endereço
+            'cep': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': '00000-000',
+                'data-mask': '00000-000',
+                'id': 'mei_cep',
+                'required': True,
+            }),
+            'logradouro': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Rua, Avenida, etc.',
+                'id': 'mei_logradouro',
+                'required': True,
+            }),
+            'numero': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Número',
+                'required': True,
+            }),
+            'complemento': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Apto, Bloco, Sala (opcional)',
+            }),
+            'bairro': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Bairro',
+                'id': 'mei_bairro',
+                'required': True,
+            }),
+            'cidade': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Cidade',
+                'id': 'mei_cidade',
+                'required': True,
+            }),
+            'estado': forms.Select(attrs={
+                'class': 'form-select',
+                'id': 'mei_estado',
+                'required': True,
+            }),
+        }
+        labels = {
+            'nome_completo': 'Nome Completo *',
+            'email': 'E-mail *',
+            'telefone': 'Telefone *',
+            'cpf': 'CPF *',
+            'rg': 'RG',
+            'orgao_expedidor_rg': 'Órgão Expedidor',
+            'uf_orgao_expedidor': 'UF do Órgão',
+            'cnae_primario': 'Atividade Principal (CNAE) *',
+            'cnae_secundario': 'Atividade Secundária',
+            'forma_atuacao': 'Forma de Atuação *',
+            'capital_social': 'Capital Social',
+            'cep': 'CEP *',
+            'logradouro': 'Logradouro *',
+            'numero': 'Número *',
+            'complemento': 'Complemento',
+            'bairro': 'Bairro *',
+            'cidade': 'Cidade *',
+            'estado': 'Estado *',
+        }
+        help_texts = {
+            'cpf': 'Informe seu CPF válido',
+            'cnae_primario': 'Selecione sua atividade principal',
+            'capital_social': 'Valor inicial investido no negócio (opcional)',
+        }
+    
+    def clean_cpf(self):
+        """Validação do CPF"""
+        cpf = self.cleaned_data.get('cpf', '')
+        # Remove caracteres não numéricos
+        cpf_numeros = ''.join(filter(str.isdigit, cpf))
+        
+        if not cpf_numeros:
+            return ""
+
+        if len(cpf_numeros) != 11:
+            raise forms.ValidationError('CPF deve conter 11 dígitos.')
+        
+        # Validação do dígito verificador
+        if not self._validar_cpf(cpf_numeros):
+            raise forms.ValidationError('CPF inválido. Verifique os dígitos informados.')
+        
+        # Retorna o CPF formatado
+        return f"{cpf_numeros[:3]}.{cpf_numeros[3:6]}.{cpf_numeros[6:9]}-{cpf_numeros[9:]}"
+    
+    def _validar_cpf(self, cpf):
+        """
+        Algoritmo de validação de CPF brasileiro.
+        Retorna True se o CPF é válido, False caso contrário.
+        """
+        # Verifica se todos os dígitos são iguais (CPF inválido)
+        if cpf == cpf[0] * 11:
+            return False
+        
+        # Validação do primeiro dígito verificador
+        soma = sum(int(cpf[i]) * (10 - i) for i in range(9))
+        resto = soma % 11
+        digito1 = 0 if resto < 2 else 11 - resto
+        
+        if int(cpf[9]) != digito1:
+            return False
+        
+        # Validação do segundo dígito verificador
+        soma = sum(int(cpf[i]) * (11 - i) for i in range(10))
+        resto = soma % 11
+        digito2 = 0 if resto < 2 else 11 - resto
+        
+        return int(cpf[10]) == digito2
+    
+    def clean_telefone(self):
+        """Validação do telefone"""
+        telefone = self.cleaned_data.get('telefone', '')
+        # Remove caracteres não numéricos
+        telefone_numeros = ''.join(filter(str.isdigit, telefone))
+        
+        if len(telefone_numeros) < 10 or len(telefone_numeros) > 11:
+            raise forms.ValidationError('Telefone deve ter 10 ou 11 dígitos (com DDD).')
+        
+        return telefone
+    
+    def clean_email(self):
+        """Validação do e-mail"""
+        email = self.cleaned_data.get('email', '').lower().strip()
+        
+        if not email:
+            raise forms.ValidationError('E-mail é obrigatório.')
+        
+        # Validação adicional de formato
+        import re
+        email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_regex, email):
+            raise forms.ValidationError('Informe um e-mail válido.')
+        
+        return email
+    
+    def clean_cep(self):
+        """Validação do CEP"""
+        cep = self.cleaned_data.get('cep', '')
+        # Remove caracteres não numéricos
+        cep_numeros = ''.join(filter(str.isdigit, cep))
+        
+        if len(cep_numeros) != 8:
+            raise forms.ValidationError('CEP deve conter 8 dígitos.')
+        
+        return cep
+    
+    def clean(self):
+        """Validações adicionais do formulário"""
+        cleaned_data = super().clean()
+        
+        # Verifica se RG foi preenchido junto com órgão expedidor
+        rg = cleaned_data.get('rg')
+        orgao = cleaned_data.get('orgao_expedidor_rg')
+        uf_orgao = cleaned_data.get('uf_orgao_expedidor')
+        
+        if rg and not orgao:
+            self.add_error('orgao_expedidor_rg', 'Informe o órgão expedidor do RG.')
+        
+        if rg and not uf_orgao:
+            self.add_error('uf_orgao_expedidor', 'Informe o estado do órgão expedidor.')
+        
+        return cleaned_data
 

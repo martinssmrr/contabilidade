@@ -205,8 +205,8 @@ urlpatterns = [
     path("endereco-virtual/", TemplateView.as_view(template_name='services/endereco_virtual.html'), name='endereco_virtual'),
     path("certificado-digital/", TemplateView.as_view(template_name='services/certificado_digital.html'), name='certificado_digital'),
     path("emissor-nota-fiscal/", TemplateView.as_view(template_name='services/emissor_nota_fiscal.html'), name='emissor_nota_fiscal'),
-    path ("abrir-mei/", TemplateView.as_view(template_name='services/abrir_mei.html'), name='abrir_mei'),
-    path ("contabilidade-online", TemplateView.as_view(template_name='services/contabilidade_online.html'), name='contabilidade_online'),
+    path("abrir-mei/", TemplateView.as_view(template_name='services/abrir_mei.html'), name='abrir_mei'),
+    path("contabilidade-online/", TemplateView.as_view(template_name='services/contabilidade_online.html'), name='contabilidade_online'),
 
     # Segmentos
     path("segmentos/servicos/", servicos_view, name='segmentos_servicos'),

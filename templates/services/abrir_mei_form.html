@@ -1,0 +1,839 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load blog_tags %}
+
+{% block title %}Abrir MEI - Vetorial Contabilidade{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    /* ========================================
+       ESTILOS GERAIS DA PÁGINA ABRIR MEI
+       ======================================== */
+    
+    .section-title-blue {
+        color: #1A237E;
+        font-weight: 700;
+    }
+
+    /* Hero Section */
+    .hero-mei {
+        background: linear-gradient(135deg, rgba(12, 99, 209, 0.85) 0%, rgba(10, 79, 163, 0.90) 100%), 
+                    url('{% static "img/abrirherosection.webp" %}');
+        background-size: cover;
+        background-position: center right;
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Formulário de Abertura MEI */
+    .form-section {
+        background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+        padding: 80px 0;
+    }
+
+    .form-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        padding: 40px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .form-card-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .form-card-header h2 {
+        color: #1A237E;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .form-card-header .price-tag {
+        display: inline-block;
+        background: linear-gradient(135deg, #0C63D1 0%, #0A4FA3 100%);
+        color: white;
+        padding: 8px 25px;
+        border-radius: 50px;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-top: 10px;
+    }
+
+    .form-section-title {
+        color: #1A237E;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #0C63D1;
+        display: inline-block;
+    }
+
+    .form-section-title i {
+        margin-right: 8px;
+        color: #0C63D1;
+    }
+
+    .form-control, .form-select {
+        border-radius: 10px;
+        padding: 12px 15px;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #0C63D1;
+        box-shadow: 0 0 0 3px rgba(12, 99, 209, 0.15);
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 6px;
+    }
+
+    .required-field::after {
+        content: " *";
+        color: #dc3545;
+    }
+
+    .form-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .btn-submit-mei {
+        background: linear-gradient(135deg, #0C63D1 0%, #0A4FA3 100%);
+        color: white;
+        padding: 15px 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 20px rgba(12, 99, 209, 0.3);
+    }
+
+    .btn-submit-mei:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(12, 99, 209, 0.4);
+        color: white;
+    }
+
+    .btn-submit-mei:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    /* Benefícios */
+    .benefits-section {
+        background: #ffffff;
+        padding: 60px 0;
+    }
+
+    .benefit-card {
+        text-align: center;
+        padding: 30px 20px;
+        background: #f8f9fa;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .benefit-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        background: #ffffff;
+    }
+
+    .benefit-icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #0C63D1 0%, #0A4FA3 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: white;
+        font-size: 1.8rem;
+    }
+
+    .benefit-card h4 {
+        color: #1A237E;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .benefit-card p {
+        color: #6c757d;
+        font-size: 0.95rem;
+        margin: 0;
+    }
+
+    /* Erros do formulário */
+    .is-invalid {
+        border-color: #dc3545 !important;
+    }
+
+    .invalid-feedback {
+        display: block;
+        color: #dc3545;
+        font-size: 0.85rem;
+        margin-top: 5px;
+    }
+
+    .errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 5px 0 0;
+    }
+
+    .errorlist li {
+        color: #dc3545;
+        font-size: 0.85rem;
+    }
+
+    /* Alert de mensagens */
+    .alert-container {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        z-index: 9999;
+        max-width: 400px;
+    }
+
+    /* Depoimentos */
+    .testimonials-section {
+        background: #f8f9fa;
+        padding: 80px 0;
+    }
+
+    .depoimento-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        position: relative;
+        height: 100%;
+    }
+
+    .depoimento-card::before {
+        content: '"';
+        font-size: 5rem;
+        color: rgba(12, 99, 209, 0.1);
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        font-family: Georgia, serif;
+        line-height: 1;
+    }
+
+    .depoimento-texto {
+        font-style: italic;
+        color: #555;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .autor-avatar {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #0C63D1, #0A4FA3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .form-card {
+            padding: 25px;
+        }
+        
+        .hero-mei h1 {
+            font-size: 2rem;
+        }
+        
+        .form-card-header .price-tag {
+            font-size: 1.1rem;
+        }
+    }
+
+    /* Loading spinner */
+    .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+        border-width: 0.15em;
+    }
+
+    /* Progress Steps */
+    .form-progress {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .progress-step {
+        display: flex;
+        align-items: center;
+        padding: 8px 16px;
+        background: #f0f0f0;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .progress-step.active {
+        background: linear-gradient(135deg, #0C63D1 0%, #0A4FA3 100%);
+        color: white;
+    }
+
+    .progress-step i {
+        margin-right: 6px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Alertas de Mensagens -->
+{% if messages %}
+<div class="alert-container">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Hero Section -->
+<!-- <section class="hero-mei text-white position-relative">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 col-12 py-5">
+                <h1 class="display-4 fw-bold mb-4">Abra seu MEI de forma rápida, segura e sem complicação</h1>
+                <p class="fs-5 mb-4 opacity-90">
+                    Deixe a burocracia com a gente! Nossa equipe especializada cuida de todo o processo de abertura do seu MEI. 
+                    Você só precisa preencher o formulário abaixo e nós fazemos o resto.
+                </p>
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                        <span>Processo 100% online</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                        <span>CNPJ em até 24h</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                        <span>Suporte especializado</span>
+                    </div>
+                </div>
+                <a href="#formulario-mei" class="btn btn-light btn-lg px-5 py-3 fw-semibold">
+                    <i class="bi bi-arrow-down-circle me-2"></i>ABRIR MEU MEI AGORA
+                </a>
+            </div>
+            <div class="col-lg-4 d-none d-lg-flex justify-content-center">
+                <div class="text-center p-4 bg-white bg-opacity-10 rounded-4">
+                    <p class="mb-2 opacity-75">Valor do serviço</p>
+                    <h2 class="display-4 fw-bold mb-0">R$ {{ valor_servico|default:"129,90" }}</h2>
+                    <p class="mb-0 opacity-75">Pagamento único</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> -->
+
+<!-- Benefícios Section -->
+<!-- <section class="benefits-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title-blue display-6 mb-3">Por que abrir seu MEI conosco?</h2>
+            <p class="lead text-muted">Simplificamos todo o processo para você focar no que realmente importa: seu negócio</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </div>
+                    <h4>Rápido</h4>
+                    <p>Seu CNPJ pronto em até 24 horas úteis após confirmação do pagamento</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4>Seguro</h4>
+                    <p>Seus dados protegidos e processo realizado por contadores especializados</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="bi bi-headset"></i>
+                    </div>
+                    <h4>Suporte Total</h4>
+                    <p>Acompanhamento completo e suporte por WhatsApp durante todo o processo</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="bi bi-wallet2"></i>
+                    </div>
+                    <h4>Preço Justo</h4>
+                    <p>Taxa única de R$ 129,90 sem surpresas ou cobranças adicionais</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> -->
+
+<!-- Formulário Section -->
+<section id="formulario-mei" class="form-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-9">
+                <div class="form-card">
+                    <!-- Header do Formulário -->
+                    <div class="form-card-header">
+                        <h2><i class="bi bi-file-earmark-text me-2"></i>Formulário de Abertura MEI</h2>
+                        <p class="text-muted mb-2">Preencha os dados abaixo para iniciar o processo de abertura do seu MEI</p>
+                        <span class="price-tag d-none">
+                            <i class="bi bi-tag-fill me-2"></i>R$ {{ valor_servico|default:"129,90" }}
+                        </span>
+                    </div>
+
+                    <!-- Progress Steps -->
+                    <div class="form-progress">
+                        <span class="progress-step active"><i class="bi bi-1-circle-fill"></i> Dados Pessoais</span>
+                        <span class="progress-step"><i class="bi bi-2-circle"></i> Atividade</span>
+                        <span class="progress-step"><i class="bi bi-3-circle"></i> Endereço</span>
+                        <span class="progress-step"><i class="bi bi-4-circle"></i> Pagamento</span>
+                    </div>
+
+                    <!-- Formulário -->
+                    <form method="post" id="form-abertura-mei" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- SEÇÃO 1: Dados Pessoais -->
+                        <div class="mb-5">
+                            <h5 class="form-section-title">
+                                <i class="bi bi-person-fill"></i>Dados Pessoais
+                            </h5>
+                            
+                            <div class="row g-3">
+                                <!-- Nome Completo -->
+                                <div class="col-12">
+                                    <label for="{{ form.nome_completo.id_for_label }}" class="form-label required-field">Nome Completo</label>
+                                    {{ form.nome_completo }}
+                                    {% if form.nome_completo.errors %}
+                                        <div class="invalid-feedback">{{ form.nome_completo.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Email -->
+                                <div class="col-md-6">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label required-field">E-mail</label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                        <div class="invalid-feedback">{{ form.email.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Telefone -->
+                                <div class="col-md-6">
+                                    <label for="{{ form.telefone.id_for_label }}" class="form-label required-field">Telefone</label>
+                                    {{ form.telefone }}
+                                    {% if form.telefone.errors %}
+                                        <div class="invalid-feedback">{{ form.telefone.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- CPF -->
+                                <div class="col-md-4">
+                                    <label for="{{ form.cpf.id_for_label }}" class="form-label required-field">CPF</label>
+                                    {{ form.cpf }}
+                                    {% if form.cpf.errors %}
+                                        <div class="invalid-feedback">{{ form.cpf.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- RG -->
+                                <div class="col-md-3">
+                                    <label for="{{ form.rg.id_for_label }}" class="form-label">RG</label>
+                                    {{ form.rg }}
+                                    {% if form.rg.errors %}
+                                        <div class="invalid-feedback">{{ form.rg.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Órgão Expedidor -->
+                                <div class="col-md-3">
+                                    <label for="{{ form.orgao_expedidor_rg.id_for_label }}" class="form-label">Órgão Expedidor</label>
+                                    {{ form.orgao_expedidor_rg }}
+                                    {% if form.orgao_expedidor_rg.errors %}
+                                        <div class="invalid-feedback">{{ form.orgao_expedidor_rg.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- UF Órgão -->
+                                <div class="col-md-2">
+                                    <label for="{{ form.uf_orgao_expedidor.id_for_label }}" class="form-label">UF</label>
+                                    {{ form.uf_orgao_expedidor }}
+                                    {% if form.uf_orgao_expedidor.errors %}
+                                        <div class="invalid-feedback">{{ form.uf_orgao_expedidor.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEÇÃO 2: Atividade do MEI -->
+                        <div class="mb-5">
+                            <h5 class="form-section-title">
+                                <i class="bi bi-briefcase-fill"></i>Atividade do MEI
+                            </h5>
+                            
+                            <div class="row g-3">
+                                <!-- CNAE Primário -->
+                                <div class="col-12">
+                                    <label for="{{ form.cnae_primario.id_for_label }}" class="form-label required-field">Atividade Principal (CNAE)</label>
+                                    {{ form.cnae_primario }}
+                                    <div class="form-text">Selecione sua atividade principal</div>
+                                    {% if form.cnae_primario.errors %}
+                                        <div class="invalid-feedback">{{ form.cnae_primario.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- CNAE Secundário -->
+                                <div class="col-12">
+                                    <label for="{{ form.cnae_secundario.id_for_label }}" class="form-label">Atividade Secundária (Opcional)</label>
+                                    {{ form.cnae_secundario }}
+                                    <div class="form-text">Atividade complementar, se houver</div>
+                                    {% if form.cnae_secundario.errors %}
+                                        <div class="invalid-feedback">{{ form.cnae_secundario.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Forma de Atuação -->
+                                <div class="col-md-6">
+                                    <label for="{{ form.forma_atuacao.id_for_label }}" class="form-label required-field">Forma de Atuação</label>
+                                    {{ form.forma_atuacao }}
+                                    <div class="form-text">Como você vai exercer sua atividade</div>
+                                    {% if form.forma_atuacao.errors %}
+                                        <div class="invalid-feedback">{{ form.forma_atuacao.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Capital Social -->
+                                <div class="col-md-6">
+                                    <label for="{{ form.capital_social.id_for_label }}" class="form-label">Capital Social (Opcional)</label>
+                                    {{ form.capital_social }}
+                                    <div class="form-text">Valor inicial investido no negócio</div>
+                                    {% if form.capital_social.errors %}
+                                        <div class="invalid-feedback">{{ form.capital_social.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEÇÃO 3: Endereço -->
+                        <div class="mb-5">
+                            <h5 class="form-section-title">
+                                <i class="bi bi-geo-alt-fill"></i>Endereço Comercial
+                            </h5>
+                            
+                            <div class="row g-3">
+                                <!-- CEP -->
+                                <div class="col-md-3">
+                                    <label for="{{ form.cep.id_for_label }}" class="form-label required-field">CEP</label>
+                                    {{ form.cep }}
+                                    {% if form.cep.errors %}
+                                        <div class="invalid-feedback">{{ form.cep.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Logradouro -->
+                                <div class="col-md-7">
+                                    <label for="{{ form.logradouro.id_for_label }}" class="form-label required-field">Logradouro</label>
+                                    {{ form.logradouro }}
+                                    {% if form.logradouro.errors %}
+                                        <div class="invalid-feedback">{{ form.logradouro.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Número -->
+                                <div class="col-md-2">
+                                    <label for="{{ form.numero.id_for_label }}" class="form-label required-field">Número</label>
+                                    {{ form.numero }}
+                                    {% if form.numero.errors %}
+                                        <div class="invalid-feedback">{{ form.numero.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Complemento -->
+                                <div class="col-md-4">
+                                    <label for="{{ form.complemento.id_for_label }}" class="form-label">Complemento</label>
+                                    {{ form.complemento }}
+                                    {% if form.complemento.errors %}
+                                        <div class="invalid-feedback">{{ form.complemento.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Bairro -->
+                                <div class="col-md-4">
+                                    <label for="{{ form.bairro.id_for_label }}" class="form-label required-field">Bairro</label>
+                                    {{ form.bairro }}
+                                    {% if form.bairro.errors %}
+                                        <div class="invalid-feedback">{{ form.bairro.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Cidade -->
+                                <div class="col-md-4">
+                                    <label for="{{ form.cidade.id_for_label }}" class="form-label required-field">Cidade</label>
+                                    {{ form.cidade }}
+                                    {% if form.cidade.errors %}
+                                        <div class="invalid-feedback">{{ form.cidade.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Estado -->
+                                <div class="col-md-12">
+                                    <label for="{{ form.estado.id_for_label }}" class="form-label required-field">Estado</label>
+                                    {{ form.estado }}
+                                    {% if form.estado.errors %}
+                                        <div class="invalid-feedback">{{ form.estado.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Termos e Submit -->
+                        <div class="text-center pt-4 border-top">
+                            <p class="text-muted mb-4">
+                                <i class="bi bi-shield-lock me-2"></i>
+                                Seus dados estão protegidos e serão usados apenas para o processo de abertura do MEI.
+                            </p>
+                            
+                            <button type="submit" class="btn btn-submit-mei" id="btn-submit">
+                                <span class="btn-text">
+                                    <i class="bi bi-arrow-right-circle me-2"></i>CONTINUAR PARA PAGAMENTO
+                                </span>
+                                <span class="btn-loading d-none">
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    Processando...
+                                </span>
+                            </button>
+                            
+                            <p class="mt-3 text-muted small">
+                                Ao continuar, você será redirecionado para a página de pagamento seguro.
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Depoimentos Section -->
+{% if testimonials %}
+<section class="testimonials-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title-blue display-6 mb-3">O que nossos clientes dizem</h2>
+            <p class="lead text-muted">Milhares de MEIs já abertos com nossa ajuda</p>
+        </div>
+        <div class="row g-4">
+            {% for depoimento in testimonials|slice:":3" %}
+            <div class="col-lg-4 col-md-6">
+                <div class="depoimento-card">
+                    <p class="depoimento-texto">"{{ depoimento.texto|truncatewords:30 }}"</p>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="autor-avatar">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div>
+                            <strong class="d-block">{{ depoimento.nome }}</strong>
+                            {% if depoimento.empresa %}
+                            <small class="text-muted">{{ depoimento.empresa }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# Seção de Artigos Relacionados #}
+{% show_recent_posts 'mei' 3 %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ===========================================
+    // MÁSCARAS DE INPUT
+    // ===========================================
+    
+    // Máscara de CPF
+    const cpfInput = document.querySelector('[data-mask="000.000.000-00"]');
+    if (cpfInput) {
+        cpfInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            }
+            e.target.value = value;
+        });
+    }
+    
+    // Máscara de Telefone
+    const telefoneInput = document.querySelector('[data-mask="(00) 00000-0000"]');
+    if (telefoneInput) {
+        telefoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+                value = value.replace(/(\d)(\d{4})$/, '$1-$2');
+            }
+            e.target.value = value;
+        });
+    }
+    
+    // Máscara de CEP
+    const cepInput = document.querySelector('[data-mask="00000-000"]');
+    if (cepInput) {
+        cepInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 8) {
+                value = value.replace(/(\d{5})(\d)/, '$1-$2');
+            }
+            e.target.value = value;
+        });
+        
+        // Busca de CEP via API
+        cepInput.addEventListener('blur', function() {
+            const cep = this.value.replace(/\D/g, '');
+            if (cep.length === 8) {
+                buscarCEP(cep);
+            }
+        });
+    }
+    
+    // ===========================================
+    // BUSCA DE CEP
+    // ===========================================
+    
+    function buscarCEP(cep) {
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(response => response.json())
+            .then(data => {
+                if (!data.erro) {
+                    document.getElementById('mei_logradouro').value = data.logradouro || '';
+                    document.getElementById('mei_bairro').value = data.bairro || '';
+                    document.getElementById('mei_cidade').value = data.localidade || '';
+                    
+                    // Selecionar o estado correto
+                    const estadoSelect = document.getElementById('mei_estado');
+                    if (estadoSelect) {
+                        for (let option of estadoSelect.options) {
+                            if (option.value === data.uf) {
+                                option.selected = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            })
+            .catch(error => {
+                console.log('Erro ao buscar CEP:', error);
+            });
+    }
+    
+    // ===========================================
+    // SUBMIT DO FORMULÁRIO
+    // ===========================================
+    
+    const form = document.getElementById('form-abertura-mei');
+    const btnSubmit = document.getElementById('btn-submit');
+    
+    if (form && btnSubmit) {
+        form.addEventListener('submit', function(e) {
+            // Mostrar loading
+            btnSubmit.querySelector('.btn-text').classList.add('d-none');
+            btnSubmit.querySelector('.btn-loading').classList.remove('d-none');
+            btnSubmit.disabled = true;
+        });
+    }
+    
+    // ===========================================
+    // VALIDAÇÃO EM TEMPO REAL
+    // ===========================================
+    
+    // Adicionar classe de erro nos campos com erro
+    const invalidFields = document.querySelectorAll('.errorlist');
+    invalidFields.forEach(function(errorList) {
+        const input = errorList.previousElementSibling;
+        if (input && (input.classList.contains('form-control') || input.classList.contains('form-select'))) {
+            input.classList.add('is-invalid');
+        }
+    });
+    
+    // ===========================================
+    // SCROLL SUAVE PARA O FORMULÁRIO
+    // ===========================================
+    
+    document.querySelectorAll('a[href="#formulario-mei"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // ===========================================
+    // AUTO-HIDE DOS ALERTAS
+    // ===========================================
+    
+    const alerts = document.querySelectorAll('.alert-container .alert');
+    alerts.forEach(function(alert) {
+        setTimeout(function() {
+            alert.classList.remove('show');
+            setTimeout(() => alert.remove(), 300);
+        }, 5000);
+    });
+});
+</script>
+{% endblock %}

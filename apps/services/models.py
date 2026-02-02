@@ -412,3 +412,224 @@ class CNAE(models.Model):
     
     def __str__(self):
         return f"{self.codigo} - {self.descricao[:50]}"
+
+
+class SolicitacaoAberturaMEI(models.Model):
+    """
+    Modelo para armazenar as solicitações de abertura de MEI.
+    Coleta todos os dados necessários para o processo de abertura.
+    Valor fixo do serviço: R$ 2,00
+    """
+    
+    # Status do processo
+    STATUS_CHOICES = [
+        ('pendente', 'Pendente Pagamento'),
+        ('pago', 'Pago - Aguardando Processamento'),
+        ('em_andamento', 'Em Andamento'),
+        ('documentacao', 'Aguardando Documentação'),
+        ('analise', 'Em Análise'),
+        ('concluido', 'Concluído'),
+        ('cancelado', 'Cancelado'),
+    ]
+    
+    # Formas de atuação do MEI (conforme legislação)
+    FORMA_ATUACAO_CHOICES = [
+        ('estabelecimento_fixo', 'Estabelecimento fixo'),
+        ('internet', 'Internet'),
+        ('porta_a_porta', 'Porta a porta'),
+        ('televenda', 'Televenda'),
+        ('correios', 'Correios'),
+        ('local_fixo_fora_loja', 'Em local fixo fora da loja'),
+        ('maquinas_automaticas', 'Máquinas automáticas'),
+    ]
+    
+    # Estados brasileiros
+    UF_CHOICES = [
+        ('AC', 'Acre'), ('AL', 'Alagoas'), ('AP', 'Amapá'), ('AM', 'Amazonas'),
+        ('BA', 'Bahia'), ('CE', 'Ceará'), ('DF', 'Distrito Federal'), ('ES', 'Espírito Santo'),
+        ('GO', 'Goiás'), ('MA', 'Maranhão'), ('MT', 'Mato Grosso'), ('MS', 'Mato Grosso do Sul'),
+        ('MG', 'Minas Gerais'), ('PA', 'Pará'), ('PB', 'Paraíba'), ('PR', 'Paraná'),
+        ('PE', 'Pernambuco'), ('PI', 'Piauí'), ('RJ', 'Rio de Janeiro'), ('RN', 'Rio Grande do Norte'),
+        ('RS', 'Rio Grande do Sul'), ('RO', 'Rondônia'), ('RR', 'Roraima'), ('SC', 'Santa Catarina'),
+        ('SP', 'São Paulo'), ('SE', 'Sergipe'), ('TO', 'Tocantins'),
+    ]
+    
+    # Valor fixo do serviço
+    VALOR_SERVICO = 2.00
+    
+    # Metadados
+    status = models.CharField(
+        max_length=20, 
+        choices=STATUS_CHOICES, 
+        default='pendente',
+        verbose_name='Status'
+    )
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
+    atualizado_em = models.DateTimeField(auto_now=True, verbose_name='Atualizado em')
+    
+    # Dados pessoais (obrigatórios)
+    nome_completo = models.CharField(
+        max_length=200, 
+        verbose_name='Nome Completo',
+        help_text='Nome completo como consta no documento de identidade'
+    )
+    email = models.EmailField(
+        verbose_name='E-mail',
+        help_text='E-mail para contato e acompanhamento'
+    )
+    telefone = models.CharField(
+        max_length=20, 
+        verbose_name='Telefone',
+        help_text='Telefone com DDD para contato'
+    )
+    cpf = models.CharField(
+        max_length=14, 
+        verbose_name='CPF',
+        help_text='CPF no formato 000.000.000-00'
+    )
+    
+    # Documentos (opcionais)
+    rg = models.CharField(
+        max_length=20, 
+        blank=True, 
+        null=True,
+        verbose_name='RG',
+        help_text='Número do RG'
+    )
+    orgao_expedidor_rg = models.CharField(
+        max_length=20, 
+        blank=True, 
+        null=True,
+        verbose_name='Órgão Expedidor',
+        help_text='Ex: SSP, DETRAN, IFP'
+    )
+    uf_orgao_expedidor = models.CharField(
+        max_length=2, 
+        choices=UF_CHOICES, 
+        blank=True, 
+        null=True,
+        verbose_name='UF do Órgão Expedidor'
+    )
+    
+    # Atividades (CNAE)
+    cnae_primario = models.CharField(
+        max_length=255, 
+        verbose_name='CNAE Primário',
+        help_text='Atividade principal do MEI'
+    )
+    cnae_secundario = models.CharField(
+        max_length=255, 
+        blank=True, 
+        null=True,
+        verbose_name='CNAE Secundário',
+        help_text='Atividade complementar (opcional)'
+    )
+    
+    # Forma de atuação
+    forma_atuacao = models.CharField(
+        max_length=30, 
+        choices=FORMA_ATUACAO_CHOICES,
+        verbose_name='Forma de Atuação',
+        help_text='Como o MEI vai exercer suas atividades'
+    )
+    
+    # Capital social
+    capital_social = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2, 
+        blank=True, 
+        null=True,
+        verbose_name='Capital Social',
+        help_text='Valor inicial investido no negócio (opcional)'
+    )
+    
+    # Endereço completo
+    cep = models.CharField(
+        max_length=10, 
+        verbose_name='CEP',
+        help_text='CEP no formato 00000-000'
+    )
+    logradouro = models.CharField(
+        max_length=200, 
+        verbose_name='Logradouro',
+        help_text='Rua, Avenida, etc.'
+    )
+    numero = models.CharField(
+        max_length=20, 
+        verbose_name='Número'
+    )
+    complemento = models.CharField(
+        max_length=100, 
+        blank=True, 
+        null=True,
+        verbose_name='Complemento',
+        help_text='Apto, Bloco, Sala, etc. (opcional)'
+    )
+    bairro = models.CharField(
+        max_length=100, 
+        verbose_name='Bairro'
+    )
+    cidade = models.CharField(
+        max_length=100, 
+        verbose_name='Cidade'
+    )
+    estado = models.CharField(
+        max_length=2, 
+        choices=UF_CHOICES,
+        verbose_name='Estado'
+    )
+    
+    # Relacionamento com pagamento (opcional, para quando o pagamento for confirmado)
+    pagamento = models.ForeignKey(
+        'payments.Pagamento',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='solicitacoes_mei',
+        verbose_name='Pagamento'
+    )
+    
+    # Observações internas (para uso administrativo)
+    observacoes = models.TextField(
+        blank=True, 
+        null=True,
+        verbose_name='Observações',
+        help_text='Anotações internas sobre o processo'
+    )
+    
+    class Meta:
+        verbose_name = 'Solicitação de Abertura MEI'
+        verbose_name_plural = 'Solicitações de Abertura MEI'
+        ordering = ['-criado_em']
+    
+    def __str__(self):
+        return f"MEI #{self.id} - {self.nome_completo} ({self.get_status_display()})"
+    
+    @property
+    def valor_servico(self):
+        """Retorna o valor fixo do serviço de abertura MEI"""
+        return self.VALOR_SERVICO
+    
+    def cpf_formatado(self):
+        """Retorna o CPF formatado para exibição"""
+        cpf = ''.join(filter(str.isdigit, self.cpf))
+        if len(cpf) == 11:
+            return f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
+        return self.cpf
+    
+    def telefone_formatado(self):
+        """Retorna o telefone formatado para exibição"""
+        tel = ''.join(filter(str.isdigit, self.telefone))
+        if len(tel) == 11:
+            return f"({tel[:2]}) {tel[2:7]}-{tel[7:]}"
+        elif len(tel) == 10:
+            return f"({tel[:2]}) {tel[2:6]}-{tel[6:]}"
+        return self.telefone
+    
+    def endereco_completo(self):
+        """Retorna o endereço formatado"""
+        endereco = f"{self.logradouro}, {self.numero}"
+        if self.complemento:
+            endereco += f" - {self.complemento}"
+        endereco += f", {self.bairro}, {self.cidade}/{self.estado} - CEP: {self.cep}"
+        return endereco

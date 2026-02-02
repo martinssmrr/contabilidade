@@ -452,3 +452,254 @@ def servicos_view(request):
     }
     
     return render(request, 'segments/servicos.html', context)
+
+
+# =============================================================================
+# VIEWS DE ABERTURA MEI (Página /abrir-mei/)
+# =============================================================================
+
+def abrir_mei_view(request):
+    """
+    View da Landing Page de Abertura de MEI.
+    Exibe informações sobre o serviço e planos.
+    """
+    from apps.testimonials.models import Testimonial
+    
+    # Buscar depoimentos para exibir na página
+    testimonials = Testimonial.objects.filter(is_active=True)[:6]
+    
+    context = {
+        'testimonials': testimonials,
+    }
+    
+    return render(request, 'services/abrir_mei.html', context)
+
+
+def solicitar_abertura_mei_view(request):
+    """
+    View do formulário de cadastro para Abertura de MEI.
+    Ao submeter o formulário com sucesso, redireciona para a página de pagamento.
+    Valor do serviço: R$ 129,90
+    """
+    from .forms import AberturaMEIForm
+    from .models import SolicitacaoAberturaMEI
+    
+    if request.method == 'POST':
+        form = AberturaMEIForm(request.POST)
+        
+        if form.is_valid():
+            # Salvar a solicitação no banco de dados
+            solicitacao = form.save(commit=False)
+            solicitacao.status = 'pendente'
+            solicitacao.save()
+            
+            # Armazenar o ID da solicitação na sessão para uso na página de pagamento
+            request.session['solicitacao_mei_id'] = solicitacao.id
+            
+            # Adicionar mensagem de sucesso
+            messages.success(
+                request, 
+                'Dados salvos com sucesso! Agora finalize o pagamento para iniciar o processo de abertura do seu MEI.'
+            )
+            
+            # Redirecionar para a página de checkout/pagamento
+            return redirect('services:checkout_mei', solicitacao_id=solicitacao.id)
+        else:
+            # Se o formulário tiver erros, exibir mensagem
+            messages.error(request, 'Por favor, corrija os erros no formulário.')
+    else:
+        form = AberturaMEIForm()
+    
+    context = {
+        'form': form,
+        'valor_servico': SolicitacaoAberturaMEI.VALOR_SERVICO,
+    }
+    
+    return render(request, 'services/abrir_mei_form.html', context)
+
+
+@login_required
+def checkout_mei_view(request, solicitacao_id):
+    """
+    Página de checkout/pagamento para abertura de MEI.
+    Exibe resumo da solicitação e opções de pagamento.
+    Valor fixo: R$ 2,00
+    """
+    from .models import SolicitacaoAberturaMEI
+    from apps.payments.models import Pagamento
+    import mercadopago
+    from django.conf import settings
+    
+    # Buscar a solicitação
+    solicitacao = get_object_or_404(SolicitacaoAberturaMEI, id=solicitacao_id)
+    
+    # Verificar se o ID na sessão corresponde (segurança básica)
+    session_id = request.session.get('solicitacao_mei_id')
+    # Se admin/staff, permite visualizar. Se usuário comum, valida sessão OU dono
+    if not request.user.is_staff and session_id != solicitacao.id:
+        # Se usuário logado e CPF bate com a solicitação (opcional)
+        # Por enquanto mantemos a lógica simples:
+        messages.warning(request, 'Você precisa preencher o formulário para acessar o pagamento.')
+        return redirect('services:abrir_mei')
+    
+    # Verificar se já foi pago
+    if solicitacao.status == 'pago':
+        messages.info(request, 'Esta solicitação já foi paga.')
+        return redirect('services:mei_sucesso', solicitacao_id=solicitacao.id)
+
+    # ----------------------------------------------------
+    # Integração Mercado Pago
+    # ----------------------------------------------------
+    
+    # 1. Recuperar ou criar Pagamento
+    if not solicitacao.pagamento:
+        pagamento = Pagamento.objects.create(
+            valor=solicitacao.VALOR_SERVICO,
+            status='pendente',
+            cliente=request.user if request.user.is_authenticated else None,
+            cliente_nome=solicitacao.nome_completo,
+            cliente_email=solicitacao.email,
+            cliente_cpf=solicitacao.cpf,
+        )
+        solicitacao.pagamento = pagamento
+        solicitacao.save()
+    else:
+        pagamento = solicitacao.pagamento
+        # Atualiza valor caso tenha mudado (improvável para este caso, mas boa prática)
+        if pagamento.valor != solicitacao.VALOR_SERVICO and pagamento.status == 'pendente':
+            pagamento.valor = solicitacao.VALOR_SERVICO
+            pagamento.save()
+
+    # 2. Configurar SDK e Preferência
+    sdk = mercadopago.SDK(settings.MERCADO_PAGO_ACCESS_TOKEN)
+    site_url = settings.SITE_URL.rstrip('/')
+    notification_url = f"{site_url}/payments/webhook/mercadopago/"
+
+    # Preferência
+    preference_data = {
+        "items": [
+            {
+                "id": f"MEI-{solicitacao.id}",
+                "title": f"Abertura MEI - {solicitacao.nome_completo}",
+                "description": f"Serviço de Abertura de MEI para {solicitacao.nome_completo}",
+                "category_id": "services",
+                "quantity": 1,
+                "currency_id": "BRL",
+                "unit_price": float(solicitacao.VALOR_SERVICO)
+            }
+        ],
+        "external_reference": str(pagamento.external_reference),
+        "statement_descriptor": "VETORIAL MEI",
+        "notification_url": notification_url,
+        "payer": {
+            "name": solicitacao.nome_completo,
+            "email": solicitacao.email,
+            "identification": {
+                "type": "CPF",
+                "number": ''.join(filter(str.isdigit, solicitacao.cpf))
+            }
+        },
+        "back_urls": {
+            "success": f"{site_url}/services/abrir-mei/sucesso/{solicitacao.id}/",
+            "failure": f"{site_url}/services/abrir-mei/checkout/{solicitacao.id}/",
+            "pending": f"{site_url}/services/abrir-mei/checkout/{solicitacao.id}/"
+        },
+        "auto_return": "approved",
+    }
+    
+    preference_id = None
+    try:
+        # Tenta criar/atualizar preferência apenas se não tiver ID salvo ou se quiser renovar
+        # Aqui criaremos sempre uma nova para garantir dados atualizados ou usar a do pagamento se validada
+        preference_response = sdk.preference().create(preference_data)
+        preference = preference_response.get("response", {})
+        preference_id = preference.get("id")
+        
+        if preference_id:
+            pagamento.mp_preference_id = preference_id
+            pagamento.save()
+        else:
+             # Log erro
+            print(f"Erro MP Create Preference: {preference_response}")
+
+    except Exception as e:
+        print(f"Exception MP: {e}")
+
+    context = {
+        'solicitacao': solicitacao,
+        'valor_servico': solicitacao.VALOR_SERVICO,
+        'pagamento': pagamento,
+        'preference_id': preference_id,
+        'mp_public_key': settings.MERCADO_PAGO_PUBLIC_KEY,
+        'site_url': site_url,
+    }
+    
+    return render(request, 'services/checkout_mei.html', context)
+
+
+def processar_pagamento_mei(request, solicitacao_id):
+    """
+    Processa o pagamento da abertura de MEI.
+    Esta view será integrada com o gateway de pagamento (Mercado Pago).
+    Por enquanto, apenas marca como processando e redireciona.
+    """
+    from .models import SolicitacaoAberturaMEI
+    
+    if request.method != 'POST':
+        return redirect('services:checkout_mei', solicitacao_id=solicitacao_id)
+    
+    solicitacao = get_object_or_404(SolicitacaoAberturaMEI, id=solicitacao_id)
+    
+    # Verificar se já foi pago
+    if solicitacao.status == 'pago':
+        messages.info(request, 'Esta solicitação já foi paga.')
+        return redirect('services:mei_sucesso', solicitacao_id=solicitacao.id)
+    
+    # TODO: Integração com Mercado Pago
+    # Por enquanto, criar uma preferência de pagamento fictícia
+    # e redirecionar para a página de sucesso para demonstração
+    
+    # Integração com Mercado Pago (quando implementado):
+    # 1. Criar preferência de pagamento
+    # 2. Redirecionar para o checkout do Mercado Pago
+    # 3. Webhook receberá a confirmação do pagamento
+    
+    # Para demonstração, marcar como pago
+    # Em produção, isso será feito pelo webhook do gateway
+    solicitacao.status = 'pago'
+    solicitacao.save()
+    
+    messages.success(request, 'Pagamento processado com sucesso!')
+    return redirect('obrigado')
+
+
+def mei_sucesso_view(request, solicitacao_id):
+    """
+    Página de sucesso após pagamento da abertura de MEI.
+    Exibe confirmação e próximos passos.
+    """
+    from .models import SolicitacaoAberturaMEI
+    
+    solicitacao = get_object_or_404(SolicitacaoAberturaMEI, id=solicitacao_id)
+
+    # Verifica status do pagamento vinculado para atualizar a solicitação se necessário
+    if solicitacao.pagamento: 
+        status_pagamento = solicitacao.pagamento.status
+        # Se o pagamento foi aprovado mas a solicitação ainda consta pendente
+        if status_pagamento == 'aprovado' and solicitacao.status == 'pendente':
+            solicitacao.status = 'pago'
+            solicitacao.save()
+        # Se for processando (Pix pode demorar segundos ou estar em processamento)
+        elif status_pagamento == 'processando' and solicitacao.status == 'pendente':
+            # Mantém pendente ou muda para um status intermediário se houver
+            pass
+    
+    # Limpar a sessão
+    if 'solicitacao_mei_id' in request.session:
+        del request.session['solicitacao_mei_id']
+    
+    context = {
+        'solicitacao': solicitacao,
+    }
+    
+    return render(request, 'services/mei_sucesso.html', context)
