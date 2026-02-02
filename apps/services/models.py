@@ -418,7 +418,7 @@ class SolicitacaoAberturaMEI(models.Model):
     """
     Modelo para armazenar as solicitações de abertura de MEI.
     Coleta todos os dados necessários para o processo de abertura.
-    Valor fixo do serviço: R$ 2,00
+    Valor fixo do serviço: R$ 129,90
     """
     
     # Status do processo
@@ -455,7 +455,7 @@ class SolicitacaoAberturaMEI(models.Model):
     ]
     
     # Valor fixo do serviço
-    VALOR_SERVICO = 2.00
+    VALOR_SERVICO = 129.90
     
     # Metadados
     status = models.CharField(

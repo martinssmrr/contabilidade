@@ -523,7 +523,7 @@ def checkout_mei_view(request, solicitacao_id):
     """
     Página de checkout/pagamento para abertura de MEI.
     Exibe resumo da solicitação e opções de pagamento.
-    Valor fixo: R$ 2,00
+    Valor fixo: R$ 129,90
     """
     from .models import SolicitacaoAberturaMEI
     from apps.payments.models import Pagamento
