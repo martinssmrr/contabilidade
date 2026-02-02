@@ -496,6 +496,15 @@ def solicitar_abertura_mei_view(request):
             # Armazenar o ID da solicitação na sessão para uso na página de pagamento
             request.session['solicitacao_mei_id'] = solicitacao.id
             
+            # Verificar se já está autenticado
+            if not request.user.is_authenticated:
+                # Redirecionar para criação de usuário
+                messages.success(
+                    request, 
+                    'Dados iniciais salvos! Crie sua conta ou faça login para finalizar o pedido.'
+                )
+                return redirect('services:register_mei', solicitacao_id=solicitacao.id)
+            
             # Adicionar mensagem de sucesso
             messages.success(
                 request, 
@@ -516,6 +525,82 @@ def solicitar_abertura_mei_view(request):
     }
     
     return render(request, 'services/abrir_mei_form.html', context)
+
+
+def register_mei_view(request, solicitacao_id):
+    """
+    View para cadastro/login de usuário durante o fluxo de MEI
+    """
+    from django.contrib.auth import login, get_user_model, authenticate
+    from django.contrib.auth.password_validation import validate_password
+    from django.core.exceptions import ValidationError as DjangoValidationError
+    from .models import SolicitacaoAberturaMEI
+    
+    User = get_user_model()
+    solicitacao = get_object_or_404(SolicitacaoAberturaMEI, id=solicitacao_id)
+    
+    if request.user.is_authenticated:
+        return redirect('services:checkout_mei', solicitacao_id=solicitacao.id)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action') # 'register' ou 'login'
+        
+        if action == 'register':
+            first_name = request.POST.get('first_name')
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            confirm_password = request.POST.get('confirm_password')
+            
+            # Validações básicas
+            if not all([first_name, email, password, confirm_password]):
+                messages.error(request, 'Preencha todos os campos.')
+            elif password != confirm_password:
+                messages.error(request, 'As senhas não conferem.')
+            elif User.objects.filter(email=email).exists():
+                messages.error(request, 'Este e-mail já está cadastrado. Faça login.')
+            else:
+                try:
+                    # Validar senha
+                    validate_password(password)
+                    
+                    # Criar usuário
+                    username = email # Username é o email
+                    user = User.objects.create_user(
+                        username=username,
+                        email=email,
+                        password=password,
+                        first_name=first_name
+                    )
+                    
+                    # Login automático
+                    login(request, user)
+                    
+                    messages.success(request, 'Conta criada com sucesso!')
+                    return redirect('services:checkout_mei', solicitacao_id=solicitacao.id)
+                    
+                except DjangoValidationError as e:
+                    for error in e.messages:
+                        messages.error(request, error)
+                except Exception as e:
+                    messages.error(request, 'Erro ao criar conta. Tente novamente.')
+                    print(f"Erro register MEI: {e}")
+                    
+        elif action == 'login':
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, f'Bem-vindo de volta, {user.first_name}!')
+                return redirect('services:checkout_mei', solicitacao_id=solicitacao.id)
+            else:
+                messages.error(request, 'E-mail ou senha inválidos.')
+
+    context = {
+        'solicitacao': solicitacao,
+    }
+    return render(request, 'services/register_mei.html', context)
 
 
 @login_required

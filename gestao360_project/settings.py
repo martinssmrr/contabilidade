@@ -429,3 +429,11 @@ CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutos
 # CONFIGURAÇÕES DO SITE
 # ==================================
 SITE_URL = os.getenv('SITE_URL', 'http://localhost:8000')
+
+# ==================================
+# CONFIGURAÇÕES DE LOGIN
+# ==================================
+LOGIN_URL = '/users/login/'
+LOGIN_REDIRECT_URL = '/users/area-cliente/'
+LOGOUT_REDIRECT_URL = '/users/login/'
+

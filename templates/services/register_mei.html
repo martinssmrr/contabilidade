@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Identificação - Abertura MEI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-page {
+        padding: 4rem 1rem;
+        background: #f8f9fa;
+        min-height: 80vh;
+    }
+    
+    .auth-container {
+        max-width: 900px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
+    }
+    
+    @media (max-width: 768px) {
+        .auth-container {
+            grid-template-columns: 1fr;
+        }
+        .separator {
+            display: none;
+        }
+    }
+    
+    .auth-box {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    
+    .auth-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1A237E;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid #3ef47c;
+        padding-bottom: 0.5rem;
+        display: inline-block;
+    }
+    
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #4b5563;
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+    
+    .form-control:focus {
+        border-color: #0c63d1;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(12, 99, 209, 0.1);
+    }
+    
+    .btn-auth {
+        width: 100%;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .btn-login {
+        background: #e5e7eb;
+        color: #374151;
+    }
+    .btn-login:hover {
+        background: #d1d5db;
+    }
+    
+    .btn-register {
+        background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
+        color: white;
+    }
+    .btn-register:hover {
+        opacity: 0.9;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="text-center mb-5">
+        <h1 style="color: #1A237E; font-weight: 700;">Estamos quase lá!</h1>
+        <p class="text-muted" style="font-size: 1.1rem;">Para finalizar seu pedido de Abertura MEI, crie uma conta ou faça login.</p>
+    </div>
+
+    <div class="auth-container">
+        <!-- Login -->
+        <div class="auth-box">
+            <h2 class="auth-title">Já tenho conta</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="login">
+                
+                <div class="form-group">
+                    <label class="form-label">E-mail</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Senha</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                
+                <button type="submit" class="btn-auth btn-login">
+                    Entrar e Continuar
+                </button>
+            </form>
+        </div>
+
+        <!-- Registro -->
+        <div class="auth-box" style="border: 2px solid #0c63d1;">
+            <div style="background: #e3f2fd; color: #0c63d1; padding: 0.5rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.9rem; text-align: center; font-weight: 600;">
+                Recomendado para novos clientes
+            </div>
+            <h2 class="auth-title">Criar nova conta</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="register">
+                
+                <div class="form-group">
+                    <label class="form-label">Nome Completo</label>
+                    <input type="text" name="first_name" class="form-control" value="{{ solicitacao.nome_completo|default:'' }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">E-mail</label>
+                    <input type="email" name="email" class="form-control" value="{{ solicitacao.email|default:'' }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Senha</label>
+                    <input type="password" name="password" class="form-control" required>
+                    <small class="text-muted">Mínimo 8 caracteres</small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Confirmar Senha</label>
+                    <input type="password" name="confirm_password" class="form-control" required>
+                </div>
+                
+                <button type="submit" class="btn-auth btn-register">
+                    Criar Conta e Continuar
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

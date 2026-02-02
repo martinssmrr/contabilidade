@@ -10,6 +10,7 @@ urlpatterns = [
     # Serviços
     path('abrir-mei/', views.abrir_mei_view, name='abrir_mei'),
     path('abrir-mei/solicitar/', views.solicitar_abertura_mei_view, name='solicitar_abertura_mei'),
+    path('abrir-mei/cadastrar-usuario/<int:solicitacao_id>/', views.register_mei_view, name='register_mei'),
     path('abrir-mei/checkout/<int:solicitacao_id>/', views.checkout_mei_view, name='checkout_mei'),
     path('abrir-mei/processar-pagamento/<int:solicitacao_id>/', views.processar_pagamento_mei, name='processar_pagamento_mei'),
     path('abrir-mei/sucesso/<int:solicitacao_id>/', views.mei_sucesso_view, name='mei_sucesso'),
