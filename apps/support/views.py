@@ -264,7 +264,7 @@ def api_processos_abertura_detail(request, pk):
                 data['pagamento'] = {
                     'plano': 'Abertura MEI',
                     'valor': f"R$ {mei.pagamento.valor}",
-                    'data': mei.pagamento.data_aprovacao.strftime('%d/%m/%Y %H:%M') if mei.pagamento.data_aprovacao else '-',
+                    'data': mei.pagamento.pago_em.strftime('%d/%m/%Y %H:%M') if mei.pagamento.pago_em else '-',
                     'confirmado': 'Sim' if mei.pagamento.status == 'approved' else 'Não'
                 }
                 
