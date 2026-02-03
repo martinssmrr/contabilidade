@@ -21,6 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from apps.testimonials.models import Testimonial
+from apps.services import views as service_views  # Added import
 
 # Customização do Admin
 admin.site.site_header = "Vetorial - Administração"
@@ -75,10 +76,19 @@ urlpatterns = [
     # Adicionar mais URLs conforme necessário:
     # path("accounts/", include('django.contrib.auth.urls')),  # Login/Logout padrão
     path("services/", include('apps.services.urls')),
+
+    # URLs Raiz para páginas de serviços (Solicitadas pelo usuário)
+    path("contabilidade-mei/", service_views.contabilidade_mei_view_debug, name='contabilidade_mei_lp'),
+    path("contabilidade-mei/contratarplano", service_views.contratar_plano_mei_view, name='contratar_plano_mei'),
+
+    # Alias para Abrir MEI na raiz
+    path("abrir-mei/", service_views.abrir_mei_view, name='abrir_mei_root'),
+    path("abrir-mei/contratarplano", service_views.contratar_plano_mei_view, name='contratar_plano_abrir_mei'),
+
     path("blog/", include('apps.blog.urls')),
     path("users/", include('apps.users.urls')),
     path("documents/", include('apps.documents.urls')),
-    # path("payments/", include('apps.payments.urls')),
+    path("payments/", include('apps.payments.urls')),
     # path("support/", include('apps.support.urls')),
 ]
 

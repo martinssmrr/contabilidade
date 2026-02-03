@@ -23,7 +23,7 @@ from django.views.generic import TemplateView
 from django.contrib.sitemaps.views import sitemap
 from django.http import JsonResponse
 from apps.testimonials.models import Testimonial
-from apps.services.views import calculadora_clt_pj, servicos_view
+from apps.services.views import calculadora_clt_pj, servicos_view, contabilidade_mei_view
 from apps.blog.sitemaps import StaticViewSitemap, BlogPostSitemap, ServicesSitemap
 
 # Customização do Admin
@@ -201,7 +201,7 @@ urlpatterns = [
     
     
     # Novos Serviços
-    path("contabilidade-mei/", TemplateView.as_view(template_name='services/contabilidade_mei.html'), name='contabilidade_mei'),
+    path("contabilidade-mei/", contabilidade_mei_view, name='contabilidade_mei'),
     path("endereco-virtual/", TemplateView.as_view(template_name='services/endereco_virtual.html'), name='endereco_virtual'),
     path("certificado-digital/", TemplateView.as_view(template_name='services/certificado_digital.html'), name='certificado_digital'),
     path("emissor-nota-fiscal/", TemplateView.as_view(template_name='services/emissor_nota_fiscal.html'), name='emissor_nota_fiscal'),

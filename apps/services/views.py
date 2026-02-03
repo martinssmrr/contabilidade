@@ -474,6 +474,27 @@ def abrir_mei_view(request):
     
     return render(request, 'services/abrir_mei.html', context)
 
+def contabilidade_mei_view(request):
+    """
+    View da Landing Page de Contabilidade para MEI.
+    Exibe planos específicos para MEI e depoimentos.
+    """
+    from apps.testimonials.models import Testimonial
+    from .models import Plano
+    
+    # Buscar planos MEI
+    planos_mei = Plano.objects.filter(ativo=True, categoria='mei').order_by('ordem', 'preco')
+
+    # Buscar depoimentos
+    testimonials = Testimonial.objects.filter(is_active=True)[:6]
+    
+    context = {
+        'planos_mei': planos_mei,
+        'testimonials': testimonials,
+    }
+    
+    return render(request, 'services/contabilidade_mei.html', context)
+
 
 def solicitar_abertura_mei_view(request):
     """
@@ -525,6 +546,29 @@ def solicitar_abertura_mei_view(request):
     }
     
     return render(request, 'services/abrir_mei_form.html', context)
+
+
+def contratar_plano_mei_view(request):
+    """
+    View para processar a escolha de plano da página Contabilidade MEI.
+    Redireciona para o formulário de contratação ou WhatsApp com a mensagem pronta.
+    """
+    plano = "Básico"
+    if 'planosecundar' in request.GET:
+        plano = "Profissional"
+    elif 'planopremium' in request.GET:
+        plano = "Premium"
+        
+    # Aqui você pode redirecionar para um checkout ou form de contato
+    # Por enquanto, vou redirecionar para o WhatsApp com uma mensagem personalizada
+    
+    texto = f"Olá! Gostaria de contratar o Plano {plano} para Contabilidade MEI."
+    import urllib.parse
+    texto_encoded = urllib.parse.quote(texto)
+    
+    url_whatsapp = f"https://wa.me/551131642284?text={texto_encoded}"
+    
+    return redirect(url_whatsapp)
 
 
 def register_mei_view(request, solicitacao_id):

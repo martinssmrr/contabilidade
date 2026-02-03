@@ -1,9 +1,313 @@
-{% extends 'base.html' %}
-{% load static %}
 
-{% block title %}Contabilidade MEI - Vetorial Contabilidade{% endblock %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Contabilidade MEI - Vetorial Contabilidade</title>
 
-{% block content %}
+    <!-- Google Tag Manager -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=	G-70MDDS47FX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-70MDDS47FX');
+    </script>
+    <!-- End Google Tag Manager -->
+    
+    <!-- Microsoft Clarity -->
+     <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "v7j10471jt");
+    </script>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Abra sua empresa sem burocracia com a Vetorial. Contabilidade online especializada em abertura de empresas, planejamento tributário e gestão contábil.">
+    <meta name="keywords" content="contabilidade, vetorial contabilidade, contabilidade online, abrir empresa, abrir cnpj, abertura de empresa, contador online, planejamento tributário">
+    <meta name="author" content="Vetorial Contabilidade">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://vetorialcontabilidade.com.br">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vetorialcontabilidade.com.br">
+    <meta property="og:title" content="Vetorial - A Melhor Contabilidade Online">
+    <meta property="og:description" content="Abra sua empresa sem burocracia com a Vetorial. Contabilidade online especializada.">
+    <meta property="og:image" content="https://vetorialcontabilidade.com.br/static/img/logo.webp">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://vetorialcontabilidade.com.br">
+    <meta property="twitter:title" content="Vetorial - A Melhor Contabilidade Online">
+    <meta property="twitter:description" content="Abra sua empresa sem burocracia com a Vetorial.">
+    <meta property="twitter:image" content="https://vetorialcontabilidade.com.br/static/img/logo.webp">
+    
+    <!-- Preconnect para recursos externos (antes do CSS) -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="preload" as="image" href="/static/img/herosection.webp">
+    
+    <!-- CSS Crítico Inline - Above the Fold -->
+    <style>
+        :root{--primary-color:#3ef47c;--primary-dark:#2ed66b;--secondary-color:#0c63d1;--secondary-dark:#0a4fa3;--dark-color:#1f2937;--light-color:#f9fafb;--white-color:#fff;--gray-color:#6b7280}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter','Segoe UI',Roboto,sans-serif;min-height:100vh;display:flex;flex-direction:column;background-color:var(--light-color);color:var(--dark-color);line-height:1.6;overflow-x:hidden}
+        main{flex:1;padding:0;margin:0;width:100%}
+        
+        /* Bootstrap Grid Crítico */
+        .container,.container-fluid{width:100%;padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}
+        @media(min-width:576px){.container{max-width:540px}}
+        @media(min-width:768px){.container{max-width:720px}}
+        @media(min-width:992px){.container{max-width:960px}}
+        @media(min-width:1200px){.container{max-width:1140px}}
+        .row{display:flex;flex-wrap:wrap;margin-right:-15px;margin-left:-15px}
+        .col,.col-1,.col-2,.col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-9,.col-10,.col-11,.col-12,.col-lg-6,.col-lg-5,.col-md-6{position:relative;width:100%;padding-right:15px;padding-left:15px}
+        @media(min-width:768px){.col-md-6{flex:0 0 50%;max-width:50%}}
+        @media(min-width:992px){.col-lg-5{flex:0 0 41.666667%;max-width:41.666667%}.col-lg-6{flex:0 0 50%;max-width:50%}}
+        
+        /* Utilitários Bootstrap Críticos */
+        .d-flex{display:flex!important}.d-none{display:none!important}.d-block{display:block!important}
+        .justify-content-center{justify-content:center!important}.justify-content-between{justify-content:space-between!important}
+        .align-items-center{align-items:center!important}.flex-column{flex-direction:column!important}
+        .text-center{text-align:center!important}.text-white{color:#fff!important}
+        .fw-bold{font-weight:700!important}.fw-semibold{font-weight:600!important}
+        .mb-0{margin-bottom:0!important}.mb-2{margin-bottom:.5rem!important}.mb-3{margin-bottom:1rem!important}.mb-4{margin-bottom:1.5rem!important}
+        .mt-3{margin-top:1rem!important}.mt-4{margin-top:1.5rem!important}
+        .py-3{padding-top:1rem!important;padding-bottom:1rem!important}.py-5{padding-top:3rem!important;padding-bottom:3rem!important}
+        .px-3{padding-left:1rem!important;padding-right:1rem!important}.px-4{padding-left:1.5rem!important;padding-right:1.5rem!important}
+        .p-4{padding:1.5rem!important}
+        .gap-2{gap:.5rem!important}.gap-3{gap:1rem!important}
+        .h1,.h2,.h3,h1,h2,h3{margin-bottom:.5rem;font-weight:700;line-height:1.2}
+        .h1,h1{font-size:2.5rem}.h2,h2{font-size:2rem}.h3,h3{font-size:1.75rem}
+        .lead{font-size:1.25rem;font-weight:300}
+        .img-fluid{max-width:100%;height:auto}
+        @media(min-width:992px){.d-lg-block{display:block!important}.d-lg-none{display:none!important}}
+        @media(max-width:991.98px){.d-lg-block{display:none!important}}
+        
+        /* Navbar Crítico */
+        .navbar{background:#0a4fa3!important;box-shadow:0 2px 20px rgba(0,0,0,.1);padding:.25rem 0;position:fixed;top:0;width:100%;z-index:1000;transition:all .3s ease}
+        .navbar.transparent{background:transparent!important;box-shadow:none;position:absolute}
+        .navbar.scrolled{background:#0a4fa3!important;box-shadow:0 2px 20px rgba(0,0,0,.1);position:fixed;top:0}
+        .navbar-brand{font-size:1.5rem;font-weight:700;letter-spacing:.5px;display:flex;align-items:center;gap:.75rem}
+        .navbar-brand img{height:75px;width:auto;filter:brightness(0) invert(1)}
+        .navbar-nav{display:flex;flex-direction:column;padding-left:0;margin-bottom:0;list-style:none}
+        @media(min-width:992px){.navbar-nav{flex-direction:row}}
+        .nav-link{display:block;padding:.5rem 1rem;color:rgba(255,255,255,.9);text-decoration:none;font-weight:500;transition:all .3s ease}
+        .nav-link:hover{color:var(--primary-color)!important}
+        .navbar-toggler{padding:.25rem .75rem;font-size:1.25rem;line-height:1;background-color:transparent;border:1px solid rgba(255,255,255,.3);border-radius:.375rem}
+        .navbar-toggler-icon{display:inline-block;width:1.5em;height:1.5em;vertical-align:middle;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:center;background-size:100%}
+        .navbar-collapse{flex-basis:100%;flex-grow:1;align-items:center}
+        @media(min-width:992px){.navbar-expand-lg .navbar-collapse{display:flex!important;flex-basis:auto}.navbar-expand-lg .navbar-toggler{display:none}}
+        @media(max-width:991.98px){.navbar-collapse{display:none}.navbar-collapse.show{display:block}}
+        
+        /* Hero Section Crítico */
+        .hero-section{position:relative;overflow:hidden;background-size:cover;background-position:center top;background-repeat:no-repeat;height:850px;display:flex;align-items:center;padding:0!important;margin:0!important;width:100vw;padding-top:100px!important}
+        .hero-section .container{padding-top:0!important;padding-bottom:0!important;max-width:100%;width:100%;position:relative;z-index:1}
+        .hero-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 30% 50%,rgba(62,244,124,.1) 0%,transparent 50%);pointer-events:none}
+        
+        /* Botões Críticos */
+        .btn{display:inline-block;font-weight:500;line-height:1.5;text-align:center;text-decoration:none;vertical-align:middle;cursor:pointer;user-select:none;border:1px solid transparent;padding:.5rem 1rem;font-size:1rem;border-radius:.375rem;transition:all .3s ease}
+        .btn-primary{color:#fff;background-color:var(--secondary-color);border-color:var(--secondary-color)}
+        .btn-primary:hover{background-color:var(--secondary-dark);border-color:var(--secondary-dark)}
+        .btn-success{color:#fff;background-color:var(--primary-color);border-color:var(--primary-color)}
+        .btn-success:hover{background-color:var(--primary-dark);border-color:var(--primary-dark)}
+        .btn-lg{padding:.75rem 1.5rem;font-size:1.125rem;border-radius:.5rem}
+        .btn-outline-primary{color:var(--secondary-color);border-color:var(--secondary-color);background-color:transparent}
+        .btn-outline-primary:hover{color:#fff;background-color:var(--secondary-color)}
+        .rounded-pill{border-radius:50rem!important}
+        
+        /* Footer Crítico */
+        .site-footer{background:#0f1724;color:#e6eef8;font-size:14px;line-height:1.4}
+        .site-footer a{color:#cfe7ff;text-decoration:none}
+    </style>
+    
+    <!-- CSS Externo -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1.0">
+    <link rel="stylesheet" href="/static/css/footer.css?v=2.0">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon.png">
+    <link rel="apple-touch-icon" href="/static/img/favicon.png">
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Vetorial Contabilidade",
+  "alternateName": "Vetorial",
+  "url": "https://vetorialcontabilidade.com.br",
+  "logo": "https://vetorialcontabilidade.com.br/static/img/logo.png",
+  "description": "Contabilidade online especializada em abertura de empresas, planejamento tributário e gestão contábil completa.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "BR",
+    "addressLocality": "Brasil"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+55-61-99831-1920",
+    "contactType": "customer service",
+    "availableLanguage": ["Portuguese"]
+  },
+  "sameAs": [
+    "https://www.facebook.com/vetorialcontabilidade",
+    "https://www.instagram.com/vetorialcontabilidade",
+    "https://www.linkedin.com/company/vetorialcontabilidade"
+  ],
+  "areaServed": "BR",
+  "serviceType": [
+    "Contabilidade",
+    "Abertura de Empresas",
+    "Planejamento Tributário",
+    "Gestão Contábil"
+  ]
+}
+
+    </script>
+    
+    
+
+    <style>
+        .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; }
+        .form-control:focus, .form-select:focus { border-color: #3ef47c; box-shadow: 0 0 0 0.25rem rgba(62, 244, 124, 0.25); }
+        .modal-content { border: none; }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=AW-17807873091"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+     
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            
+            <img src="/static/img/logo.webp" alt="Vetorial" width="88" height="88">
+
+            
+
+            <!-- <strong>Vetorial</strong> -->
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Menu à esquerda (ao lado da logo) -->
+            <ul class="navbar-nav me-auto ms-lg-4">
+                <!-- 1º Botão: Abrir Empresa -->
+                <li class="nav-item me-lg-2">
+                    <a class="nav-link fs-6 px-3" href="/abrir-empresa/">Abrir Empresa</a>
+                </li>
+            
+
+                <!-- 2º Botão: Trocar Contador -->
+                <li class="nav-item me-lg-2">
+                    <a class="nav-link fs-6 px-3" href="/trocar-contador/">Trocar Contador</a>
+                </li>
+
+                <!-- Botão Planos -->
+                 <li class="nav-item me-lg-2">
+                    <a class="nav-link fs-6 px-3" href="/services/planos/">Planos</a>
+                 </li>
+
+                <!-- 3º Menu: Serviços -->
+                <li class="nav-item dropdown me-lg-2">
+                    <a class="nav-link dropdown-toggle fs-6 px-3" href="#" id="navbarServicos" role="button" 
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Serviços
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarServicos">
+                        <li><a class="dropdown-item" href="/abrir-empresa/">Abrir Empresa</a></li>
+                        <li><a class="dropdown-item" href="/trocar-contador/">Trocar de Contador</a></li>
+                        <li><a class="dropdown-item" href="/abrir-mei/">Abrir MEI</a></li>
+                        <li><a class="dropdown-item" href="/contabilidade-online/">Contabilidade Online</a></li>
+                        <li><a class="dropdown-item" href="/contabilidade-mei/">Contabilidade MEI</a></li>
+                        <li><a class="dropdown-item" href="/deixar-mei/">Deixar de Ser MEI</a></li>
+                        <li><a class="dropdown-item" href="/endereco-virtual/">Endereço Virtual</a></li>
+                        <li><a class="dropdown-item" href="/certificado-digital/">Certificado Digital</a></li>
+                        <li><a class="dropdown-item" href="/emissor-nota-fiscal/">Emissor de Nota Fiscal</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item fw-bold text-primary" href="/services/">Todos os Serviços</a></li>
+                    </ul>
+                </li>
+
+                <!-- 4º Menu: Segmentos -->
+                <li class="nav-item dropdown me-lg-2">
+                    <a class="nav-link dropdown-toggle fs-6 px-3" href="#" id="navbarSegmentos" role="button" 
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Segmentos
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarSegmentos">
+                        <li><a class="dropdown-item" href="/segmentos/servicos/">Serviços</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/comercio/">Comércio</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/saude/">Saúde</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/direito/">Direito</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/engenharia/">Engenharia</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/agronegocio/">Agronegócio</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/turismo/">Turismo</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/tecnologia/">Profissionais de Tecnologia</a></li>
+                        <li><a class="dropdown-item" href="/segmentos/outros/">Demais categorias atendidas</a></li>
+                    </ul>
+                </li>
+
+                <!-- 5º Menu: Conteúdos -->
+                <li class="nav-item dropdown me-lg-2">
+                    <a class="nav-link dropdown-toggle fs-6 px-3" href="#" id="navbarConteudos" role="button" 
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Conteúdos
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarConteudos">
+                        <li><a class="dropdown-item" href="/blog/">Blog</a></li>
+                        <li><a class="dropdown-item" href="/recursos/calculadora-clt-pj/">Calculadora CLT vs. PJ</a></li>
+                        <li><a class="dropdown-item" href="/services/recursos/consultar-cnaes/">Consultar CNAEs</a></li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <!-- Menu à direita -->
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                
+                    <!-- Usuário Não Logado -->
+                    <li class="nav-item me-2">
+                        <a class="btn btn-gradient-primary text-white px-4 py-2" href="/users/login/">
+                            Login
+                        </a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="btn btn-gradient-primary text-white px-4 py-2" href="/users/cadastro/">
+                            Cadastre-se
+                        </a>
+                    </li> -->
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    
+    <!-- Mensagens do Django -->
+    
+    
+    <!-- Conteúdo principal -->
+    <main>
+        
 
 <style>
 
@@ -219,7 +523,7 @@
 </div>
 
 <!-- Hero Section -->
-<section class="hero-section text-white position-relative" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('{% static 'img/abrirherosection.webp' %}'); background-size: cover; background-position: center right;">
+<section class="hero-section text-white position-relative" style="background: linear-gradient(135deg, rgba(12, 99, 209, 0.50) 0%, rgba(10, 79, 163, 0.50) 100%), url('/static/img/abrirherosection.webp'); background-size: cover; background-position: center right;">
     <div class="container-fluid">
         <div class="row align-items-center" style="min-height: 75vh; padding-bottom: 1rem;">
             <!-- Coluna Esquerda - Conteúdo -->
@@ -635,55 +939,11 @@
 
         <div class="pricing-cards-container">
             <div class="row g-4 justify-content-center">
-                {% for plano in planos_mei %}
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:'100' }}">
-                    <div class="pricing-card {% if plano.destaque %}pricing-card-popular{% endif %}">
-                        {% if plano.destaque %}
-                        <div class="popular-badge">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-                            </svg>
-                            Mais Popular
-                        </div>
-                        {% endif %}
-                        <div class="pricing-card-header">
-                            <h3 class="pricing-plan-name">{{ plano.nome }}</h3>
-                            <p class="pricing-description">{{ plano.descricao }}</p>
-                        </div>
-                        <div class="pricing-card-price">
-                            <div class="price-current">
-                                <span class="price-currency">R$</span>
-                                <span class="price-value">{{ plano.preco|floatformat:2 }}</span>
-                                <span class="price-period">/mês</span>
-                            </div>
-                        </div>
-                        <div class="pricing-card-body">
-                            <ul class="pricing-features">
-                                {% for item in plano.features %}
-                                    {% if item.included %}
-                                    <li class="feature-included">
-                                        <span class="feature-icon">✔</span>
-                                        <span>{{ item.feature }}</span>
-                                    </li>
-                                    {% else %}
-                                    <li class="feature-excluded">
-                                        <span class="feature-icon">✖</span>
-                                        <span>{{ item.feature }}</span>
-                                    </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="pricing-card-footer">
-                            <a href="{% url 'payments:pre_checkout' plano.id %}" class="btn btn-pricing {% if plano.destaque %}btn-pricing-popular{% endif %}">Contratar Agora</a>
-                        </div>
-                    </div>
-                </div>
-                {% empty %}
+                
                 <div class="col-12 text-center">
                     <p>Nenhum plano disponível no momento.</p>
                 </div>
-                {% endfor %}
+                
             </div>
         </div>
     </div>
@@ -696,7 +956,7 @@
         <div class="text-center mb-5">
             <h2 class="display-5 section-title-blue mb-4">DEPOIMENTOS</h2>
             <p class="lead text-muted mb-4">Quer saber por que ser MEI vale a pena? Confira os depoimentos reais de quem já fez a escolha certa!</p>
-            <img src="{% static 'img/avaliação-google.webp' %}" alt="Avaliação Google" class="img-fluid" style="max-width: 300px; height: auto;" loading="lazy">
+            <img src="/static/img/avalia%C3%A7%C3%A3o-google.webp" alt="Avaliação Google" class="img-fluid" style="max-width: 300px; height: auto;" loading="lazy">
         </div>
         
         <div class="testimonials-scroll d-flex gap-4">
@@ -705,7 +965,7 @@
                     <p class="depoimento-texto">"Meu faturamento foi baixo no começo, mas com a flexibilidade do MEI e o suporte que encontrei, consegui me organizar e até pagar as multas que estavam pendentes. O MEI me deu uma segunda chance e, agora, estou mais tranquilo."</p>
                     <div class="depoimento-autor">
                         <div class="autor-avatar">
-                            <img src="{% static 'img/carlos.webp' %}" alt="Foto do Marcos Melo" class="autor-foto" width="60" height="60" loading="lazy">
+                            <img src="/static/img/carlos.webp" alt="Foto do Marcos Melo" class="autor-foto" width="60" height="60" loading="lazy">
                         </div>
                         <div>
                             <h6 class="mb-0">Marcos Melo Silva</h6>
@@ -719,7 +979,7 @@
                     <p class="depoimento-texto">"Quando abri o MEI, achei que era um simples registro. Não sabia que tinha que pagar as taxas e muito menos que havia riscos de multas. Mas, depois de aprender tudo certinho e contar a equipe da Vetorial MEI, agora faço os pagamentos de forma antecipada e evito dores de cabeça."</p>
                     <div class="depoimento-autor">
                         <div class="autor-avatar">
-                            <img src="{% static 'img/rafael.webp' %}" alt="Foto da Ana Júlia Pires Souza" class="autor-foto" width="60" height="60" loading="lazy">
+                            <img src="/static/img/rafael.webp" alt="Foto da Ana Júlia Pires Souza" class="autor-foto" width="60" height="60" loading="lazy">
                         </div>
                         <div>
                             <h6 class="mb-0">Ana Júlia Pires Souza</h6>
@@ -733,7 +993,7 @@
                     <p class="depoimento-texto">"Eu só queria garantir minha aposentadoria, e o MEI foi uma ótima opção. Paguei os impostos de forma reduzida e agora vejo o valor sendo revertido para minha aposentadoria futura. Me sinto mais seguro!"</p>
                     <div class="depoimento-autor">
                         <div class="autor-avatar">
-                            <img src="{% static 'img/juliana.webp' %}" alt="Foto do Joaquim Rufino Messias" class="autor-foto" width="60" height="60" loading="lazy">
+                            <img src="/static/img/juliana.webp" alt="Foto do Joaquim Rufino Messias" class="autor-foto" width="60" height="60" loading="lazy">
                         </div>
                         <div>
                             <h6 class="mb-0">Joaquim Rufino Messias</h6>
@@ -747,7 +1007,7 @@
                     <p class="depoimento-texto">"Eu passei por um momento difícil e deixei algumas DAS atrasadas. Mas, com a ajuda da equipe Vetorial MEI, consegui parcelar e agora estou regularizado! O MEI me ajudou a legalizar meu trabalho e a receber os benefícios do INSS. Agora, é só crescer!"</p>
                     <div class="depoimento-autor">
                         <div class="autor-avatar">
-                            <img src="{% static 'img/maria.webp' %}" alt="Foto da Carla Santana Neves" class="autor-foto" width="60" height="60" loading="lazy">
+                            <img src="/static/img/maria.webp" alt="Foto da Carla Santana Neves" class="autor-foto" width="60" height="60" loading="lazy">
                         </div>
                         <div>
                             <h6 class="mb-0">Carla Santana Neves</h6>
@@ -761,7 +1021,7 @@
                     <p class="depoimento-texto">"Antes, eu não sabia se deveria abrir o MEI ou continuar autônomo, mas a flexibilidade e os benefícios, como a aposentadoria e o auxílio maternidade, me convenceram. Agora, sei que estou legalizado e protegido, e não me arrependo.”</p>
                     <div class="depoimento-autor">
                         <div class="autor-avatar">
-                            <img src="{% static 'img/tiago.webp' %}" alt="Foto da Ana Paula Nogueira Magalhães" class="autor-foto" width="60" height="60" loading="lazy">
+                            <img src="/static/img/tiago.webp" alt="Foto da Ana Paula Nogueira Magalhães" class="autor-foto" width="60" height="60" loading="lazy">
                         </div>
                         <div>
                             <h6 class="mb-0"> Ana Paula Nogueira Magalhães</h6>
@@ -776,7 +1036,7 @@
                     <p class="depoimento-texto">"Trabalhei como autônomo por muito tempo, mas ao abrir o MEI, percebi que poderia ter muito mais benefícios, como a cobertura do INSS. Se você quer crescer e ter mais segurança, o MEI é a solução.”</p>
                     <div class="depoimento-autor">
                         <div class="autor-avatar">
-                            <img src="{% static 'img/tiago.webp' %}" alt="Foto da Bianca Montalvão Meirelles" class="autor-foto" width="60" height="60" loading="lazy">
+                            <img src="/static/img/tiago.webp" alt="Foto da Bianca Montalvão Meirelles" class="autor-foto" width="60" height="60" loading="lazy">
                         </div>
                         <div>
                             <h6 class="mb-0"> Bianca Montalvão Meirelles</h6>
@@ -791,7 +1051,7 @@
                     <p class="depoimento-texto">"Como motorista de app, sempre tive receio de formalizar. Mas abrir o MEI foi uma das melhores decisões! Agora tenho mais confiança no meu trabalho e benefícios, além de poder emitir notas fiscais. E o melhor, não precisei mudar de endereço.”</p>
                     <div class="depoimento-autor">
                         <div class="autor-avatar">
-                            <img src="{% static 'img/tiago.webp' %}" alt="Foto da Felipe de Paula" class="autor-foto" width="60" height="60" loading="lazy">
+                            <img src="/static/img/tiago.webp" alt="Foto da Felipe de Paula" class="autor-foto" width="60" height="60" loading="lazy">
                         </div>
                         <div>
                             <h6 class="mb-0"> Felipe de Paula, MEI</h6>
@@ -806,7 +1066,7 @@
                     <p class="depoimento-texto">"Comecei meu MEI sem saber muito, mas a plataforma Vetorial MEI me ajudou demais. Já passei por golpes de boletos falsos e consegui me proteger. Agora, consigo manter tudo em ordem, pagar as taxas certinhas e ainda fico mais tranquilo com a documentação. Super recomendo!”</p>
                     <div class="depoimento-autor">
                         <div class="autor-avatar">
-                            <img src="{% static 'img/tiago.webp' %}" alt="Foto do João" class="autor-foto" width="60" height="60" loading="lazy">
+                            <img src="/static/img/tiago.webp" alt="Foto do João" class="autor-foto" width="60" height="60" loading="lazy">
                         </div>
                         <div>
                             <h6 class="mb-0"> João</h6>
@@ -984,9 +1244,359 @@ Flexibilidade para mudar de plano: Se necessário, você poderá alterar seu pla
         </div>
     </div>
 </section>
-{% endblock %}
 
-{% block extra_js %}
+    </main>
+    
+    <!-- Footer -->
+    
+
+<!-- Início do Rodapé -->
+<footer class="main-footer">
+    <div class="footer-container">
+        
+        <!-- Coluna 1: Informações da Marca -->
+        <div class="footer-col brand-col">
+            <!-- Ajuste o src conforme a localização real do seu logo no Django -->
+            <img src="/static/img/logo.png" alt="Vetorial Contabilidade" class="footer-logo">
+            
+            <p class="brand-desc">
+                A contabilidade completa para empresas exigentes que buscam simplicidade, agilidade e zero burocracia, tudo 100% online.
+            </p>
+            
+            <div class="legal-info">
+                <span class="info-item"><strong>CNPJ:</strong> 57.397.355/0001-83</span>
+                <span class="info-item"><strong>CRC:</strong> 009504/O-3</span>
+            </div>
+
+            <div class="social-icons">
+                <a href="https://www.instagram.com/contabilidadevetorial/" aria-label="Instagram" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+        </div>
+
+        <!-- Colunas de Links de Navegação (Agrupadas para layout limpo) -->
+        <div class="links-group">
+            
+            <!-- Coluna 2: Sobre Nós -->
+            <div class="footer-col link-col">
+                <h3>VETORIAL</h3>
+                <ul>
+                    <li><a href="/sobre/">Sobre Nós</a></li>
+                    <li><a href="#">Depoimento dos Clientes</a></li>
+                    <li><a href="/termos-de-uso/">Termos de Uso</a></li>
+                    <li><a href="/blog/">Blog Vetorial</a></li>
+                    <li><a href="/politica-de-privacidade/">Política de Privacidade</a></li>
+                    <li><a href="">Trabalhe Conosco</a></li>
+                </ul>
+            </div>
+
+            <!-- Coluna 3: Contabilidade -->
+            <div class="footer-col link-col">
+                <h3>CONTABILIDADE</h3>
+                <ul>
+                    <li><a href="/abrir-empresa/">Abrir Empresa</a></li>
+                    <li><a href="/trocar-contador/">Trocar Contador</a></li>
+                    <li><a href="/contabilidade-mei/">Contabilidade MEI</a></li>
+                    <li><a href="/assessoria/">Gestão Contábil Completa</a></li>
+                    <li><a href="/emissor-nota-fiscal/">Emissor de Nota Fiscal</a></li>
+                    <li><a href="/endereco-virtual/">Endereço Virtual</a></li>
+                    <li><a href="/certificado-digital/">Certificado Digital</a></li>
+                    <li><a href="#">BPO Financeiro</a></li>
+                    <li><a href="#">Regularização Empresarial</a></li>
+                </ul>
+            </div>
+
+            <!-- Coluna 4: Soluções -->
+            <div class="footer-col link-col">
+                <h3>CLIENTE</h3>
+                <ul>
+                    <li><a href="/users/login/">Área do Cliente (Login)</a></li>
+                    <!-- <li><a href="/services/contrato-teste/">Testar Contrato</a></li> -->
+                    <li><a href="#">Dúvidas Frequentes (FAQ)</a></li>
+                    <li><a href="#">Quanto custa?</a></li>
+                    <li><a href="#">Contato</a></li>
+                </ul>
+            </div>
+
+            <!-- Coluna 5: Atendimento -->
+            <div class="footer-col link-col">
+                <h3>SEGMENTOS</h3>
+                <ul>
+                    <li><a href="/segmentos/servicos">Serviços</a></li>
+                    <li><a href="/segmentos/comercio">Comércio</a></li>
+                    <li><a href="/segmentos/saude">Saúde</a></li>
+                    <li><a href="/segmentos/direito">Advocacia</a></li>
+                    <li><a href="/segmentos/agronegocio">Agronegócio</a></li>
+                    <li><a href="/segmentos/turismo">Turismo</a></li>
+                    <li><a href="/segmentos/engenharia">Engenharia e Construção Civil</a></li>
+                    <li><a href="/segmentos/tecnologia">Profissionais da Tecnologia</a></li>
+                    <li><a href="/segmentos/outros">Demais Categorias Atendidas</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Rodapé inferior (Copyright) -->
+    <div class="footer-bottom">
+        <p>&copy; 2026 Vetorial Contabilidade. Todos os direitos reservados.</p>
+    </div>
+</footer>
+
+<!-- Botão Flutuante do WhatsApp (Fixo no canto inferior esquerdo) -->
+<a href="https://wa.me/551131642284" class="whatsapp-float" target="_blank" aria-label="Fale conosco no WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+    
+    <!-- JavaScript - Carregamento Deferido -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="/static/js/script.js" defer></script>
+    
+    <!-- Modal de Captura de Lead WhatsApp -->
+    <div class="modal fade" id="whatsappLeadModal" tabindex="-1" aria-labelledby="whatsappLeadModalLabel" aria-hidden="true" style="z-index: 10000;">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+          <!-- Header Personalizado -->
+          <div class="modal-header text-white border-0" style="background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%); padding: 1.5rem 1.5rem 1rem;">
+            <div class="d-flex align-items-center w-100">
+                <div class="me-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 50%; backdrop-filter: blur(5px);">
+                    <i class="fab fa-whatsapp fa-xl"></i>
+                </div>
+                <div>
+                    <h5 class="modal-title fw-bold mb-0" id="whatsappLeadModalLabel" style="font-size: 1.25rem;">Falar com Consultor</h5>
+                    <p class="mb-0 small" style="opacity: 0.9;">Atendimento ágil pelo WhatsApp</p>
+                </div>
+            </div>
+            <button type="button" class="btn-close btn-close-white align-self-start" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          
+          <div class="modal-body p-4" style="background-color: #f8f9fa;">
+            <p class="text-center mb-4" style="color: #6c757d; font-size: 0.95rem;">
+                Preencha seus dados para ser redirecionado(a) ao nosso atendimento prioritário.
+            </p>
+            
+            <form id="leadCaptureForm">
+              <div class="mb-3">
+                <label for="leadNome" class="form-label small fw-bold text-uppercase text-secondary" style="font-size: 0.75rem; letter-spacing: 0.5px;">Nome Completo *</label>
+                <div class="input-group shadow-sm" style="border-radius: 8px; overflow: hidden;">
+                    <span class="input-group-text bg-white border-end-0 text-muted ps-3"><i class="fas fa-user"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-2 py-2" id="leadNome" placeholder="Digite seu nome" required style="border-left: none;">
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="leadEmail" class="form-label small fw-bold text-uppercase text-secondary" style="font-size: 0.75rem; letter-spacing: 0.5px;">E-mail *</label>
+                <div class="input-group shadow-sm" style="border-radius: 8px; overflow: hidden;">
+                    <span class="input-group-text bg-white border-end-0 text-muted ps-3"><i class="fas fa-envelope"></i></span>
+                    <input type="email" class="form-control border-start-0 ps-2 py-2" id="leadEmail" placeholder="seu@email.com" required style="border-left: none;">
+                </div>
+              </div>
+              
+              <div class="row g-2">
+                  <div class="col-7 mb-3">
+                    <label for="leadTelefone" class="form-label small fw-bold text-uppercase text-secondary" style="font-size: 0.75rem; letter-spacing: 0.5px;">Telefone (DDD) *</label>
+                    <div class="input-group shadow-sm" style="border-radius: 8px; overflow: hidden;">
+                        <span class="input-group-text bg-white border-end-0 text-muted ps-3"><i class="fab fa-whatsapp"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-2 py-2" id="leadTelefone" placeholder="(11) 99999-9999" required style="border-left: none;">
+                    </div>
+                  </div>
+                  <div class="col-5 mb-3">
+                    <label for="leadEstado" class="form-label small fw-bold text-uppercase text-secondary" style="font-size: 0.75rem; letter-spacing: 0.5px;">Estado *</label>
+                    <select class="form-select shadow-sm py-2" id="leadEstado" required style="border-radius: 8px;">
+                      <option value="" selected disabled>UF</option>
+                      <option value="AC">AC</option>
+                      <option value="AL">AL</option>
+                      <option value="AP">AP</option>
+                      <option value="AM">AM</option>
+                      <option value="BA">BA</option>
+                      <option value="CE">CE</option>
+                      <option value="DF">DF</option>
+                      <option value="ES">ES</option>
+                      <option value="GO">GO</option>
+                      <option value="MA">MA</option>
+                      <option value="MT">MT</option>
+                      <option value="MS">MS</option>
+                      <option value="MG">MG</option>
+                      <option value="PA">PA</option>
+                      <option value="PB">PB</option>
+                      <option value="PR">PR</option>
+                      <option value="PE">PE</option>
+                      <option value="PI">PI</option>
+                      <option value="RJ">RJ</option>
+                      <option value="RN">RN</option>
+                      <option value="RS">RS</option>
+                      <option value="RO">RO</option>
+                      <option value="RR">RR</option>
+                      <option value="SC">SC</option>
+                      <option value="SP">SP</option>
+                      <option value="SE">SE</option>
+                      <option value="TO">TO</option>
+                    </select>
+                  </div>
+              </div>
+            </form>
+          </div>
+          
+          <div class="modal-footer border-0 p-4 pt-0 bg-light justify-content-center flex-column">
+            <button type="button" class="btn btn-success w-100 py-3 fw-bold shadow hover-lift" id="btnSubmitLead" style="border-radius: 12px; font-size: 1.1rem; background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); border: none;">
+                Iniciar Conversa <i class="fas fa-paper-plane ms-2"></i>
+            </button>
+            <button type="button" class="btn btn-link text-muted btn-sm text-decoration-none mt-2" data-bs-dismiss="modal">Cancelar e fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script de Interceptação do WhatsApp -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let leadModal; 
+        try {
+            leadModal = new bootstrap.Modal(document.getElementById('whatsappLeadModal'));
+        } catch (e) {
+            console.error('Bootstrap Modal initialization failed:', e);
+            return;
+        }
+        
+        let originalUrl = '';
+
+        // Intercepta cliques
+        document.body.addEventListener('click', function(e) {
+            const target = e.target.closest('a');
+            if (!target) return;
+
+            const href = target.getAttribute('href');
+            if (href && (href.includes('wa.me') || href.includes('api.whatsapp.com') || href.includes('whatsapp.com/send'))) {
+                e.preventDefault();
+                originalUrl = href;
+                leadModal.show();
+            }
+        });
+        
+        // Máscara de telefone simples
+        const phoneInput = document.getElementById('leadTelefone');
+        phoneInput.addEventListener('input', function (e) {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+            e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+        });
+
+        // Envio do formulário
+        document.getElementById('btnSubmitLead').addEventListener('click', function() {
+            const nome = document.getElementById('leadNome').value.trim();
+            const email = document.getElementById('leadEmail').value.trim();
+            const telefone = document.getElementById('leadTelefone').value.trim();
+            const estado = document.getElementById('leadEstado').value;
+
+            if (!nome || !email || !telefone || !estado) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            // Validação de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                 alert('Por favor, insira um e-mail válido.');
+                 return;
+            }
+
+            const btn = this;
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Enviando...';
+
+            const payload = {
+                nome_completo: nome,
+                email: email,
+                telefone: telefone,
+                estado: estado,
+                origem: 'WhatsApp Intercept',
+                servico_interesse: 'Contato via WhatsApp'
+            };
+
+            const csrfTokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
+            // Se não encontrar o input, tenta usar o cookie ou uma string vazia (view é csrf_exempt, mas bom enviar)
+            const csrfToken = 'dNR9te8j2zutvJFJK1GHhsNU4x19tPzXglmp40ZsU3cEasYDbdNQpOyIadpp1xXs'; 
+
+            fetch('/support/capturar-lead/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Rastreamento Google Ads/Analytics (opcional, mas recomendado)
+                    if (typeof gtag === 'function') {
+                        gtag('event', 'generate_lead', {
+                            'event_category': 'WhatsApp',
+                            'event_label': 'Intercept Modal'
+                        });
+                    }
+
+                    leadModal.hide();
+                    
+                    // Constrói mensagem personalizada para o WhatsApp
+                    const msg = `Olá, meu nome é ${nome}.\nEmail: ${email}\nTelefone: ${telefone}\nEstado: ${estado}\nGostaria de atendimento.`;
+                    const encodedMsg = encodeURIComponent(msg);
+                    
+                    // Adiciona a mensagem à URL original
+                    let finalUrl = originalUrl;
+                    if (finalUrl.includes('?')) {
+                        // Verifica se existe o parâmetro text
+                        if (finalUrl.match(/[?&]text=[^&]*/)) {
+                            // Substitui o texto existente
+                            finalUrl = finalUrl.replace(/([?&])text=[^&]*/, '$1text=' + encodedMsg);
+                        } else {
+                            // Adiciona como novo parâmetro
+                            finalUrl += '&text=' + encodedMsg;
+                        }
+                    } else {
+                        // Criar query string
+                        finalUrl += '?text=' + encodedMsg;
+                    }
+                    
+                    // Redireciona em nova aba
+                    window.open(finalUrl, '_blank');
+                    
+                    // Restaura o botão após o clique
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    }, 500);
+                } else {
+                    alert('Erro ao processar: ' + (data.message || 'Tente novamente.'));
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            })
+            .catch(error => {
+                console.error('Erro na captura:', error);
+                // Fallback: redireciona mesmo com erro para não perder o clique
+                leadModal.hide();
+                window.open(originalUrl, '_blank');
+                
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            });
+        });
+    });
+    </script>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17807873091"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17807873091');
+    </script>
+    
+    
 <script>
 // Função para abrir/fechar FAQ
 function toggleFaq(btn) {
@@ -1022,4 +1632,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-{% endblock %}
+
+</body>
+</html>

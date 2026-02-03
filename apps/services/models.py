@@ -13,6 +13,7 @@ class Plano(models.Model):
         ('servicos', 'Serviços'),
         ('comercio', 'Comércio'),
         ('abertura', 'Abertura de Empresa'),
+        ('mei', 'MEI - Contabilidade'),
     ]
     
     nome = models.CharField(max_length=100, help_text="Nome do plano (ex: Bronze, Prata, Ouro)")
