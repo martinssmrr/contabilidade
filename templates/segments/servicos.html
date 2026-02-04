@@ -19,7 +19,7 @@
     
     #contabilidade-facil-grid .central-image {
         grid-area: 2 / 2 / 4 / 4;
-        width: 70%;
+        width: 50%;
         height: auto;
         object-fit: cover;
         border-radius: 10px;
@@ -170,14 +170,16 @@
     overflow-x: auto;
     scroll-behavior: smooth;
     padding-bottom: 20px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     }
 
     .testimonials-scroll::-webkit-scrollbar {
-    height: 8px;
+    display: none;
     }
 
     .testimonials-scroll::-webkit-scrollbar-thumb {
-    background: #c5c5c5;
+    background: transparent;
     border-radius: 4px;
     }
 
