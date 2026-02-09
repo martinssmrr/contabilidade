@@ -1190,10 +1190,12 @@ def api_clientes_list(request):
         # Tentar obter o profile
         fase = 'fase_1' # Default fallback
         regime = 'SN' # Default fallback
+        profile = None
         try:
             if hasattr(cliente, 'cliente_profile'):
-               fase = cliente.cliente_profile.fase_abertura or 'fase_1'
-               regime = cliente.cliente_profile.regime_tributario or 'SN'
+               profile = cliente.cliente_profile
+               fase = profile.fase_abertura or 'fase_1'
+               regime = profile.regime_tributario or 'SN'
         except Exception:
             pass
 
@@ -1201,10 +1203,18 @@ def api_clientes_list(request):
             'id': cliente.id,
             'nome': cliente.get_full_name() or cliente.username,
             'email': cliente.email,
-            'telefone': getattr(cliente.cliente_profile, 'telefone', 'N/D') if hasattr(cliente, 'cliente_profile') else 'N/D',
+            'telefone': getattr(profile, 'telefone', 'N/D') if profile else 'N/D',
             'fase': fase,
             'regime': regime,
-            'fase_display': dict(getattr(Cliente.FASE_ABERTURA_CHOICES, 'choices', [])) if 0 else fase # Simplificado
+            'fase_display': dict(getattr(Cliente.FASE_ABERTURA_CHOICES, 'choices', [])) if 0 else fase, # Simplificado
+            # Dados da empresa
+            'cnpj': getattr(profile, 'cnpj', None) if profile else None,
+            'razao_social': getattr(profile, 'razao_social', None) if profile else None,
+            'nome_fantasia': getattr(profile, 'nome_fantasia', None) if profile else None,
+            'endereco': getattr(profile, 'endereco', None) if profile else None,
+            # Serviços
+            'endereco_virtual_status': getattr(profile, 'endereco_virtual_status', 'nao_contratado') if profile else 'nao_contratado',
+            'certificado_digital_status': getattr(profile, 'certificado_digital_status', 'nao_contratado') if profile else 'nao_contratado',
         })
     return JsonResponse({'success': True, 'data': data})
 
@@ -1699,6 +1709,78 @@ def api_cliente_fase_update(request):
         logger.error(f"Erro ao atualizar fase do cliente: {str(e)}")
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
+
+# ==================== DADOS DA EMPRESA DO CLIENTE ====================
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_cliente_dados_empresa(request, cliente_id):
+    """GET: Busca dados da empresa do cliente / POST: Atualiza dados da empresa"""
+    from apps.support.models import Cliente
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    
+    # Buscar o usuário
+    user = get_object_or_404(User, id=cliente_id)
+    
+    # Buscar ou criar o perfil de cliente
+    cliente, created = Cliente.objects.get_or_create(user=user)
+    
+    if request.method == 'GET':
+        # Retornar dados atuais
+        data = {
+            'cnpj': cliente.cnpj,
+            'telefone': cliente.telefone,
+            'razao_social': cliente.razao_social,
+            'nome_fantasia': cliente.nome_fantasia,
+            'endereco': cliente.endereco,
+            'fase_abertura': cliente.fase_abertura,
+            'regime_tributario': cliente.regime_tributario,
+            'endereco_virtual_status': cliente.endereco_virtual_status,
+            'endereco_virtual_endereco': cliente.endereco_virtual_endereco,
+            'endereco_virtual_validade': cliente.endereco_virtual_validade.strftime('%Y-%m-%d') if cliente.endereco_virtual_validade else None,
+            'certificado_digital_status': cliente.certificado_digital_status,
+            'certificado_digital_tipo': cliente.certificado_digital_tipo,
+            'certificado_digital_validade': cliente.certificado_digital_validade.strftime('%Y-%m-%d') if cliente.certificado_digital_validade else None,
+        }
+        return JsonResponse({'success': True, 'data': data})
+    
+    elif request.method == 'POST':
+        try:
+            dados = json.loads(request.body)
+            
+            # Atualizar campos
+            cliente.cnpj = dados.get('cnpj') or None
+            cliente.telefone = dados.get('telefone') or None
+            cliente.razao_social = dados.get('razao_social') or None
+            cliente.nome_fantasia = dados.get('nome_fantasia') or None
+            cliente.endereco = dados.get('endereco') or None
+            cliente.fase_abertura = dados.get('fase_abertura', 'fase_1')
+            cliente.regime_tributario = dados.get('regime_tributario', 'SN')
+            
+            # Endereço Virtual
+            cliente.endereco_virtual_status = dados.get('endereco_virtual_status', 'nao_contratado')
+            cliente.endereco_virtual_endereco = dados.get('endereco_virtual_endereco') or None
+            validade_ev = dados.get('endereco_virtual_validade')
+            cliente.endereco_virtual_validade = validade_ev if validade_ev else None
+            
+            # Certificado Digital
+            cliente.certificado_digital_status = dados.get('certificado_digital_status', 'nao_contratado')
+            cliente.certificado_digital_tipo = dados.get('certificado_digital_tipo') or None
+            validade_cd = dados.get('certificado_digital_validade')
+            cliente.certificado_digital_validade = validade_cd if validade_cd else None
+            
+            cliente.save()
+            
+            return JsonResponse({'success': True, 'message': 'Dados atualizados com sucesso!'})
+            
+        except Exception as e:
+            logger.error(f"Erro ao atualizar dados da empresa do cliente: {str(e)}")
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+    
+    return JsonResponse({'success': False, 'error': 'Método não permitido'}, status=405)
+
+
 # ==================== GUIAS DE IMPOSTO ====================
 
 @login_required
@@ -1992,3 +2074,771 @@ def api_staff_tasks_delete(request, pk):
         return JsonResponse({'success': True})
     except Exception as e:
          return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+# ========================================
+# CHATBOT - Views e API
+# ========================================
+
+from .models import ChatbotPergunta, ChatbotSessao, ChatbotMensagem
+import uuid
+from django.utils import timezone
+
+
+def get_client_ip(request):
+    """Obtém o IP do cliente"""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        return x_forwarded_for.split(',')[0].strip()
+    return request.META.get('REMOTE_ADDR')
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def chatbot_iniciar_sessao(request):
+    """
+    Inicia uma nova sessão do chatbot.
+    Cria um Lead automaticamente com os dados do visitante.
+    """
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        data = request.POST
+    
+    nome = data.get('nome', '').strip()
+    email = data.get('email', '').strip()
+    telefone = data.get('telefone', '').strip()
+    pagina_origem = data.get('pagina_origem', '')
+    
+    if not nome or not email or not telefone:
+        return JsonResponse({
+            'success': False, 
+            'error': 'Nome, e-mail e telefone são obrigatórios.'
+        }, status=400)
+    
+    # Gerar chave única da sessão
+    session_key = str(uuid.uuid4())
+    
+    # Criar Lead automaticamente
+    lead = Lead.objects.create(
+        nome_completo=nome,
+        email=email,
+        telefone=telefone,
+        estado='',  # Pode ser preenchido depois
+        origem='chatbot',
+        servico_interesse='Chatbot - Atendimento Automático',
+        observacoes=f'Lead gerado via chatbot. Página: {pagina_origem}'
+    )
+    
+    # Criar sessão do chatbot
+    sessao = ChatbotSessao.objects.create(
+        session_key=session_key,
+        nome=nome,
+        email=email,
+        telefone=telefone,
+        lead=lead,
+        pagina_origem=pagina_origem or None,
+        ip_address=get_client_ip(request),
+        user_agent=request.META.get('HTTP_USER_AGENT', '')[:500],
+    )
+    
+    # Mensagem de boas-vindas do bot
+    msg_boas_vindas = f"Olá, {nome.split()[0]}! 👋 Sou o assistente virtual da Vetorial Contabilidade. Como posso ajudar você hoje?"
+    
+    ChatbotMensagem.objects.create(
+        sessao=sessao,
+        is_bot=True,
+        conteudo=msg_boas_vindas
+    )
+    
+    # Buscar perguntas frequentes para exibir
+    perguntas = ChatbotPergunta.objects.filter(ativo=True).order_by('categoria', 'ordem')[:10]
+    
+    perguntas_data = [{
+        'id': p.id,
+        'pergunta': p.pergunta,
+        'categoria': p.categoria or 'Geral'
+    } for p in perguntas]
+    
+    return JsonResponse({
+        'success': True,
+        'session_key': session_key,
+        'mensagem_boas_vindas': msg_boas_vindas,
+        'perguntas': perguntas_data
+    })
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def chatbot_enviar_pergunta(request):
+    """
+    Visitante seleciona uma pergunta pré-definida.
+    Retorna a resposta correspondente.
+    """
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        data = request.POST
+    
+    session_key = data.get('session_key', '')
+    pergunta_id = data.get('pergunta_id')
+    
+    if not session_key:
+        return JsonResponse({'success': False, 'error': 'Sessão inválida.'}, status=400)
+    
+    try:
+        sessao = ChatbotSessao.objects.get(session_key=session_key, status='ativa')
+    except ChatbotSessao.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Sessão não encontrada ou encerrada.'}, status=404)
+    
+    try:
+        pergunta = ChatbotPergunta.objects.get(id=pergunta_id, ativo=True)
+    except ChatbotPergunta.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Pergunta não encontrada.'}, status=404)
+    
+    # Salvar mensagem do visitante (a pergunta que ele clicou)
+    ChatbotMensagem.objects.create(
+        sessao=sessao,
+        is_bot=False,
+        conteudo=pergunta.pergunta,
+        pergunta_relacionada=pergunta
+    )
+    
+    # Salvar resposta do bot
+    ChatbotMensagem.objects.create(
+        sessao=sessao,
+        is_bot=True,
+        conteudo=pergunta.resposta,
+        pergunta_relacionada=pergunta
+    )
+    
+    # Atualizar timestamp da sessão
+    sessao.atualizado_em = timezone.now()
+    sessao.save(update_fields=['atualizado_em'])
+    
+    return JsonResponse({
+        'success': True,
+        'pergunta': pergunta.pergunta,
+        'resposta': pergunta.resposta
+    })
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def chatbot_listar_perguntas(request):
+    """
+    Retorna todas as perguntas ativas agrupadas por categoria.
+    """
+    perguntas = ChatbotPergunta.objects.filter(ativo=True).order_by('categoria', 'ordem')
+    
+    # Agrupar por categoria
+    categorias = {}
+    for p in perguntas:
+        cat = p.categoria or 'Geral'
+        if cat not in categorias:
+            categorias[cat] = []
+        categorias[cat].append({
+            'id': p.id,
+            'pergunta': p.pergunta
+        })
+    
+    return JsonResponse({
+        'success': True,
+        'categorias': categorias
+    })
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def chatbot_encerrar_sessao(request):
+    """
+    Encerra a sessão do chatbot.
+    """
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        data = request.POST
+    
+    session_key = data.get('session_key', '')
+    
+    if not session_key:
+        return JsonResponse({'success': False, 'error': 'Sessão inválida.'}, status=400)
+    
+    try:
+        sessao = ChatbotSessao.objects.get(session_key=session_key)
+        sessao.status = 'encerrada'
+        sessao.encerrado_em = timezone.now()
+        sessao.save(update_fields=['status', 'encerrado_em'])
+        
+        return JsonResponse({'success': True})
+    except ChatbotSessao.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Sessão não encontrada.'}, status=404)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def chatbot_avaliar_sessao(request):
+    """
+    Visitante avalia o atendimento do chatbot.
+    """
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        data = request.POST
+    
+    session_key = data.get('session_key', '')
+    avaliacao = data.get('avaliacao')
+    feedback = data.get('feedback', '')
+    
+    if not session_key:
+        return JsonResponse({'success': False, 'error': 'Sessão inválida.'}, status=400)
+    
+    try:
+        sessao = ChatbotSessao.objects.get(session_key=session_key)
+        
+        if avaliacao:
+            sessao.avaliacao = int(avaliacao)
+        if feedback:
+            sessao.feedback = feedback
+        
+        sessao.status = 'encerrada'
+        sessao.encerrado_em = timezone.now()
+        sessao.save(update_fields=['avaliacao', 'feedback', 'status', 'encerrado_em'])
+        
+        return JsonResponse({'success': True})
+    except ChatbotSessao.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Sessão não encontrada.'}, status=404)
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def chatbot_recuperar_sessao(request):
+    """
+    Recupera uma sessão existente pelo session_key.
+    Permite que o visitante continue de onde parou.
+    """
+    session_key = request.GET.get('session_key', '')
+    
+    if not session_key:
+        return JsonResponse({'success': False, 'error': 'Session key não fornecida.'}, status=400)
+    
+    try:
+        sessao = ChatbotSessao.objects.get(session_key=session_key, status='ativa')
+        
+        # Buscar mensagens da sessão
+        mensagens = sessao.mensagens.all().order_by('criado_em')
+        mensagens_data = [{
+            'is_bot': m.is_bot,
+            'conteudo': m.conteudo,
+            'timestamp': m.criado_em.isoformat()
+        } for m in mensagens]
+        
+        # Buscar perguntas disponíveis
+        perguntas = ChatbotPergunta.objects.filter(ativo=True).order_by('categoria', 'ordem')[:10]
+        perguntas_data = [{
+            'id': p.id,
+            'pergunta': p.pergunta,
+            'categoria': p.categoria or 'Geral'
+        } for p in perguntas]
+        
+        return JsonResponse({
+            'success': True,
+            'sessao': {
+                'nome': sessao.nome,
+                'email': sessao.email,
+                'status': sessao.status
+            },
+            'mensagens': mensagens_data,
+            'perguntas': perguntas_data
+        })
+    except ChatbotSessao.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Sessão não encontrada ou encerrada.'}, status=404)
+
+
+# ==================== CHATBOT - ATENDENTE IA ====================
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def chatbot_atendente_ia(request):
+    """
+    Processa mensagem livre do usuário usando IA (Groq - Llama 3).
+    Ativa o modo de atendimento com IA na sessão.
+    """
+    from .groq_service import groq_service
+    
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        data = request.POST
+    
+    session_key = data.get('session_key', '').strip()
+    mensagem = data.get('mensagem', '').strip()
+    
+    if not session_key:
+        return JsonResponse({'success': False, 'error': 'Session key é obrigatória.'}, status=400)
+    
+    if not mensagem:
+        return JsonResponse({'success': False, 'error': 'Mensagem é obrigatória.'}, status=400)
+    
+    # Limitar tamanho da mensagem
+    if len(mensagem) > 1000:
+        return JsonResponse({'success': False, 'error': 'Mensagem muito longa (máx. 1000 caracteres).'}, status=400)
+    
+    try:
+        sessao = ChatbotSessao.objects.get(session_key=session_key, status='ativa')
+    except ChatbotSessao.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Sessão não encontrada ou encerrada.'}, status=404)
+    
+    # Verificar se IA está disponível
+    if not groq_service.is_available():
+        return JsonResponse({
+            'success': False, 
+            'error': 'Atendente virtual temporariamente indisponível. Tente as perguntas rápidas ou WhatsApp.'
+        }, status=503)
+    
+    # Salvar mensagem do usuário
+    ChatbotMensagem.objects.create(
+        sessao=sessao,
+        is_bot=False,
+        conteudo=mensagem
+    )
+    
+    # Obter histórico de conversa
+    conversation_history = groq_service.get_conversation_history_from_session(sessao)
+    
+    # Obter resposta da IA
+    resposta_ia = groq_service.get_response(mensagem, conversation_history)
+    
+    # Salvar resposta do bot
+    ChatbotMensagem.objects.create(
+        sessao=sessao,
+        is_bot=True,
+        conteudo=resposta_ia
+    )
+    
+    return JsonResponse({
+        'success': True,
+        'resposta': resposta_ia
+    })
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def chatbot_ia_status(request):
+    """
+    Verifica se o atendente IA está disponível.
+    """
+    from .groq_service import groq_service
+    
+    return JsonResponse({
+        'success': True,
+        'disponivel': groq_service.is_available()
+    })
+
+
+# =============================================================================
+# SERVIÇOS AVULSOS
+# =============================================================================
+
+@login_required
+@require_http_methods(["GET"])
+def api_servicos_avulsos_list(request):
+    """
+    Lista todas as contratações de serviços avulsos.
+    Filtra por cliente se cliente_id for passado.
+    """
+    from apps.services.models import ContratacaoServicoAvulso
+    
+    if not request.user.is_staff:
+        return JsonResponse({'error': 'Acesso negado'}, status=403)
+    
+    cliente_id = request.GET.get('cliente_id')
+    apenas_pendentes = request.GET.get('pendentes', 'false').lower() == 'true'
+    
+    qs = ContratacaoServicoAvulso.objects.select_related('usuario', 'servico').all()
+    
+    if cliente_id:
+        qs = qs.filter(usuario_id=cliente_id)
+    
+    if apenas_pendentes:
+        qs = qs.filter(visualizado=False)
+    
+    qs = qs.order_by('-criado_em')
+    
+    data = []
+    for c in qs[:100]:
+        data.append({
+            'id': c.id,
+            'usuario_id': c.usuario_id,
+            'usuario_nome': c.usuario.get_full_name() or c.usuario.email,
+            'usuario_email': c.usuario.email,
+            'servico_id': c.servico_id,
+            'servico_titulo': c.servico.titulo,
+            'valor_contratado': float(c.valor_contratado),
+            'status': c.status,
+            'status_display': c.get_status_display(),
+            'observacoes_cliente': c.observacoes_cliente,
+            'observacoes_internas': c.observacoes_internas,
+            'visualizado': c.visualizado,
+            'criado_em': c.criado_em.strftime('%d/%m/%Y %H:%M'),
+            'concluido_em': c.concluido_em.strftime('%d/%m/%Y %H:%M') if c.concluido_em else None,
+        })
+    
+    return JsonResponse({'success': True, 'contratacoes': data})
+
+
+@login_required
+@csrf_exempt
+@require_http_methods(["POST"])
+def api_servico_avulso_update(request, pk):
+    """
+    Atualiza o status e observações de uma contratação de serviço avulso.
+    """
+    from apps.services.models import ContratacaoServicoAvulso
+    from django.utils import timezone
+    import json
+    
+    if not request.user.is_staff:
+        return JsonResponse({'error': 'Acesso negado'}, status=403)
+    
+    try:
+        contratacao = ContratacaoServicoAvulso.objects.get(pk=pk)
+    except ContratacaoServicoAvulso.DoesNotExist:
+        return JsonResponse({'error': 'Contratação não encontrada'}, status=404)
+    
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'JSON inválido'}, status=400)
+    
+    # Atualizar campos
+    if 'status' in data:
+        contratacao.status = data['status']
+        if data['status'] == 'concluido' and not contratacao.concluido_em:
+            contratacao.concluido_em = timezone.now()
+    
+    if 'observacoes_internas' in data:
+        contratacao.observacoes_internas = data['observacoes_internas']
+    
+    if 'visualizado' in data:
+        contratacao.visualizado = data['visualizado']
+    
+    # Marcar como visualizado ao atualizar
+    contratacao.visualizado = True
+    contratacao.save()
+    
+    return JsonResponse({
+        'success': True,
+        'message': 'Contratação atualizada com sucesso',
+        'id': contratacao.id,
+        'status': contratacao.status,
+        'status_display': contratacao.get_status_display()
+    })
+
+
+@login_required
+@require_http_methods(["GET"])
+def api_servicos_avulsos_contagem(request):
+    """
+    Retorna a contagem de contratações pendentes (não visualizadas).
+    """
+    from apps.services.models import ContratacaoServicoAvulso
+    
+    if not request.user.is_staff:
+        return JsonResponse({'error': 'Acesso negado'}, status=403)
+    
+    pendentes = ContratacaoServicoAvulso.objects.filter(visualizado=False).count()
+    em_andamento = ContratacaoServicoAvulso.objects.filter(status='em_andamento').count()
+    total = ContratacaoServicoAvulso.objects.count()
+    
+    return JsonResponse({
+        'success': True,
+        'pendentes': pendentes,
+        'em_andamento': em_andamento,
+        'total': total
+    })
+
+
+# =============================================================================
+# ASSISTENTE IA - DÚVIDAS CONTÁBEIS (CLIENTE)
+# =============================================================================
+
+# Prompt específico para dúvidas contábeis dos clientes
+ASSISTENTE_CONTABIL_PROMPT = """
+Você é a Vitória, assistente virtual da Vetorial Contabilidade, especializada em esclarecer dúvidas contábeis e fiscais dos nossos clientes.
+
+Você foi treinada para responder perguntas sobre:
+
+📊 SIMPLES NACIONAL:
+- Anexos I a V e suas alíquotas
+- Fator R e cálculo
+- Sublimites e exclusão do Simples
+- DAS e vencimentos
+- DEFIS anual
+
+📄 NOTAS FISCAIS:
+- Emissão de NFS-e (serviços)
+- Emissão de NF-e (produtos)
+- Notas de devolução
+- Cancelamento de notas
+- CFOP mais comuns
+
+💰 MEI:
+- Limite de faturamento (R$ 81.000/ano)
+- DAS-MEI mensal
+- DASN-SIMEI anual
+- Desenquadramento
+- Contratação de funcionário
+
+🏢 OBRIGAÇÕES ACESSÓRIAS:
+- SPED Fiscal e Contribuições
+- ECD e ECF
+- DCTF
+- RAIS e CAGED/eSocial
+- DIRF
+
+📋 IMPOSTOS:
+- ISS (serviços)
+- ICMS (produtos)
+- PIS/COFINS
+- IRPJ e CSLL
+- INSS e FGTS
+
+⚖️ TRABALHISTA:
+- eSocial
+- Folha de pagamento
+- 13º salário
+- Férias
+- Rescisão
+
+Regras de atendimento:
+- Responda de forma clara, objetiva e didática
+- Use exemplos práticos quando apropriado
+- Se a dúvida for muito específica do caso do cliente, oriente a abrir um chamado pelo sistema
+- Para assuntos que exigem análise documental, sugira contato com a equipe
+- Forneça as alíquotas e informações baseadas na legislação vigente
+- Seja preciso com números e percentuais
+- Não invente valores ou prazos
+- Se não souber algo com certeza, oriente a consultar a equipe
+
+Formato das respostas:
+- Não use * nem ** nas respostas
+- Use emojis com moderação para organizar o conteúdo
+- Seja conciso mas completo
+- Quando listar itens, use bullets simples
+
+Contatos para suporte adicional:
+- WhatsApp: (11) 3164-2284
+- Abrir chamado no sistema de suporte
+"""
+
+
+@login_required
+def assistente_ia(request):
+    """
+    Página do assistente virtual de IA para dúvidas contábeis.
+    Disponível apenas para clientes logados.
+    """
+    return render(request, 'client/assistente_ia.html')
+
+
+@login_required
+@csrf_exempt
+@require_http_methods(["POST"])
+def assistente_ia_chat(request):
+    """
+    API para processar mensagens do assistente IA de dúvidas contábeis.
+    Armazena histórico na sessão do usuário.
+    """
+    from .groq_service import GroqService
+    import os
+    from groq import Groq
+    
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        data = request.POST
+    
+    mensagem = data.get('mensagem', '').strip()
+    limpar_historico = data.get('limpar_historico', False)
+    
+    if not mensagem and not limpar_historico:
+        return JsonResponse({'success': False, 'error': 'Mensagem é obrigatória.'}, status=400)
+    
+    # Limitar tamanho da mensagem
+    if mensagem and len(mensagem) > 1500:
+        return JsonResponse({'success': False, 'error': 'Mensagem muito longa (máx. 1500 caracteres).'}, status=400)
+    
+    # Chave única para o histórico do usuário
+    history_key = f'assistente_ia_history_{request.user.id}'
+    
+    # Se solicitado, limpar histórico
+    if limpar_historico:
+        request.session[history_key] = []
+        request.session.modified = True
+        return JsonResponse({'success': True, 'message': 'Histórico limpo.'})
+    
+    # Recuperar histórico da sessão
+    conversation_history = request.session.get(history_key, [])
+    
+    # Verificar API Key do Groq
+    api_key = os.getenv('GROQ_API_KEY', '')
+    if not api_key:
+        return JsonResponse({
+            'success': False, 
+            'error': 'Assistente virtual temporariamente indisponível. Entre em contato pelo WhatsApp (11) 3164-2284.'
+        }, status=503)
+    
+    try:
+        client = Groq(api_key=api_key)
+        
+        # Construir mensagens
+        messages = [
+            {"role": "system", "content": ASSISTENTE_CONTABIL_PROMPT}
+        ]
+        
+        # Adicionar histórico (últimas 10 mensagens para economizar tokens)
+        if conversation_history:
+            messages.extend(conversation_history[-10:])
+        
+        # Adicionar mensagem atual
+        messages.append({"role": "user", "content": mensagem})
+        
+        # Fazer chamada à API
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=messages,
+            max_tokens=800,
+            temperature=0.7,
+        )
+        
+        resposta_ia = response.choices[0].message.content.strip()
+        
+        # Atualizar histórico na sessão
+        conversation_history.append({"role": "user", "content": mensagem})
+        conversation_history.append({"role": "assistant", "content": resposta_ia})
+        
+        # Manter apenas últimas 20 mensagens no histórico
+        if len(conversation_history) > 20:
+            conversation_history = conversation_history[-20:]
+        
+        request.session[history_key] = conversation_history
+        request.session.modified = True
+        
+        logger.info(f"Assistente IA: resposta gerada para usuário {request.user.id}. Tokens: {response.usage.total_tokens}")
+        
+        return JsonResponse({
+            'success': True,
+            'resposta': resposta_ia
+        })
+        
+    except Exception as e:
+        error_msg = str(e)
+        logger.error(f"Erro no assistente IA: {e}")
+        
+        if 'rate_limit' in error_msg.lower() or '429' in error_msg:
+            return JsonResponse({
+                'success': False,
+                'error': 'Estou processando muitas mensagens no momento. Por favor, aguarde alguns segundos e tente novamente.'
+            }, status=429)
+        else:
+            return JsonResponse({
+                'success': False,
+                'error': 'Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente.'
+            }, status=500)
+
+
+# ==================== BOLETOS CONTABILIDADE ====================
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_cliente_boletos(request, cliente_id):
+    """GET: Lista boletos do cliente / POST: Cria novo boleto"""
+    from apps.documents.models import BoletoContabilidade
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    
+    user = get_object_or_404(User, id=cliente_id)
+    
+    if request.method == 'GET':
+        boletos = BoletoContabilidade.objects.filter(cliente=user).order_by('-criado_em')[:10]
+        data = []
+        for b in boletos:
+            data.append({
+                'id': b.id,
+                'referencia': b.referencia,
+                'valor': float(b.valor),
+                'data_vencimento': b.data_vencimento.strftime('%d/%m/%Y'),
+                'status': b.status,
+                'status_display': b.get_status_display(),
+                'arquivo_url': b.arquivo_boleto.url if b.arquivo_boleto else None,
+                'criado_em': b.criado_em.strftime('%d/%m/%Y %H:%M'),
+            })
+        return JsonResponse({'success': True, 'boletos': data})
+    
+    elif request.method == 'POST':
+        try:
+            referencia = request.POST.get('referencia')
+            valor = request.POST.get('valor')
+            data_vencimento = request.POST.get('data_vencimento')
+            arquivo = request.FILES.get('arquivo_boleto')
+            observacoes = request.POST.get('observacoes', '')
+            
+            if not all([referencia, valor, data_vencimento, arquivo]):
+                return JsonResponse({'success': False, 'error': 'Preencha todos os campos obrigatórios'}, status=400)
+            
+            from decimal import Decimal
+            from datetime import datetime
+            
+            boleto = BoletoContabilidade.objects.create(
+                cliente=user,
+                referencia=referencia,
+                valor=Decimal(valor.replace(',', '.')),
+                data_vencimento=datetime.strptime(data_vencimento, '%Y-%m-%d').date(),
+                arquivo_boleto=arquivo,
+                observacoes=observacoes,
+                enviado_por=request.user,
+                status='pendente'
+            )
+            
+            return JsonResponse({'success': True, 'message': 'Boleto enviado com sucesso!', 'boleto_id': boleto.id})
+            
+        except Exception as e:
+            logger.error(f"Erro ao criar boleto: {str(e)}")
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_boleto_status(request, boleto_id):
+    """PUT: Atualiza status do boleto / DELETE: Remove boleto"""
+    from apps.documents.models import BoletoContabilidade
+    
+    boleto = get_object_or_404(BoletoContabilidade, id=boleto_id)
+    
+    if request.method == 'PUT':
+        try:
+            dados = json.loads(request.body)
+            novo_status = dados.get('status')
+            
+            if novo_status in ['pendente', 'pago', 'vencido', 'cancelado']:
+                boleto.status = novo_status
+                boleto.save()
+                return JsonResponse({'success': True, 'message': 'Status atualizado!'})
+            else:
+                return JsonResponse({'success': False, 'error': 'Status inválido'}, status=400)
+                
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+    
+    elif request.method == 'DELETE':
+        try:
+            boleto.arquivo_boleto.delete(save=False)
+            boleto.delete()
+            return JsonResponse({'success': True, 'message': 'Boleto removido!'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+    
+    return JsonResponse({'success': False, 'error': 'Método não permitido'}, status=405)
+
+

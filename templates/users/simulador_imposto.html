@@ -1,0 +1,450 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Simulador de Imposto - Vetorial{% endblock %}
+
+{% block extra_css %}
+<style>
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+    
+    .header-section {
+        margin-bottom: 32px;
+    }
+    
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0 0 8px 0;
+    }
+    
+    .page-subtitle {
+        font-size: 0.95rem;
+        color: #6b7280;
+        margin: 0;
+    }
+    
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #6b7280;
+        text-decoration: none;
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+    }
+    
+    .back-link:hover {
+        color: #374151;
+    }
+    
+    /* Card Section */
+    .card-section {
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 32px;
+        margin-bottom: 24px;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0 0 24px 0;
+    }
+    
+    /* Form */
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 8px;
+    }
+    
+    .form-input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        color: #1f2937;
+        transition: all 0.15s ease;
+    }
+    
+    .form-input:focus {
+        outline: none;
+        border-color: #1f2937;
+    }
+    
+    .form-select {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        color: #1f2937;
+        background: #fff;
+        cursor: pointer;
+    }
+    
+    .form-select:focus {
+        outline: none;
+        border-color: #1f2937;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    .form-hint {
+        font-size: 0.8rem;
+        color: #9ca3af;
+        margin-top: 6px;
+    }
+    
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: #1f2937;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        width: 100%;
+    }
+    
+    .btn-primary:hover {
+        background: #374151;
+    }
+    
+    /* Result Card */
+    .result-card {
+        background: #f9fafb;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 24px;
+        display: none;
+    }
+    
+    .result-card.show {
+        display: block;
+    }
+    
+    .result-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .result-icon {
+        width: 48px;
+        height: 48px;
+        background: #d1fae5;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #059669;
+        font-size: 1.25rem;
+    }
+    
+    .result-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+    
+    .result-subtitle {
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+    
+    .result-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    .result-item {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 16px;
+    }
+    
+    .result-label {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin-bottom: 4px;
+    }
+    
+    .result-value {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+    
+    .result-value.highlight {
+        color: #059669;
+    }
+    
+    .result-note {
+        margin-top: 20px;
+        padding: 16px;
+        background: #fffbeb;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: #92400e;
+    }
+    
+    .result-note i {
+        margin-right: 6px;
+    }
+    
+    /* Info Card */
+    .info-card {
+        background: #eff6ff;
+        border: 1px solid #dbeafe;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 24px;
+    }
+    
+    .info-card p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #1e40af;
+    }
+    
+    .info-card i {
+        margin-right: 8px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .container {
+            padding: 24px 16px;
+        }
+        
+        .form-row,
+        .result-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Back Link -->
+    <a href="{% url 'users:pendencias' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        Voltar para Obrigações
+    </a>
+    
+    <!-- Header -->
+    <div class="header-section">
+        <h1 class="page-title">Simulador de Imposto</h1>
+        <p class="page-subtitle">Simule o valor dos seus impostos</p>
+    </div>
+    
+    <!-- Info -->
+    <div class="info-card">
+        <p><i class="fas fa-info-circle"></i> Este é um simulador estimado. Os valores reais podem variar conforme sua situação fiscal específica.</p>
+    </div>
+    
+    <!-- Simulator Form -->
+    <div class="card-section">
+        <h2 class="section-title">Dados para Simulação</h2>
+        
+        <form id="simuladorForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Regime Tributário</label>
+                    <select class="form-select" id="regimeTributario">
+                        <option value="mei">MEI</option>
+                        <option value="simples">Simples Nacional</option>
+                        <option value="lucro_presumido">Lucro Presumido</option>
+                        <option value="lucro_real">Lucro Real</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tipo de Atividade</label>
+                    <select class="form-select" id="tipoAtividade">
+                        <option value="comercio">Comércio</option>
+                        <option value="industria">Indústria</option>
+                        <option value="servicos">Serviços</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Faturamento Mensal (R$)</label>
+                <input type="text" class="form-input" id="faturamento" placeholder="Ex: 10.000,00">
+                <p class="form-hint">Digite o valor do faturamento bruto mensal</p>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Folha de Pagamento (R$)</label>
+                    <input type="text" class="form-input" id="folhaPagamento" placeholder="Ex: 2.000,00">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Faturamento 12 meses (R$)</label>
+                    <input type="text" class="form-input" id="faturamento12m" placeholder="Ex: 120.000,00">
+                </div>
+            </div>
+            
+            <button type="button" class="btn-primary" onclick="calcularImposto()">
+                <i class="fas fa-calculator"></i>
+                Calcular Imposto
+            </button>
+        </form>
+    </div>
+    
+    <!-- Result -->
+    <div class="card-section result-card" id="resultCard">
+        <div class="result-header">
+            <div class="result-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <div>
+                <div class="result-title">Resultado da Simulação</div>
+                <div class="result-subtitle" id="resultRegime">Simples Nacional</div>
+            </div>
+        </div>
+        
+        <div class="result-grid">
+            <div class="result-item">
+                <div class="result-label">Alíquota Efetiva</div>
+                <div class="result-value" id="resultAliquota">0%</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">Imposto Estimado</div>
+                <div class="result-value highlight" id="resultImposto">R$ 0,00</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">Faturamento Informado</div>
+                <div class="result-value" id="resultFaturamento">R$ 0,00</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">Lucro Líquido Estimado</div>
+                <div class="result-value" id="resultLucro">R$ 0,00</div>
+            </div>
+        </div>
+        
+        <div class="result-note">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Atenção:</strong> Esta é uma simulação aproximada. Para valores precisos, consulte seu contador.
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function parseValor(str) {
+    if (!str) return 0;
+    return parseFloat(str.replace(/\./g, '').replace(',', '.')) || 0;
+}
+
+function formatMoney(value) {
+    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function calcularImposto() {
+    const regime = document.getElementById('regimeTributario').value;
+    const atividade = document.getElementById('tipoAtividade').value;
+    const faturamento = parseValor(document.getElementById('faturamento').value);
+    const folha = parseValor(document.getElementById('folhaPagamento').value);
+    const fat12m = parseValor(document.getElementById('faturamento12m').value) || faturamento * 12;
+    
+    let aliquota = 0;
+    let imposto = 0;
+    
+    // Cálculos simplificados por regime
+    if (regime === 'mei') {
+        // MEI: valor fixo
+        if (atividade === 'comercio') {
+            imposto = 71.60; // ICMS
+        } else if (atividade === 'industria') {
+            imposto = 71.60;
+        } else {
+            imposto = 75.60; // ISS
+        }
+        aliquota = faturamento > 0 ? (imposto / faturamento) * 100 : 0;
+    } else if (regime === 'simples') {
+        // Simples Nacional - faixas simplificadas
+        if (fat12m <= 180000) {
+            aliquota = atividade === 'servicos' ? 6.0 : 4.0;
+        } else if (fat12m <= 360000) {
+            aliquota = atividade === 'servicos' ? 11.2 : 7.3;
+        } else if (fat12m <= 720000) {
+            aliquota = atividade === 'servicos' ? 13.5 : 9.5;
+        } else if (fat12m <= 1800000) {
+            aliquota = atividade === 'servicos' ? 16.0 : 10.7;
+        } else {
+            aliquota = atividade === 'servicos' ? 21.0 : 14.3;
+        }
+        imposto = faturamento * (aliquota / 100);
+    } else if (regime === 'lucro_presumido') {
+        // Lucro Presumido
+        if (atividade === 'servicos') {
+            aliquota = 11.33; // PIS + COFINS + CSLL + IRPJ
+        } else {
+            aliquota = 5.93;
+        }
+        imposto = faturamento * (aliquota / 100);
+    } else {
+        // Lucro Real - muito variável, usando estimativa
+        aliquota = 15.0;
+        imposto = faturamento * (aliquota / 100);
+    }
+    
+    const lucro = faturamento - imposto - folha;
+    
+    // Exibir resultados
+    document.getElementById('resultRegime').textContent = 
+        regime === 'mei' ? 'MEI' :
+        regime === 'simples' ? 'Simples Nacional' :
+        regime === 'lucro_presumido' ? 'Lucro Presumido' : 'Lucro Real';
+    
+    document.getElementById('resultAliquota').textContent = aliquota.toFixed(2) + '%';
+    document.getElementById('resultImposto').textContent = formatMoney(imposto);
+    document.getElementById('resultFaturamento').textContent = formatMoney(faturamento);
+    document.getElementById('resultLucro').textContent = formatMoney(lucro);
+    
+    document.getElementById('resultCard').classList.add('show');
+    document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Formatação de campos monetários
+document.querySelectorAll('#faturamento, #folhaPagamento, #faturamento12m').forEach(input => {
+    input.addEventListener('blur', function() {
+        let value = parseValor(this.value);
+        if (value > 0) {
+            this.value = value.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+        }
+    });
+});
+</script>
+{% endblock %}

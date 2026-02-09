@@ -1,0 +1,331 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Histórico de Imposto - Vetorial{% endblock %}
+
+{% block extra_css %}
+<style>
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+    
+    .header-section {
+        margin-bottom: 32px;
+    }
+    
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0 0 8px 0;
+    }
+    
+    .page-subtitle {
+        font-size: 0.95rem;
+        color: #6b7280;
+        margin: 0;
+    }
+    
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #6b7280;
+        text-decoration: none;
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+    }
+    
+    .back-link:hover {
+        color: #374151;
+    }
+    
+    /* Filters */
+    .filters-section {
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 24px;
+    }
+    
+    .filters-row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    
+    .filter-group {
+        flex: 1;
+        min-width: 150px;
+    }
+    
+    .filter-label {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 6px;
+        display: block;
+    }
+    
+    .filter-select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        color: #1f2937;
+        background: #fff;
+    }
+    
+    .filter-select:focus {
+        outline: none;
+        border-color: #1f2937;
+    }
+    
+    /* Summary Cards */
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+    
+    .summary-card {
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 20px;
+    }
+    
+    .summary-label {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-bottom: 4px;
+    }
+    
+    .summary-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+    
+    .summary-value.total {
+        color: #1f2937;
+    }
+    
+    /* Card Section */
+    .card-section {
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 24px;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0 0 20px 0;
+    }
+    
+    /* History Table */
+    .history-table {
+        width: 100%;
+        font-size: 0.9rem;
+    }
+    
+    .history-table th {
+        font-weight: 500;
+        color: #6b7280;
+        padding: 12px 0;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: left;
+    }
+    
+    .history-table td {
+        padding: 14px 0;
+        border-bottom: 1px solid #f3f4f6;
+        color: #374151;
+    }
+    
+    .history-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .tipo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        background: #f3f4f6;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #374151;
+    }
+    
+    .valor-cell {
+        font-weight: 600;
+        color: #1f2937;
+    }
+    
+    /* Status */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+    
+    .status-pago {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    
+    .status-a_vencer {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    
+    .status-atrasado {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 48px 20px;
+        color: #9ca3af;
+    }
+    
+    .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+    
+    .empty-text {
+        font-size: 0.95rem;
+        color: #6b7280;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .container {
+            padding: 24px 16px;
+        }
+        
+        .summary-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .history-table {
+            font-size: 0.85rem;
+        }
+        
+        .history-table th,
+        .history-table td {
+            padding: 10px 4px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Back Link -->
+    <a href="{% url 'users:pendencias' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        Voltar para Obrigações
+    </a>
+    
+    <!-- Header -->
+    <div class="header-section">
+        <h1 class="page-title">Histórico de Imposto</h1>
+        <p class="page-subtitle">Consulte o histórico de impostos pagos</p>
+    </div>
+    
+    <!-- Filters -->
+    <div class="filters-section">
+        <form method="get" class="filters-row">
+            <div class="filter-group">
+                <label class="filter-label">Ano</label>
+                <select name="ano" class="filter-select" onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    {% for ano_opt in anos_disponiveis %}
+                    <option value="{{ ano_opt }}" {% if ano_opt == ano_selecionado %}selected{% endif %}>{{ ano_opt }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Tipo</label>
+                <select name="tipo" class="filter-select" onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    {% for tipo_choice in tipos_imposto %}
+                    <option value="{{ tipo_choice.0 }}" {% if tipo_choice.0 == tipo_selecionado %}selected{% endif %}>{{ tipo_choice.1 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Summary -->
+    <div class="summary-grid">
+        <div class="summary-card">
+            <div class="summary-label">Total de Guias</div>
+            <div class="summary-value">{{ total_guias }}</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-label">Valor Total Pago</div>
+            <div class="summary-value total">R$ {{ total_valor|floatformat:2 }}</div>
+        </div>
+    </div>
+    
+    <!-- History List -->
+    <div class="card-section">
+        <h2 class="section-title">Histórico</h2>
+        
+        {% if historico %}
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Competência</th>
+                    <th>Vencimento</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for guia in historico %}
+                <tr>
+                    <td>
+                        <span class="tipo-badge">{{ guia.get_tipo_display }}</span>
+                    </td>
+                    <td>{{ guia.competencia|date:"m/Y" }}</td>
+                    <td>{{ guia.vencimento|date:"d/m/Y" }}</td>
+                    <td class="valor-cell">R$ {{ guia.valor|floatformat:2 }}</td>
+                    <td>
+                        <span class="status-badge status-{{ guia.status }}">
+                            {% if guia.status == 'pago' %}Pago{% elif guia.status == 'a_vencer' %}A Vencer{% else %}Atrasado{% endif %}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📊</div>
+            <p class="empty-text">Nenhum histórico de imposto encontrado.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -419,7 +419,7 @@ class SolicitacaoAberturaMEI(models.Model):
     """
     Modelo para armazenar as solicitações de abertura de MEI.
     Coleta todos os dados necessários para o processo de abertura.
-    Valor fixo do serviço: R$ 2,00
+    Valor fixo do serviço: R$ 129,90
     """
     
     # Status do processo
@@ -456,7 +456,7 @@ class SolicitacaoAberturaMEI(models.Model):
     ]
     
     # Valor fixo do serviço
-    VALOR_SERVICO = 2.00
+    VALOR_SERVICO = 129.90
     
     # Metadados
     status = models.CharField(
@@ -634,3 +634,133 @@ class SolicitacaoAberturaMEI(models.Model):
             endereco += f" - {self.complemento}"
         endereco += f", {self.bairro}, {self.cidade}/{self.estado} - CEP: {self.cep}"
         return endereco
+
+
+class ServicoAvulso(models.Model):
+    """
+    Modelo para gerenciar serviços avulsos que podem ser contratados pelos clientes.
+    Exemplo: Rescisão Retroativa, Regularização Fiscal, etc.
+    """
+    titulo = models.CharField(
+        max_length=200,
+        verbose_name='Título do Serviço',
+        help_text='Nome do serviço (ex: Rescisão Retroativa)'
+    )
+    valor = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name='Valor',
+        help_text='Valor do serviço em R$'
+    )
+    descricao = models.TextField(
+        verbose_name='Descrição',
+        help_text='Descrição detalhada do serviço'
+    )
+    icone = models.CharField(
+        max_length=50,
+        default='fas fa-file-alt',
+        verbose_name='Ícone',
+        help_text='Classe do ícone FontAwesome (ex: fas fa-file-alt)'
+    )
+    ativo = models.BooleanField(
+        default=True,
+        verbose_name='Ativo',
+        help_text='Se o serviço está disponível para contratação'
+    )
+    ordem = models.IntegerField(
+        default=0,
+        verbose_name='Ordem',
+        help_text='Ordem de exibição (menor número aparece primeiro)'
+    )
+    criado_em = models.DateTimeField(auto_now_add=True)
+    atualizado_em = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = 'Serviço Avulso'
+        verbose_name_plural = 'Serviços Avulsos'
+        ordering = ['ordem', 'titulo']
+    
+    def __str__(self):
+        return f"{self.titulo} - R$ {self.valor}"
+
+
+class ContratacaoServicoAvulso(models.Model):
+    """
+    Modelo para registrar a contratação de um serviço avulso por um cliente.
+    """
+    STATUS_CHOICES = [
+        ('pendente', 'Pendente'),
+        ('aguardando_pagamento', 'Aguardando Pagamento'),
+        ('em_andamento', 'Em Andamento'),
+        ('concluido', 'Concluído'),
+        ('cancelado', 'Cancelado'),
+    ]
+    
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='contratacoes_servicos_avulsos',
+        verbose_name='Cliente'
+    )
+    servico = models.ForeignKey(
+        ServicoAvulso,
+        on_delete=models.PROTECT,
+        related_name='contratacoes',
+        verbose_name='Serviço'
+    )
+    status = models.CharField(
+        max_length=30,
+        choices=STATUS_CHOICES,
+        default='pendente',
+        verbose_name='Status'
+    )
+    valor_contratado = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name='Valor Contratado',
+        help_text='Valor do serviço no momento da contratação'
+    )
+    observacoes_cliente = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Observações do Cliente',
+        help_text='Observações enviadas pelo cliente ao contratar'
+    )
+    observacoes_internas = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Observações Internas',
+        help_text='Anotações internas sobre o andamento do serviço'
+    )
+    visualizado = models.BooleanField(
+        default=False,
+        verbose_name='Visualizado',
+        help_text='Se a equipe já visualizou essa contratação'
+    )
+    criado_em = models.DateTimeField(auto_now_add=True)
+    atualizado_em = models.DateTimeField(auto_now=True)
+    concluido_em = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name='Concluído em'
+    )
+    
+    class Meta:
+        verbose_name = 'Contratação de Serviço Avulso'
+        verbose_name_plural = 'Contratações de Serviços Avulsos'
+        ordering = ['-criado_em']
+    
+    def __str__(self):
+        return f"{self.usuario.get_full_name() or self.usuario.email} - {self.servico.titulo}"
+    
+    def save(self, *args, **kwargs):
+        # Se não tem valor contratado, pega do serviço
+        if not self.valor_contratado:
+            self.valor_contratado = self.servico.valor
+        
+        # Se mudou para concluído, marca a data
+        if self.status == 'concluido' and not self.concluido_em:
+            from django.utils import timezone
+            self.concluido_em = timezone.now()
+        
+        super().save(*args, **kwargs)

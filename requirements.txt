@@ -49,6 +49,11 @@ google-auth-httplib2>=0.1.0
 google-auth-oauthlib>=1.0.0
 
 # ==================================
+# GROQ - ATENDENTE IA (Llama 3)
+# ==================================
+groq>=0.4.0
+
+# ==================================
 # DESENVOLVIMENTO (OPCIONAL)
 # ==================================
 # django-debug-toolbar>=4.2.0

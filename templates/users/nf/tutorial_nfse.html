@@ -1,0 +1,137 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Como Emitir NF de Serviço - Vetorial{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-title { font-size: 1.5rem; font-weight: 600; color: #1f2937; }
+    .card-section { background: #fff; border-radius: 12px; padding: 1.5rem; border: 1px solid #f3f4f6; }
+    .step-item { display: flex; align-items: flex-start; padding: 1rem 0; border-bottom: 1px solid #f3f4f6; }
+    .step-item:last-child { border-bottom: none; }
+    .step-number { width: 32px; height: 32px; background: #eff6ff; color: #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem; flex-shrink: 0; margin-right: 1rem; }
+    .step-content h6 { font-weight: 600; color: #1f2937; margin-bottom: 0.25rem; font-size: 0.95rem; }
+    .step-content p { color: #6b7280; font-size: 0.875rem; margin: 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{% url 'users:notas_fiscais' %}" class="text-decoration-none">Notas Fiscais</a></li>
+            <li class="breadcrumb-item active text-muted">Tutorial</li>
+        </ol>
+    </nav>
+    
+    <h1 class="page-title mb-4">Como emitir NF de serviço</h1>
+
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card-section">
+                <h6 class="fw-semibold mb-3 text-muted">Passo a Passo</h6>
+                
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h6>Acesse a área de Emissão</h6>
+                        <p>Clique em "Emitir NFs-e" no menu de Notas Fiscais.</p>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h6>Preencha os dados do tomador</h6>
+                        <p>Informe o nome, CPF/CNPJ e e-mail do cliente.</p>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h6>Descreva o serviço</h6>
+                        <p>Detalhe o serviço prestado de forma clara e específica.</p>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h6>Informe valor e código</h6>
+                        <p>Digite o valor e selecione o código CNAE correspondente.</p>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h6>Revise e emita</h6>
+                        <p>Confira os dados e clique em "Emitir Nota Fiscal".</p>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <div class="d-flex gap-3">
+                    <a href="{% url 'users:notas_fiscais' %}" class="btn btn-light">
+                        <i class="fas fa-arrow-left me-2"></i>Voltar
+                    </a>
+                    <a href="{% url 'users:emitir_nfse' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Emitir NFs-e
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card-section mb-3">
+                <h6 class="fw-semibold mb-3 text-muted">Dúvidas Frequentes</h6>
+                
+                <div class="accordion accordion-flush" id="faqAccordion">
+                    <div class="accordion-item border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed px-0 py-2" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" style="font-size: 0.875rem;">
+                                Prazo para cancelar?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body px-0 pt-0 text-muted" style="font-size: 0.8rem;">
+                                Geralmente 24 a 48 horas, conforme a prefeitura.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed px-0 py-2" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" style="font-size: 0.875rem;">
+                                Envio automático?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body px-0 pt-0 text-muted" style="font-size: 0.8rem;">
+                                Sim, se informar o e-mail do tomador.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed px-0 py-2" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" style="font-size: 0.875rem;">
+                                Posso emitir para CPF?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body px-0 pt-0 text-muted" style="font-size: 0.8rem;">
+                                Sim, para pessoas físicas e jurídicas.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

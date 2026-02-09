@@ -1,0 +1,178 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Formas de Pagamento - Vetorial{% endblock %}
+{% block page_title %}Formas de Pagamento{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card-section {
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 24px;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0 0 8px 0;
+    }
+    
+    .section-subtitle {
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin: 0 0 24px 0;
+    }
+    
+    /* Payment Methods */
+    .payment-methods {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .payment-method {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        background: #fafafa;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+    }
+    
+    .payment-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 16px;
+        font-size: 1.25rem;
+    }
+    
+    .payment-icon.boleto {
+        background: #eff6ff;
+        color: #2563eb;
+    }
+    
+    .payment-icon.pix {
+        background: #ecfdf5;
+        color: #059669;
+    }
+    
+    .payment-icon.cartao {
+        background: #f5f3ff;
+        color: #7c3aed;
+    }
+    
+    .payment-info h6 {
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0 0 4px 0;
+        font-size: 0.95rem;
+    }
+    
+    .payment-info p {
+        color: #6b7280;
+        font-size: 0.85rem;
+        margin: 0;
+    }
+    
+    .payment-badge {
+        margin-left: auto;
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background: #d1fae5;
+        color: #065f46;
+    }
+    
+    .payment-badge.inactive {
+        background: #f3f4f6;
+        color: #6b7280;
+    }
+    
+    /* Info Box */
+    .info-box {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin-top: 24px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .info-box i {
+        color: #2563eb;
+        font-size: 1.1rem;
+        margin-top: 2px;
+    }
+    
+    .info-box p {
+        color: #1e40af;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4" style="max-width: 700px;">
+    
+    <div class="card-section">
+        <h2 class="section-title">Métodos de Pagamento Disponíveis</h2>
+        <p class="section-subtitle">Escolha a forma de pagamento mais conveniente para você</p>
+        
+        <div class="payment-methods">
+            <div class="payment-method">
+                <div class="payment-icon boleto">
+                    <i class="fas fa-barcode"></i>
+                </div>
+                <div class="payment-info">
+                    <h6>Boleto Bancário</h6>
+                    <p>Pague em qualquer banco, lotérica ou internet banking</p>
+                </div>
+                <span class="payment-badge">Disponível</span>
+            </div>
+            
+            <div class="payment-method">
+                <div class="payment-icon pix">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <div class="payment-info">
+                    <h6>PIX</h6>
+                    <p>Pagamento instantâneo 24h por dia</p>
+                </div>
+                <span class="payment-badge">Disponível</span>
+            </div>
+            
+            <div class="payment-method">
+                <div class="payment-icon cartao">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="payment-info">
+                    <h6>Cartão de Crédito</h6>
+                    <p>Parcele em até 12x</p>
+                </div>
+                <span class="payment-badge inactive">Em breve</span>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <i class="fas fa-info-circle"></i>
+            <p>
+                Os boletos são enviados automaticamente para o seu e-mail cadastrado. 
+                Você também pode acessá-los na seção "Ver Faturas" a qualquer momento.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

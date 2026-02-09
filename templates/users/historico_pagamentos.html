@@ -1,0 +1,171 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Histórico de Pagamentos - Vetorial{% endblock %}
+{% block page_title %}Consultar Histórico{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Card Section */
+    .card-section {
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 24px;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0 0 20px 0;
+    }
+    
+    /* Stats */
+    .stats-card {
+        background: #ecfdf5;
+        border: 1px solid #d1fae5;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 24px;
+    }
+    
+    .stats-number {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #059669;
+    }
+    
+    .stats-label {
+        font-size: 0.85rem;
+        color: #065f46;
+        margin-top: 4px;
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 48px 20px;
+        color: #9ca3af;
+    }
+    
+    .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+    
+    .empty-text {
+        font-size: 0.95rem;
+        color: #6b7280;
+    }
+    
+    /* Pagamento List */
+    .pagamento-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .pagamento-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: #fafafa;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+    }
+    
+    .pagamento-info {
+        flex: 1;
+    }
+    
+    .pagamento-referencia {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #1f2937;
+        margin-bottom: 4px;
+    }
+    
+    .pagamento-meta {
+        display: flex;
+        gap: 16px;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+    
+    .pagamento-valor {
+        font-weight: 500;
+        color: #059669;
+    }
+    
+    .pagamento-data {
+        color: #6b7280;
+    }
+    
+    .pagamento-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background: #d1fae5;
+        color: #065f46;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .pagamento-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4" style="max-width: 900px;">
+    
+    <!-- Stats -->
+    <div class="stats-card">
+        <div class="stats-number">{{ total_pagos }}</div>
+        <div class="stats-label">Pagamento{{ total_pagos|pluralize:"s" }} realizado{{ total_pagos|pluralize:"s" }}</div>
+    </div>
+    
+    <!-- Histórico List -->
+    <div class="card-section">
+        <h2 class="section-title">Histórico de Pagamentos</h2>
+        
+        {% if boletos_pagos %}
+        <div class="pagamento-list">
+            {% for boleto in boletos_pagos %}
+            <div class="pagamento-item">
+                <div class="pagamento-info">
+                    <div class="pagamento-referencia">{{ boleto.referencia }}</div>
+                    <div class="pagamento-meta">
+                        <span class="pagamento-valor">R$ {{ boleto.valor|floatformat:2 }}</span>
+                        <span class="pagamento-data">
+                            Pago em {{ boleto.atualizado_em|date:"d/m/Y" }}
+                        </span>
+                    </div>
+                </div>
+                
+                <span class="pagamento-badge">
+                    <i class="fas fa-check me-1"></i> Pago
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">💰</div>
+            <p class="empty-text">Nenhum pagamento registrado até o momento.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

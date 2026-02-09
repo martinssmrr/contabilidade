@@ -370,22 +370,31 @@
             Impostos e Obrigações
           </a>
 
-          <!-- 5. DOCUMENTOS -->
+          <!-- 5. MENSALIDADE -->
           <a
-            href="{% url 'users:documentos' %}"
-            class="sidebar-nav-item {% if request.resolver_match.url_name == 'documentos' %}active{% endif %}"
+            href="{% url 'users:mensalidade' %}"
+            class="sidebar-nav-item {% if request.resolver_match.url_name == 'mensalidade' %}active{% endif %}"
           >
             <i class="fas fa-folder-open"></i>
-            Documentos
+            Mensalidade
           </a>
 
           <!-- 6. ATENDIMENTO -->
           <a
             href="{% url 'support:dashboard_cliente' %}"
-            class="sidebar-nav-item {% if 'support' in request.resolver_match.app_names %}active{% endif %}"
+            class="sidebar-nav-item {% if request.resolver_match.url_name == 'dashboard_cliente' %}active{% endif %}"
           >
             <i class="fas fa-headset"></i>
             Atendimento
+          </a>
+
+          <!-- 6.1 ASSISTENTE IA -->
+          <a
+            href="{% url 'support:assistente_ia' %}"
+            class="sidebar-nav-item {% if request.resolver_match.url_name == 'assistente_ia' %}active{% endif %}"
+          >
+            <i class="fas fa-robot"></i>
+            Assistente IA
           </a>
           
           <!-- 7. MINHA EMPRESA -->

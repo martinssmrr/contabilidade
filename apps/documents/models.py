@@ -603,3 +603,113 @@ class NotaFiscalCliente(models.Model):
                     return f"{size:.1f} {unit}"
                 size /= 1024.0
         return "0 B"
+
+
+def boleto_contabilidade_upload_path(instance, filename):
+    """
+    Define o caminho de upload dos boletos de contabilidade.
+    Organiza por ano/mês e ID do cliente.
+    """
+    from datetime import datetime
+    now = datetime.now()
+    return f'boletos_contabilidade/{now.year}/{now.month:02d}/cliente_{instance.cliente.id}/{filename}'
+
+
+class BoletoContabilidade(models.Model):
+    """
+    Modelo para gerenciamento de Boletos da Mensalidade de Contabilidade.
+    Enviados pela equipe do escritório para os clientes.
+    """
+    STATUS_CHOICES = [
+        ('pendente', 'Pendente'),
+        ('pago', 'Pago'),
+        ('vencido', 'Vencido'),
+        ('cancelado', 'Cancelado'),
+    ]
+    
+    cliente = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='boletos_contabilidade',
+        verbose_name='Cliente',
+        help_text='Cliente que receberá o boleto'
+    )
+    
+    referencia = models.CharField(
+        max_length=50,
+        verbose_name='Mês de Referência',
+        help_text='Mês/ano de referência do boleto (ex: Janeiro/2026)'
+    )
+    
+    valor = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name='Valor',
+        help_text='Valor do boleto em reais'
+    )
+    
+    data_vencimento = models.DateField(
+        verbose_name='Data de Vencimento',
+        help_text='Data de vencimento do boleto'
+    )
+    
+    arquivo_boleto = models.FileField(
+        upload_to=boleto_contabilidade_upload_path,
+        verbose_name='Arquivo do Boleto',
+        help_text='Arquivo PDF do boleto'
+    )
+    
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pendente',
+        verbose_name='Status'
+    )
+    
+    observacoes = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Observações',
+        help_text='Observações internas sobre este boleto'
+    )
+    
+    enviado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='boletos_enviados',
+        limit_choices_to={'is_staff': True},
+        verbose_name='Enviado por'
+    )
+    
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
+    atualizado_em = models.DateTimeField(auto_now=True, verbose_name='Atualizado em')
+    
+    class Meta:
+        verbose_name = 'Boleto Contabilidade'
+        verbose_name_plural = 'Boletos Contabilidade'
+        ordering = ['-criado_em']
+    
+    def __str__(self):
+        return f"Boleto {self.referencia} - {self.cliente.get_full_name() or self.cliente.username}"
+    
+    @property
+    def nome_arquivo(self):
+        if self.arquivo_boleto:
+            return os.path.basename(self.arquivo_boleto.name)
+        return "Sem arquivo"
+    
+    @property
+    def tamanho_arquivo(self):
+        if self.arquivo_boleto:
+            size = self.arquivo_boleto.size
+            for unit in ['B', 'KB', 'MB', 'GB']:
+                if size < 1024.0:
+                    return f"{size:.1f} {unit}"
+                size /= 1024.0
+        return "0 B"
+    
+    @property
+    def is_vencido(self):
+        from datetime import date
+        return self.data_vencimento < date.today() and self.status == 'pendente'

@@ -195,7 +195,31 @@ def api_certidoes_status(request):
 @login_required
 def notas_fiscais(request):
     """
-    View para o cliente visualizar e enviar notas fiscais.
+    View para exibir o menu de notas fiscais.
+    """
+    return render(request, 'users/notas_fiscais.html')
+
+
+@login_required
+def emitir_nfse(request):
+    """
+    View para emissão de NFS-e.
+    """
+    return render(request, 'users/nf/emitir_nfse.html')
+
+
+@login_required
+def tutorial_nfse(request):
+    """
+    View com tutorial de como emitir NF de serviço.
+    """
+    return render(request, 'users/nf/tutorial_nfse.html')
+
+
+@login_required
+def importar_notas(request):
+    """
+    View para importar/enviar notas fiscais para a contabilidade.
     """
     from apps.documents.models import NotaFiscal, NotaFiscalCliente
     
@@ -204,11 +228,6 @@ def notas_fiscais(request):
         descricao = request.POST.get('descricao', '')
         
         if arquivo:
-            # Validar tamanho/extensão se necessário (usando utils existente se houver)
-            # from .utils import validate_file_upload
-            # is_valid, err = validate_file_upload(arquivo)
-            # if not is_valid: messages.error...
-            
             try:
                 NotaFiscalCliente.objects.create(
                     cliente=request.user,
@@ -216,33 +235,79 @@ def notas_fiscais(request):
                     descricao=descricao
                 )
                 messages.success(request, 'Nota fiscal enviada com sucesso! A equipe de contabilidade será notificada.')
-                return redirect('users:notas_fiscais')
+                return redirect('users:importar_notas')
             except Exception as e:
                 messages.error(request, f'Erro ao enviar arquivo: {str(e)}')
         else:
             messages.error(request, 'Por favor, selecione um arquivo para enviar.')
-            
-    # Buscar todas as notas fiscais do usuário logado (Recebidas)
-    notas_recebidas = NotaFiscal.objects.filter(cliente=request.user).order_by('-data_upload')
     
     # Buscar notas enviadas pelo cliente
     notas_enviadas = NotaFiscalCliente.objects.filter(cliente=request.user).order_by('-data_envio')
     
     context = {
-        'notas_fiscais': notas_recebidas, # Manter compatibilidade se o template antigo for usado temporariamente
+        'notas_enviadas': notas_enviadas,
+        'total_enviadas': notas_enviadas.count(),
+    }
+    
+    return render(request, 'users/nf/importar_notas.html', context)
+
+
+@login_required
+def consultar_notas(request):
+    """
+    View para consultar notas fiscais emitidas e recebidas.
+    """
+    from apps.documents.models import NotaFiscal, NotaFiscalCliente
+    
+    notas_recebidas = NotaFiscal.objects.filter(cliente=request.user).order_by('-data_upload')
+    notas_enviadas = NotaFiscalCliente.objects.filter(cliente=request.user).order_by('-data_envio')
+    
+    context = {
         'notas_recebidas': notas_recebidas,
         'notas_enviadas': notas_enviadas,
-        'total_notas': notas_recebidas.count(),
         'total_recebidas': notas_recebidas.count(),
         'total_enviadas': notas_enviadas.count(),
     }
     
-    return render(request, 'users/notas_fiscais.html', context)
+    return render(request, 'users/nf/consultar_notas.html', context)
+
+
+@login_required
+def cancelar_nota(request):
+    """
+    View para solicitar cancelamento de nota fiscal.
+    """
+    return render(request, 'users/nf/cancelar_nota.html')
+
+
+@login_required
+def notas_tomadas(request):
+    """
+    View para registrar notas tomadas (notas de serviços contratados).
+    """
+    return render(request, 'users/nf/notas_tomadas.html')
+
+
+@login_required
+def minha_aliquota(request):
+    """
+    View para exibir a alíquota de ISS do cliente.
+    """
+    return render(request, 'users/nf/minha_aliquota.html')
 
 
 @login_required
 def pendencias(request):
-    """View para Certidões Negativas (pendências).
+    """View menu para Obrigações (Certidões, Guias, Impostos).
+    
+    Exibe um menu com links para as subpáginas.
+    """
+    return render(request, 'users/obrigacoes.html')
+
+
+@login_required
+def certidoes_negativas(request):
+    """View para Certidões Negativas.
 
     Recupera o último envio por tipo para o usuário logado e envia ao template.
     """
@@ -259,18 +324,94 @@ def pendencias(request):
     cert_trabalhista = last_for(CertidaoNegativa.TIPO_TRABALHISTA)
     cert_fgts = last_for(CertidaoNegativa.TIPO_FGTS)
 
-    # Buscando Guias de Impostos
-    guias = GuiaImposto.objects.filter(cliente=user).order_by('status', 'vencimento')
-
     context = {
         'cert_federal': cert_federal,
         'cert_estadual': cert_estadual,
         'cert_trabalhista': cert_trabalhista,
         'cert_fgts': cert_fgts,
-        'guias': guias,
     }
 
-    return render(request, 'users/pendencias.html', context)
+    return render(request, 'users/certidoes_negativas.html', context)
+
+
+@login_required
+def guias_pagamento(request):
+    """View para Guias de Pagamento.
+    
+    Exibe todas as guias de impostos do usuário.
+    """
+    user = request.user
+    guias = GuiaImposto.objects.filter(cliente=user).order_by('status', 'vencimento')
+    
+    # Estatísticas
+    guias_a_vencer = guias.filter(status='a_vencer').count()
+    guias_atrasadas = guias.filter(status='atrasado').count()
+    guias_pagas = guias.filter(status='pago').count()
+    
+    context = {
+        'guias': guias,
+        'guias_a_vencer': guias_a_vencer,
+        'guias_atrasadas': guias_atrasadas,
+        'guias_pagas': guias_pagas,
+    }
+    
+    return render(request, 'users/guias_pagamento.html', context)
+
+
+@login_required
+def historico_imposto(request):
+    """View para Histórico de Impostos.
+    
+    Exibe o histórico de todos os impostos do usuário com filtros.
+    """
+    from django.db.models import Sum
+    
+    user = request.user
+    
+    # Filtros
+    ano_selecionado = request.GET.get('ano', '')
+    tipo_selecionado = request.GET.get('tipo', '')
+    
+    # Buscar todas as guias
+    historico = GuiaImposto.objects.filter(cliente=user).order_by('-vencimento')
+    
+    # Anos disponíveis para filtro
+    anos_disponiveis = historico.dates('vencimento', 'year').values_list('vencimento__year', flat=True)
+    anos_disponiveis = sorted(set(anos_disponiveis), reverse=True)
+    
+    # Tipos de imposto para filtro
+    tipos_imposto = GuiaImposto.TIPO_CHOICES
+    
+    # Aplicar filtros
+    if ano_selecionado:
+        historico = historico.filter(vencimento__year=int(ano_selecionado))
+    if tipo_selecionado:
+        historico = historico.filter(tipo=tipo_selecionado)
+    
+    # Calcular totais
+    total_guias = historico.count()
+    total_valor = historico.filter(status='pago').aggregate(total=Sum('valor'))['total'] or 0
+    
+    context = {
+        'historico': historico,
+        'anos_disponiveis': anos_disponiveis,
+        'tipos_imposto': tipos_imposto,
+        'ano_selecionado': ano_selecionado,
+        'tipo_selecionado': tipo_selecionado,
+        'total_guias': total_guias,
+        'total_valor': total_valor,
+    }
+    
+    return render(request, 'users/historico_imposto.html', context)
+
+
+@login_required
+def simulador_imposto(request):
+    """View para Simulador de Impostos.
+    
+    Página com calculadora de impostos.
+    """
+    return render(request, 'users/simulador_imposto.html')
 
 
 @login_required
@@ -366,38 +507,122 @@ def minha_empresa(request):
         else:
             fase['status'] = 'pending'
     
+    # Dados da empresa (cliente_profile)
+    cliente_profile = None
+    if hasattr(request.user, 'cliente_profile'):
+        cliente_profile = request.user.cliente_profile
+    
     context = {
         'documentos': documentos,
         'total_documentos': documentos.count(),
         'fases': fases,
         'fase_atual_id': fase_atual_id,
-        'is_concluido': fase_atual_id == 'fase_7'
+        'is_concluido': fase_atual_id == 'fase_7',
+        'cliente_profile': cliente_profile,
     }
     
     return render(request, 'users/minha_empresa.html', context)
 
 
 @login_required
-def documentos(request):
+def mensalidade(request):
     """
-    View para o cliente visualizar todos os seus documentos.
-    Inclui: Notas Fiscais e Documentos da Empresa.
+    View para o cliente visualizar seus boletos de contabilidade.
+    Renomeada para exibir apenas boletos da mensalidade.
     """
-    from apps.documents.models import NotaFiscal, DocumentoEmpresa
+    from apps.documents.models import BoletoContabilidade
+    from datetime import date
     
-    # Buscar todos os documentos do usuário logado
-    notas_fiscais = NotaFiscal.objects.filter(cliente=request.user).order_by('-data_upload')
-    documentos_empresa = DocumentoEmpresa.objects.filter(cliente=request.user).order_by('-data_upload')
+    # Buscar todos os boletos do usuário logado
+    boletos = BoletoContabilidade.objects.filter(cliente=request.user).order_by('-criado_em')
+    
+    # Atualizar status de vencidos automaticamente
+    hoje = date.today()
+    boletos_pendentes = boletos.filter(status='pendente', data_vencimento__lt=hoje)
+    for boleto in boletos_pendentes:
+        boleto.status = 'vencido'
+        boleto.save()
+    
+    # Recarregar boletos após atualização
+    boletos = BoletoContabilidade.objects.filter(cliente=request.user).order_by('-criado_em')
+    
+    # Estatísticas
+    total_boletos = boletos.count()
+    boletos_pendentes_count = boletos.filter(status='pendente').count()
+    boletos_vencidos_count = boletos.filter(status='vencido').count()
+    boletos_pagos_count = boletos.filter(status='pago').count()
     
     context = {
-        'notas_fiscais': notas_fiscais,
-        'documentos_empresa': documentos_empresa,
-        'total_notas': notas_fiscais.count(),
-        'total_documentos': documentos_empresa.count(),
-        'total_geral': notas_fiscais.count() + documentos_empresa.count(),
+        'boletos': boletos,
+        'total_boletos': total_boletos,
+        'boletos_pendentes': boletos_pendentes_count,
+        'boletos_vencidos': boletos_vencidos_count,
+        'boletos_pagos': boletos_pagos_count,
     }
     
-    return render(request, 'users/documentos.html', context)
+    return render(request, 'users/mensalidade.html', context)
+
+
+@login_required
+def ver_faturas(request):
+    """View para o cliente visualizar suas faturas e boletos."""
+    from apps.documents.models import BoletoContabilidade
+    from datetime import date
+    
+    # Buscar todos os boletos do usuário logado
+    boletos = BoletoContabilidade.objects.filter(cliente=request.user).order_by('-criado_em')
+    
+    # Atualizar status de vencidos automaticamente
+    hoje = date.today()
+    boletos_pendentes = boletos.filter(status='pendente', data_vencimento__lt=hoje)
+    for boleto in boletos_pendentes:
+        boleto.status = 'vencido'
+        boleto.save()
+    
+    # Recarregar boletos após atualização
+    boletos = BoletoContabilidade.objects.filter(cliente=request.user).order_by('-criado_em')
+    
+    # Estatísticas
+    total_boletos = boletos.count()
+    boletos_pendentes_count = boletos.filter(status='pendente').count()
+    boletos_vencidos_count = boletos.filter(status='vencido').count()
+    boletos_pagos_count = boletos.filter(status='pago').count()
+    
+    context = {
+        'boletos': boletos,
+        'total_boletos': total_boletos,
+        'boletos_pendentes': boletos_pendentes_count,
+        'boletos_vencidos': boletos_vencidos_count,
+        'boletos_pagos': boletos_pagos_count,
+    }
+    
+    return render(request, 'users/ver_faturas.html', context)
+
+
+@login_required
+def historico_pagamentos(request):
+    """View para o cliente consultar histórico de pagamentos."""
+    from apps.documents.models import BoletoContabilidade
+    
+    # Buscar apenas boletos pagos do usuário
+    boletos_pagos = BoletoContabilidade.objects.filter(
+        cliente=request.user, 
+        status='pago'
+    ).order_by('-atualizado_em', '-criado_em')
+    
+    context = {
+        'boletos_pagos': boletos_pagos,
+        'total_pagos': boletos_pagos.count(),
+    }
+    
+    return render(request, 'users/historico_pagamentos.html', context)
+
+
+@login_required
+def formas_pagamento(request):
+    """View para o cliente gerenciar formas de pagamento."""
+    context = {}
+    return render(request, 'users/formas_pagamento.html', context)
 
 
 @login_required
@@ -635,14 +860,117 @@ def contabilidade_history(request):
 
 @login_required
 def meu_plano(request):
-    """View para Meu Plano"""
-    return render(request, 'users/meu_plano.html')
+    """View para Meu Plano - exibe informações da assinatura do usuário"""
+    from apps.services.models import Subscription, Plano
+    
+    # Buscar assinatura ativa do usuário
+    subscription = Subscription.objects.filter(
+        cliente=request.user, 
+        status='ativa'
+    ).select_related('plano').first()
+    
+    # Se não tiver ativa, busca a última assinatura
+    if not subscription:
+        subscription = Subscription.objects.filter(
+            cliente=request.user
+        ).select_related('plano').order_by('-criado_em').first()
+    
+    # Buscar o plano correspondente no modelo Plano (marketing) para obter features
+    plano_marketing = None
+    if subscription and subscription.plano:
+        # Buscar planos com o mesmo nome que tenham features configuradas
+        planos_candidatos = Plano.objects.filter(
+            nome__iexact=subscription.plano.nome
+        )
+        # Preferir o plano que tem features preenchidas
+        for p in planos_candidatos:
+            if p.features_included or p.features_excluded:
+                plano_marketing = p
+                break
+        # Se nenhum tem features, pega o primeiro
+        if not plano_marketing:
+            plano_marketing = planos_candidatos.first()
+    
+    context = {
+        'subscription': subscription,
+        'plano_marketing': plano_marketing,
+    }
+    
+    return render(request, 'users/meu_plano.html', context)
 
 
 @login_required
 def servicos_avulsos(request):
-    """View para Serviços Avulsos"""
-    return render(request, 'users/servicos_avulsos.html')
+    """View para Serviços Avulsos - Lista serviços disponíveis e contratações do usuário"""
+    from apps.services.models import ServicoAvulso, ContratacaoServicoAvulso
+    
+    # Serviços ativos disponíveis
+    servicos = ServicoAvulso.objects.filter(ativo=True).order_by('ordem', 'titulo')
+    
+    # Contratações do usuário
+    minhas_contratacoes = ContratacaoServicoAvulso.objects.filter(
+        usuario=request.user
+    ).select_related('servico').order_by('-criado_em')
+    
+    context = {
+        'servicos': servicos,
+        'minhas_contratacoes': minhas_contratacoes,
+    }
+    return render(request, 'users/servicos_avulsos.html', context)
+
+
+@login_required
+@require_POST
+def contratar_servico_avulso(request, servico_id):
+    """View para contratar um serviço avulso"""
+    from apps.services.models import ServicoAvulso, ContratacaoServicoAvulso
+    
+    try:
+        servico = ServicoAvulso.objects.get(id=servico_id, ativo=True)
+    except ServicoAvulso.DoesNotExist:
+        messages.error(request, 'Serviço não encontrado ou não está mais disponível.')
+        return redirect('users:servicos_avulsos')
+    
+    observacoes = request.POST.get('observacoes', '').strip()
+    
+    # Criar a contratação
+    contratacao = ContratacaoServicoAvulso.objects.create(
+        usuario=request.user,
+        servico=servico,
+        valor_contratado=servico.valor,
+        observacoes_cliente=observacoes if observacoes else None,
+        status='pendente'
+    )
+    
+    messages.success(
+        request, 
+        f'Serviço "{servico.titulo}" contratado com sucesso! Nossa equipe entrará em contato em breve.'
+    )
+    return redirect('users:servicos_avulsos')
+
+
+@login_required
+def minhas_contratacoes_avulsas(request):
+    """API que retorna as contratações do usuário em JSON"""
+    from apps.services.models import ContratacaoServicoAvulso
+    
+    contratacoes = ContratacaoServicoAvulso.objects.filter(
+        usuario=request.user
+    ).select_related('servico').order_by('-criado_em')
+    
+    data = []
+    for c in contratacoes:
+        data.append({
+            'id': c.id,
+            'servico': c.servico.titulo,
+            'valor': float(c.valor_contratado),
+            'status': c.status,
+            'status_display': c.get_status_display(),
+            'criado_em': c.criado_em.strftime('%d/%m/%Y %H:%M'),
+            'concluido_em': c.concluido_em.strftime('%d/%m/%Y %H:%M') if c.concluido_em else None,
+        })
+    
+    return JsonResponse({'success': True, 'contratacoes': data})
 
 
 @login_required

@@ -1,195 +1,181 @@
 {% extends 'base_dashboard.html' %}
 {% load static %}
 
-{% block page_title %}Certidões Negativas{% endblock %}
+{% block title %}Certidões Negativas - Vetorial{% endblock %}
 
 {% block extra_css %}
 <style>
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+    
+    .header-section {
+        margin-bottom: 32px;
+    }
+    
     .page-title {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
         font-weight: 600;
         color: #1f2937;
-        margin-bottom: 0.25rem;
+        margin: 0 0 8px 0;
     }
+    
     .page-subtitle {
+        font-size: 0.95rem;
         color: #6b7280;
-        font-size: 0.9rem;
+        margin: 0;
     }
-    .card-section {
-        background: #fff;
-        border: 1px solid #f3f4f6;
-        border-radius: 8px;
-        padding: 1.5rem;
-        margin-bottom: 1.25rem;
-    }
-    .section-title {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 1rem;
-        display: flex;
+    
+    .back-link {
+        display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-    }
-    .section-title i {
+        gap: 6px;
         color: #6b7280;
+        text-decoration: none;
         font-size: 0.9rem;
+        margin-bottom: 16px;
+    }
+    
+    .back-link:hover {
+        color: #374151;
     }
     
     /* Certidões Grid */
     .certidoes-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
     }
+    
     .certidao-card {
         background: #fff;
         border: 1px solid #f3f4f6;
         border-radius: 8px;
-        padding: 1.25rem;
+        padding: 24px;
     }
+    
     .certidao-header {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        margin-bottom: 1rem;
+        margin-bottom: 16px;
     }
+    
     .certidao-icon {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         background: #f3f4f6;
-        border-radius: 8px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #6b7280;
     }
+    
     .certidao-title {
-        font-size: 0.95rem;
+        font-size: 1rem;
         font-weight: 600;
-        color: #374151;
-        margin-bottom: 0.25rem;
+        color: #1f2937;
+        margin-bottom: 4px;
     }
+    
     .certidao-subtitle {
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         color: #9ca3af;
     }
+    
+    .certidao-info {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin: 16px 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    /* Status */
     .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 50px;
-        font-size: 0.7rem;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
     }
+    
     .status-negativa {
         background: #d1fae5;
         color: #047857;
     }
+    
     .status-positiva {
         background: #fee2e2;
         color: #dc2626;
     }
+    
+    .status-indisponivel,
     .status-pendente {
         background: #fef3c7;
         color: #d97706;
     }
-    .certidao-info {
-        font-size: 0.8rem;
-        color: #6b7280;
-        margin-bottom: 1rem;
-    }
-    .certidao-info i {
-        margin-right: 0.25rem;
-    }
+    
+    /* Botão Download */
     .btn-download {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.5rem;
+        gap: 8px;
         width: 100%;
-        padding: 0.6rem 1rem;
-        background: #fff;
-        border: 1px solid #e5e7eb;
+        padding: 10px 16px;
+        background: #1f2937;
+        border: none;
         border-radius: 6px;
-        color: #374151;
+        color: #fff;
         font-size: 0.85rem;
         font-weight: 500;
         text-decoration: none;
         transition: all 0.15s ease;
     }
+    
     .btn-download:hover {
-        border-color: #3b82f6;
-        color: #3b82f6;
+        background: #374151;
+        color: #fff;
     }
-    .btn-download:disabled, .btn-download.disabled {
-        background: #f9fafb;
+    
+    .btn-download.disabled {
+        background: #f3f4f6;
         color: #9ca3af;
         cursor: not-allowed;
     }
     
-    /* Guias Table */
-    .guias-table {
-        width: 100%;
-        font-size: 0.875rem;
-    }
-    .guias-table th {
-        font-weight: 500;
-        color: #6b7280;
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #e5e7eb;
-        text-align: left;
-    }
-    .guias-table td {
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #f3f4f6;
-        color: #374151;
-    }
-    .guias-table tr:last-child td {
-        border-bottom: none;
-    }
-    .guia-name {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    .guia-name i {
-        color: #9ca3af;
-    }
-    .guia-valor {
-        font-weight: 600;
-        color: #1f2937;
-    }
-    .btn-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 6px;
-        border: 1px solid #e5e7eb;
-        background: #fff;
-        color: #6b7280;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        transition: all 0.15s ease;
-    }
-    .btn-icon:hover {
-        border-color: #3b82f6;
-        color: #3b82f6;
-    }
-    .empty-state {
-        text-align: center;
-        padding: 2rem 1rem;
-        color: #9ca3af;
-    }
-    .empty-state i {
-        font-size: 2rem;
-        margin-bottom: 0.75rem;
+    /* Responsive */
+    @media (max-width: 768px) {
+        .container {
+            padding: 24px 16px;
+        }
+        
+        .certidoes-grid {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4" style="max-width: 1000px;">
+<div class="container">
+    <!-- Back Link -->
+    <a href="{% url 'users:pendencias' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        Voltar para Obrigações
+    </a>
+    
+    <!-- Header -->
+    <div class="header-section">
+        <h1 class="page-title">Certidões Negativas</h1>
+        <p class="page-subtitle">Acompanhe a regularidade fiscal da sua empresa</p>
+    </div>
+
     <!-- Certidões Grid -->
     <div class="certidoes-grid">
         <!-- Federal -->
@@ -311,72 +297,6 @@
             <span class="btn-download disabled">Indisponível</span>
             {% endif %}
         </div>
-    </div>
-
-    <!-- Guias de Pagamento -->
-    <div class="card-section" style="margin-top: 2rem;">
-        <h2 class="section-title">
-            <i class="fas fa-file-invoice-dollar"></i>
-            Guias de Pagamento
-        </h2>
-        
-        {% if guias %}
-        <table class="guias-table">
-            <thead>
-                <tr>
-                    <th>Imposto</th>
-                    <th>Competência</th>
-                    <th>Vencimento</th>
-                    <th>Valor</th>
-                    <th>Status</th>
-                    <th style="width: 80px; text-align: right;">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for guia in guias %}
-                <tr>
-                    <td>
-                        <div class="guia-name">
-                            <i class="fas fa-file-alt"></i>
-                            <span>{{ guia.get_tipo_display }}</span>
-                        </div>
-                    </td>
-                    <td>{{ guia.competencia|date:"m/Y" }}</td>
-                    <td>{{ guia.vencimento|date:"d/m/Y" }}</td>
-                    <td class="guia-valor">R$ {{ guia.valor }}</td>
-                    <td>
-                        {% if guia.status == 'pago' %}
-                            <span class="status-badge status-negativa">Pago</span>
-                        {% elif guia.status == 'atrasado' %}
-                            <span class="status-badge status-positiva">Atrasado</span>
-                        {% else %}
-                            <span class="status-badge status-pendente">A Vencer</span>
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-                            {% if guia.arquivo_pdf %}
-                            <a href="{{ guia.arquivo_pdf.url }}" class="btn-icon" target="_blank" title="Baixar Guia">
-                                <i class="fas fa-download"></i>
-                            </a>
-                            {% endif %}
-                            {% if guia.comprovante %}
-                            <a href="{{ guia.comprovante.url }}" class="btn-icon" target="_blank" title="Comprovante">
-                                <i class="fas fa-check-circle"></i>
-                            </a>
-                            {% endif %}
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <div class="empty-state">
-            <i class="far fa-folder-open"></i>
-            <p>Nenhuma guia de pagamento disponível</p>
-        </div>
-        {% endif %}
     </div>
 </div>
 {% endblock %}

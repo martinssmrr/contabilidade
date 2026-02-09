@@ -1,8 +1,7 @@
 {% extends 'base_dashboard.html' %}
 {% load static %}
 
-{% block title %}Notas Fiscais - Vetorial{% endblock %}
-{% block page_title %}Notas Fiscais{% endblock %}
+{% block title %}Obrigações - Vetorial{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -79,118 +78,73 @@
     .bg-yellow-soft { background: #fffbeb; color: #d97706; }
     .bg-red-soft { background: #fef2f2; color: #dc2626; }
     .bg-cyan-soft { background: #ecfeff; color: #0891b2; }
-    .bg-pink-soft { background: #fdf2f8; color: #db2777; }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid py-4">
     
-    <!-- Messages -->
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
+    <!-- Header -->
+    <div class="mb-4">
+        <h1 class="page-title">Obrigações</h1>
+        <p class="page-subtitle">Certidões, guias e impostos</p>
+    </div>
 
     <!-- Menu List -->
     <div class="row g-3">
         
         <div class="col-md-6">
-            <a href="{% url 'users:emitir_nfse' %}" class="menu-item">
+            <a href="{% url 'users:certidoes_negativas' %}" class="menu-item">
                 <div class="menu-icon bg-green-soft">
-                    <i class="fas fa-plus"></i>
+                    <i class="fas fa-file-certificate"></i>
                 </div>
                 <div class="menu-content">
-                    <h6>Emitir NFs-e</h6>
-                    <p>Emita notas fiscais de serviço</p>
+                    <h6>Certidões Negativas</h6>
+                    <p>Visualize suas certidões</p>
                 </div>
                 <i class="fas fa-chevron-right menu-arrow"></i>
             </a>
         </div>
         
         <div class="col-md-6">
-            <a href="{% url 'users:tutorial_nfse' %}" class="menu-item">
+            <a href="{% url 'users:guias_pagamento' %}" class="menu-item">
                 <div class="menu-icon bg-blue-soft">
-                    <i class="fas fa-book-open"></i>
+                    <i class="fas fa-barcode"></i>
                 </div>
                 <div class="menu-content">
-                    <h6>Como emitir NF de serviço</h6>
-                    <p>Tutorial passo a passo</p>
+                    <h6>Guias de Pagamento</h6>
+                    <p>DAS, INSS, FGTS e mais</p>
                 </div>
                 <i class="fas fa-chevron-right menu-arrow"></i>
             </a>
         </div>
         
         <div class="col-md-6">
-            <a href="{% url 'users:importar_notas' %}" class="menu-item">
+            <a href="{% url 'users:historico_imposto' %}" class="menu-item">
                 <div class="menu-icon bg-purple-soft">
-                    <i class="fas fa-upload"></i>
+                    <i class="fas fa-history"></i>
                 </div>
                 <div class="menu-content">
-                    <h6>Importar Notas Fiscais</h6>
-                    <p>Envie notas para a contabilidade</p>
+                    <h6>Histórico de Imposto</h6>
+                    <p>Consulte impostos anteriores</p>
                 </div>
                 <i class="fas fa-chevron-right menu-arrow"></i>
             </a>
         </div>
         
         <div class="col-md-6">
-            <a href="{% url 'users:consultar_notas' %}" class="menu-item">
+            <a href="{% url 'users:simulador_imposto' %}" class="menu-item">
                 <div class="menu-icon bg-yellow-soft">
-                    <i class="fas fa-search"></i>
+                    <i class="fas fa-calculator"></i>
                 </div>
                 <div class="menu-content">
-                    <h6>Consultar Notas Fiscais</h6>
-                    <p>Visualize notas emitidas e recebidas</p>
-                </div>
-                <i class="fas fa-chevron-right menu-arrow"></i>
-            </a>
-        </div>
-        
-        <div class="col-md-6">
-            <a href="{% url 'users:cancelar_nota' %}" class="menu-item">
-                <div class="menu-icon bg-red-soft">
-                    <i class="fas fa-times"></i>
-                </div>
-                <div class="menu-content">
-                    <h6>Cancelar Nota Fiscal</h6>
-                    <p>Solicite cancelamento de notas</p>
-                </div>
-                <i class="fas fa-chevron-right menu-arrow"></i>
-            </a>
-        </div>
-        
-        <div class="col-md-6">
-            <a href="{% url 'users:notas_tomadas' %}" class="menu-item">
-                <div class="menu-icon bg-cyan-soft">
-                    <i class="fas fa-file-import"></i>
-                </div>
-                <div class="menu-content">
-                    <h6>Registrar Notas Tomadas</h6>
-                    <p>Notas de serviços contratados</p>
-                </div>
-                <i class="fas fa-chevron-right menu-arrow"></i>
-            </a>
-        </div>
-        
-        <div class="col-md-6">
-            <a href="{% url 'users:minha_aliquota' %}" class="menu-item">
-                <div class="menu-icon bg-pink-soft">
-                    <i class="fas fa-percentage"></i>
-                </div>
-                <div class="menu-content">
-                    <h6>Ver Minha Alíquota</h6>
-                    <p>Informações tributárias</p>
+                    <h6>Simulador de Imposto</h6>
+                    <p>Simule seus impostos</p>
                 </div>
                 <i class="fas fa-chevron-right menu-arrow"></i>
             </a>
         </div>
         
     </div>
-    
 </div>
 {% endblock %}

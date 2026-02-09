@@ -1,0 +1,103 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Minha Alíquota - Vetorial{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-title { font-size: 1.5rem; font-weight: 600; color: #1f2937; }
+    .card-section { background: #fff; border-radius: 12px; padding: 1.5rem; border: 1px solid #f3f4f6; }
+    .aliquota-display { text-align: center; padding: 2rem 1rem; }
+    .aliquota-value { font-size: 3.5rem; font-weight: 800; color: #059669; }
+    .tributo-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6; }
+    .tributo-row:last-child { border-bottom: none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{% url 'users:notas_fiscais' %}" class="text-decoration-none">Notas Fiscais</a></li>
+            <li class="breadcrumb-item active text-muted">Alíquota</li>
+        </ol>
+    </nav>
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="page-title mb-0">Minha Alíquota</h1>
+        <a href="{% url 'users:notas_fiscais' %}" class="btn btn-light btn-sm">
+            <i class="fas fa-arrow-left me-1"></i>Voltar
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card-section aliquota-display">
+                <span class="badge bg-success mb-3">ISS Municipal</span>
+                <div class="aliquota-value">5%</div>
+                <p class="text-muted small mb-3">Alíquota padrão para sua atividade</p>
+                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                    <span class="badge bg-light text-dark">São Paulo/SP</span>
+                    <span class="badge bg-light text-dark">Serviços de TI</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <div class="card-section mb-4">
+                <h6 class="fw-semibold mb-3 text-muted">Detalhamento Tributário</h6>
+                
+                <div class="tributo-row">
+                    <div>
+                        <strong style="font-size: 0.9rem;">ISS</strong>
+                        <p class="text-muted small mb-0">Imposto municipal</p>
+                    </div>
+                    <span class="badge bg-success align-self-center">5,00%</span>
+                </div>
+                
+                <div class="tributo-row">
+                    <div>
+                        <strong style="font-size: 0.9rem;">IRPJ</strong>
+                        <p class="text-muted small mb-0">Base: 32% do faturamento</p>
+                    </div>
+                    <span class="badge bg-warning text-dark align-self-center">4,80%</span>
+                </div>
+                
+                <div class="tributo-row">
+                    <div>
+                        <strong style="font-size: 0.9rem;">CSLL</strong>
+                        <p class="text-muted small mb-0">Base: 32% do faturamento</p>
+                    </div>
+                    <span class="badge bg-info align-self-center">2,88%</span>
+                </div>
+                
+                <div class="tributo-row">
+                    <div>
+                        <strong style="font-size: 0.9rem;">PIS/COFINS</strong>
+                        <p class="text-muted small mb-0">Contribuições federais</p>
+                    </div>
+                    <span class="badge bg-secondary align-self-center">3,65%</span>
+                </div>
+                
+                <hr class="my-3">
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong>Carga Tributária Estimada</strong>
+                    <span class="badge bg-danger fs-6 px-3">≈ 16,33%</span>
+                </div>
+            </div>
+            
+            <div class="card-section">
+                <h6 class="fw-semibold mb-3 text-muted">Observações</h6>
+                <ul class="list-unstyled mb-0" style="font-size: 0.85rem; color: #6b7280;">
+                    <li class="mb-2"><i class="fas fa-lightbulb text-warning me-2"></i>Valores baseados no Lucro Presumido</li>
+                    <li class="mb-2"><i class="fas fa-map-marker-alt text-muted me-2"></i>Alíquota de ISS varia por município</li>
+                    <li><i class="fas fa-headset text-muted me-2"></i>Dúvidas? Fale com um contador</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

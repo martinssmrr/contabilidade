@@ -4,260 +4,450 @@
 {% block title %}Início - Área do Cliente Vetorial{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/dashboard-modern.css' %}">
 <style>
-    /* Estilos Específicos para a Nova Dashboard */
+    .page-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.25rem;
+    }
+    .page-subtitle {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-bottom: 0;
+    }
+    .card-section {
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .section-title i {
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    /* Welcome Banner Minimalista */
     .welcome-banner {
-        background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
-        color: white;
-        border-radius: 12px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
     }
-    .welcome-banner::after {
-        content: '';
-        position: absolute;
-        right: -20px;
-        bottom: -40px;
-        width: 150px;
-        height: 150px;
-        background: rgba(255,255,255,0.1);
-        border-radius: 50%;
+    .welcome-info h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.25rem;
     }
-    .grid-container {
+    .welcome-info p {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+    .welcome-date {
+        background: #f3f4f6;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+    .welcome-date i {
+        margin-right: 0.5rem;
+    }
+
+    /* Grid de Ações */
+    .actions-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
     }
     .action-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        border: 1px solid #e9ecef;
-        transition: transform 0.2s, box-shadow 0.2s;
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 1.25rem;
         text-decoration: none;
-        color: inherit;
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        height: 100%;
-        justify-content: center;
+        transition: border-color 0.15s ease;
     }
     .action-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-        border-color: #0d6efd;
+        border-color: #d1d5db;
     }
     .action-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background-color: #e7f1ff;
-        color: #0d6efd;
+        width: 48px;
+        height: 48px;
+        background: #f3f4f6;
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
+        color: #6b7280;
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
     }
-    .section-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #2c3e50;
-        margin-bottom: 1rem;
+    .action-card h5 {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.25rem;
+    }
+    .action-card small {
+        color: #9ca3af;
+        font-size: 0.8rem;
+        line-height: 1.4;
+    }
+
+    /* Status Tracker */
+    .tracker-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    .tracker-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #374151;
         display: flex;
         align-items: center;
+        gap: 0.5rem;
     }
-    .status-tracker {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    .tracker-title i {
+        color: #6b7280;
+    }
+    .tracker-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        background: #dbeafe;
+        color: #1d4ed8;
     }
     .tracker-steps {
         display: flex;
         justify-content: space-between;
-        margin-top: 1.5rem;
         position: relative;
     }
     .tracker-steps::before {
         content: '';
         position: absolute;
         top: 15px;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: #e9ecef;
+        left: 30px;
+        right: 30px;
+        height: 2px;
+        background: #e5e7eb;
         z-index: 1;
     }
     .step {
         position: relative;
         z-index: 2;
         text-align: center;
-        width: 25%;
+        flex: 1;
     }
     .step-circle {
-        width: 35px;
-        height: 35px;
+        width: 32px;
+        height: 32px;
         background: #fff;
-        border: 3px solid #dee2e6;
+        border: 2px solid #e5e7eb;
         border-radius: 50%;
         margin: 0 auto 0.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #adb5bd;
-        font-weight: bold;
+        color: #9ca3af;
+        font-size: 0.75rem;
+        font-weight: 600;
     }
     .step.active .step-circle {
-        border-color: #28a745;
-        background: #28a745;
+        border-color: #10b981;
+        background: #10b981;
         color: white;
     }
     .step-text {
-        font-size: 0.85rem;
-        color: #6c757d;
+        font-size: 0.75rem;
+        color: #9ca3af;
     }
     .step.active .step-text {
-        color: #28a745;
+        color: #10b981;
+        font-weight: 500;
+    }
+
+    /* Info Cards */
+    .info-card {
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+    }
+    .info-card-header {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #f3f4f6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .info-card-title {
+        font-size: 0.9rem;
         font-weight: 600;
+        color: #374151;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .info-card-title i {
+        color: #6b7280;
+    }
+    .info-card-body {
+        padding: 1.25rem;
+    }
+    .btn-link-minimal {
+        font-size: 0.8rem;
+        color: #6b7280;
+        text-decoration: none;
+    }
+    .btn-link-minimal:hover {
+        color: #374151;
+    }
+
+    /* Alerts */
+    .alert-item {
+        padding: 0.875rem 1rem;
+        border-left: 3px solid #e5e7eb;
+        background: #f9fafb;
+        border-radius: 0 6px 6px 0;
+        margin-bottom: 0.75rem;
+    }
+    .alert-item:last-child {
+        margin-bottom: 0;
+    }
+    .alert-item.info {
+        border-left-color: #3b82f6;
+    }
+    .alert-item.warning {
+        border-left-color: #f59e0b;
+    }
+    .alert-item h6 {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.25rem;
+    }
+    .alert-item p {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    /* Document List */
+    .doc-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    .doc-item:last-child {
+        border-bottom: none;
+    }
+    .doc-icon {
+        width: 36px;
+        height: 36px;
+        background: #f3f4f6;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+    }
+    .doc-info h6 {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #374151;
+        margin: 0 0 0.125rem 0;
+    }
+    .doc-info small {
+        color: #9ca3af;
+        font-size: 0.75rem;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 2rem 1rem;
+        color: #9ca3af;
+    }
+    .empty-state i {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .empty-state p {
+        font-size: 0.85rem;
+        margin: 0;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Welcome Banner -->
-<div class="welcome-banner">
-    <div class="row align-items-center">
-        <div class="col-md-8">
-            <h2 class="fw-bold mb-2">Olá, {{ user.first_name|default:user.username }}! 👋</h2>
-            <p class="mb-0 opacity-75">Bem-vindo ao seu painel contábil. Aqui está o resumo atual da sua empresa.</p>
+<div class="container-fluid py-4" style="max-width: 1000px;">
+    <!-- Header -->
+    <!-- <div class="mb-4">
+        <h1 class="page-title">Início</h1>
+        <p class="page-subtitle">Painel de controle da sua empresa</p>
+    </div> -->
+
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+        <div class="welcome-info">
+            <h2>Olá, {{ user.first_name|default:user.username }}!</h2>
+            <p>Bem-vindo ao seu painel contábil. Aqui está o resumo atual da sua empresa.</p>
         </div>
-        <div class="col-md-4 text-md-end mt-3 mt-md-0">
-            <div class="d-inline-block bg-white bg-opacity-25 px-3 py-2 rounded">
-                <i class="far fa-calendar-alt me-2"></i> {% now "d de F de Y" %}
-            </div>
+        <div class="welcome-date">
+            <i class="far fa-calendar-alt"></i>{% now "d de F de Y" %}
         </div>
     </div>
-</div>
 
-<!-- Ações Rápidas (Shortcuts) -->
-<h3 class="section-title"><i class="fas fa-bolt text-warning me-2"></i> Acesso Rápido</h3>
-<div class="grid-container">
-    <a href="{% url 'users:notas_fiscais' %}" class="action-card">
-        <div class="action-icon">
-            <i class="fas fa-cloud-upload-alt"></i>
+    <!-- Acesso Rápido -->
+    <div class="card-section">
+        <div class="section-title">
+            <i class="fas fa-th-large"></i>
+            Acesso Rápido
         </div>
-        <h5 class="fw-bold mb-1">Enviar Notas</h5>
-        <small class="text-muted">Envie XMLs ou PDFs para a contabilidade</small>
-    </a>
+        <div class="actions-grid">
+            <a href="{% url 'users:notas_fiscais' %}" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h5>Enviar Notas</h5>
+                <small>Envie XMLs ou PDFs para a contabilidade</small>
+            </a>
 
-    <a href="{% url 'users:pendencias' %}" class="action-card">
-        <div class="action-icon" style="background-color: #fff3cd; color: #ffc107;">
-            <i class="fas fa-barcode"></i>
-        </div>
-        <h5 class="fw-bold mb-1">Pagar Impostos</h5>
-        <small class="text-muted">Acesse suas guias de pagamento (DAS, INSS)</small>
-    </a>
+            <a href="{% url 'users:pendencias' %}" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-barcode"></i>
+                </div>
+                <h5>Pagar Impostos</h5>
+                <small>Acesse suas guias de pagamento</small>
+            </a>
 
-    <a href="{% url 'finance:dashboard' %}" class="action-card">
-        <div class="action-icon" style="background-color: #d1e7dd; color: #198754;">
-            <i class="fas fa-chart-line"></i>
-        </div>
-        <h5 class="fw-bold mb-1">Painel Financeiro</h5>
-        <small class="text-muted">Visualize receitas, despesas e relatórios</small>
-    </a>
-    
-    <a href="{% url 'support:dashboard_cliente' %}" class="action-card">
-        <div class="action-icon" style="background-color: #e2e3e5; color: #495057;">
-            <i class="fas fa-headset"></i>
-        </div>
-        <h5 class="fw-bold mb-1">Preciso de Ajuda</h5>
-        <small class="text-muted">Fale com seu analista contábil</small>
-    </a>
-</div>
-
-<div class="row g-4 mb-4">
-    <!-- Tracker Abertura (Exemplo Visual) - Pode ser condicional se a empresa for nova -->
-    <div class="col-12"> <!-- Se for empresa consolidada, pode esconder isso ou trocar por "Status do Mês" -->
-        <div class="status-tracker">
-            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
-                <h5 class="mb-0 fw-bold"><i class="fas fa-tasks text-primary me-2"></i>Status do Fechamento Mensal (Exemplo)</h5>
-                <span class="badge bg-info text-dark">Em Processamento</span>
-            </div>
-            <div class="tracker-steps">
-                <div class="step active">
-                    <div class="step-circle"><i class="fas fa-check"></i></div>
-                    <div class="step-text">Docs Enviados</div>
+            <a href="{% url 'finance:dashboard' %}" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-chart-line"></i>
                 </div>
-                <div class="step active">
-                    <div class="step-circle"><i class="fas fa-calculator"></i></div>
-                    <div class="step-text">Apuração Fiscal</div>
+                <h5>Painel Financeiro</h5>
+                <small>Visualize receitas e despesas</small>
+            </a>
+            
+            <a href="{% url 'support:dashboard_cliente' %}" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-headset"></i>
                 </div>
-                <div class="step">
-                    <div class="step-circle">3</div>
-                    <div class="step-text">Folha de Pagto</div>
-                </div>
-                <div class="step">
-                    <div class="step-circle">4</div>
-                    <div class="step-text">Contabilidade</div>
-                </div>
-            </div>
+                <h5>Preciso de Ajuda</h5>
+                <small>Fale com seu analista contábil</small>
+            </a>
         </div>
     </div>
-</div>
 
-<!-- Resumo Informativo -->
-<div class="row g-4">
-    <div class="col-md-6">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold"><i class="fas fa-bullhorn text-danger me-2"></i>Avisos Importantes</h5>
+    <!-- Status do Fechamento -->
+    <div class="card-section">
+        <div class="tracker-header">
+            <div class="tracker-title">
+                <i class="fas fa-tasks"></i>
+                Status do Fechamento Mensal
             </div>
-            <div class="card-body">
-                <div class="alert alert-light border-start border-4 border-info shadow-sm">
-                    <h6 class="alert-heading fw-bold"><i class="fas fa-info-circle text-info me-1"></i> IRPF 2026</h6>
-                    <p class="mb-0 small">O prazo para entrega da declaração começa em Março. Organize seus informes de rendimentos.</p>
-                </div>
-                <div class="alert alert-light border-start border-4 border-warning shadow-sm">
-                    <h6 class="alert-heading fw-bold"><i class="fas fa-clock text-warning me-1"></i> Feriado Bancário</h6>
-                    <p class="mb-0 small">Não haverá expediente bancário na próxima segunda-feira. Antecipe seus pagamentos.</p>
-                </div>
+            <span class="tracker-badge">Em Processamento</span>
+        </div>
+        <div class="tracker-steps">
+            <div class="step active">
+                <div class="step-circle"><i class="fas fa-check"></i></div>
+                <div class="step-text">Docs Enviados</div>
+            </div>
+            <div class="step active">
+                <div class="step-circle"><i class="fas fa-check"></i></div>
+                <div class="step-text">Apuração Fiscal</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">3</div>
+                <div class="step-text">Folha de Pagto</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">4</div>
+                <div class="step-text">Contabilidade</div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-6">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold"><i class="fas fa-file-alt text-secondary me-2"></i>Últimos Documentos</h5>
-                <a href="#" class="btn btn-sm btn-link text-decoration-none">Ver todos</a>
+    <!-- Avisos e Documentos -->
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Avisos Importantes
+                    </div>
+                </div>
+                <div class="info-card-body">
+                    <div class="alert-item info">
+                        <h6><i class="fas fa-info-circle me-1"></i> IRPF 2026</h6>
+                        <p>O prazo para entrega da declaração começa em Março. Organize seus informes de rendimentos.</p>
+                    </div>
+                    <div class="alert-item warning">
+                        <h6><i class="fas fa-clock me-1"></i> Feriado Bancário</h6>
+                        <p>Não haverá expediente bancário na próxima segunda-feira. Antecipe seus pagamentos.</p>
+                    </div>
+                </div>
             </div>
-            <div class="card-body p-0">
-                <div class="list-group list-group-flush">
+        </div>
+
+        <div class="col-md-6">
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-title">
+                        <i class="fas fa-file-alt"></i>
+                        Últimos Documentos
+                    </div>
+                    <a href="#" class="btn-link-minimal">Ver todos</a>
+                </div>
+                <div class="info-card-body">
                     {% for doc in documentos_recentes|default:''|slice:":3" %}
-                    <a href="#" class="list-group-item list-group-item-action d-flex align-items-center p-3">
-                        <i class="fas fa-file-pdf text-danger fa-2x me-3"></i>
-                        <div>
-                            <h6 class="mb-1 text-dark">{{ doc.nome }}</h6>
-                            <small class="text-muted">{{ doc.data }}</small>
+                    <div class="doc-item">
+                        <div class="doc-icon">
+                            <i class="fas fa-file-pdf"></i>
                         </div>
-                    </a>
+                        <div class="doc-info">
+                            <h6>{{ doc.nome }}</h6>
+                            <small>{{ doc.data }}</small>
+                        </div>
+                    </div>
                     {% empty %}
-                        <div class="text-center py-4 text-muted">
-                            <i class="far fa-folder-open fa-2x mb-2 opacity-50"></i>
-                            <p class="mb-0">Nenhum documento recente.</p>
-                        </div>
+                    <div class="empty-state">
+                        <i class="far fa-folder-open"></i>
+                        <p>Nenhum documento recente.</p>
+                    </div>
                     {% endfor %}
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}

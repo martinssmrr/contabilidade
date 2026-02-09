@@ -1,0 +1,123 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Importar Notas Fiscais - Vetorial{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-title { font-size: 1.5rem; font-weight: 600; color: #1f2937; }
+    .card-section { background: #fff; border-radius: 12px; padding: 1.5rem; border: 1px solid #f3f4f6; }
+    .upload-area { border: 2px dashed #e5e7eb; border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .upload-area:hover { border-color: #9ca3af; background: #f9fafb; }
+    .upload-area.dragover { border-color: #3b82f6; background: #eff6ff; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{% url 'users:notas_fiscais' %}" class="text-decoration-none">Notas Fiscais</a></li>
+            <li class="breadcrumb-item active text-muted">Importar</li>
+        </ol>
+    </nav>
+    
+    <h1 class="page-title mb-4">Importar Notas Fiscais</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card-section">
+                <h6 class="fw-semibold mb-4 text-muted">Enviar Nota</h6>
+                
+                <form action="{% url 'users:importar_notas' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">Descrição (Opcional)</label>
+                        <input type="text" class="form-control" name="descricao" placeholder="Ex: NF Março/2024">
+                    </div>
+
+                    <div class="upload-area mb-4" id="dropZone" onclick="document.getElementById('arquivo_nf').click()">
+                        <input type="file" name="arquivo_nf" id="arquivo_nf" class="d-none" accept=".pdf,.xml,.zip" required>
+                        <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
+                        <p class="mb-1 fw-medium">Arraste ou clique para selecionar</p>
+                        <small class="text-muted">PDF, XML ou ZIP (máx. 10MB)</small>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'users:notas_fiscais' %}" class="btn btn-light">Voltar</a>
+                        <button type="submit" class="btn btn-primary flex-grow-1">
+                            <i class="fas fa-upload me-2"></i>Enviar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-lg-6 mb-4">
+            <div class="card-section">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-semibold text-muted mb-0">Notas Enviadas</h6>
+                    <span class="badge bg-light text-dark">{{ total_enviadas|default:0 }}</span>
+                </div>
+                
+                {% if notas_enviadas %}
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <tbody>
+                            {% for nota in notas_enviadas|slice:":5" %}
+                            <tr>
+                                <td>
+                                    <i class="fas fa-file-pdf text-danger me-2"></i>
+                                    <span class="small">{{ nota.descricao|default:"Nota Fiscal"|truncatechars:25 }}</span>
+                                </td>
+                                <td class="text-muted small text-end">{{ nota.data_envio|date:"d/m/Y" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if total_enviadas > 5 %}
+                <a href="{% url 'users:consultar_notas' %}" class="btn btn-link btn-sm p-0 mt-2">Ver todas →</a>
+                {% endif %}
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
+                    <p class="text-muted small mb-0">Nenhuma nota enviada</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('arquivo_nf');
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => {
+        dropZone.addEventListener(e, ev => { ev.preventDefault(); ev.stopPropagation(); });
+    });
+    
+    ['dragenter', 'dragover'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.add('dragover')));
+    ['dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.remove('dragover')));
+    
+    dropZone.addEventListener('drop', e => { fileInput.files = e.dataTransfer.files; updateText(fileInput.files[0].name); });
+    fileInput.addEventListener('change', function() { if (this.files[0]) updateText(this.files[0].name); });
+    
+    function updateText(name) { dropZone.innerHTML = `<i class="fas fa-file-check fa-2x text-success mb-2"></i><p class="mb-0 fw-medium">${name}</p>`; }
+});
+</script>
+{% endblock %}

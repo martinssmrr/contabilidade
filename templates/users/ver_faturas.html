@@ -1,0 +1,297 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Ver Faturas - Vetorial{% endblock %}
+{% block page_title %}Ver Faturas{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Stats Cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+    
+    .stat-card {
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+    
+    .stat-number.pendente {
+        color: #f59e0b;
+    }
+    
+    .stat-number.vencido {
+        color: #ef4444;
+    }
+    
+    .stat-number.pago {
+        color: #10b981;
+    }
+    
+    .stat-label {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+    
+    /* Card Section */
+    .card-section {
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 24px;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0 0 20px 0;
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 48px 20px;
+        color: #9ca3af;
+    }
+    
+    .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+    
+    .empty-text {
+        font-size: 0.95rem;
+        color: #6b7280;
+    }
+    
+    /* Boleto List */
+    .boleto-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .boleto-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: #fafafa;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        transition: all 0.15s ease;
+    }
+    
+    .boleto-item:hover {
+        background: #f5f5f5;
+        border-color: #e5e7eb;
+    }
+    
+    .boleto-info {
+        flex: 1;
+    }
+    
+    .boleto-referencia {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #1f2937;
+        margin-bottom: 4px;
+    }
+    
+    .boleto-meta {
+        display: flex;
+        gap: 16px;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+    
+    .boleto-valor {
+        font-weight: 500;
+        color: #374151;
+    }
+    
+    .boleto-vencimento {
+        color: #6b7280;
+    }
+    
+    /* Status Badge */
+    .boleto-status {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin-left: 16px;
+    }
+    
+    .status-pendente {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    
+    .status-pago {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    
+    .status-vencido {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    
+    .status-cancelado {
+        background: #f3f4f6;
+        color: #6b7280;
+    }
+    
+    /* Actions */
+    .boleto-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .btn-download {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        background: #1f2937;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+    
+    .btn-download:hover {
+        background: #374151;
+        color: #fff;
+    }
+    
+    .btn-download i {
+        font-size: 0.9rem;
+    }
+    
+    /* Observações */
+    .boleto-obs {
+        margin-top: 8px;
+        font-size: 0.85rem;
+        color: #9ca3af;
+        font-style: italic;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .boleto-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .boleto-actions {
+            width: 100%;
+            justify-content: space-between;
+        }
+        
+        .boleto-status {
+            margin-left: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4" style="max-width: 900px;">
+    
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number pendente">{{ boletos_pendentes }}</div>
+            <div class="stat-label">Pendentes</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number vencido">{{ boletos_vencidos }}</div>
+            <div class="stat-label">Vencidos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number pago">{{ boletos_pagos }}</div>
+            <div class="stat-label">Pagos</div>
+        </div>
+    </div>
+    
+    <!-- Boletos List -->
+    <div class="card-section">
+        <h2 class="section-title">Suas Faturas</h2>
+        
+        {% if boletos %}
+        <div class="boleto-list">
+            {% for boleto in boletos %}
+            <div class="boleto-item">
+                <div class="boleto-info">
+                    <div class="boleto-referencia">{{ boleto.referencia }}</div>
+                    <div class="boleto-meta">
+                        <span class="boleto-valor">R$ {{ boleto.valor|floatformat:2 }}</span>
+                        <span class="boleto-vencimento">Vence em {{ boleto.data_vencimento|date:"d/m/Y" }}</span>
+                    </div>
+                    {% if boleto.observacoes %}
+                    <div class="boleto-obs">{{ boleto.observacoes }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="boleto-actions">
+                    <span class="boleto-status status-{{ boleto.status }}">
+                        {% if boleto.status == 'pendente' %}
+                            Pendente
+                        {% elif boleto.status == 'pago' %}
+                            Pago
+                        {% elif boleto.status == 'vencido' %}
+                            Vencido
+                        {% elif boleto.status == 'cancelado' %}
+                            Cancelado
+                        {% endif %}
+                    </span>
+                    
+                    {% if boleto.arquivo_boleto %}
+                    <a href="{{ boleto.arquivo_boleto.url }}" class="btn-download" download>
+                        <i class="fas fa-download"></i>
+                        Baixar
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📄</div>
+            <p class="empty-text">Nenhuma fatura disponível no momento.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

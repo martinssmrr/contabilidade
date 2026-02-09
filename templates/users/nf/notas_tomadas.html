@@ -1,0 +1,111 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Registrar Notas Tomadas - Vetorial{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-title { font-size: 1.5rem; font-weight: 600; color: #1f2937; }
+    .card-section { background: #fff; border-radius: 12px; padding: 1.5rem; border: 1px solid #f3f4f6; }
+    .info-box { background: #eff6ff; border-radius: 8px; padding: 1rem; font-size: 0.875rem; color: #1e40af; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{% url 'users:notas_fiscais' %}" class="text-decoration-none">Notas Fiscais</a></li>
+            <li class="breadcrumb-item active text-muted">Notas Tomadas</li>
+        </ol>
+    </nav>
+    
+    <h1 class="page-title mb-4">Registrar Notas Tomadas</h1>
+
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card-section">
+                
+                <div class="info-box mb-4">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Notas Tomadas</strong> são notas de serviços que você contratou de terceiros.
+                </div>
+                
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">Prestador</label>
+                            <input type="text" class="form-control" name="prestador_nome" placeholder="Nome/Razão Social" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">CNPJ/CPF</label>
+                            <input type="text" class="form-control" name="prestador_documento" placeholder="00.000.000/0000-00" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">Número da Nota</label>
+                            <input type="text" class="form-control" name="numero_nota" placeholder="Ex: 000123" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">Data da Nota</label>
+                            <input type="date" class="form-control" name="data_nota" required>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">Descrição do Serviço</label>
+                            <textarea class="form-control" name="descricao_servico" rows="2" placeholder="Descreva o serviço..." required></textarea>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">Valor (R$)</label>
+                            <input type="text" class="form-control" name="valor_total" placeholder="0,00" required>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">ISS Retido</label>
+                            <input type="text" class="form-control" name="iss_retido" placeholder="0,00">
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">IR Retido</label>
+                            <input type="text" class="form-control" name="ir_retido" placeholder="0,00">
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">Anexar Nota (PDF/XML)</label>
+                            <input type="file" class="form-control" name="arquivo_nota" accept=".pdf,.xml">
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'users:notas_fiscais' %}" class="btn btn-light">Voltar</a>
+                        <button type="submit" class="btn btn-primary flex-grow-1">
+                            <i class="fas fa-save me-2"></i>Registrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card-section">
+                <h6 class="fw-semibold mb-3 text-muted">Por que registrar?</h6>
+                <ul class="list-unstyled mb-0" style="font-size: 0.85rem; color: #6b7280;">
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Controle financeiro</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Apuração correta de impostos</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Facilita declaração de IR</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Histórico organizado</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

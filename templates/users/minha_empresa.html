@@ -4,25 +4,54 @@
 {% block page_title %}Minha Empresa{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/dashboard-modern.css' %}">
 <style>
+    .page-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.25rem;
+    }
+    .page-subtitle {
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+    .card-section {
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .section-title i {
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+    
+    /* Stepper minimalista */
     .stepper-container {
         display: flex;
         justify-content: space-between;
         position: relative;
-        margin: 30px 0;
-        padding: 0 10px;
+        padding: 0;
     }
     .stepper-container::before {
         content: '';
         position: absolute;
-        top: 20px;
+        top: 16px;
         left: 0;
         width: 100%;
-        height: 4px;
-        background-color: #e9ecef;
+        height: 2px;
+        background-color: #e5e7eb;
         z-index: 1;
-        transform: translateY(-50%);
     }
     .stepper-item {
         position: relative;
@@ -34,117 +63,315 @@
         flex: 1;
     }
     .step-circle {
-        width: 40px;
-        height: 40px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         background-color: #fff;
-        border: 3px solid #e9ecef;
+        border: 2px solid #e5e7eb;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: bold;
-        color: #adb5bd;
-        margin-bottom: 10px;
-        transition: all 0.3s ease;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #9ca3af;
+        margin-bottom: 8px;
+        transition: all 0.2s ease;
     }
     .step-label {
-        font-size: 0.85rem;
-        color: #adb5bd;
-        font-weight: 500;
-        margin-bottom: 2px;
-    }
-    .step-desc {
         font-size: 0.75rem;
         color: #9ca3af;
-        display: none;
+        font-weight: 500;
     }
-    
-    /* Completed State */
     .stepper-item.completed .step-circle {
-        background-color: #10B981;
-        border-color: #10B981;
+        background-color: #10b981;
+        border-color: #10b981;
         color: white;
     }
     .stepper-item.completed .step-label {
-        color: #10B981;
+        color: #10b981;
     }
-    
-    /* Active State */
     .stepper-item.active .step-circle {
-        background-color: #3B82F6;
-        border-color: #3B82F6;
+        background-color: #3b82f6;
+        border-color: #3b82f6;
         color: white;
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
-        transform: scale(1.1);
     }
     .stepper-item.active .step-label {
-        color: #3B82F6;
-        font-weight: 700;
-    }
-    .stepper-item.active .step-desc {
-        display: block;
-        color: #6B7280;
+        color: #3b82f6;
+        font-weight: 600;
     }
     
-    @media (max-width: 992px) {
+    @media (max-width: 768px) {
         .stepper-container {
             flex-direction: column;
             align-items: flex-start;
             gap: 0;
-            margin: 0;
-            padding-left: 20px;
+            padding-left: 16px;
         }
         .stepper-container::before {
-            width: 4px;
+            width: 2px;
             height: 100%;
-            left: 39px;
+            left: 31px;
             top: 0;
-            transform: translateX(-50%);
         }
         .stepper-item {
             flex-direction: row;
-            align-items: center;
-            gap: 15px;
+            gap: 12px;
             text-align: left;
-            width: 100%;
-            padding-bottom: 20px;
+            padding-bottom: 16px;
         }
         .step-circle {
             margin-bottom: 0;
             flex-shrink: 0;
         }
-        .step-desc {
-            display: block;
-        }
+    }
+    
+    /* Info da empresa */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    .info-item {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    .info-label {
+        font-size: 0.75rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        margin-bottom: 0.25rem;
+    }
+    .info-value {
+        font-size: 0.95rem;
+        color: #1f2937;
+        font-weight: 500;
+    }
+    
+    /* Cards de serviços */
+    .service-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+    }
+    .service-card {
+        background: #fff;
+        border: 1px solid #f3f4f6;
+        border-radius: 8px;
+        padding: 1.25rem;
+    }
+    .service-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+    .service-card-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #374151;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .service-card-title i {
+        color: #6b7280;
+    }
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .status-ativo {
+        background: #d1fae5;
+        color: #047857;
+    }
+    .status-nao-contratado {
+        background: #f3f4f6;
+        color: #6b7280;
+    }
+    .status-vencido {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+    .status-a-vencer {
+        background: #fef3c7;
+        color: #d97706;
+    }
+    .service-detail {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-bottom: 0.5rem;
+    }
+    .service-detail strong {
+        color: #374151;
+    }
+    
+    /* Tabela de documentos */
+    .docs-table {
+        width: 100%;
+        font-size: 0.875rem;
+    }
+    .docs-table th {
+        font-weight: 500;
+        color: #6b7280;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: left;
+    }
+    .docs-table td {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f3f4f6;
+        color: #374151;
+    }
+    .docs-table tr:last-child td {
+        border-bottom: none;
+    }
+    .doc-name {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .doc-name i {
+        color: #9ca3af;
+    }
+    .doc-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        text-decoration: none;
+    }
+    .btn-icon:hover {
+        border-color: #3b82f6;
+        color: #3b82f6;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 2rem 1rem;
+        color: #9ca3af;
+    }
+    .empty-state i {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+    }
+    .empty-state p {
+        margin: 0;
+        font-size: 0.875rem;
+    }
+    
+    .success-banner {
+        background: #d1fae5;
+        border: 1px solid #a7f3d0;
+        border-radius: 8px;
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+    }
+    .success-banner i {
+        color: #047857;
+        font-size: 1.25rem;
+    }
+    .success-banner-text {
+        color: #047857;
+        font-size: 0.9rem;
+    }
+    .success-banner-text strong {
+        display: block;
+        font-weight: 600;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-wrapper">
-    <div class="dashboard-header">
-        <h1 class="dashboard-title">Minha Empresa</h1>
-        <p class="dashboard-subtitle">Documentos e informações da sua empresa</p>
-    </div>
+<div class="container-fluid py-4" style="max-width: 1000px;">
+    <!-- Header -->
+    <!-- <div class="mb-4">
+        <h1 class="page-title">Minha Empresa</h1>
+        <p class="page-subtitle">Documentos e informações da sua empresa</p>
+    </div> -->
 
-    <!-- Status de Abertura -->
-    <div class="dash-card mb-4">
-        <div class="dash-card-header">
-            <div>
-                <h3 class="dash-card-title">Status de Abertura</h3>
-                <p class="dash-card-subtitle">Acompanhe o progresso da abertura da sua empresa</p>
-            </div>
-            <div class="dash-card-icon icon-success">
-                <i class="fas fa-rocket"></i>
+    {% if is_concluido %}
+        <!-- Banner de sucesso -->
+        <div class="success-banner">
+            <i class="fas fa-check-circle"></i>
+            <div class="success-banner-text">
+                <strong>Empresa aberta com sucesso!</strong>
+                Seu negócio está pronto para operar.
             </div>
         </div>
-        <div class="dash-card-body">
-            {% if is_concluido %}
-                <div class="alert alert-success mb-4 text-center border-success-subtle bg-success-subtle text-success-emphasis">
-                    <h4 class="alert-heading fs-5 fw-bold"><i class="fas fa-check-circle me-2"></i>Parabéns! Sua empresa está aberta!</h4>
-                    <p class="mb-0">Todo o processo foi concluído com sucesso. Agora você pode focar no crescimento do seu negócio.</p>
+        
+        <!-- Informações da Empresa -->
+        <div class="card-section">
+            <h2 class="section-title">
+                <i class="fas fa-building"></i>
+                Dados da Empresa
+            </h2>
+            
+            {% if cliente_profile and cliente_profile.cnpj %}
+            <div class="info-grid">
+                <div>
+                    <div class="info-item">
+                        <div class="info-label">CNPJ</div>
+                        <div class="info-value">{{ cliente_profile.cnpj|default:"-" }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Razão Social</div>
+                        <div class="info-value">{{ cliente_profile.razao_social|default:"-" }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Nome Fantasia</div>
+                        <div class="info-value">{{ cliente_profile.nome_fantasia|default:"-" }}</div>
+                    </div>
                 </div>
+                <div>
+                    <div class="info-item">
+                        <div class="info-label">Telefone</div>
+                        <div class="info-value">{{ cliente_profile.telefone|default:"-" }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Regime Tributário</div>
+                        <div class="info-value">{{ cliente_profile.get_regime_tributario_display|default:"-" }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Endereço</div>
+                        <div class="info-value">{{ cliente_profile.endereco|default:"-" }}</div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-building"></i>
+                <p>Os dados da empresa serão preenchidos em breve pela nossa equipe.</p>
+            </div>
             {% endif %}
+        </div>
+    {% else %}
+        <!-- Status de Abertura (apenas quando NÃO está na fase_7) -->
+        <div class="card-section">
+            <h2 class="section-title">
+                <i class="fas fa-rocket"></i>
+                Status de Abertura
+            </h2>
             
             <div class="stepper-container">
                 {% for fase in fases %}
@@ -156,115 +383,132 @@
                                 {{ fase.step }}
                             {% endif %}
                         </div>
-                        <div>
-                            <div class="step-label">{{ fase.nome }}</div>
-                            <div class="step-desc">{{ fase.descricao }}</div>
-                        </div>
+                        <div class="step-label">{{ fase.nome }}</div>
                     </div>
                 {% endfor %}
             </div>
         </div>
-    </div>
+    {% endif %}
 
-    <!-- Informação -->
-    <div class="alert alert-info mb-4 d-flex align-items-center">
-        <i class="fas fa-info-circle me-3 fs-4"></i>
-        <div>
-            Total de <strong>{{ total_documentos }}</strong> documento{{ total_documentos|pluralize:"s" }} disponível{{ total_documentos|pluralize:"s" }}.
-        </div>
-    </div>
-
-    <!-- Lista de Documentos -->
-    <div class="dash-card">
-        <div class="dash-card-header">
-            <div>
-                <h3 class="dash-card-title">Documentos Disponíveis</h3>
-                <p class="dash-card-subtitle">Contrato social, CNPJ e outros documentos</p>
+    <!-- Cards de Serviços -->
+    <div class="service-cards-grid">
+        <!-- Documentos Disponíveis -->
+        <div class="service-card">
+            <div class="service-card-header">
+                <div class="service-card-title">
+                    <i class="fas fa-folder-open"></i>
+                    Documentos
+                </div>
+                <span class="status-badge {% if total_documentos > 0 %}status-ativo{% else %}status-nao-contratado{% endif %}">
+                    {{ total_documentos }} arquivo{{ total_documentos|pluralize:"s" }}
+                </span>
             </div>
-            <div class="dash-card-icon icon-primary">
-                <i class="fas fa-building"></i>
-            </div>
-        </div>
-        
-        <div class="dash-card-body p-0">
+            
             {% if documentos %}
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="bg-light">
-                            <tr>
-                                <th class="ps-4">Título do Documento</th>
-                                <th>Categoria</th>
-                                <th>Arquivo</th>
-                                <th>Data de Envio</th>
-                                <th>Tamanho</th>
-                                <th class="text-end pe-4">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for documento in documentos %}
-                            <tr>
-                                <td class="ps-4">
-                                    <div class="d-flex align-items-center">
-                                        <div class="me-3 text-primary">
-                                            <i class="fas fa-file-alt fa-lg"></i>
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold text-dark">{{ documento.titulo }}</div>
-                                            {% if documento.descricao %}
-                                                <div class="small text-muted">{{ documento.descricao|truncatewords:8 }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-3">
-                                        {{ documento.get_categoria_display }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="me-2 text-secondary">
-                                            <i class="fas fa-file fa-sm"></i>
-                                        </div>
-                                        <div>
-                                            <div class="small text-dark">{{ documento.nome_arquivo }}</div>
-                                            <div class="small text-muted" style="font-size: 0.75rem;">{{ documento.extensao_arquivo|upper }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="text-muted">{{ documento.data_upload|date:"d/m/Y \à\s H:i" }}</td>
-                                <td><span class="badge bg-secondary-subtle text-secondary">{{ documento.tamanho_arquivo }}</span></td>
-                                <td class="text-end pe-4">
-                                    <div class="btn-group">
-                                        <a href="{{ documento.arquivo.url }}" 
-                                           class="btn btn-sm btn-outline-primary" 
-                                           target="_blank"
-                                           title="Visualizar">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="{{ documento.arquivo.url }}" 
-                                           class="btn btn-sm btn-outline-success" 
-                                           download
-                                           title="Baixar">
-                                            <i class="fas fa-download"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            <table class="docs-table">
+                <thead>
+                    <tr>
+                        <th>Documento</th>
+                        <th style="width: 80px; text-align: right;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for documento in documentos %}
+                    <tr>
+                        <td>
+                            <div class="doc-name">
+                                <i class="fas fa-file-alt"></i>
+                                {{ documento.titulo }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="doc-actions" style="justify-content: flex-end;">
+                                <a href="{{ documento.arquivo.url }}" class="btn-icon" target="_blank" title="Visualizar">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ documento.arquivo.url }}" class="btn-icon" download title="Baixar">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             {% else %}
-                <div class="text-center py-5">
-                    <div class="mb-3 text-muted opacity-50">
-                        <i class="fas fa-building fa-4x"></i>
-                    </div>
-                    <h4 class="text-muted">Nenhum documento disponível</h4>
-                    <p class="text-muted mb-0">
-                        Ainda não há documentos da sua empresa enviados pela nossa equipe.
-                    </p>
+            <div class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <p>Nenhum documento disponível ainda.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Endereço Virtual -->
+        <div class="service-card">
+            <div class="service-card-header">
+                <div class="service-card-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Endereço Virtual
                 </div>
+                {% if cliente_profile %}
+                <span class="status-badge status-{{ cliente_profile.endereco_virtual_status }}">
+                    {{ cliente_profile.get_endereco_virtual_status_display }}
+                </span>
+                {% else %}
+                <span class="status-badge status-nao-contratado">Não Contratado</span>
+                {% endif %}
+            </div>
+            
+            {% if cliente_profile and cliente_profile.endereco_virtual_status == 'ativo' %}
+            <div class="service-detail">
+                <strong>Endereço:</strong><br>
+                {{ cliente_profile.endereco_virtual_endereco|default:"-" }}
+            </div>
+            {% if cliente_profile.endereco_virtual_validade %}
+            <div class="service-detail">
+                <strong>Válido até:</strong> {{ cliente_profile.endereco_virtual_validade|date:"d/m/Y" }}
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-map-marker-alt"></i>
+                <p>Endereço virtual para sua empresa.<br>Entre em contato para contratar.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Certificado Digital -->
+        <div class="service-card">
+            <div class="service-card-header">
+                <div class="service-card-title">
+                    <i class="fas fa-certificate"></i>
+                    Certificado Digital
+                </div>
+                {% if cliente_profile %}
+                <span class="status-badge status-{{ cliente_profile.certificado_digital_status|default:'nao_contratado' }}">
+                    {{ cliente_profile.get_certificado_digital_status_display }}
+                </span>
+                {% else %}
+                <span class="status-badge status-nao-contratado">Não Contratado</span>
+                {% endif %}
+            </div>
+            
+            {% if cliente_profile and cliente_profile.certificado_digital_status == 'ativo' %}
+            {% if cliente_profile.certificado_digital_tipo %}
+            <div class="service-detail">
+                <strong>Tipo:</strong> {{ cliente_profile.certificado_digital_tipo }}
+            </div>
+            {% endif %}
+            {% if cliente_profile.certificado_digital_validade %}
+            <div class="service-detail">
+                <strong>Válido até:</strong> {{ cliente_profile.certificado_digital_validade|date:"d/m/Y" }}
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-certificate"></i>
+                <p>Certificado para emissão de NF-e.<br>Entre em contato para contratar.</p>
+            </div>
             {% endif %}
         </div>
     </div>

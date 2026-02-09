@@ -11,6 +11,7 @@ class Lead(models.Model):
     ORIGEM_CHOICES = [
         ('popup', 'Popup da Home'),
         ('contato', 'Seção de Contato'),
+        ('chatbot', 'Chatbot'),
     ]
     
     nome_completo = models.CharField(max_length=200, verbose_name='Nome Completo')
@@ -176,6 +177,84 @@ class Cliente(models.Model):
         choices=REGIME_CHOICES,
         default='SN',
         verbose_name='Regime Tributário'
+    )
+    
+    # Dados da Empresa (preenchido pelo staff após fase_7)
+    cnpj = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        verbose_name='CNPJ'
+    )
+    razao_social = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Razão Social'
+    )
+    nome_fantasia = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Nome Fantasia'
+    )
+    endereco = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Endereço Completo'
+    )
+    telefone = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        verbose_name='Telefone'
+    )
+    
+    # Serviços Adicionais
+    ENDERECO_VIRTUAL_STATUS = [
+        ('nao_contratado', 'Não Contratado'),
+        ('ativo', 'Ativo'),
+        ('vencido', 'Vencido'),
+    ]
+    endereco_virtual_status = models.CharField(
+        max_length=20,
+        choices=ENDERECO_VIRTUAL_STATUS,
+        default='nao_contratado',
+        verbose_name='Status Endereço Virtual'
+    )
+    endereco_virtual_endereco = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Endereço Virtual'
+    )
+    endereco_virtual_validade = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Validade Endereço Virtual'
+    )
+    
+    CERTIFICADO_STATUS = [
+        ('nao_contratado', 'Não Contratado'),
+        ('ativo', 'Ativo'),
+        ('vencido', 'Vencido'),
+        ('a_vencer', 'Próximo ao Vencimento'),
+    ]
+    certificado_digital_status = models.CharField(
+        max_length=20,
+        choices=CERTIFICADO_STATUS,
+        default='nao_contratado',
+        verbose_name='Status Certificado Digital'
+    )
+    certificado_digital_tipo = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name='Tipo de Certificado'
+    )
+    certificado_digital_validade = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Validade Certificado Digital'
     )
 
     class Meta:
@@ -343,3 +422,131 @@ class Agenda(models.Model):
     
     def __str__(self):
         return f"{self.titulo} - {self.data_inicio}"
+
+
+# ========================================
+# CHATBOT - Perguntas e Respostas
+# ========================================
+
+class ChatbotPergunta(models.Model):
+    """
+    Perguntas e respostas pré-definidas para o chatbot.
+    Gerenciadas via Django Admin.
+    """
+    pergunta = models.CharField(max_length=300, verbose_name='Pergunta')
+    resposta = models.TextField(verbose_name='Resposta')
+    categoria = models.CharField(
+        max_length=100, 
+        blank=True, 
+        null=True, 
+        verbose_name='Categoria',
+        help_text='Categoria para agrupar perguntas (ex: Abertura de Empresa, Impostos, etc.)'
+    )
+    palavras_chave = models.CharField(
+        max_length=500, 
+        blank=True, 
+        null=True, 
+        verbose_name='Palavras-chave',
+        help_text='Palavras separadas por vírgula para ajudar na busca (ex: cnpj, abrir, empresa)'
+    )
+    ordem = models.IntegerField(default=0, verbose_name='Ordem de Exibição')
+    ativo = models.BooleanField(default=True, verbose_name='Ativo')
+    criado_em = models.DateTimeField(auto_now_add=True)
+    atualizado_em = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = 'Pergunta do Chatbot'
+        verbose_name_plural = 'Perguntas do Chatbot'
+        ordering = ['categoria', 'ordem', '-criado_em']
+    
+    def __str__(self):
+        return self.pergunta[:80]
+
+
+class ChatbotSessao(models.Model):
+    """
+    Sessão de conversa do chatbot com um visitante.
+    """
+    STATUS_CHOICES = [
+        ('ativa', 'Ativa'),
+        ('encerrada', 'Encerrada'),
+    ]
+    
+    # Identificador único da sessão (armazenado no localStorage do visitante)
+    session_key = models.CharField(max_length=100, unique=True, db_index=True)
+    
+    # Dados do visitante (preenchidos no formulário inicial)
+    nome = models.CharField(max_length=200, verbose_name='Nome')
+    email = models.EmailField(verbose_name='E-mail')
+    telefone = models.CharField(max_length=20, verbose_name='Telefone')
+    
+    # Lead associado (criado automaticamente)
+    lead = models.ForeignKey(
+        Lead, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name='chatbot_sessoes'
+    )
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ativa')
+    
+    # Avaliação
+    avaliacao = models.PositiveSmallIntegerField(
+        null=True, 
+        blank=True, 
+        verbose_name='Avaliação (1-5)'
+    )
+    feedback = models.TextField(blank=True, null=True, verbose_name='Feedback')
+    
+    # Metadados
+    pagina_origem = models.URLField(blank=True, null=True, verbose_name='Página de Origem')
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    user_agent = models.TextField(blank=True, null=True)
+    
+    criado_em = models.DateTimeField(auto_now_add=True)
+    atualizado_em = models.DateTimeField(auto_now=True)
+    encerrado_em = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        verbose_name = 'Sessão do Chatbot'
+        verbose_name_plural = 'Sessões do Chatbot'
+        ordering = ['-criado_em']
+    
+    def __str__(self):
+        return f"Chatbot: {self.nome} ({self.criado_em.strftime('%d/%m/%Y %H:%M')})"
+
+
+class ChatbotMensagem(models.Model):
+    """
+    Mensagens trocadas em uma sessão do chatbot.
+    """
+    sessao = models.ForeignKey(
+        ChatbotSessao, 
+        on_delete=models.CASCADE, 
+        related_name='mensagens'
+    )
+    
+    # Se é mensagem do visitante ou do bot
+    is_bot = models.BooleanField(default=False, verbose_name='É do Bot?')
+    
+    conteudo = models.TextField(verbose_name='Conteúdo')
+    
+    # Se foi uma pergunta pré-definida selecionada
+    pergunta_relacionada = models.ForeignKey(
+        ChatbotPergunta,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    
+    criado_em = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'Mensagem do Chatbot'
+        verbose_name_plural = 'Mensagens do Chatbot'
+        ordering = ['criado_em']
+    
+    def __str__(self):
+        tipo = "Bot" if self.is_bot else "Visitante"
+        return f"[{tipo}] {self.conteudo[:50]}..."

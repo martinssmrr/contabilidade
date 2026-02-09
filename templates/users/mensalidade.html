@@ -1,0 +1,142 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Mensalidade - Vetorial{% endblock %}
+{% block page_title %}Mensalidade{% endblock %}
+
+{% block extra_css %}
+<style>
+    .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 1.25rem 1.5rem;
+        background: #fff;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: 1px solid #f3f4f6;
+    }
+    
+    .menu-item:hover {
+        background: #f9fafb;
+        border-color: #e5e7eb;
+    }
+    
+    .menu-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+    
+    .menu-icon i {
+        font-size: 1.1rem;
+    }
+    
+    .menu-content h6 {
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0 0 0.25rem 0;
+        font-size: 0.95rem;
+    }
+    
+    .menu-content p {
+        color: #9ca3af;
+        font-size: 0.85rem;
+        margin: 0;
+    }
+    
+    .menu-arrow {
+        margin-left: auto;
+        color: #d1d5db;
+        font-size: 0.875rem;
+    }
+    
+    .menu-item:hover .menu-arrow {
+        color: #9ca3af;
+    }
+    
+    /* Cores suaves */
+    .bg-green-soft { background: #ecfdf5; color: #059669; }
+    .bg-blue-soft { background: #eff6ff; color: #2563eb; }
+    .bg-purple-soft { background: #f5f3ff; color: #7c3aed; }
+    .bg-yellow-soft { background: #fffbeb; color: #d97706; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Menu List -->
+    <div class="row g-3">
+        
+        <div class="col-md-6">
+            <a href="{% url 'users:meu_plano' %}" class="menu-item">
+                <div class="menu-icon bg-blue-soft">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="menu-content">
+                    <h6>Meu Plano</h6>
+                    <p>Visualize detalhes do seu plano atual</p>
+                </div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+        </div>
+        
+        <div class="col-md-6">
+            <a href="{% url 'users:ver_faturas' %}" class="menu-item">
+                <div class="menu-icon bg-green-soft">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <div class="menu-content">
+                    <h6>Ver Faturas</h6>
+                    <p>Acesse suas faturas e boletos</p>
+                </div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+        </div>
+        
+        <div class="col-md-6">
+            <a href="{% url 'users:historico_pagamentos' %}" class="menu-item">
+                <div class="menu-icon bg-purple-soft">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div class="menu-content">
+                    <h6>Consultar Histórico</h6>
+                    <p>Veja o histórico de pagamentos</p>
+                </div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+        </div>
+        
+        <div class="col-md-6">
+            <a href="{% url 'users:formas_pagamento' %}" class="menu-item">
+                <div class="menu-icon bg-yellow-soft">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="menu-content">
+                    <h6>Formas de Pagamento</h6>
+                    <p>Gerencie seus métodos de pagamento</p>
+                </div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+        </div>
+        
+    </div>
+    
+</div>
+{% endblock %}

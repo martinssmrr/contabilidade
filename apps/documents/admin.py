@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.contrib import messages
-from .models import Document, NotaFiscal, DocumentoEmpresa, ExtratoBancario, DocumentoCliente
+from .models import Document, NotaFiscal, DocumentoEmpresa, ExtratoBancario, DocumentoCliente, BoletoContabilidade
 from .models_guia_imposto import GuiaImposto
 
 # Register your models here.
@@ -347,4 +347,47 @@ class GuiaImpostoAdmin(admin.ModelAdmin):
     date_hierarchy = 'vencimento'
     ordering = ('-vencimento',)
     raw_id_fields = ('cliente',)
+
+
+@admin.register(BoletoContabilidade)
+class BoletoContabilidadeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'referencia', 'cliente_info', 'valor', 'data_vencimento', 'status', 'enviado_por', 'criado_em']
+    list_filter = ['status', 'data_vencimento', 'criado_em']
+    search_fields = ['referencia', 'cliente__username', 'cliente__email', 'cliente__first_name', 'cliente__last_name']
+    raw_id_fields = ['cliente', 'enviado_por']
+    readonly_fields = ['criado_em', 'atualizado_em']
+    date_hierarchy = 'data_vencimento'
+    ordering = ['-criado_em']
+    
+    fieldsets = (
+        ('Cliente', {
+            'fields': ('cliente',)
+        }),
+        ('Dados do Boleto', {
+            'fields': ('referencia', 'valor', 'data_vencimento', 'arquivo_boleto')
+        }),
+        ('Status', {
+            'fields': ('status', 'observacoes')
+        }),
+        ('Controle', {
+            'fields': ('enviado_por', 'criado_em', 'atualizado_em')
+        }),
+    )
+    
+    def cliente_info(self, obj):
+        """Exibe informações do cliente."""
+        nome = obj.cliente.get_full_name() or obj.cliente.username
+        return format_html('<strong>{}</strong><br><small>{}</small>', nome, obj.cliente.email)
+    cliente_info.short_description = 'Cliente'
+    
+    def get_queryset(self, request):
+        """Otimiza consultas."""
+        qs = super().get_queryset(request)
+        return qs.select_related('cliente', 'enviado_por')
+    
+    def save_model(self, request, obj, form, change):
+        """Preenche enviado_por automaticamente."""
+        if not obj.enviado_por:
+            obj.enviado_por = request.user
+        super().save_model(request, obj, form, change)
 

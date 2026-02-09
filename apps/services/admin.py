@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Service, Plan, Subscription, ProcessoAbertura, Socio, Plano, CategoriaCNAE, CNAE, SolicitacaoAberturaMEI
+from .models import Service, Plan, Subscription, ProcessoAbertura, Socio, Plano, CategoriaCNAE, CNAE, SolicitacaoAberturaMEI, ServicoAvulso, ContratacaoServicoAvulso
 
 # Register your models here.
 
@@ -243,3 +243,82 @@ class SolicitacaoAberturaMEIAdmin(admin.ModelAdmin):
         updated = queryset.update(status='concluido')
         self.message_user(request, f'{updated} solicitação(ões) marcada(s) como concluída(s).')
     marcar_concluido.short_description = 'Marcar como Concluído'
+
+
+# =============================================================================
+# ADMIN PARA SERVIÇOS AVULSOS
+# =============================================================================
+
+@admin.register(ServicoAvulso)
+class ServicoAvulsoAdmin(admin.ModelAdmin):
+    """
+    Admin para gerenciar serviços avulsos disponíveis para contratação.
+    """
+    list_display = ['titulo', 'valor', 'icone', 'ativo', 'ordem', 'criado_em']
+    list_filter = ['ativo', 'criado_em']
+    search_fields = ['titulo', 'descricao']
+    list_editable = ['ativo', 'ordem', 'valor']
+    ordering = ['ordem', 'titulo']
+    
+    fieldsets = (
+        ('Informações do Serviço', {
+            'fields': ('titulo', 'descricao', 'valor')
+        }),
+        ('Configurações de Exibição', {
+            'fields': ('icone', 'ordem', 'ativo')
+        }),
+    )
+
+
+@admin.register(ContratacaoServicoAvulso)
+class ContratacaoServicoAvulsoAdmin(admin.ModelAdmin):
+    """
+    Admin para gerenciar contratações de serviços avulsos.
+    """
+    list_display = [
+        'id',
+        'usuario',
+        'servico',
+        'status',
+        'valor_contratado',
+        'visualizado',
+        'criado_em'
+    ]
+    list_filter = ['status', 'visualizado', 'servico', 'criado_em']
+    search_fields = ['usuario__email', 'usuario__first_name', 'servico__titulo']
+    list_editable = ['status', 'visualizado']
+    readonly_fields = ['criado_em', 'atualizado_em', 'concluido_em']
+    date_hierarchy = 'criado_em'
+    ordering = ['-criado_em']
+    raw_id_fields = ['usuario']
+    
+    fieldsets = (
+        ('Informações da Contratação', {
+            'fields': ('usuario', 'servico', 'status', 'valor_contratado')
+        }),
+        ('Observações', {
+            'fields': ('observacoes_cliente', 'observacoes_internas'),
+            'classes': ('collapse',)
+        }),
+        ('Controle', {
+            'fields': ('visualizado', 'criado_em', 'atualizado_em', 'concluido_em')
+        }),
+    )
+    
+    actions = ['marcar_em_andamento', 'marcar_concluido', 'marcar_visualizado']
+    
+    def marcar_em_andamento(self, request, queryset):
+        updated = queryset.update(status='em_andamento', visualizado=True)
+        self.message_user(request, f'{updated} contratação(ões) marcada(s) como em andamento.')
+    marcar_em_andamento.short_description = 'Marcar como Em Andamento'
+    
+    def marcar_concluido(self, request, queryset):
+        from django.utils import timezone
+        updated = queryset.update(status='concluido', concluido_em=timezone.now())
+        self.message_user(request, f'{updated} contratação(ões) marcada(s) como concluída(s).')
+    marcar_concluido.short_description = 'Marcar como Concluído'
+    
+    def marcar_visualizado(self, request, queryset):
+        updated = queryset.update(visualizado=True)
+        self.message_user(request, f'{updated} contratação(ões) marcada(s) como visualizada(s).')
+    marcar_visualizado.short_description = 'Marcar como Visualizado'

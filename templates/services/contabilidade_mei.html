@@ -253,6 +253,7 @@
                         </div>
                         <h5 class="card-title fw-bold mb-3">Ser MEI ficou fácil e cheio de vantagens</h5>
                         <p class="card-text text-muted">Obtenha orientação especializada para aproveitar benefícios do MEI</p>
+                        <a href="#pricing" class="btn btn-primary mt-3">Acessar Benefícios</a>
                     </div>
                 </div>
             </div>
@@ -270,6 +271,8 @@
                         </div>
                         <h5 class="card-title fw-bold mb-3">Abra agora seu MEI</h5>
                         <p class="card-text text-muted">Ser MEI é o primeiro passo para transformar seu talento em um negócio de verdade!</p>
+                        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#contactModal">Iniciar Abertura MEI</button>
+                        <p class="text-muted mt-2 mb-0"><i class="bi bi-shield-lock me-1"></i>Garantia de Segurança de Dados</p>
                     </div>
                 </div>
             </div>
@@ -286,10 +289,1378 @@
                         </div>
                         <h5 class="card-title fw-bold mb-3">Suporte</h5>
                         <p class="card-text text-muted">Estamos sempre à disposição para te atender com agilidade.</p>
+                        <a href="https://wa.me/551131642284" target="_blank" class="btn btn-primary mt-3">Entrar em Contato</a>
+                        <p class="fw-bold text-muted mt-2 mb-0">Seguro • Rápido • Fácil</p>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- =============================================
+     SECTION: NOSSOS SERVIÇOS
+     Design premium com ícones grandes, gradiente
+     nas bordas e layout consistente com o projeto.
+     ============================================= -->
+<style>
+    .servicos-mei {
+        background: linear-gradient(180deg, #ebeef1 0%, #f8f9fa 100%);
+        padding: clamp(3rem, 6vw, 5.5rem) 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Detalhe decorativo de fundo */
+    .servicos-mei::before {
+        content: '';
+        position: absolute;
+        top: -120px;
+        right: -80px;
+        width: 350px;
+        height: 350px;
+        background: radial-gradient(circle, rgba(12,99,209,0.06) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .servicos-mei__header {
+        text-align: center;
+        margin-bottom: 3.5rem;
+        position: relative;
+    }
+
+    .servicos-mei__kicker {
+        display: inline-block;
+        background: linear-gradient(135deg, #0c63d1 0%, #1A237E 100%);
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        padding: 0.4rem 1.25rem;
+        border-radius: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .servicos-mei__title {
+        color: #1A237E;
+        font-weight: 800;
+        font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+        margin-bottom: 0.75rem;
+    }
+
+    .servicos-mei__desc {
+        color: #475569;
+        font-size: 1.1rem;
+        max-width: 560px;
+        margin: 0 auto;
+    }
+
+    /* Grid de cards */
+    .servicos-mei__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    @media (max-width: 992px) {
+        .servicos-mei__grid { grid-template-columns: 1fr; max-width: 540px; }
+    }
+
+    /* Card individual */
+    .servicos-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 2.25rem 1.75rem 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+        border: 1px solid rgba(12,99,209,0.06);
+    }
+
+    .servicos-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 48px rgba(12,99,209,0.12);
+    }
+
+    /* Barra de topo colorida */
+    .servicos-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #0c63d1, #3ef47c);
+        border-radius: 16px 16px 0 0;
+    }
+
+    /* Ícone do card */
+    .servicos-card__icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .servicos-card__icon svg {
+        width: 30px;
+        height: 30px;
+    }
+
+    .servicos-card__icon--abrir {
+        background: linear-gradient(135deg, #dbeafe, #eff6ff);
+        color: #0c63d1;
+    }
+    .servicos-card__icon--baixar {
+        background: linear-gradient(135deg, #fce7f3, #fdf2f8);
+        color: #db2777;
+    }
+    .servicos-card__icon--dasn {
+        background: linear-gradient(135deg, #d1fae5, #ecfdf5);
+        color: #059669;
+    }
+
+    .servicos-card__title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1A237E;
+        margin-bottom: 1.25rem;
+    }
+
+    /* Itens do checklist */
+    .servicos-card__list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1.75rem;
+        flex-grow: 1;
+    }
+
+    .servicos-card__list li {
+        margin-bottom: 1rem;
+        padding-left: 1.75rem;
+        position: relative;
+    }
+
+    .servicos-card__list li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 5px;
+        width: 18px;
+        height: 18px;
+        background: linear-gradient(135deg, #0c63d1, #3b82f6);
+        border-radius: 50%;
+        /* Check branco via SVG data URI */
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2.5-2.5a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");
+        background-size: 12px;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .servicos-card__list li strong {
+        display: block;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 2px;
+    }
+
+    .servicos-card__list li span {
+        font-size: 0.875rem;
+        color: #64748b;
+        line-height: 1.5;
+    }
+
+    /* Botão do card */
+    .servicos-card__btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        font-weight: 700;
+        font-size: 0.95rem;
+        padding: 0.85rem 1.5rem;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .servicos-card__btn--primary {
+        background: linear-gradient(135deg, #0c63d1, #1A237E);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(12,99,209,0.25);
+    }
+    .servicos-card__btn--primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(12,99,209,0.35);
+        color: #fff;
+    }
+
+    .servicos-card__btn--outline {
+        background: transparent;
+        color: #1A237E;
+        border-color: #1A237E;
+    }
+    .servicos-card__btn--outline:hover {
+        background: #1A237E;
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .servicos-card__btn--green {
+        background: linear-gradient(135deg, #059669, #10b981);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(5,150,105,0.25);
+    }
+    .servicos-card__btn--green:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(5,150,105,0.35);
+        color: #fff;
+    }
+</style>
+
+<section class="servicos-mei" aria-labelledby="servicos-mei-title">
+    <div class="container">
+        <div class="servicos-mei__header">
+            <span class="servicos-mei__kicker">Soluções para MEI</span>
+            <h2 id="servicos-mei-title" class="servicos-mei__title">Nossos Serviços</h2>
+            <p class="servicos-mei__desc">Explore nossos serviços e descubra como facilitar sua rotina</p>
+        </div>
+
+        <div class="servicos-mei__grid">
+
+            <!-- Card 1 — Abrir MEI -->
+            <div class="servicos-card">
+                <div class="servicos-card__icon servicos-card__icon--abrir">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </svg>
+                </div>
+                <h3 class="servicos-card__title">Abrir MEI</h3>
+                <ul class="servicos-card__list">
+                    <li>
+                        <strong>Negócio Legal e Emissão de Nota Fiscal</strong>
+                        <span>Fortaleça sua credibilidade no mercado</span>
+                    </li>
+                    <li>
+                        <strong>Orientação sobre benefícios previdenciários</strong>
+                        <span>Acesse os direitos como auxílio doença, salário maternidade e aposentadoria (quando possível)</span>
+                    </li>
+                    <li>
+                        <strong>Baixo Custo</strong>
+                        <span>Não precisa de contador. Imposto Reduzido e isenção de tributos. Valor fixo mensal</span>
+                    </li>
+                </ul>
+                <button type="button" class="servicos-card__btn servicos-card__btn--primary" data-bs-toggle="modal" data-bs-target="#contactModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                    Abrir CNPJ MEI
+                </button>
+            </div>
+
+            <!-- Card 2 — Baixar MEI -->
+            <div class="servicos-card">
+                <div class="servicos-card__icon servicos-card__icon--baixar">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                </div>
+                <h3 class="servicos-card__title">Baixar MEI</h3>
+                <ul class="servicos-card__list">
+                    <li>
+                        <strong>Minimizar Erros Fiscais</strong>
+                        <span>Com orientação profissional para minimizar erros fiscais na assessoria para encerramento correto do MEI.</span>
+                    </li>
+                    <li>
+                        <strong>Pendências? Resolvidas!</strong>
+                        <span>Regularizamos tudo e encerramos seu CNPJ rapidamente.</span>
+                    </li>
+                    <li>
+                        <strong>Assessoria para Encerramento Seguro</strong>
+                        <span>Não deixe seu CNPJ inativo acumular dívidas. Elimine qualquer pendência através da Assessoria Personalizada da Central MEI. Fechamento Rápido e Seguro com suporte dos nossos profissionais.</span>
+                    </li>
+                </ul>
+                <a href="https://wa.me/551131642284?text=Ol%C3%A1%2C%20gostaria%20de%20cancelar%20meu%20MEI" target="_blank" class="servicos-card__btn servicos-card__btn--outline">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Cancelar MEI
+                </a>
+            </div>
+
+            <!-- Card 3 — Declaração Anual MEI -->
+            <div class="servicos-card">
+                <div class="servicos-card__icon servicos-card__icon--dasn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <h3 class="servicos-card__title">Declaração Anual MEI</h3>
+                <ul class="servicos-card__list">
+                    <li>
+                        <strong>Obrigatoriedade e Prazo</strong>
+                        <span>A Declaração Anual do Simples Nacional (DASN) é obrigatória e deve ser enviada até 31 de maio de cada ano.</span>
+                    </li>
+                    <li>
+                        <strong>Evite Multas e Penalidades</strong>
+                        <span>O atraso gera multas e até o cancelamento do seu CNPJ MEI. Não deixe para depois!</span>
+                    </li>
+                    <li>
+                        <strong>Comprovante Oficial de Faturamento</strong>
+                        <span>A DASN é essencial para obter financiamentos e firmar contratos comerciais.</span>
+                    </li>
+                    <li>
+                        <strong>Suporte Especializado e CNPJ Regular</strong>
+                        <span>Evite erros e a perda de benefícios! Mantenha seu CNPJ Regular através da nossa equipe especialista.</span>
+                    </li>
+                </ul>
+                <a href="https://wa.me/551131642284?text=Ol%C3%A1%2C%20gostaria%20de%20fazer%20a%20Declara%C3%A7%C3%A3o%20Anual%20MEI" target="_blank" class="servicos-card__btn servicos-card__btn--green">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Fazer Declaração Anual
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- =============================================
+     SECTION: MEI SEGURO — Hero de Valor + Cards
+     Design alinhado com identidade visual do projeto.
+     Cores: azul #0c63d1 / #1A237E, verde #3ef47c.
+     ============================================= -->
+<style>
+    .mei-seguro {
+        background: linear-gradient(180deg, #f8f9fa 0%, #ebeef1 100%);
+        padding: clamp(3rem, 6vw, 6rem) 1rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Círculos decorativos de fundo */
+    .mei-seguro::before,
+    .mei-seguro::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .mei-seguro::before {
+        width: 500px; height: 500px;
+        top: -200px; left: -150px;
+        background: radial-gradient(circle, rgba(12,99,209,0.05) 0%, transparent 70%);
+    }
+    .mei-seguro::after {
+        width: 400px; height: 400px;
+        bottom: -150px; right: -100px;
+        background: radial-gradient(circle, rgba(62,244,124,0.06) 0%, transparent 70%);
+    }
+
+    .mei-seguro__wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ── Hero Grid ── */
+    .mei-seguro__hero {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: clamp(2rem, 4vw, 4rem);
+        align-items: center;
+        margin-bottom: clamp(3.5rem, 6vw, 5rem);
+    }
+
+    /* ── Badge ── */
+    .mei-seguro__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #fff;
+        color: #0c63d1;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        padding: 0.5rem 1.25rem;
+        border-radius: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 12px rgba(12,99,209,0.1);
+        border: 1px solid rgba(12,99,209,0.12);
+    }
+
+    .mei-seguro__badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #3ef47c;
+        animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    /* ── Tipografia ── */
+    .mei-seguro__title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+        font-weight: 800;
+        line-height: 1.15;
+        color: #1A237E;
+        margin-bottom: 1.25rem;
+    }
+
+    .mei-seguro__title-highlight {
+        color: #0c63d1;
+        position: relative;
+        display: inline;
+    }
+
+    .mei-seguro__title-highlight::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 8px;
+        background: linear-gradient(90deg, rgba(62,244,124,0.35), rgba(12,99,209,0.15));
+        border-radius: 4px;
+        z-index: -1;
+    }
+
+    .mei-seguro__subtitle {
+        font-size: 1.125rem;
+        color: #475569;
+        line-height: 1.7;
+        margin-bottom: 2rem;
+        max-width: 520px;
+    }
+
+    /* ── CTA ── */
+    .mei-seguro__cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: linear-gradient(135deg, #0c63d1 0%, #1A237E 100%);
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.0625rem;
+        padding: 1rem 2.25rem;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 6px 20px rgba(12,99,209,0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .mei-seguro__cta::before {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .mei-seguro__cta:hover::before {
+        left: 100%;
+    }
+
+    .mei-seguro__cta:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(12,99,209,0.4);
+        color: #fff;
+    }
+
+    .mei-seguro__cta:focus-visible {
+        outline: 3px solid #93c5fd;
+        outline-offset: 3px;
+    }
+
+    .mei-seguro__cta-arrow {
+        transition: transform 0.3s ease;
+    }
+
+    .mei-seguro__cta:hover .mei-seguro__cta-arrow {
+        transform: translateX(5px);
+    }
+
+    /* Trust badges abaixo do CTA */
+    .mei-seguro__trust {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-top: 1.75rem;
+        flex-wrap: wrap;
+    }
+
+    .mei-seguro__trust-item {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.8125rem;
+        color: #64748b;
+        font-weight: 500;
+    }
+
+    .mei-seguro__trust-item svg {
+        width: 16px;
+        height: 16px;
+        color: #3ef47c;
+        flex-shrink: 0;
+    }
+
+    /* ── Visual / Imagem ── */
+    .mei-seguro__visual {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .mei-seguro__img-wrapper {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(12,99,209,0.12);
+        border: 3px solid rgba(12,99,209,0.08);
+    }
+
+    .mei-seguro__image {
+        width: 100%;
+        max-width: 520px;
+        height: auto;
+        display: block;
+        border-radius: 18px;
+    }
+
+    /* Badge flutuante sobre a imagem */
+    .mei-seguro__float-badge {
+        position: absolute;
+        bottom: 1.5rem;
+        left: 1.5rem;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 0.75rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .mei-seguro__float-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #0c63d1, #1A237E);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        flex-shrink: 0;
+    }
+
+    .mei-seguro__float-icon svg { width: 20px; height: 20px; }
+
+    .mei-seguro__float-text strong {
+        display: block;
+        font-size: 0.9rem;
+        color: #0f172a;
+    }
+    .mei-seguro__float-text span {
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
+    }
+
+    /* ── Grid de 4 Cards ── */
+    .mei-seguro__cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+    }
+
+    .mei-seguro__card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+        border: 1px solid rgba(0,0,0,0.04);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .mei-seguro__card::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #0c63d1, #3ef47c);
+        opacity: 0;
+        transition: opacity 0.35s ease;
+    }
+
+    .mei-seguro__card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 48px rgba(12,99,209,0.1);
+    }
+
+    .mei-seguro__card:hover::after {
+        opacity: 1;
+    }
+
+    .mei-seguro__card-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.25rem;
+        transition: transform 0.3s ease;
+    }
+
+    .mei-seguro__card:hover .mei-seguro__card-icon {
+        transform: scale(1.08);
+    }
+
+    .mei-seguro__card-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .mei-seguro__card-icon--star {
+        background: linear-gradient(135deg, #fef3c7, #fffbeb);
+        color: #d97706;
+    }
+    .mei-seguro__card-icon--shield {
+        background: linear-gradient(135deg, #dbeafe, #eff6ff);
+        color: #0c63d1;
+    }
+    .mei-seguro__card-icon--rocket {
+        background: linear-gradient(135deg, #d1fae5, #ecfdf5);
+        color: #059669;
+    }
+    .mei-seguro__card-icon--users {
+        background: linear-gradient(135deg, #ede9fe, #f5f3ff);
+        color: #7c3aed;
+    }
+
+    .mei-seguro__card-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1A237E;
+        margin-bottom: 0.5rem;
+    }
+
+    .mei-seguro__card-text {
+        font-size: 0.875rem;
+        color: #64748b;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    /* ── Responsivo ── */
+    @media (max-width: 1024px) {
+        .mei-seguro__hero {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+        .mei-seguro__subtitle { margin-left: auto; margin-right: auto; }
+        .mei-seguro__visual { order: -1; }
+        .mei-seguro__image { max-width: 420px; }
+        .mei-seguro__trust { justify-content: center; }
+        .mei-seguro__cards { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+        .mei-seguro__cards { grid-template-columns: 1fr; }
+        .mei-seguro__image { max-width: 100%; }
+        .mei-seguro__float-badge { left: 0.75rem; bottom: 0.75rem; }
+    }
+</style>
+
+<section class="mei-seguro" aria-labelledby="mei-seguro-title">
+    <div class="mei-seguro__wrapper">
+
+        <!-- ── Hero ── -->
+        <div class="mei-seguro__hero">
+
+            <!-- Coluna esquerda -->
+            <div class="mei-seguro__content">
+                <span class="mei-seguro__badge">
+                    <span class="mei-seguro__badge-dot"></span>
+                    Você cuida do seu negócio, a gente cuida do seu MEI.
+                </span>
+
+                <h2 id="mei-seguro-title" class="mei-seguro__title">
+                    Seu MEI seguro.<br>
+                    <span class="mei-seguro__title-highlight">Suas finanças em dia.</span>
+                </h2>
+
+                <p class="mei-seguro__subtitle">
+                    Evite dores de cabeça com impostos, prazos e burocracia. Deixe a parte fiscal com a gente.
+                </p>
+
+                <a href="#pricing" class="mei-seguro__cta">
+                    Quero proteger meu MEI
+                    <svg class="mei-seguro__cta-arrow" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+
+                <!-- Trust signals -->
+                <div class="mei-seguro__trust">
+                    <span class="mei-seguro__trust-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8A8 8 0 110 8a8 8 0 0116 0zm-3.97-3.03a.75.75 0 00-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 00-1.06 1.06L6.97 11.03a.75.75 0 001.079-.02l3.992-4.99a.75.75 0 00-.01-1.05z"/></svg>
+                        100% Online
+                    </span>
+                    <span class="mei-seguro__trust-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8A8 8 0 110 8a8 8 0 0116 0zm-3.97-3.03a.75.75 0 00-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 00-1.06 1.06L6.97 11.03a.75.75 0 001.079-.02l3.992-4.99a.75.75 0 00-.01-1.05z"/></svg>
+                        Dados Protegidos
+                    </span>
+                    <span class="mei-seguro__trust-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8A8 8 0 110 8a8 8 0 0116 0zm-3.97-3.03a.75.75 0 00-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 00-1.06 1.06L6.97 11.03a.75.75 0 001.079-.02l3.992-4.99a.75.75 0 00-.01-1.05z"/></svg>
+                        +5 anos de experiência
+                    </span>
+                </div>
+            </div>
+
+            <!-- Coluna direita -->
+            <div class="mei-seguro__visual">
+                <div class="mei-seguro__img-wrapper">
+                    <img
+                        src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80"
+                        alt="Gestão financeira MEI — profissional organizando finanças e documentos"
+                        class="mei-seguro__image"
+                        loading="lazy"
+                        width="520"
+                        height="400"
+                    >
+                    <!-- Badge flutuante -->
+                    <div class="mei-seguro__float-badge">
+                        <div class="mei-seguro__float-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        </div>
+                        <div class="mei-seguro__float-text">
+                            <strong>MEI Protegido</strong>
+                            <span>Segurança garantida</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── 4 Cards ── -->
+        <div class="mei-seguro__cards">
+
+            <div class="mei-seguro__card">
+                <div class="mei-seguro__card-icon mei-seguro__card-icon--star">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                    </svg>
+                </div>
+                <h3 class="mei-seguro__card-title">Reconhecimento de excelência</h3>
+                <p class="mei-seguro__card-text">Nossa qualidade é reconhecida e valorizada.</p>
+            </div>
+
+            <div class="mei-seguro__card">
+                <div class="mei-seguro__card-icon mei-seguro__card-icon--shield">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <h3 class="mei-seguro__card-title">Compromisso e Ética</h3>
+                <p class="mei-seguro__card-text">Compromisso com sigilo, ética e precisão das informações.</p>
+            </div>
+
+            <div class="mei-seguro__card">
+                <div class="mei-seguro__card-icon mei-seguro__card-icon--rocket">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
+                </div>
+                <h3 class="mei-seguro__card-title">Impulsione o Sucesso do Seu Negócio</h3>
+                <p class="mei-seguro__card-text">Descomplicamos a gestão do seu MEI.</p>
+            </div>
+
+            <div class="mei-seguro__card">
+                <div class="mei-seguro__card-icon mei-seguro__card-icon--users">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                </div>
+                <h3 class="mei-seguro__card-title">Expertise reconhecida</h3>
+                <p class="mei-seguro__card-text">Especialistas prontos para cuidar do seu MEI com segurança e eficiência.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- =============================================
+     SECTION: PLATAFORMA MEI — Smartphone + Benefícios
+     Layout premium: 3 colunas com celular central,
+     fundo com glassmorphism e partículas decorativas.
+     ============================================= -->
+<style>
+    .plataforma-mei {
+        /* Fundo escuro azul profundo para contraste */
+        background: linear-gradient(160deg, #0a1628 0%, #0f2547 40%, #132d5e 70%, #0a1628 100%);
+        padding: clamp(4rem, 7vw, 7rem) 1rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Mesh de pontos decorativa - cria profundidade */
+    .plataforma-mei::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+            radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Glow orbital azul */
+    .plataforma-mei__orb1 {
+        position: absolute;
+        width: 500px; height: 500px;
+        top: -10%; left: -5%;
+        background: radial-gradient(circle, rgba(12,99,209,0.2) 0%, transparent 65%);
+        border-radius: 50%;
+        filter: blur(60px);
+        pointer-events: none;
+        z-index: 0;
+    }
+    .plataforma-mei__orb2 {
+        position: absolute;
+        width: 400px; height: 400px;
+        bottom: -10%; right: -5%;
+        background: radial-gradient(circle, rgba(62,244,124,0.12) 0%, transparent 65%);
+        border-radius: 50%;
+        filter: blur(60px);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .plataforma-mei__wrapper {
+        max-width: 1260px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ── Header ── */
+    .plataforma-mei__header {
+        text-align: center;
+        margin-bottom: clamp(3rem, 5vw, 4.5rem);
+    }
+
+    .plataforma-mei__kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255,255,255,0.07);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        color: #93c5fd;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        padding: 0.5rem 1.25rem;
+        border-radius: 2rem;
+        margin-bottom: 1.25rem;
+        border: 1px solid rgba(147,197,253,0.15);
+    }
+
+    .plataforma-mei__kicker-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #3ef47c;
+        box-shadow: 0 0 8px rgba(62,244,124,0.6);
+        animation: plat-dot-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes plat-dot-pulse {
+        0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(62,244,124,0.6); }
+        50% { opacity: 0.6; box-shadow: 0 0 16px rgba(62,244,124,0.8); }
+    }
+
+    .plataforma-mei__title {
+        font-size: clamp(1.875rem, 4vw, 2.75rem);
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 0.75rem;
+        line-height: 1.2;
+    }
+
+    .plataforma-mei__title-accent {
+        background: linear-gradient(90deg, #60a5fa, #3ef47c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .plataforma-mei__desc {
+        font-size: 1.1rem;
+        color: #94a3b8;
+        max-width: 560px;
+        margin: 0 auto;
+        line-height: 1.65;
+    }
+
+    /* ── Grid principal ── */
+    .plataforma-mei__grid {
+        display: grid;
+        grid-template-columns: 1fr 300px 1fr;
+        gap: clamp(1.5rem, 3vw, 3.5rem);
+        align-items: center;
+    }
+
+    /* ── Benefícios ── */
+    .plataforma-mei__benefits {
+        display: flex;
+        flex-direction: column;
+        gap: 1.75rem;
+    }
+
+    .plataforma-mei__benefits--left .plataforma-mei__benefit {
+        flex-direction: row-reverse;
+        text-align: right;
+    }
+
+    /* Card de benefício individual — glassmorphism */
+    .plataforma-mei__benefit {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        padding: 1.25rem;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.06);
+        transition: all 0.35s ease;
+    }
+
+    .plataforma-mei__benefit:hover {
+        background: rgba(255,255,255,0.08);
+        border-color: rgba(147,197,253,0.2);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    }
+
+    /* Ícone */
+    .plataforma-mei__benefit-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+    }
+
+    .plataforma-mei__benefit:hover .plataforma-mei__benefit-icon {
+        transform: scale(1.1);
+    }
+
+    .plataforma-mei__benefit-icon svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    /* Cores variadas com transparência */
+    .plataforma-mei__benefit-icon--blue {
+        background: rgba(59,130,246,0.15);
+        color: #60a5fa;
+    }
+    .plataforma-mei__benefit-icon--green {
+        background: rgba(16,185,129,0.15);
+        color: #34d399;
+    }
+    .plataforma-mei__benefit-icon--purple {
+        background: rgba(139,92,246,0.15);
+        color: #a78bfa;
+    }
+    .plataforma-mei__benefit-icon--amber {
+        background: rgba(245,158,11,0.15);
+        color: #fbbf24;
+    }
+    .plataforma-mei__benefit-icon--rose {
+        background: rgba(236,72,153,0.15);
+        color: #f472b6;
+    }
+    .plataforma-mei__benefit-icon--teal {
+        background: rgba(20,184,166,0.15);
+        color: #2dd4bf;
+    }
+
+    .plataforma-mei__benefit-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .plataforma-mei__benefit-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #e2e8f0;
+        margin-bottom: 0.3rem;
+        line-height: 1.3;
+    }
+
+    .plataforma-mei__benefit-text {
+        font-size: 0.8125rem;
+        color: #94a3b8;
+        line-height: 1.55;
+        margin: 0;
+    }
+
+    /* ── Celular central ── */
+    .plataforma-mei__phone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .plataforma-mei__phone-wrapper {
+        position: relative;
+        width: 280px;
+    }
+
+    .plataforma-mei__phone-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        position: relative;
+        z-index: 2;
+        filter: drop-shadow(0 20px 50px rgba(0,0,0,0.5));
+    }
+
+    /* Anel de brilho */
+    .plataforma-mei__phone-ring {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        border: 1px solid rgba(59,130,246,0.12);
+        z-index: 0;
+        animation: ring-breathe 5s ease-in-out infinite;
+    }
+
+    .plataforma-mei__phone-ring--outer {
+        width: 400px;
+        height: 400px;
+        border-color: rgba(59,130,246,0.06);
+        animation-delay: 0.5s;
+    }
+
+    @keyframes ring-breathe {
+        0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+        50% { transform: translate(-50%, -50%) scale(1.06); opacity: 1; }
+    }
+
+    /* Glow atrás do celular */
+    .plataforma-mei__phone-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 240px;
+        height: 380px;
+        background: linear-gradient(180deg, rgba(59,130,246,0.2) 0%, rgba(62,244,124,0.1) 100%);
+        border-radius: 40px;
+        filter: blur(40px);
+        z-index: 0;
+    }
+
+    /* Linhas conectoras */
+    .plataforma-mei__phone-wrapper::before,
+    .plataforma-mei__phone-wrapper::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 60px;
+        height: 1px;
+        z-index: 1;
+    }
+    .plataforma-mei__phone-wrapper::before {
+        right: 100%;
+        margin-right: 8px;
+        background: linear-gradient(90deg, transparent, rgba(59,130,246,0.3));
+    }
+    .plataforma-mei__phone-wrapper::after {
+        left: 100%;
+        margin-left: 8px;
+        background: linear-gradient(90deg, rgba(59,130,246,0.3), transparent);
+    }
+
+    /* 3 dots animados nas linhas */
+    .plataforma-mei__connector-dot {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #60a5fa;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 3;
+        animation: connector-travel 3s ease-in-out infinite;
+    }
+    .plataforma-mei__connector-dot--left {
+        right: calc(100% + 32px);
+        animation-direction: reverse;
+    }
+    .plataforma-mei__connector-dot--right {
+        left: calc(100% + 32px);
+    }
+
+    @keyframes connector-travel {
+        0%, 100% { opacity: 0; transform: translateY(-50%) translateX(0); }
+        20% { opacity: 1; }
+        80% { opacity: 1; }
+        100% { opacity: 0; transform: translateY(-50%) translateX(20px); }
+    }
+
+    /* ── Bottom CTA ── */
+    .plataforma-mei__cta-row {
+        text-align: center;
+        margin-top: clamp(2.5rem, 4vw, 4rem);
+    }
+
+    .plataforma-mei__cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem 2.5rem;
+        background: linear-gradient(135deg, #3ef47c 0%, #2ed66b 100%);
+        color: #0a1628;
+        font-weight: 700;
+        font-size: 1rem;
+        border: none;
+        border-radius: 12px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 24px rgba(62,244,124,0.3);
+    }
+
+    .plataforma-mei__cta-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 36px rgba(62,244,124,0.4);
+        color: #0a1628;
+    }
+
+    .plataforma-mei__cta-btn svg {
+        transition: transform 0.3s ease;
+    }
+    .plataforma-mei__cta-btn:hover svg {
+        transform: translateX(4px);
+    }
+
+    /* ── Responsivo ── */
+    @media (max-width: 1024px) {
+        .plataforma-mei__grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            max-width: 540px;
+            margin: 0 auto;
+        }
+
+        .plataforma-mei__phone { order: -1; }
+
+        .plataforma-mei__phone-wrapper {
+            width: 220px;
+        }
+
+        .plataforma-mei__phone-wrapper::before,
+        .plataforma-mei__phone-wrapper::after,
+        .plataforma-mei__connector-dot { display: none; }
+
+        .plataforma-mei__benefits--left .plataforma-mei__benefit {
+            text-align: left;
+            flex-direction: row;
+        }
+
+        .plataforma-mei__phone-ring,
+        .plataforma-mei__phone-ring--outer {
+            width: 260px; height: 260px;
+        }
+        .plataforma-mei__phone-ring--outer {
+            width: 320px; height: 320px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .plataforma-mei__phone-wrapper { width: 180px; }
+        .plataforma-mei__benefit { padding: 1rem; }
+    }
+</style>
+
+<section class="plataforma-mei" aria-labelledby="plataforma-mei-title">
+    <!-- Efeitos de fundo -->
+    <div class="plataforma-mei__orb1"></div>
+    <div class="plataforma-mei__orb2"></div>
+
+    <div class="plataforma-mei__wrapper">
+
+        <!-- Header -->
+        <div class="plataforma-mei__header">
+            <span class="plataforma-mei__kicker">
+                <span class="plataforma-mei__kicker-dot"></span>
+                Tecnologia a favor do seu negócio
+            </span>
+            <h2 id="plataforma-mei-title" class="plataforma-mei__title">
+                Tudo que você precisa, <span class="plataforma-mei__title-accent">onde estiver</span>
+            </h2>
+            <p class="plataforma-mei__desc">Gestão completa do seu MEI em uma plataforma moderna, segura e fácil de usar.</p>
+        </div>
+
+        <!-- Grid 3 colunas -->
+        <div class="plataforma-mei__grid">
+
+            <!-- Coluna Esquerda -->
+            <div class="plataforma-mei__benefits plataforma-mei__benefits--left">
+
+                <article class="plataforma-mei__benefit">
+                    <div class="plataforma-mei__benefit-icon plataforma-mei__benefit-icon--blue">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <div class="plataforma-mei__benefit-content">
+                        <h3 class="plataforma-mei__benefit-title">Acesso em qualquer dispositivo</h3>
+                        <p class="plataforma-mei__benefit-text">Use no celular, tablet ou computador de onde estiver. Toda a gestão do seu MEI na palma da mão, com praticidade e segurança.</p>
+                    </div>
+                </article>
+
+                <article class="plataforma-mei__benefit">
+                    <div class="plataforma-mei__benefit-icon plataforma-mei__benefit-icon--green">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                    </div>
+                    <div class="plataforma-mei__benefit-content">
+                        <h3 class="plataforma-mei__benefit-title">Suporte especializado</h3>
+                        <p class="plataforma-mei__benefit-text">Dúvidas ou problemas? Conte com uma equipe pronta para atender e orientar você na gestão do seu MEI.</p>
+                    </div>
+                </article>
+
+                <article class="plataforma-mei__benefit">
+                    <div class="plataforma-mei__benefit-icon plataforma-mei__benefit-icon--purple">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
+                        </svg>
+                    </div>
+                    <div class="plataforma-mei__benefit-content">
+                        <h3 class="plataforma-mei__benefit-title">Painel simples e fácil de usar</h3>
+                        <p class="plataforma-mei__benefit-text">Controle seus boletos, declarações e obrigações com poucos cliques.</p>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- Coluna Central: Smartphone -->
+            <div class="plataforma-mei__phone">
+                <div class="plataforma-mei__phone-wrapper">
+                    <div class="plataforma-mei__phone-glow"></div>
+                    <div class="plataforma-mei__phone-ring"></div>
+                    <div class="plataforma-mei__phone-ring plataforma-mei__phone-ring--outer"></div>
+                    <span class="plataforma-mei__connector-dot plataforma-mei__connector-dot--left"></span>
+                    <span class="plataforma-mei__connector-dot plataforma-mei__connector-dot--right"></span>
+                    <img
+                        src="{% static 'img/celular.png' %}"
+                        alt="Tela do aplicativo Vetorial MEI — Abertura CNPJ MEI Online"
+                        class="plataforma-mei__phone-img"
+                        loading="lazy"
+                        width="280"
+                        height="560"
+                    >
+                </div>
+            </div>
+
+            <!-- Coluna Direita -->
+            <div class="plataforma-mei__benefits plataforma-mei__benefits--right">
+
+                <article class="plataforma-mei__benefit">
+                    <div class="plataforma-mei__benefit-icon plataforma-mei__benefit-icon--amber">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                    </div>
+                    <div class="plataforma-mei__benefit-content">
+                        <h3 class="plataforma-mei__benefit-title">Atualizações automáticas e seguras</h3>
+                        <p class="plataforma-mei__benefit-text">Você sempre com as versões mais recentes e seguras do sistema, sem precisar se preocupar com downloads ou instalações.</p>
+                    </div>
+                </article>
+
+                <article class="plataforma-mei__benefit">
+                    <div class="plataforma-mei__benefit-icon plataforma-mei__benefit-icon--rose">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <div class="plataforma-mei__benefit-content">
+                        <h3 class="plataforma-mei__benefit-title">Plataforma 100% responsiva</h3>
+                        <p class="plataforma-mei__benefit-text">Navegação adaptada a qualquer tamanho de tela, com layout intuitivo e moderno, garantindo conforto visual e usabilidade.</p>
+                    </div>
+                </article>
+
+                <article class="plataforma-mei__benefit">
+                    <div class="plataforma-mei__benefit-icon plataforma-mei__benefit-icon--teal">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                        </svg>
+                    </div>
+                    <div class="plataforma-mei__benefit-content">
+                        <h3 class="plataforma-mei__benefit-title">Compatível com todos os navegadores</h3>
+                        <p class="plataforma-mei__benefit-text">Funciona perfeitamente no Chrome, Safari, Firefox e Edge, sem erros ou travamentos.</p>
+                    </div>
+                </article>
+
+            </div>
+
+        </div>
+
+        <!-- CTA inferior -->
+        <div class="plataforma-mei__cta-row">
+            <a href="#pricing" class="plataforma-mei__cta-btn">
+                Ver Soluções
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+            </a>
+        </div>
+
     </div>
 </section>
 
@@ -970,6 +2341,429 @@ Flexibilidade para mudar de plano: Se necessário, você poderá alterar seu pla
                     
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- =============================================
+     SECTION: DESCOMPLIQUE SEU MEI
+     Duas colunas: copy persuasivo (esq.) + imagem (dir.)
+     Mobile-first: imagem no topo, texto abaixo.
+     Objetivo UX: gerar confiança e empatia no visitante,
+     reforçando que a burocracia fica por conta da equipe.
+     ============================================= -->
+<style>
+    /* ── Wrapper da section ── */
+    .descomplique-mei {
+        /* Fundo off-white suave — repouso visual após o FAQ */
+        background: #f7f8fb;
+        padding: clamp(4rem, 7vw, 7rem) 1rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Detalhe decorativo: semicírculo sutil no canto superior direito */
+    .descomplique-mei::before {
+        content: '';
+        position: absolute;
+        top: -120px;
+        right: -120px;
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(12,99,209,0.05) 0%, transparent 65%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Detalhe decorativo inferior esquerdo */
+    .descomplique-mei::after {
+        content: '';
+        position: absolute;
+        bottom: -80px;
+        left: -80px;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(62,244,124,0.04) 0%, transparent 65%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .descomplique-mei__container {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ── Grid principal ── */
+    .descomplique-mei__grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(2.5rem, 5vw, 5rem);
+        align-items: center;
+    }
+
+    /* ── Coluna de texto ── */
+    .descomplique-mei__content {
+        order: 1;
+    }
+
+    /* Kicker/badge superior — identidade com as demais sections */
+    .descomplique-mei__kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        background: linear-gradient(135deg, rgba(12,99,209,0.08), rgba(12,99,209,0.04));
+        color: #0c63d1;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        padding: 0.45rem 1.15rem;
+        border-radius: 2rem;
+        margin-bottom: 1.25rem;
+        border: 1px solid rgba(12,99,209,0.1);
+    }
+
+    .descomplique-mei__kicker-icon {
+        display: inline-flex;
+        color: #3ef47c;
+    }
+
+    /* Headline principal */
+    .descomplique-mei__title {
+        font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+        font-weight: 800;
+        color: #1A237E;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+    }
+
+    .descomplique-mei__title-accent {
+        color: #0c63d1;
+    }
+
+    /* Subtítulo introdutório */
+    .descomplique-mei__subtitle {
+        font-size: 1.125rem;
+        font-weight: 500;
+        color: #334155;
+        line-height: 1.65;
+        margin-bottom: 1.5rem;
+        border-left: 3px solid #3ef47c;
+        padding-left: 1rem;
+    }
+
+    /* Parágrafos de copy */
+    .descomplique-mei__text {
+        font-size: 1rem;
+        color: #475569;
+        line-height: 1.75;
+        margin-bottom: 1.25rem;
+    }
+
+    .descomplique-mei__text:last-of-type {
+        margin-bottom: 1.5rem;
+    }
+
+    .descomplique-mei__text strong {
+        color: #1A237E;
+        font-weight: 600;
+    }
+
+    /* Frase de reforço em destaque */
+    .descomplique-mei__highlight {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        background: linear-gradient(135deg, rgba(12,99,209,0.06), rgba(12,99,209,0.02));
+        border: 1px solid rgba(12,99,209,0.1);
+        border-radius: 12px;
+        padding: 1.15rem 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .descomplique-mei__highlight-icon {
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0c63d1, #0a4fa3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        margin-top: 2px;
+    }
+
+    .descomplique-mei__highlight-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .descomplique-mei__highlight-text {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1A237E;
+        line-height: 1.5;
+    }
+
+    /* ── Botão CTA ── */
+    .descomplique-mei__cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.9rem 2.25rem;
+        background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 1rem;
+        border: none;
+        border-radius: 12px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(12,99,209,0.25);
+        /* Foco acessível */
+        outline-offset: 3px;
+    }
+
+    .descomplique-mei__cta:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 28px rgba(12,99,209,0.35);
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .descomplique-mei__cta:focus-visible {
+        outline: 2px solid #0c63d1;
+    }
+
+    .descomplique-mei__cta svg {
+        transition: transform 0.3s ease;
+    }
+
+    .descomplique-mei__cta:hover svg {
+        transform: translateX(4px);
+    }
+
+    /* ── Coluna da imagem ── */
+    .descomplique-mei__image-col {
+        order: 2;
+        position: relative;
+    }
+
+    .descomplique-mei__image-wrapper {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow:
+            0 20px 60px rgba(12,99,209,0.1),
+            0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .descomplique-mei__image-wrapper img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: cover;
+        /* Leve zoom no hover para sentir de profundidade */
+        transition: transform 0.6s ease;
+    }
+
+    .descomplique-mei__image-wrapper:hover img {
+        transform: scale(1.03);
+    }
+
+    /* Badge flutuante sobre a imagem — reforço de prova social */
+    .descomplique-mei__image-badge {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 0.65rem 1.1rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        z-index: 2;
+    }
+
+    .descomplique-mei__image-badge-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3ef47c, #2ed66b);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+    }
+
+    .descomplique-mei__image-badge-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .descomplique-mei__image-badge-text {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        color: #1A237E;
+        line-height: 1.3;
+    }
+
+    .descomplique-mei__image-badge-text span {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 400;
+        color: #64748b;
+    }
+
+    /* Detalhe decorativo atrás da imagem */
+    .descomplique-mei__image-deco {
+        position: absolute;
+        top: -16px;
+        right: -16px;
+        width: 120px;
+        height: 120px;
+        border-radius: 20px;
+        border: 2px solid rgba(12,99,209,0.1);
+        z-index: -1;
+    }
+
+    /* ── Responsivo ── */
+    @media (max-width: 1024px) {
+        .descomplique-mei__grid {
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+
+        /* Mobile-first: imagem no topo, texto abaixo */
+        .descomplique-mei__image-col {
+            order: -1;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        .descomplique-mei__content {
+            order: 2;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .descomplique-mei__title {
+            font-size: 1.5rem;
+        }
+
+        .descomplique-mei__subtitle {
+            font-size: 1rem;
+        }
+
+        .descomplique-mei__cta {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .descomplique-mei__image-deco {
+            display: none;
+        }
+    }
+</style>
+
+<section class="descomplique-mei" aria-labelledby="descomplique-mei-title">
+    <div class="descomplique-mei__container">
+        <div class="descomplique-mei__grid">
+
+            <!-- ── Coluna esquerda: Copy persuasiva ── -->
+            <div class="descomplique-mei__content">
+
+                <!-- Badge kicker — ancora identidade com as demais sections -->
+                <span class="descomplique-mei__kicker">
+                    <span class="descomplique-mei__kicker-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                        </svg>
+                    </span>
+                    Assessoria MEI Completa
+                </span>
+
+                <!-- Headline principal — palavras-chave em destaque -->
+                <h2 id="descomplique-mei-title" class="descomplique-mei__title">
+                    Descomplique seu MEI: nós cuidamos da <span class="descomplique-mei__title-accent">burocracia</span>, você foca no seu negócio!
+                </h2>
+
+                <!-- Subtítulo introdutório com borda verde — respiro visual -->
+                <p class="descomplique-mei__subtitle">
+                    Abrir um CNPJ MEI pode parecer um desafio, mas com a escolha certa, todo o processo se torna <strong>simples e descomplicado</strong>.
+                </p>
+
+                <!-- Parágrafos persuasivos — tom empático → alívio → fechamento -->
+                <p class="descomplique-mei__text">
+                    Sabemos como administrar seu negócio, manter as <strong>taxas em dia</strong> e atualizar suas informações pode ser cansativo e estressante.
+                </p>
+
+                <p class="descomplique-mei__text">
+                    A boa notícia? Você <strong>não precisa enfrentar tudo isso sozinho</strong>. Com nossa plataforma, você tem o apoio de uma equipe de especialistas pronta para cuidar de cada detalhe, enquanto você foca no que realmente importa: <strong>o crescimento do seu negócio</strong>.
+                </p>
+
+                <p class="descomplique-mei__text">
+                    Deixe o trabalho burocrático conosco e tenha a tranquilidade de que seu <strong>MEI estará sempre em dia</strong>.
+                </p>
+
+                <!-- Frase de reforço — card de destaque com ícone para prender atenção -->
+                <div class="descomplique-mei__highlight">
+                    <div class="descomplique-mei__highlight-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <p class="descomplique-mei__highlight-text">
+                        O sucesso do seu MEI começa com a escolha certa: nossa assessoria!
+                    </p>
+                </div>
+
+                <!-- CTA principal — cor azul institucional, seta animada -->
+                <a href="{% url 'services:services_list' %}" class="descomplique-mei__cta" aria-label="Acessar serviços para MEI">
+                    Acessar Serviços
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- ── Coluna direita: Imagem ── -->
+            <div class="descomplique-mei__image-col">
+                <!-- Detalhe decorativo atrás da imagem — profundidade -->
+                <div class="descomplique-mei__image-deco"></div>
+
+                <div class="descomplique-mei__image-wrapper">
+                    <img
+                        src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80"
+                        alt="Profissional trabalhando com documentos e notebook em ambiente organizado — Assessoria MEI Vetorial"
+                        loading="lazy"
+                        width="800"
+                        height="534"
+                    >
+
+                    <!-- Badge flutuante — prova social + confiança -->
+                    <div class="descomplique-mei__image-badge">
+                        <div class="descomplique-mei__image-badge-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <div class="descomplique-mei__image-badge-text">
+                            Equipe Especializada
+                            <span>Suporte completo ao MEI</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </section>

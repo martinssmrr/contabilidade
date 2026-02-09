@@ -44,6 +44,7 @@ urlpatterns = [
     
     # API Endpoints - Notas Fiscais (Staff)
     path('api/clientes/', views.api_clientes_list, name='api_clientes_list'),
+    path('api/cliente/<int:cliente_id>/dados-empresa/', views.api_cliente_dados_empresa, name='api_cliente_dados_empresa'),
     path('api/notas-fiscais/', views.api_notas_fiscais_list, name='api_notas_fiscais_list'),
     path('api/notas-fiscais/enviar/', views.api_nota_fiscal_enviar, name='api_nota_fiscal_enviar'),
     
@@ -65,11 +66,17 @@ urlpatterns = [
     path('api/extratos-bancarios/clientes/', views.api_clientes_com_extratos, name='api_clientes_com_extratos'),
     path('api/extratos-bancarios/clientes/<int:cliente_id>/', views.api_extratos_bancarios_cliente, name='api_extratos_bancarios_cliente'),
     
+    # API Endpoints - Boletos Contabilidade (Staff)
+    path('api/cliente/<int:cliente_id>/boletos/', views.api_cliente_boletos, name='api_cliente_boletos'),
+    path('api/boleto/<int:boleto_id>/status/', views.api_boleto_status, name='api_boleto_status'),
+    
     # Área do Cliente
     path('cliente/dashboard/', views.dashboard_cliente, name='dashboard_cliente'),
     path('cliente/abrir-chamado/', views.abrir_chamado, name='abrir_chamado'),
     path('cliente/chamado/<int:pk>/', views.chamado_detail, name='chamado_detail'),
     path('cliente/chamado/<int:pk>/responder/', views.responder_chamado, name='responder_chamado'),
+    path('cliente/assistente-ia/', views.assistente_ia, name='assistente_ia'),
+    path('cliente/assistente-ia/chat/', views.assistente_ia_chat, name='assistente_ia_chat'),
     
     # API Endpoints - Novos (Extensão do Dashboard)
     path('api/guias/', views.api_guias_imposto_list, name='api_guias_imposto_list'),
@@ -82,6 +89,11 @@ urlpatterns = [
     path('api/staff-tasks/<int:pk>/update/', views.api_staff_tasks_update, name='api_staff_tasks_update'),
     path('api/staff-tasks/<int:pk>/delete/', views.api_staff_tasks_delete, name='api_staff_tasks_delete'),
 
+    # API Endpoints - Serviços Avulsos
+    path('api/servicos-avulsos/', views.api_servicos_avulsos_list, name='api_servicos_avulsos_list'),
+    path('api/servicos-avulsos/<int:pk>/update/', views.api_servico_avulso_update, name='api_servico_avulso_update'),
+    path('api/servicos-avulsos/contagem/', views.api_servicos_avulsos_contagem, name='api_servicos_avulsos_contagem'),
+
     # API Endpoints - Agenda
     path('api/agenda/', views.api_agenda_list, name='api_agenda_list'),
     path('api/agenda/sync/', views.api_agenda_sync_google, name='api_agenda_sync_google'),
@@ -89,4 +101,16 @@ urlpatterns = [
     path('api/agenda/<int:pk>/update/', views.api_agenda_update, name='api_agenda_update'),
     path('api/agenda/<int:pk>/update-status/', views.api_agenda_update_status, name='api_agenda_update_status'),
     path('api/agenda/<int:pk>/delete/', views.api_agenda_delete, name='api_agenda_delete'),
+    
+    # API Endpoints - Chatbot
+    path('api/chatbot/iniciar/', views.chatbot_iniciar_sessao, name='chatbot_iniciar_sessao'),
+    path('api/chatbot/perguntas/', views.chatbot_listar_perguntas, name='chatbot_listar_perguntas'),
+    path('api/chatbot/pergunta/', views.chatbot_enviar_pergunta, name='chatbot_enviar_pergunta'),
+    path('api/chatbot/encerrar/', views.chatbot_encerrar_sessao, name='chatbot_encerrar_sessao'),
+    path('api/chatbot/avaliar/', views.chatbot_avaliar_sessao, name='chatbot_avaliar_sessao'),
+    path('api/chatbot/recuperar/', views.chatbot_recuperar_sessao, name='chatbot_recuperar_sessao'),
+    
+    # API Endpoints - Chatbot Atendente IA
+    path('api/chatbot/ia/', views.chatbot_atendente_ia, name='chatbot_atendente_ia'),
+    path('api/chatbot/ia/status/', views.chatbot_ia_status, name='chatbot_ia_status'),
 ]

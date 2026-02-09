@@ -1,0 +1,111 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Cancelar Nota Fiscal - Vetorial{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-title { font-size: 1.5rem; font-weight: 600; color: #1f2937; }
+    .card-section { background: #fff; border-radius: 12px; padding: 1.5rem; border: 1px solid #f3f4f6; }
+    .warning-box { background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px; padding: 1rem; font-size: 0.875rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{% url 'users:notas_fiscais' %}" class="text-decoration-none">Notas Fiscais</a></li>
+            <li class="breadcrumb-item active text-muted">Cancelar</li>
+        </ol>
+    </nav>
+    
+    <h1 class="page-title mb-4">Cancelar Nota Fiscal</h1>
+
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card-section">
+                
+                <div class="warning-box mb-4">
+                    <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                    <strong>Atenção:</strong> O prazo para cancelamento é de 24 a 48 horas após emissão, conforme a prefeitura.
+                </div>
+                
+                <form method="POST" id="formCancelarNota">
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">Número da Nota</label>
+                            <input type="text" class="form-control" name="numero_nota" placeholder="Ex: 000123" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">Data de Emissão</label>
+                            <input type="date" class="form-control" name="data_emissao" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">Tomador (Cliente)</label>
+                            <input type="text" class="form-control" name="tomador" placeholder="Nome ou CNPJ" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">Valor (R$)</label>
+                            <input type="text" class="form-control" name="valor_nota" placeholder="0,00" required>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">Motivo</label>
+                            <select class="form-select" name="motivo" required>
+                                <option value="">Selecione...</option>
+                                <option value="erro_dados">Erro nos dados</option>
+                                <option value="erro_valor">Erro no valor</option>
+                                <option value="duplicidade">Duplicidade</option>
+                                <option value="servico_nao_realizado">Serviço não realizado</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label" style="font-size: 0.875rem; font-weight: 500;">Justificativa</label>
+                            <textarea class="form-control" name="justificativa" rows="3" placeholder="Descreva o motivo..." required></textarea>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="confirmar" required>
+                                <label class="form-check-label small" for="confirmar">
+                                    Confirmo que os dados estão corretos
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'users:notas_fiscais' %}" class="btn btn-light">Voltar</a>
+                        <button type="submit" class="btn btn-danger flex-grow-1">
+                            <i class="fas fa-times me-2"></i>Solicitar Cancelamento
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card-section">
+                <h6 class="fw-semibold mb-3 text-muted">Informações</h6>
+                <ul class="list-unstyled mb-0" style="font-size: 0.85rem; color: #6b7280;">
+                    <li class="mb-2"><i class="fas fa-clock text-muted me-2"></i>Análise em até 2 dias úteis</li>
+                    <li class="mb-2"><i class="fas fa-envelope text-muted me-2"></i>Você receberá e-mail com status</li>
+                    <li><i class="fas fa-headset text-muted me-2"></i>Dúvidas? Abra um chamado</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

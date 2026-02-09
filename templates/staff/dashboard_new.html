@@ -1270,6 +1270,12 @@
                     </svg>
                     <span class="menu-item-text">Abertura de Empresa</span>
                 </a>
+                <a href="#" class="menu-item" data-model="dados-empresa">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                    <span class="menu-item-text">Dados da Empresa</span>
+                </a>
             </div>
 
             <div class="menu-section">
@@ -1285,6 +1291,13 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                     </svg>
                     <span class="menu-item-text">Quadros / Tarefas</span>
+                </a>
+                <a href="#" class="menu-item" data-model="servicos-avulsos">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                    </svg>
+                    <span class="menu-item-text">Serviços Avulsos</span>
+                    <span class="menu-badge" id="badge-servicos-avulsos" style="display: none; background: #EF4444; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; margin-left: auto;">0</span>
                 </a>
             </div>
         </nav>
@@ -1770,6 +1783,229 @@
     </div>
 </div>
 
+<!-- Modal Editar Dados da Empresa do Cliente -->
+<div class="modal-overlay" id="clienteEmpresaModal">
+    <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Dados da Empresa do Cliente</h3>
+            <button class="modal-close" onclick="closeClienteEmpresaModal()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <form id="clienteEmpresaForm">
+            <input type="hidden" id="clienteEmpresaId" name="cliente_id">
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                <!-- Info do Cliente -->
+                <div style="background: #f8fafc; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px;">
+                    <div style="font-weight: 600; color: #1e293b;" id="clienteEmpresaNome">Nome do Cliente</div>
+                    <div style="font-size: 0.85rem; color: #64748b;" id="clienteEmpresaEmail">email@exemplo.com</div>
+                </div>
+
+                <!-- Dados da Empresa -->
+                <h4 style="font-size: 0.9rem; font-weight: 600; color: #374151; margin-bottom: 12px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 6px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                    Dados da Empresa
+                </h4>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="clienteCnpj">CNPJ</label>
+                        <input type="text" class="form-control" id="clienteCnpj" placeholder="00.000.000/0000-00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="clienteTelefone">Telefone</label>
+                        <input type="text" class="form-control" id="clienteTelefone" placeholder="(00) 00000-0000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="clienteRazaoSocial">Razão Social</label>
+                    <input type="text" class="form-control" id="clienteRazaoSocial" placeholder="Razão Social da Empresa">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="clienteNomeFantasia">Nome Fantasia</label>
+                    <input type="text" class="form-control" id="clienteNomeFantasia" placeholder="Nome Fantasia">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="clienteEndereco">Endereço Completo</label>
+                    <textarea class="form-control" id="clienteEndereco" rows="2" placeholder="Rua, número, bairro, cidade - UF, CEP"></textarea>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="clienteFase">Fase de Abertura</label>
+                        <select class="form-control" id="clienteFase">
+                            <option value="fase_1">Fase 1 - Planejamento</option>
+                            <option value="fase_2">Fase 2 - Viabilidade</option>
+                            <option value="fase_3">Fase 3 - Registro</option>
+                            <option value="fase_4">Fase 4 - Inscrições</option>
+                            <option value="fase_5">Fase 5 - Licenças</option>
+                            <option value="fase_6">Fase 6 - Tributário</option>
+                            <option value="fase_7">Fase 7 - Concluído</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="clienteRegime">Regime Tributário</label>
+                        <select class="form-control" id="clienteRegime">
+                            <option value="SN">Simples Nacional</option>
+                            <option value="LP">Lucro Presumido</option>
+                            <option value="LR">Lucro Real</option>
+                            <option value="MEI">MEI</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Endereço Virtual -->
+                <h4 style="font-size: 0.9rem; font-weight: 600; color: #374151; margin: 20px 0 12px 0; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 6px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Endereço Virtual
+                </h4>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="clienteEndVirtualStatus">Status</label>
+                        <select class="form-control" id="clienteEndVirtualStatus">
+                            <option value="nao_contratado">Não Contratado</option>
+                            <option value="ativo">Ativo</option>
+                            <option value="vencido">Vencido</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="clienteEndVirtualValidade">Validade</label>
+                        <input type="date" class="form-control" id="clienteEndVirtualValidade">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="clienteEndVirtualEndereco">Endereço Virtual</label>
+                    <textarea class="form-control" id="clienteEndVirtualEndereco" rows="2" placeholder="Endereço virtual contratado"></textarea>
+                </div>
+
+                <!-- Certificado Digital -->
+                <h4 style="font-size: 0.9rem; font-weight: 600; color: #374151; margin: 20px 0 12px 0; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 6px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    Certificado Digital
+                </h4>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="clienteCertStatus">Status</label>
+                        <select class="form-control" id="clienteCertStatus">
+                            <option value="nao_contratado">Não Contratado</option>
+                            <option value="ativo">Ativo</option>
+                            <option value="vencido">Vencido</option>
+                            <option value="a_vencer">Próximo ao Vencimento</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="clienteCertValidade">Validade</label>
+                        <input type="date" class="form-control" id="clienteCertValidade">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="clienteCertTipo">Tipo de Certificado</label>
+                    <input type="text" class="form-control" id="clienteCertTipo" placeholder="Ex: A1, A3, e-CPF, e-CNPJ">
+                </div>
+
+                <!-- Boletos da Contabilidade -->
+                <h4 style="font-size: 0.9rem; font-weight: 600; color: #374151; margin: 20px 0 12px 0; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 6px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    Boletos da Mensalidade
+                </h4>
+                
+                <div id="boletosListContainer" style="margin-bottom: 16px;">
+                    <div style="text-align: center; color: #9ca3af; padding: 16px 0;">
+                        Carregando boletos...
+                    </div>
+                </div>
+
+                <button type="button" class="btn-secondary" onclick="openEnviarBoletoModal()" style="width: 100%; margin-bottom: 8px;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 6px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Enviar Novo Boleto
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeClienteEmpresaModal()">Cancelar</button>
+                <button type="submit" class="btn-primary">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Salvar Alterações
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Enviar Boleto -->
+<div class="modal-overlay" id="enviarBoletoModal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Enviar Boleto da Mensalidade</h3>
+            <button class="modal-close" onclick="closeEnviarBoletoModal()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <form id="enviarBoletoForm" enctype="multipart/form-data">
+            <input type="hidden" id="boletoClienteId" name="cliente_id">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="boletoReferencia">Mês de Referência *</label>
+                    <input type="text" class="form-control" id="boletoReferencia" name="referencia" placeholder="Ex: Janeiro/2026" required>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="boletoValor">Valor (R$) *</label>
+                        <input type="text" class="form-control" id="boletoValor" name="valor" placeholder="0,00" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="boletoVencimento">Data de Vencimento *</label>
+                        <input type="date" class="form-control" id="boletoVencimento" name="data_vencimento" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="boletoArquivo">Arquivo do Boleto (PDF) *</label>
+                    <input type="file" class="form-control" id="boletoArquivo" name="arquivo_boleto" accept=".pdf" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="boletoObservacoes">Observações</label>
+                    <textarea class="form-control" id="boletoObservacoes" name="observacoes" rows="2" placeholder="Observações internas (opcional)"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeEnviarBoletoModal()">Cancelar</button>
+                <button type="submit" class="btn-primary">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                    </svg>
+                    Enviar Boleto
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Client Management Panel -->
 <div class="client-panel-overlay" id="clientPanel">
     <div class="client-panel">
@@ -1802,6 +2038,9 @@
                 </div>
                  <div class="panel-tab" onclick="switchTab('tab-empresa')">
                     Minha Empresa
+                </div>
+                <div class="panel-tab" onclick="switchTab('tab-servicos-avulsos')">
+                    Serv. Avulsos
                 </div>
                 <div class="panel-tab" onclick="switchTab('tab-atendimento')">
                     Atendimento
@@ -1900,6 +2139,23 @@
                             <button class="btn-primary" style="margin-left: auto; padding: 4px 12px; font-size: 0.8rem;" onclick="openDocumentoEmpresaModal(currentSelectedClientId)">Enviar Documento</button>
                         </div>
                          <div class="items-list" id="panelDocsEmpresaList">Loading...</div>
+                    </div>
+                </div>
+
+                <!-- TAB: SERVIÇOS AVULSOS -->
+                <div id="tab-servicos-avulsos" class="tab-content">
+                    <div class="panel-section">
+                        <div class="panel-section-header">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                            Serviços Avulsos Contratados
+                        </div>
+                        <div class="items-list" id="panelServicosAvulsosList">
+                            <div style="text-align: center; padding: 20px; color: #6b7280;">
+                                Carregando...
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -2033,7 +2289,7 @@
 
         // Loaders
         const loaders = ['panelNFsList', 'panelChamadosList', 'panelExtratosList', 'panelGuiasList', 
-                         'panelCertidoesList', 'panelDocsEmpresaList', 'planInfoContainer'];
+                         'panelCertidoesList', 'panelDocsEmpresaList', 'planInfoContainer', 'panelServicosAvulsosList'];
         loaders.forEach(lId => {
             const el = document.getElementById(lId);
             if(el) el.innerHTML = '<div style="text-align: center; color: #5e6c84; padding: 20px;">Carregando...</div>';
@@ -2121,6 +2377,13 @@
             .then(r=>r.json())
             .then(d => {
                 if(d.success) renderPanelPlano(d.data, d.planos_disponiveis);
+            });
+
+        // 8. Serviços Avulsos
+        fetch(`${API_BASE}/servicos-avulsos/?cliente_id=${id}`)
+            .then(r=>r.json())
+            .then(d => {
+                if(d.success) renderPanelServicosAvulsos(d.contratacoes);
             });
     }
 
@@ -2212,6 +2475,77 @@
                 ${item.arquivo_url ? `<a href="${item.arquivo_url}" target="_blank">Baixar</a>` : ''}
             </div>
         `).join('');
+    }
+
+    function renderPanelServicosAvulsos(list) {
+        const container = document.getElementById('panelServicosAvulsosList');
+        if(!list || list.length === 0) {
+            container.innerHTML = '<div class="empty-state" style="text-align: center; padding: 30px; color: #6b7280;">Nenhum serviço avulso contratado.</div>'; 
+            return;
+        }
+        
+        const statusColors = {
+            'pendente': { bg: '#fef3c7', text: '#92400e' },
+            'aguardando_pagamento': { bg: '#fef3c7', text: '#92400e' },
+            'em_andamento': { bg: '#dbeafe', text: '#1e40af' },
+            'concluido': { bg: '#d1fae5', text: '#065f46' },
+            'cancelado': { bg: '#fee2e2', text: '#991b1b' }
+        };
+        
+        container.innerHTML = list.map(item => {
+            const statusStyle = statusColors[item.status] || { bg: '#f3f4f6', text: '#374151' };
+            return `
+            <div class="list-item" style="padding: 16px; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 8px;">
+                <div style="flex: 1;">
+                    <div style="font-weight: 600; font-size: 1rem; margin-bottom: 4px;">${item.servico_titulo}</div>
+                    <div style="font-size: 0.85rem; color: #6b7280; margin-bottom: 6px;">
+                        R$ ${item.valor_contratado.toFixed(2).replace('.', ',')} • ${item.criado_em}
+                    </div>
+                    ${item.observacoes_cliente ? `<div style="font-size: 0.8rem; color: #9ca3af; margin-top: 4px; font-style: italic;">"${item.observacoes_cliente}"</div>` : ''}
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+                    <span style="display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; background: ${statusStyle.bg}; color: ${statusStyle.text};">
+                        ${item.status_display}
+                    </span>
+                    <select onchange="updateServicoAvulsoStatus(${item.id}, this.value)" style="font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; border: 1px solid #d1d5db;">
+                        <option value="pendente" ${item.status === 'pendente' ? 'selected' : ''}>Pendente</option>
+                        <option value="em_andamento" ${item.status === 'em_andamento' ? 'selected' : ''}>Em Andamento</option>
+                        <option value="concluido" ${item.status === 'concluido' ? 'selected' : ''}>Concluído</option>
+                        <option value="cancelado" ${item.status === 'cancelado' ? 'selected' : ''}>Cancelado</option>
+                    </select>
+                </div>
+            </div>
+        `;
+        }).join('');
+    }
+
+    async function updateServicoAvulsoStatus(id, newStatus) {
+        try {
+            const res = await fetch(`${API_BASE}/servicos-avulsos/${id}/update/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showNotification('Status atualizado!', 'success');
+                // Reload serviços avulsos
+                if (currentSelectedClientId) {
+                    fetch(`${API_BASE}/servicos-avulsos/?cliente_id=${currentSelectedClientId}`)
+                        .then(r=>r.json())
+                        .then(d => {
+                            if(d.success) renderPanelServicosAvulsos(d.contratacoes);
+                        });
+                }
+            } else {
+                showNotification(data.error || 'Erro ao atualizar', 'error');
+            }
+        } catch(e) {
+            showNotification('Erro de conexão', 'error');
+        }
     }
     
     function renderPanelPlano(currentPlan, availablePlans) {
@@ -2499,6 +2833,13 @@
             btnText: 'Enviar Novo Documento',
             headers: []
         },
+        'dados-empresa': {
+            title: 'Dados da Empresa',
+            subtitle: 'Gerencie os dados cadastrais das empresas dos clientes',
+            endpoint: `${API_BASE}/clientes/`,
+            btnText: null,
+            headers: ['Cliente', 'CNPJ', 'Razão Social', 'Fase', 'End. Virtual', 'Certificado', 'Ações']
+        },
         'extratos-bancarios': {
             title: 'Extratos Bancários',
             subtitle: 'Visualize os extratos bancários enviados pelos clientes',
@@ -2512,6 +2853,13 @@
             endpoint: `${API_BASE}/staff-tasks/`,
             btnText: 'Nova Tarefa',
             headers: []
+        },
+        'servicos-avulsos': {
+            title: 'Serviços Avulsos',
+            subtitle: 'Visualize e gerencie contratações de serviços avulsos',
+            endpoint: `${API_BASE}/servicos-avulsos/`,
+            btnText: null,
+            headers: ['Cliente', 'Serviço', 'Valor', 'Status', 'Data', 'Ações']
         },
 
         testimonials: {
@@ -2645,7 +2993,54 @@
                     plansContainer.innerHTML = plansHtml || 'Sem planos ativos';
                 }
             }
+            
+            // Carregar contagem de serviços avulsos pendentes
+            loadServicosAvulsosCount();
         } catch(e) { console.error(e); }
+    }
+
+    // Carregar contagem de serviços avulsos pendentes
+    async function loadServicosAvulsosCount() {
+        try {
+            const res = await fetch('/support/api/servicos-avulsos/contagem/');
+            const result = await res.json();
+            if (result.success) {
+                const badge = document.getElementById('badge-servicos-avulsos');
+                if (badge) {
+                    if (result.pendentes > 0) {
+                        badge.textContent = result.pendentes;
+                        badge.style.display = 'inline';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            }
+        } catch(e) { console.error(e); }
+    }
+
+    // Atualizar status de serviço avulso (na tabela global)
+    async function updateServicoAvulsoStatusGlobal(id, newStatus) {
+        try {
+            const res = await fetch(`${API_BASE}/servicos-avulsos/${id}/update/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showNotification('Status atualizado!', 'success');
+                // Recarregar dados
+                loadModelData('servicos-avulsos');
+                loadServicosAvulsosCount();
+            } else {
+                showNotification(data.error || 'Erro ao atualizar', 'error');
+            }
+        } catch(e) {
+            showNotification('Erro de conexão', 'error');
+        }
     }
 
     function filterByRegime(regime, card) {
@@ -2888,6 +3283,54 @@
             } catch (error) {
                 console.error(error);
                 container.innerHTML = `<div style="color:red; padding:20px;">Erro de conexão ao buscar chamados.</div>`;
+            }
+            return;
+        }
+
+        // Para serviços avulsos, mostrar tabela
+        if (model === 'servicos-avulsos') {
+            const container = document.getElementById('dataCard');
+            if(container) container.style.display = 'block';
+            
+            // Restaurar estrutura da tabela
+            let thead = document.getElementById('tableHead');
+            if (!thead) {
+                container.innerHTML = `
+                    <table class="data-table" id="dataTable">
+                        <thead id="tableHead"></thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                `;
+                container.className = 'data-card';
+                container.style.display = 'block';
+                thead = document.getElementById('tableHead');
+            }
+            
+            thead.innerHTML = `<tr>${config.headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+            
+            container.innerHTML = `<div style="text-align:center; padding: 40px;">Carregando serviços avulsos...</div>`;
+            try {
+                const response = await fetch(config.endpoint);
+                const result = await response.json();
+                if (result.success) {
+                    // Dados vêm em 'contratacoes' não 'data'
+                    currentData = result.contratacoes || [];
+                    
+                    // Restaurar tabela
+                    container.innerHTML = `
+                        <table class="data-table" id="dataTable">
+                            <thead id="tableHead"><tr>${config.headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    `;
+                    
+                    renderTable();
+                } else {
+                    container.innerHTML = `<div style="color:red; padding:20px;">Erro: ${result.error}</div>`;
+                }
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = `<div style="color:red; padding:20px;">Erro de conexão</div>`;
             }
             return;
         }
@@ -4023,8 +4466,8 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <button class="btn-action btn-edit" title="Detalhes">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                <button class="btn-action btn-edit" onclick="openClienteEmpresaModal(${item.id}, '${(item.nome || '').replace(/'/g, "\\'")}', '${item.email || ''}')" title="Editar Dados da Empresa">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                 </button>
                             </div>
                         </td>
@@ -4225,6 +4668,93 @@
                     </td>
                 </tr>
             `).join('');
+        } else if (currentModel === 'servicos-avulsos') {
+            // Serviços Avulsos: dados vêm em formato diferente (contratacoes)
+            const contratacoes = currentData.contratacoes || currentData;
+            
+            const statusColors = {
+                'pendente': { bg: '#fef3c7', text: '#92400e' },
+                'aguardando_pagamento': { bg: '#fef3c7', text: '#92400e' },
+                'em_andamento': { bg: '#dbeafe', text: '#1e40af' },
+                'concluido': { bg: '#d1fae5', text: '#065f46' },
+                'cancelado': { bg: '#fee2e2', text: '#991b1b' }
+            };
+            
+            tbody.innerHTML = contratacoes.map(item => {
+                const sc = statusColors[item.status] || { bg: '#f3f4f6', text: '#374151' };
+                return `
+                <tr>
+                    <td>
+                        <div style="font-weight: 600;">${item.usuario_nome}</div>
+                        <div style="font-size: 0.8rem; color: #6b7280;">${item.usuario_email}</div>
+                    </td>
+                    <td><strong>${item.servico_titulo}</strong></td>
+                    <td>R$ ${item.valor_contratado.toFixed(2).replace('.', ',')}</td>
+                    <td>
+                        <span style="display: inline-flex; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; background: ${sc.bg}; color: ${sc.text};">
+                            ${item.status_display}
+                        </span>
+                    </td>
+                    <td>${item.criado_em}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <select onchange="updateServicoAvulsoStatusGlobal(${item.id}, this.value)" style="font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; border: 1px solid #d1d5db;">
+                                <option value="pendente" ${item.status === 'pendente' ? 'selected' : ''}>Pendente</option>
+                                <option value="em_andamento" ${item.status === 'em_andamento' ? 'selected' : ''}>Em Andamento</option>
+                                <option value="concluido" ${item.status === 'concluido' ? 'selected' : ''}>Concluído</option>
+                                <option value="cancelado" ${item.status === 'cancelado' ? 'selected' : ''}>Cancelado</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            }).join('');
+        } else if (currentModel === 'dados-empresa') {
+            // Dados da Empresa dos clientes
+            const statusColors = {
+                'nao_contratado': { bg: '#f3f4f6', text: '#6b7280', label: 'Não Contratado' },
+                'ativo': { bg: '#d1fae5', text: '#065f46', label: 'Ativo' },
+                'vencido': { bg: '#fee2e2', text: '#991b1b', label: 'Vencido' },
+                'a_vencer': { bg: '#fef3c7', text: '#92400e', label: 'A Vencer' }
+            };
+            
+            tbody.innerHTML = currentData.map(item => {
+                const evStatus = statusColors[item.endereco_virtual_status] || statusColors['nao_contratado'];
+                const cdStatus = statusColors[item.certificado_digital_status] || statusColors['nao_contratado'];
+                
+                return `
+                <tr>
+                    <td>
+                        <div style="font-weight: 600; color: var(--text-primary);">${item.nome}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">${item.email}</div>
+                    </td>
+                    <td>${item.cnpj || '<span style="color: #9ca3af;">-</span>'}</td>
+                    <td>${item.razao_social || '<span style="color: #9ca3af;">-</span>'}</td>
+                    <td>
+                        <span class="badge badge-secondary" style="font-size: 0.75rem;">
+                            ${item.fase ? item.fase.replace('fase_', 'Fase ') : '-'}
+                        </span>
+                    </td>
+                    <td>
+                        <span style="display: inline-flex; padding: 3px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 500; background: ${evStatus.bg}; color: ${evStatus.text};">
+                            ${evStatus.label}
+                        </span>
+                    </td>
+                    <td>
+                        <span style="display: inline-flex; padding: 3px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 500; background: ${cdStatus.bg}; color: ${cdStatus.text};">
+                            ${cdStatus.label}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-edit" onclick="openClienteEmpresaModal(${item.id}, '${(item.nome || '').replace(/'/g, "\\'")}', '${item.email || ''}')" title="Editar Dados">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            }).join('');
         }
     }
 
@@ -4639,6 +5169,246 @@
             alert('Erro ao enviar guia');
         }
     });
+
+    // ==================== MODAL DADOS EMPRESA CLIENTE ====================
+    
+    async function openClienteEmpresaModal(clienteId, nome, email) {
+        document.getElementById('clienteEmpresaModal').classList.add('active');
+        document.getElementById('clienteEmpresaId').value = clienteId;
+        document.getElementById('clienteEmpresaNome').textContent = nome || 'Cliente';
+        document.getElementById('clienteEmpresaEmail').textContent = email || '';
+        
+        // Limpar formulário
+        document.getElementById('clienteEmpresaForm').reset();
+        
+        // Buscar dados atuais do cliente
+        try {
+            const resp = await fetch(`${API_BASE}/cliente/${clienteId}/dados-empresa/`, {
+                headers: {'X-CSRFToken': csrftoken}
+            });
+            const data = await resp.json();
+            
+            if (data.success) {
+                const c = data.data;
+                // Preencher campos
+                document.getElementById('clienteCnpj').value = c.cnpj || '';
+                document.getElementById('clienteTelefone').value = c.telefone || '';
+                document.getElementById('clienteRazaoSocial').value = c.razao_social || '';
+                document.getElementById('clienteNomeFantasia').value = c.nome_fantasia || '';
+                document.getElementById('clienteEndereco').value = c.endereco || '';
+                document.getElementById('clienteFase').value = c.fase_abertura || 'fase_1';
+                document.getElementById('clienteRegime').value = c.regime_tributario || 'SN';
+                
+                // Endereço Virtual
+                document.getElementById('clienteEndVirtualStatus').value = c.endereco_virtual_status || 'nao_contratado';
+                document.getElementById('clienteEndVirtualEndereco').value = c.endereco_virtual_endereco || '';
+                document.getElementById('clienteEndVirtualValidade').value = c.endereco_virtual_validade || '';
+                
+                // Certificado Digital
+                document.getElementById('clienteCertStatus').value = c.certificado_digital_status || 'nao_contratado';
+                document.getElementById('clienteCertTipo').value = c.certificado_digital_tipo || '';
+                document.getElementById('clienteCertValidade').value = c.certificado_digital_validade || '';
+            }
+            
+            // Carregar boletos
+            await loadClienteBoletos(clienteId);
+            
+        } catch (e) {
+            console.error('Erro ao carregar dados do cliente:', e);
+        }
+    }
+    
+    function closeClienteEmpresaModal() {
+        document.getElementById('clienteEmpresaModal').classList.remove('active');
+        document.getElementById('clienteEmpresaForm').reset();
+    }
+    
+    document.getElementById('clienteEmpresaForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const clienteId = document.getElementById('clienteEmpresaId').value;
+        
+        const dados = {
+            cliente_id: clienteId,
+            cnpj: document.getElementById('clienteCnpj').value,
+            telefone: document.getElementById('clienteTelefone').value,
+            razao_social: document.getElementById('clienteRazaoSocial').value,
+            nome_fantasia: document.getElementById('clienteNomeFantasia').value,
+            endereco: document.getElementById('clienteEndereco').value,
+            fase_abertura: document.getElementById('clienteFase').value,
+            regime_tributario: document.getElementById('clienteRegime').value,
+            endereco_virtual_status: document.getElementById('clienteEndVirtualStatus').value,
+            endereco_virtual_endereco: document.getElementById('clienteEndVirtualEndereco').value,
+            endereco_virtual_validade: document.getElementById('clienteEndVirtualValidade').value || null,
+            certificado_digital_status: document.getElementById('clienteCertStatus').value,
+            certificado_digital_tipo: document.getElementById('clienteCertTipo').value,
+            certificado_digital_validade: document.getElementById('clienteCertValidade').value || null
+        };
+        
+        try {
+            const resp = await fetch(`${API_BASE}/cliente/${clienteId}/dados-empresa/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify(dados)
+            });
+            
+            const data = await resp.json();
+            
+            if (data.success) {
+                alert('Dados salvos com sucesso!');
+                closeClienteEmpresaModal();
+                loadData(); // Recarregar lista de clientes
+            } else {
+                alert('Erro: ' + (data.error || 'Erro ao salvar'));
+            }
+        } catch (e) {
+            console.error('Erro ao salvar dados:', e);
+            alert('Erro ao salvar dados do cliente');
+        }
+    });
+
+    // ==================== FUNÇÕES BOLETOS CONTABILIDADE ====================
+    
+    async function loadClienteBoletos(clienteId) {
+        const container = document.getElementById('boletosListContainer');
+        container.innerHTML = '<div style="text-align: center; color: #9ca3af; padding: 16px 0;">Carregando boletos...</div>';
+        
+        try {
+            const resp = await fetch(`${API_BASE}/cliente/${clienteId}/boletos/`, {
+                headers: {'X-CSRFToken': csrftoken}
+            });
+            const data = await resp.json();
+            
+            if (data.success && data.boletos.length > 0) {
+                let html = '<div style="max-height: 200px; overflow-y: auto;">';
+                data.boletos.forEach(b => {
+                    const statusColors = {
+                        'pendente': 'background: #fef3c7; color: #d97706;',
+                        'pago': 'background: #d1fae5; color: #047857;',
+                        'vencido': 'background: #fee2e2; color: #dc2626;',
+                        'cancelado': 'background: #f3f4f6; color: #6b7280;'
+                    };
+                    html += `
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid #f3f4f6; border-radius: 6px; margin-bottom: 8px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 500; color: #374151; font-size: 0.9rem;">${b.referencia}</div>
+                                <div style="font-size: 0.8rem; color: #6b7280;">R$ ${b.valor.toFixed(2).replace('.', ',')} | Venc: ${b.data_vencimento}</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <select onchange="updateBoletoStatus(${b.id}, this.value)" style="padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 4px; font-size: 0.75rem; ${statusColors[b.status] || ''}">
+                                    <option value="pendente" ${b.status === 'pendente' ? 'selected' : ''}>Pendente</option>
+                                    <option value="pago" ${b.status === 'pago' ? 'selected' : ''}>Pago</option>
+                                    <option value="vencido" ${b.status === 'vencido' ? 'selected' : ''}>Vencido</option>
+                                    <option value="cancelado" ${b.status === 'cancelado' ? 'selected' : ''}>Cancelado</option>
+                                </select>
+                                <a href="${b.arquivo_url}" target="_blank" style="color: #3b82f6; font-size: 0.85rem;" title="Ver boleto">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </a>
+                                <button onclick="deleteBoleto(${b.id})" style="background: none; border: none; color: #ef4444; cursor: pointer;" title="Remover boleto">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '<div style="text-align: center; color: #9ca3af; padding: 16px 0; font-size: 0.85rem;">Nenhum boleto enviado</div>';
+            }
+        } catch (e) {
+            console.error('Erro ao carregar boletos:', e);
+            container.innerHTML = '<div style="text-align: center; color: #ef4444; padding: 16px 0;">Erro ao carregar boletos</div>';
+        }
+    }
+    
+    function openEnviarBoletoModal() {
+        const clienteId = document.getElementById('clienteEmpresaId').value;
+        document.getElementById('boletoClienteId').value = clienteId;
+        document.getElementById('enviarBoletoForm').reset();
+        document.getElementById('enviarBoletoModal').classList.add('active');
+    }
+    
+    function closeEnviarBoletoModal() {
+        document.getElementById('enviarBoletoModal').classList.remove('active');
+    }
+    
+    document.getElementById('enviarBoletoForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const clienteId = document.getElementById('boletoClienteId').value;
+        const formData = new FormData(this);
+        
+        try {
+            const resp = await fetch(`${API_BASE}/cliente/${clienteId}/boletos/`, {
+                method: 'POST',
+                headers: {'X-CSRFToken': csrftoken},
+                body: formData
+            });
+            
+            const data = await resp.json();
+            
+            if (data.success) {
+                alert('Boleto enviado com sucesso!');
+                closeEnviarBoletoModal();
+                await loadClienteBoletos(clienteId);
+            } else {
+                alert('Erro: ' + (data.error || 'Erro ao enviar boleto'));
+            }
+        } catch (e) {
+            console.error('Erro ao enviar boleto:', e);
+            alert('Erro ao enviar boleto');
+        }
+    });
+    
+    async function updateBoletoStatus(boletoId, status) {
+        try {
+            const resp = await fetch(`${API_BASE}/boleto/${boletoId}/status/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({ status })
+            });
+            
+            const data = await resp.json();
+            if (!data.success) {
+                alert('Erro ao atualizar status');
+            }
+        } catch (e) {
+            console.error('Erro ao atualizar status:', e);
+        }
+    }
+    
+    async function deleteBoleto(boletoId) {
+        if (!confirm('Tem certeza que deseja remover este boleto?')) return;
+        
+        try {
+            const resp = await fetch(`${API_BASE}/boleto/${boletoId}/status/`, {
+                method: 'DELETE',
+                headers: {'X-CSRFToken': csrftoken}
+            });
+            
+            const data = await resp.json();
+            if (data.success) {
+                const clienteId = document.getElementById('clienteEmpresaId').value;
+                await loadClienteBoletos(clienteId);
+            } else {
+                alert('Erro ao remover boleto');
+            }
+        } catch (e) {
+            console.error('Erro ao remover boleto:', e);
+        }
+    }
 
     // calendar logic
     function renderFullCalendar() {

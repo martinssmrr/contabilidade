@@ -1,0 +1,149 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Consultar Notas Fiscais - Vetorial{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-title { font-size: 1.5rem; font-weight: 600; color: #1f2937; }
+    .card-section { background: #fff; border-radius: 12px; padding: 1.5rem; border: 1px solid #f3f4f6; }
+    .stat-box { text-align: center; padding: 1rem; }
+    .stat-box .number { font-size: 1.75rem; font-weight: 700; }
+    .stat-box .label { color: #6b7280; font-size: 0.8rem; }
+    .nav-tabs .nav-link { color: #6b7280; font-weight: 500; border: none; padding: 0.75rem 1rem; }
+    .nav-tabs .nav-link.active { color: #1f2937; border-bottom: 2px solid #1f2937; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{% url 'users:notas_fiscais' %}" class="text-decoration-none">Notas Fiscais</a></li>
+            <li class="breadcrumb-item active text-muted">Consultar</li>
+        </ol>
+    </nav>
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="page-title mb-0">Consultar Notas Fiscais</h1>
+        <a href="{% url 'users:notas_fiscais' %}" class="btn btn-light btn-sm">
+            <i class="fas fa-arrow-left me-1"></i>Voltar
+        </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="row mb-4">
+        <div class="col-4">
+            <div class="card-section stat-box">
+                <div class="number text-warning">{{ total_recebidas|default:0 }}</div>
+                <div class="label">Recebidas</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card-section stat-box">
+                <div class="number text-success">{{ total_enviadas|default:0 }}</div>
+                <div class="label">Enviadas</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card-section stat-box">
+                <div class="number text-primary">{{ total_recebidas|add:total_enviadas|default:0 }}</div>
+                <div class="label">Total</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs e Tabela -->
+    <div class="card-section">
+        <ul class="nav nav-tabs mb-3" id="nfTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="recebidas-tab" data-bs-toggle="tab" data-bs-target="#recebidas" type="button">
+                    Recebidas <span class="badge bg-light text-dark ms-1">{{ total_recebidas }}</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="enviadas-tab" data-bs-toggle="tab" data-bs-target="#enviadas" type="button">
+                    Enviadas <span class="badge bg-light text-dark ms-1">{{ total_enviadas }}</span>
+                </button>
+            </li>
+        </ul>
+        
+        <div class="tab-content">
+            <!-- Tab Recebidas -->
+            <div class="tab-pane fade show active" id="recebidas" role="tabpanel">
+                {% if notas_recebidas %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Documento</th>
+                                <th>Data</th>
+                                <th class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for nota in notas_recebidas %}
+                            <tr>
+                                <td>
+                                    <i class="fas fa-file-pdf text-danger me-2"></i>
+                                    {{ nota.nome_arquivo }}
+                                </td>
+                                <td class="text-muted">{{ nota.data_upload|date:"d/m/Y" }}</td>
+                                <td class="text-end">
+                                    <a href="{{ nota.arquivo_pdf.url }}" class="btn btn-sm btn-outline-primary" download>Baixar</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
+                    <p class="text-muted mb-0">Nenhuma nota recebida</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Tab Enviadas -->
+            <div class="tab-pane fade" id="enviadas" role="tabpanel">
+                {% if notas_enviadas %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Documento</th>
+                                <th>Data</th>
+                                <th class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for nota in notas_enviadas %}
+                            <tr>
+                                <td>
+                                    <i class="fas fa-file-alt text-primary me-2"></i>
+                                    {{ nota.descricao|default:"Nota Fiscal" }}
+                                </td>
+                                <td class="text-muted">{{ nota.data_envio|date:"d/m/Y" }}</td>
+                                <td class="text-end">
+                                    <a href="{{ nota.arquivo.url }}" class="btn btn-sm btn-outline-primary" target="_blank">Ver</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-paper-plane fa-2x text-muted mb-2"></i>
+                    <p class="text-muted mb-3">Nenhuma nota enviada</p>
+                    <a href="{% url 'users:importar_notas' %}" class="btn btn-primary btn-sm">Importar Notas</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}
