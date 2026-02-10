@@ -1,0 +1,370 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pagamento Confirmado - {{ titulo_servico }} | Vetorial Contabilidade{% endblock %}
+
+{% block extra_css %}
+<style>
+    .success-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 4rem 1rem;
+        text-align: center;
+    }
+    
+    .success-icon {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        animation: scaleIn 0.5s ease-out;
+    }
+    
+    .success-icon i {
+        font-size: 3rem;
+        color: white;
+    }
+    
+    @keyframes scaleIn {
+        0% { transform: scale(0); opacity: 0; }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .success-title {
+        color: #1A237E;
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .success-subtitle {
+        color: #6b7280;
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .order-details {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: left;
+    }
+    
+    .order-details h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .detail-row:last-child { border-bottom: none; }
+    
+    .detail-label {
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+    
+    .detail-value {
+        color: #1f2937;
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .status-badge.pago {
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+    }
+    
+    .status-badge.pendente {
+        background: rgba(245, 158, 11, 0.1);
+        color: #d97706;
+    }
+
+    .next-steps {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: left;
+    }
+    
+    .next-steps h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+    
+    .step-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .step-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .step-item:last-child { border-bottom: none; }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, {{ cor_tema }} 0%, {{ cor_tema }}cc 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+    
+    .step-content h4 {
+        margin: 0 0 0.25rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+    
+    .step-content p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    .contact-card {
+        background: linear-gradient(135deg, {{ cor_tema }} 0%, {{ cor_tema }}cc 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        color: white;
+        margin-bottom: 2rem;
+    }
+    
+    .contact-card h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    .contact-card p {
+        opacity: 0.9;
+        margin-bottom: 1.5rem;
+    }
+    
+    .btn-whatsapp {
+        background: #25D366;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-whatsapp:hover {
+        background: #20bd5a;
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .btn-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: {{ cor_tema }};
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+    
+    .btn-home:hover { opacity: 0.8; }
+
+    .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        top: -10px;
+        animation: confetti-fall 3s linear forwards;
+    }
+    
+    @keyframes confetti-fall {
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="success-container">
+    <!-- Ícone de Sucesso -->
+    <div class="success-icon">
+        <i class="bi bi-check-lg"></i>
+    </div>
+    
+    <!-- Mensagem -->
+    {% if solicitacao.pagamento and solicitacao.pagamento.status == 'aprovado' or solicitacao.status == 'pago' %}
+    <h1 class="success-title">Pagamento Confirmado!</h1>
+    <p class="success-subtitle">
+        {{ descricao_sucesso }}<br>
+        Nossa equipe já começou a trabalhar no seu processo.
+    </p>
+    {% else %}
+    <h1 class="success-title">Solicitação Recebida!</h1>
+    <p class="success-subtitle">
+        {{ descricao_sucesso }}<br>
+        Aguardando confirmação do pagamento.
+    </p>
+    {% endif %}
+    
+    <!-- Detalhes do Pedido -->
+    <div class="order-details">
+        <h3><i class="bi bi-receipt me-2"></i>Detalhes do Pedido</h3>
+        
+        <div class="detail-row">
+            <span class="detail-label">Número do Pedido</span>
+            <span class="detail-value">#{{ solicitacao.id|stringformat:"05d" }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Serviço</span>
+            <span class="detail-value">{{ titulo_servico }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Nome</span>
+            <span class="detail-value">{{ solicitacao.nome_completo }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">E-mail</span>
+            <span class="detail-value">{{ solicitacao.email }}</span>
+        </div>
+        {% if solicitacao.cnpj %}
+        <div class="detail-row">
+            <span class="detail-label">CNPJ</span>
+            <span class="detail-value">{{ solicitacao.cnpj_formatado }}</span>
+        </div>
+        {% endif %}
+        <div class="detail-row">
+            <span class="detail-label">Valor</span>
+            <span class="detail-value">R$ {{ solicitacao.VALOR_SERVICO|floatformat:2 }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Status</span>
+            {% if solicitacao.status == 'pago' or solicitacao.pagamento.status == 'aprovado' %}
+            <span class="status-badge pago">
+                <i class="bi bi-check-circle-fill me-1"></i>Pago
+            </span>
+            {% else %}
+            <span class="status-badge pendente">
+                <i class="bi bi-clock-fill me-1"></i>Pendente
+            </span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Próximos Passos -->
+    <div class="next-steps">
+        <h3><i class="bi bi-signpost-2 me-2"></i>Próximos Passos</h3>
+        
+        <ul class="step-list">
+            <li class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Confirmação do Pagamento</h4>
+                    <p>Nosso sistema confirma automaticamente o seu pagamento.</p>
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Análise dos Dados</h4>
+                    <p>Nossa equipe irá verificar todas as informações enviadas.</p>
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Execução do Serviço</h4>
+                    <p>Realizaremos o serviço de {{ titulo_servico }} junto aos órgãos competentes.</p>
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>Entrega dos Documentos</h4>
+                    <p>Enviaremos todos os comprovantes e documentos para o seu e-mail.</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Card de Contato -->
+    <div class="contact-card">
+        <h3><i class="bi bi-headset me-2"></i>Precisa de ajuda?</h3>
+        <p>Nossa equipe está pronta para ajudar! Entre em contato pelo WhatsApp para acompanhar seu processo.</p>
+        <a href="https://wa.me/551131642284?text=Olá! Acabei de solicitar o serviço de {{ titulo_servico }} (Pedido %23{{ solicitacao.id|stringformat:'05d' }}). Gostaria de acompanhar o processo." 
+           target="_blank" 
+           class="btn-whatsapp">
+            <i class="bi bi-whatsapp"></i>
+            Falar no WhatsApp
+        </a>
+    </div>
+    
+    <!-- Link para Home -->
+    <a href="{% url 'home' %}" class="btn-home">
+        <i class="bi bi-house"></i>
+        Voltar para a página inicial
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const colors = ['{{ cor_tema }}', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+    for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            confetti.style.opacity = Math.random();
+            document.body.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 5000);
+        }, i * 50);
+    }
+});
+</script>
+{% endblock %}

@@ -141,6 +141,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon.png' %}">
     <link rel="apple-touch-icon" href="{% static 'img/favicon.png' %}">
     
+    {% block extra_head %}{% endblock %}
+    
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
     {% include 'schema_org.json' %}

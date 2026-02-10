@@ -636,6 +636,120 @@ class SolicitacaoAberturaMEI(models.Model):
         return endereco
 
 
+class SolicitacaoBaixaMEI(models.Model):
+    """
+    Modelo para armazenar as solicitações de Baixa (cancelamento) do MEI.
+    Valor fixo do serviço: R$ 129,90
+    """
+    STATUS_CHOICES = [
+        ('pendente', 'Pendente Pagamento'),
+        ('pago', 'Pago - Aguardando Processamento'),
+        ('em_andamento', 'Em Andamento'),
+        ('concluido', 'Concluído'),
+        ('cancelado', 'Cancelado'),
+    ]
+
+    MOTIVO_CHOICES = [
+        ('encerramento', 'Encerramento das atividades'),
+        ('transicao_me', 'Transição para ME'),
+        ('falecimento', 'Falecimento do titular'),
+        ('outros', 'Outros motivos'),
+    ]
+
+    VALOR_SERVICO = 129.90
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente', verbose_name='Status')
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
+    atualizado_em = models.DateTimeField(auto_now=True, verbose_name='Atualizado em')
+
+    nome_completo = models.CharField(max_length=200, verbose_name='Nome Completo')
+    email = models.EmailField(verbose_name='E-mail')
+    telefone = models.CharField(max_length=20, verbose_name='Telefone')
+    cnpj = models.CharField(max_length=20, verbose_name='CNPJ do MEI')
+    cpf = models.CharField(max_length=14, verbose_name='CPF')
+    motivo = models.CharField(max_length=30, choices=MOTIVO_CHOICES, blank=True, null=True, verbose_name='Motivo da Baixa')
+    observacoes = models.TextField(blank=True, null=True, verbose_name='Observações')
+
+    pagamento = models.ForeignKey(
+        'payments.Pagamento',
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='solicitacoes_baixa_mei',
+        verbose_name='Pagamento'
+    )
+
+    class Meta:
+        verbose_name = 'Solicitação de Baixa MEI'
+        verbose_name_plural = 'Solicitações de Baixa MEI'
+        ordering = ['-criado_em']
+
+    def __str__(self):
+        return f"Baixa MEI #{self.id} - {self.nome_completo} ({self.get_status_display()})"
+
+    def cpf_formatado(self):
+        cpf = ''.join(filter(str.isdigit, self.cpf))
+        if len(cpf) == 11:
+            return f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
+        return self.cpf
+
+    def cnpj_formatado(self):
+        cnpj = ''.join(filter(str.isdigit, self.cnpj))
+        if len(cnpj) == 14:
+            return f"{cnpj[:2]}.{cnpj[2:5]}.{cnpj[5:8]}/{cnpj[8:12]}-{cnpj[12:]}"
+        return self.cnpj
+
+
+class SolicitacaoDeclaracaoAnualMEI(models.Model):
+    """
+    Modelo para armazenar as solicitações de Declaração Anual MEI (DASN-SIMEI).
+    Valor fixo do serviço: R$ 89,90
+    """
+    STATUS_CHOICES = [
+        ('pendente', 'Pendente Pagamento'),
+        ('pago', 'Pago - Aguardando Processamento'),
+        ('em_andamento', 'Em Andamento'),
+        ('concluido', 'Concluído'),
+        ('cancelado', 'Cancelado'),
+    ]
+
+    VALOR_SERVICO = 89.90
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente', verbose_name='Status')
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
+    atualizado_em = models.DateTimeField(auto_now=True, verbose_name='Atualizado em')
+
+    nome_completo = models.CharField(max_length=200, verbose_name='Nome Completo')
+    email = models.EmailField(verbose_name='E-mail')
+    telefone = models.CharField(max_length=20, verbose_name='Telefone')
+    cnpj = models.CharField(max_length=20, verbose_name='CNPJ do MEI')
+    ano_referencia = models.CharField(max_length=4, verbose_name='Ano de Referência')
+    faturamento = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True, verbose_name='Faturamento Anual')
+    teve_funcionario = models.BooleanField(default=False, verbose_name='Teve funcionário no período?')
+    observacoes = models.TextField(blank=True, null=True, verbose_name='Observações')
+
+    pagamento = models.ForeignKey(
+        'payments.Pagamento',
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='solicitacoes_dasn_mei',
+        verbose_name='Pagamento'
+    )
+
+    class Meta:
+        verbose_name = 'Solicitação de Declaração Anual MEI'
+        verbose_name_plural = 'Solicitações de Declaração Anual MEI'
+        ordering = ['-criado_em']
+
+    def __str__(self):
+        return f"DASN MEI #{self.id} - {self.nome_completo} - Ano {self.ano_referencia} ({self.get_status_display()})"
+
+    def cnpj_formatado(self):
+        cnpj = ''.join(filter(str.isdigit, self.cnpj))
+        if len(cnpj) == 14:
+            return f"{cnpj[:2]}.{cnpj[2:5]}.{cnpj[5:8]}/{cnpj[8:12]}-{cnpj[12:]}"
+        return self.cnpj
+
+
 class ServicoAvulso(models.Model):
     """
     Modelo para gerenciar serviços avulsos que podem ser contratados pelos clientes.

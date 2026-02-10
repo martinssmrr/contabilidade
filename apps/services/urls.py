@@ -15,6 +15,16 @@ urlpatterns = [
     path('abrir-mei/processar-pagamento/<int:solicitacao_id>/', views.processar_pagamento_mei, name='processar_pagamento_mei'),
     path('abrir-mei/sucesso/<int:solicitacao_id>/', views.mei_sucesso_view, name='mei_sucesso'),
     
+    # Baixa do MEI
+    path('baixar-mei/solicitar/', views.solicitar_baixa_mei_view, name='solicitar_baixa_mei'),
+    path('baixar-mei/checkout/<int:solicitacao_id>/', views.checkout_baixa_mei_view, name='checkout_baixa_mei'),
+    path('baixar-mei/sucesso/<int:solicitacao_id>/', views.baixa_mei_sucesso_view, name='baixa_mei_sucesso'),
+
+    # Declaração Anual MEI (DASN)
+    path('declaracao-anual-mei/solicitar/', views.solicitar_declaracao_anual_mei_view, name='solicitar_dasn_mei'),
+    path('declaracao-anual-mei/checkout/<int:solicitacao_id>/', views.checkout_declaracao_anual_mei_view, name='checkout_dasn_mei'),
+    path('declaracao-anual-mei/sucesso/<int:solicitacao_id>/', views.dasn_mei_sucesso_view, name='dasn_mei_sucesso'),
+
     path('contabilidade-online/', TemplateView.as_view(template_name='services/contabilidade_online.html'), name='contabilidade_online'),
     
     # Planos

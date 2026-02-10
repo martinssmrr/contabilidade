@@ -22,6 +22,8 @@ from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from apps.testimonials.models import Testimonial
 from apps.services import views as service_views  # Added import
+from apps.support.models import Duvida
+from apps.services.models import Plano
 
 # Customização do Admin
 admin.site.site_header = "Vetorial - Administração"
@@ -63,6 +65,33 @@ def abrir_empresa_view(request):
         'planos_comercio': planos_comercio,
     })
 
+def depoimentos_view(request):
+    from django.shortcuts import render
+    testimonials = Testimonial.objects.filter(is_active=True)
+    return render(request, 'pages/depoimentos.html', {
+        'testimonials': testimonials,
+    })
+
+def faq_view(request):
+    from django.shortcuts import render
+    duvidas = Duvida.objects.filter(ativo=True).order_by('ordem', '-criado_em')
+    return render(request, 'pages/faq.html', {
+        'duvidas': duvidas,
+    })
+
+def quanto_custa_view(request):
+    from django.shortcuts import render
+    planos_servicos = Plano.objects.filter(ativo=True, categoria='servicos').order_by('ordem', 'preco')
+    planos_comercio = Plano.objects.filter(ativo=True, categoria='comercio').order_by('ordem', 'preco')
+    return render(request, 'pages/quanto_custa.html', {
+        'planos_servicos': planos_servicos,
+        'planos_comercio': planos_comercio,
+    })
+
+def contato_view(request):
+    from django.shortcuts import render
+    return render(request, 'pages/contato.html')
+
 urlpatterns = [
     path("", home_view, name='home'),
     path("abrir-empresa/", abrir_empresa_view, name='abrir_empresa'),
@@ -71,6 +100,17 @@ urlpatterns = [
     path('termos-de-uso', TemplateView.as_view(template_name='pages/termos_de_uso.html'), name='termos_de_uso'),
     path('politica-de-privacidade', TemplateView.as_view(template_name='pages/politica_de_privacidade.html'), name='politica_de_privacidade'),
     path('obrigado/', TemplateView.as_view(template_name='obrigado.html'), name='obrigado'),
+    
+    # Páginas institucionais novas
+    path('depoimentos/', depoimentos_view, name='depoimentos'),
+    path('trabalhe-conosco/', TemplateView.as_view(template_name='pages/trabalhe_conosco.html'), name='trabalhe_conosco'),
+    path('gestao-contabil/', TemplateView.as_view(template_name='pages/gestao_contabil.html'), name='gestao_contabil'),
+    path('bpo-financeiro/', TemplateView.as_view(template_name='pages/bpo_financeiro.html'), name='bpo_financeiro'),
+    path('regularizacao-empresarial/', TemplateView.as_view(template_name='pages/regularizacao_empresarial.html'), name='regularizacao_empresarial'),
+    path('contato/', contato_view, name='contato'),
+    path('quanto-custa/', quanto_custa_view, name='quanto_custa'),
+    path('faq/', faq_view, name='faq'),
+    
     path("admin/", admin.site.urls),
     path("dashboard/", include('apps.dashboard.urls')),
     # Adicionar mais URLs conforme necessário:

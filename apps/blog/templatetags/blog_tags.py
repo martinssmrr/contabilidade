@@ -1,6 +1,26 @@
 from django import template
+import re
 
 register = template.Library()
+
+
+@register.filter(name='reading_time')
+def reading_time(content):
+    """Calcula o tempo estimado de leitura de um conteúdo HTML"""
+    if not content:
+        return 1
+    clean_content = re.sub('<[^<]+?>', '', str(content))
+    word_count = len(clean_content.split())
+    minutes = max(1, round(word_count / 200))
+    return minutes
+
+
+@register.filter(name='strip_html')
+def strip_html(value):
+    """Remove todas as tags HTML de um texto"""
+    if not value:
+        return ''
+    return re.sub('<[^<]+?>', '', str(value))
 
 
 # Mapeamento de slugs de página para categorias e títulos

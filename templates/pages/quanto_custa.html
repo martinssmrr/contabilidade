@@ -1,0 +1,378 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Quanto Custa? Planos e Preços - Vetorial Contabilidade{% endblock %}
+{% block description %}Conheça os planos e preços da Vetorial Contabilidade. Contabilidade completa a partir de valores acessíveis, sem taxas ocultas e com suporte humanizado.{% endblock %}
+{% block canonical %}/quanto-custa/{% endblock %}
+
+{% block extra_css %}
+<style>
+    .qc-hero {
+        background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
+        padding: 100px 0 60px; text-align: center;
+    }
+    .qc-hero h1 { color: #fff; font-size: 2.8rem; font-weight: 800; margin-bottom: 1rem; }
+    .qc-hero p  { color: rgba(255,255,255,.85); font-size: 1.15rem; max-width: 650px; margin: 0 auto; }
+
+    /* Toggle */
+    .qc-toggle-section { padding: 60px 0 0; background: #ebeef1; }
+    .pricing-toggle {
+        background: #e2e8f0; border-radius: 12px; padding: 4px;
+        display: inline-flex;
+    }
+    .toggle-btn {
+        padding: 10px 24px; border: none; background: transparent;
+        border-radius: 8px; font-weight: 600; cursor: pointer;
+        transition: all .3s ease; color: #64748b;
+    }
+    .toggle-btn.active {
+        background: #0c63d1; color: #fff; box-shadow: 0 2px 8px rgba(12,99,209,.3);
+    }
+    .toggle-content { display: flex; align-items: center; }
+
+    /* Plans grid */
+    .qc-plans { padding: 40px 0 80px; background: #ebeef1; }
+
+    /* Pricing cards - reutilizando o estilo existente */
+    .pricing-section::before { display: none !important; }
+
+    /* Incluso em todos */
+    .qc-included { padding: 80px 0; background: #fff; }
+    .inc-item {
+        display: flex; align-items: center; gap: 12px;
+        padding: 12px 16px; background: #f0fdf4; border-radius: 8px;
+        margin-bottom: 8px;
+    }
+    .inc-item i { color: #059669; font-size: 1rem; min-width: 20px; }
+    .inc-item span { color: #1f2937; font-weight: 500; font-size: .95rem; }
+
+    /* Comparativo */
+    .qc-compare { padding: 80px 0; background: #ebeef1; }
+    .compare-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,.05); }
+    .compare-table th, .compare-table td { padding: 14px 20px; text-align: center; border-bottom: 1px solid #e7e7e7; }
+    .compare-table th { background: #0c63d1; color: #fff; font-weight: 600; font-size: .9rem; }
+    .compare-table td:first-child { text-align: left; font-weight: 600; color: #1f2937; }
+    .compare-table .check { color: #059669; font-size: 1.1rem; }
+    .compare-table .cross { color: #d1d5db; font-size: 1.1rem; }
+
+    /* FAQ */
+    .qc-faq { padding: 80px 0; background: #fff; }
+    .faq-item { border-bottom: 1px solid rgba(0,0,0,.06); }
+    .faq-question {
+        background: transparent; border: 0; width: 100%; text-align: left;
+        padding: 1rem; display: flex; justify-content: space-between;
+        align-items: center; cursor: pointer; font-weight: 600; color: #1f2937;
+    }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+    .faq-answer-content { padding: 0 1rem 1rem; color: #6b7280; line-height: 1.7; }
+    .faq-icon { display: inline-flex; align-items: center; transition: transform .25s ease; }
+    .faq-item.open .faq-icon { transform: rotate(180deg); }
+
+    /* CTA */
+    .qc-cta {
+        background: linear-gradient(135deg, #0c63d1,#0a4fa3);
+        padding: 80px 0; text-align: center;
+    }
+    .qc-cta h2 { color: #fff; font-size: 2.2rem; font-weight: 700; margin-bottom: 1rem; }
+    .qc-cta p  { color: rgba(255,255,255,.85); max-width: 600px; margin: 0 auto 2rem; font-size: 1.1rem; }
+    .btn-cta-green {
+        background: #3ef47c; color: #1f2937; border: none;
+        padding: 14px 40px; border-radius: 10px; font-weight: 700;
+        font-size: 1.05rem; text-decoration: none; display: inline-block;
+        transition: all .3s ease;
+    }
+    .btn-cta-green:hover { background: #2ed66b; transform: translateY(-2px); color: #1f2937; }
+
+    @media (max-width: 768px) {
+        .qc-hero h1 { font-size: 2rem; }
+        .compare-table { font-size: .85rem; }
+        .compare-table th, .compare-table td { padding: 10px 12px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="qc-hero">
+    <div class="container">
+        <h1>Quanto custa a contabilidade Vetorial?</h1>
+        <p>Planos transparentes, sem taxas escondidas. Escolha o que faz mais sentido para o momento da sua empresa e pague apenas pelo que precisa.</p>
+    </div>
+</section>
+
+<!-- Toggle + Planos -->
+<section class="qc-toggle-section">
+    <div class="container text-center">
+        <div class="pricing-toggle d-inline-flex p-1 mb-4">
+            <button class="toggle-btn active" data-toggle="servicos">
+                <span class="toggle-content">
+                    <i class="fas fa-cog me-2"></i>Serviços
+                </span>
+            </button>
+            <button class="toggle-btn" data-toggle="comercio">
+                <span class="toggle-content">
+                    <i class="fas fa-store me-2"></i>Comércio
+                </span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<section class="qc-plans">
+    <div class="container">
+        <!-- Planos de Serviços -->
+        <div id="planos-servicos">
+            <div class="row g-4 justify-content-center">
+                {% for plano in planos_servicos %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="pricing-card {% if plano.destaque %}pricing-card-popular{% endif %}">
+                        {% if plano.destaque %}
+                        <div class="popular-badge">
+                            <i class="fas fa-star me-1"></i> Mais Popular
+                        </div>
+                        {% endif %}
+                        <div class="pricing-card-header">
+                            <h3 class="pricing-plan-name">{{ plano.nome }}</h3>
+                            <p class="pricing-description">{{ plano.descricao }}</p>
+                        </div>
+                        <div class="pricing-card-price">
+                            {% if plano.tem_desconto %}
+                            <span class="price-old">R$ {{ plano.preco_antigo|floatformat:2 }}</span>
+                            {% endif %}
+                            <div class="price-current">
+                                <span class="price-currency">R$</span>
+                                <span class="price-value">{{ plano.preco|floatformat:2 }}</span>
+                                <span class="price-period">/mês</span>
+                            </div>
+                        </div>
+                        <div class="pricing-card-body">
+                            <ul class="pricing-features">
+                                {% for item in plano.features %}
+                                    {% if item.included %}
+                                    <li class="feature-included"><span class="feature-icon">✔</span><span>{{ item.feature }}</span></li>
+                                    {% else %}
+                                    <li class="feature-excluded"><span class="feature-icon">✖</span><span>{{ item.feature }}</span></li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="pricing-card-footer">
+                            <a href="https://wa.me/551131642284?text=Olá! Tenho interesse no plano {{ plano.nome }}." class="btn btn-pricing {% if plano.destaque %}btn-pricing-popular{% endif %}">Contratar Agora</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">Nenhum plano de serviços disponível no momento. Entre em contato para um orçamento personalizado.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Planos de Comércio -->
+        <div id="planos-comercio" style="display: none;">
+            <div class="row g-4 justify-content-center">
+                {% for plano in planos_comercio %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="pricing-card {% if plano.destaque %}pricing-card-popular{% endif %}">
+                        {% if plano.destaque %}
+                        <div class="popular-badge">
+                            <i class="fas fa-star me-1"></i> Mais Popular
+                        </div>
+                        {% endif %}
+                        <div class="pricing-card-header">
+                            <h3 class="pricing-plan-name">{{ plano.nome }}</h3>
+                            <p class="pricing-description">{{ plano.descricao }}</p>
+                        </div>
+                        <div class="pricing-card-price">
+                            {% if plano.tem_desconto %}
+                            <span class="price-old">R$ {{ plano.preco_antigo|floatformat:2 }}</span>
+                            {% endif %}
+                            <div class="price-current">
+                                <span class="price-currency">R$</span>
+                                <span class="price-value">{{ plano.preco|floatformat:2 }}</span>
+                                <span class="price-period">/mês</span>
+                            </div>
+                        </div>
+                        <div class="pricing-card-body">
+                            <ul class="pricing-features">
+                                {% for item in plano.features %}
+                                    {% if item.included %}
+                                    <li class="feature-included"><span class="feature-icon">✔</span><span>{{ item.feature }}</span></li>
+                                    {% else %}
+                                    <li class="feature-excluded"><span class="feature-icon">✖</span><span>{{ item.feature }}</span></li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="pricing-card-footer">
+                            <a href="https://wa.me/551131642284?text=Olá! Tenho interesse no plano {{ plano.nome }}." class="btn btn-pricing {% if plano.destaque %}btn-pricing-popular{% endif %}">Contratar Agora</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">Nenhum plano de comércio disponível no momento. Entre em contato para um orçamento personalizado.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- O que está incluso em todos os planos -->
+<section class="qc-included">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Incluso em todos os planos</h2>
+            <p class="text-muted" style="max-width:600px;margin:0 auto;">Independente do plano escolhido, você tem acesso a benefícios que fazem a diferença.</p>
+        </div>
+        <div class="row g-3">
+            <div class="col-lg-4 col-md-6">
+                <div class="inc-item"><i class="fas fa-check-circle"></i><span>Plataforma online 24h</span></div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="inc-item"><i class="fas fa-check-circle"></i><span>Gerente de conta dedicado</span></div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="inc-item"><i class="fas fa-check-circle"></i><span>Suporte por WhatsApp e e-mail</span></div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="inc-item"><i class="fas fa-check-circle"></i><span>Apuração mensal de impostos</span></div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="inc-item"><i class="fas fa-check-circle"></i><span>Entrega de obrigações acessórias</span></div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="inc-item"><i class="fas fa-check-circle"></i><span>Emissão de guias de pagamento</span></div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="inc-item"><i class="fas fa-check-circle"></i><span>Planejamento tributário anual</span></div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="inc-item"><i class="fas fa-check-circle"></i><span>Atendimento em todo o Brasil</span></div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="inc-item"><i class="fas fa-check-circle"></i><span>Sem taxa de adesão</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Comparativo -->
+<section class="qc-compare">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Vetorial vs. Contabilidade Tradicional</h2>
+        </div>
+        <div class="table-responsive">
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th style="text-align:left;">Recurso</th>
+                        <th>Vetorial</th>
+                        <th>Tradicional</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Atendimento 100% online</td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-times cross"></i></td></tr>
+                    <tr><td>Gerente de conta dedicado</td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-times cross"></i></td></tr>
+                    <tr><td>Plataforma com acesso 24h</td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-times cross"></i></td></tr>
+                    <tr><td>Preço transparente e fixo</td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-times cross"></i></td></tr>
+                    <tr><td>Suporte por WhatsApp</td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-times cross"></i></td></tr>
+                    <tr><td>Relatórios gerenciais mensais</td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-times cross"></i></td></tr>
+                    <tr><td>Sem taxa de adesão</td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-times cross"></i></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Preços -->
+<section class="qc-faq">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Dúvidas sobre preços</h2>
+        </div>
+        <div style="max-width:800px;margin:0 auto;">
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Existe alguma taxa de adesão?</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer"><div class="faq-answer-content">Não! A Vetorial não cobra nenhuma taxa de adesão. Você paga apenas a mensalidade do plano escolhido.</div></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Posso mudar de plano depois?</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer"><div class="faq-answer-content">Sim! Você pode fazer upgrade ou downgrade do seu plano a qualquer momento, sem multas ou burocracia.</div></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Existe fidelidade ou multa de cancelamento?</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer"><div class="faq-answer-content">Não trabalhamos com fidelidade. Você pode cancelar a qualquer momento. Nosso objetivo é conquistar sua satisfação todo mês.</div></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>O preço inclui emissão de notas fiscais?</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer"><div class="faq-answer-content">Depende do plano escolhido. Nossos planos mais completos incluem sistema de emissão de notas fiscais integrado. Consulte os detalhes de cada plano.</div></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Qual forma de pagamento é aceita?</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer"><div class="faq-answer-content">Aceitamos boleto bancário, cartão de crédito e PIX. O pagamento é mensal e pode ser configurado como débito recorrente.</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="qc-cta">
+    <div class="container">
+        <h2>Ainda em dúvida? Fale com um especialista!</h2>
+        <p>Nossa equipe pode ajudar a encontrar o plano ideal para o estágio da sua empresa. Consulte gratuitamente.</p>
+        <a href="https://wa.me/551131642284?text=Olá! Gostaria de ajuda para escolher o melhor plano da Vetorial." class="btn-cta-green">Falar com especialista <i class="fas fa-arrow-right ms-2"></i></a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Toggle entre planos
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleButtons = document.querySelectorAll('.toggle-btn');
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetType = this.getAttribute('data-toggle');
+            toggleButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById('planos-servicos').style.display = targetType === 'servicos' ? 'block' : 'none';
+            document.getElementById('planos-comercio').style.display = targetType === 'comercio' ? 'block' : 'none';
+        });
+    });
+});
+
+// FAQ
+function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const answer = item.querySelector('.faq-answer');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.faq-answer').style.maxHeight = null;
+    });
+    if (!isOpen) {
+        item.classList.add('open');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+}
+</script>
+{% endblock %}

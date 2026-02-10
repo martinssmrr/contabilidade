@@ -14,9 +14,9 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'author', 'is_featured', 'status', 'created_at', 'updated_at')
+    list_display = ('title', 'category', 'author', 'is_featured', 'status', 'focus_keyword', 'created_at', 'updated_at')
     list_filter = ('status', 'is_featured', 'category', 'created_at', 'author')
-    search_fields = ('title', 'content')
+    search_fields = ('title', 'content', 'meta_title', 'meta_description', 'focus_keyword')
     prepopulated_fields = {'slug': ('title',)}
     date_hierarchy = 'created_at'
     ordering = ('-created_at',)
@@ -28,6 +28,10 @@ class PostAdmin(admin.ModelAdmin):
         }),
         ('Conteúdo', {
             'fields': ('excerpt', 'content', 'featured_image')
+        }),
+        ('SEO - Otimização para Buscadores', {
+            'fields': ('meta_title', 'meta_description', 'meta_keywords', 'focus_keyword', 'canonical_url'),
+            'description': 'Campos opcionais para otimização SEO. Se vazios, serão gerados automaticamente.',
         }),
         ('Metadados', {
             'fields': ('created_at', 'updated_at'),

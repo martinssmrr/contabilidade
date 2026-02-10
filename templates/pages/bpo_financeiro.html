@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}BPO Financeiro - Vetorial Contabilidade{% endblock %}
+{% block description %}Terceirize sua gestão financeira com o BPO Financeiro da Vetorial. Contas a pagar e receber, conciliação bancária, fluxo de caixa e relatórios gerenciais.{% endblock %}
+{% block canonical %}/bpo-financeiro/{% endblock %}
+
+{% block extra_css %}
+<style>
+    .bpo-hero {
+        background: linear-gradient(135deg, rgba(12,99,209,.85), rgba(10,79,163,.70)), url('{% static "img/abrirherosection.webp" %}');
+        background-size: cover; background-position: center;
+        padding: 100px 0 70px;
+    }
+    .bpo-hero h1 { color: #fff; font-size: 2.8rem; font-weight: 800; margin-bottom: 1rem; }
+    .bpo-hero p  { color: rgba(255,255,255,.85); font-size: 1.15rem; max-width: 600px; }
+    .btn-hero-green {
+        background: #3ef47c; color: #1f2937; border: none;
+        padding: 14px 36px; border-radius: 10px; font-weight: 700;
+        text-decoration: none; display: inline-block; transition: all .3s ease;
+    }
+    .btn-hero-green:hover { background: #2ed66b; transform: translateY(-2px); color: #1f2937; }
+
+    /* O que é BPO */
+    .bpo-about { padding: 80px 0; background: #fff; }
+    .bpo-about-icon {
+        width: 80px; height: 80px; border-radius: 50%;
+        background: linear-gradient(135deg,#3ef47c,#0c63d1);
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 20px;
+    }
+    .bpo-about-icon i { font-size: 2rem; color: #fff; }
+
+    /* Serviços */
+    .bpo-services { padding: 80px 0; background: #ebeef1; }
+    .bpo-svc-card {
+        background: #fff; border-radius: 14px; padding: 32px;
+        height: 100%; transition: all .3s ease;
+        border: 1px solid transparent;
+    }
+    .bpo-svc-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,.08); border-color: #0c63d1; }
+    .bpo-svc-num {
+        width: 40px; height: 40px; border-radius: 10px;
+        background: #0c63d1; color: #fff; font-weight: 800;
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 16px;
+    }
+    .bpo-svc-card h3 { font-size: 1.1rem; font-weight: 700; color: #1f2937; margin-bottom: .5rem; }
+    .bpo-svc-card p  { color: #6b7280; font-size: .9rem; line-height: 1.6; }
+
+    /* Para quem */
+    .bpo-target { padding: 80px 0; background: #fff; }
+    .target-item {
+        display: flex; align-items: center; gap: 14px;
+        padding: 16px 20px; background: #f9fafb; border-radius: 10px; margin-bottom: 12px;
+    }
+    .target-item i { color: #0c63d1; font-size: 1.2rem; min-width: 24px; }
+    .target-item span { color: #1f2937; font-weight: 500; }
+
+    /* Benefícios */
+    .bpo-benefits { padding: 80px 0; background: #ebeef1; }
+    .benefit-card {
+        text-align: center; padding: 36px 24px;
+        background: #fff; border-radius: 14px;
+        height: 100%; transition: all .3s ease;
+    }
+    .benefit-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,.08); }
+    .benefit-number { font-size: 2.5rem; font-weight: 800; color: #0c63d1; }
+    .benefit-card h4 { font-size: 1rem; font-weight: 700; margin-top: .5rem; }
+    .benefit-card p  { color: #6b7280; font-size: .9rem; }
+
+    /* CTA */
+    .bpo-cta {
+        background: linear-gradient(135deg, #0c63d1,#0a4fa3);
+        padding: 80px 0; text-align: center;
+    }
+    .bpo-cta h2 { color: #fff; font-size: 2.2rem; font-weight: 700; margin-bottom: 1rem; }
+    .bpo-cta p  { color: rgba(255,255,255,.85); max-width: 600px; margin: 0 auto 2rem; font-size: 1.1rem; }
+    .btn-cta-green {
+        background: #3ef47c; color: #1f2937; border: none;
+        padding: 14px 40px; border-radius: 10px; font-weight: 700;
+        font-size: 1.05rem; text-decoration: none; display: inline-block;
+        transition: all .3s ease;
+    }
+    .btn-cta-green:hover { background: #2ed66b; transform: translateY(-2px); color: #1f2937; }
+
+    @media (max-width: 768px) { .bpo-hero h1 { font-size: 2rem; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bpo-hero">
+    <div class="container">
+        <div class="row align-items-center" style="min-height: 60vh;">
+            <div class="col-lg-7">
+                <h1>BPO Financeiro: terceirize com quem entende</h1>
+                <p class="mb-4">Delegue a gestão financeira da sua empresa para especialistas. Reduza custos operacionais, ganhe tempo e tome decisões baseadas em dados reais.</p>
+                <a href="https://wa.me/551131642284?text=Olá! Gostaria de saber mais sobre o BPO Financeiro da Vetorial." class="btn-hero-green">Solicitar proposta <i class="fas fa-arrow-right ms-2"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- O que é BPO -->
+<section class="bpo-about">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="bpo-about-icon"><i class="fas fa-cogs"></i></div>
+                <h2 class="display-6 fw-bold mb-3">O que é BPO Financeiro?</h2>
+                <p class="text-muted">O <strong>Business Process Outsourcing (BPO) Financeiro</strong> é a terceirização dos processos financeiros da sua empresa para uma equipe especializada.</p>
+                <p class="text-muted">Com o BPO da Vetorial, você conta com profissionais qualificados que cuidam de toda a rotina financeira — contas a pagar, contas a receber, conciliação bancária, fluxo de caixa e muito mais — enquanto você foca no crescimento do negócio.</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="p-4 bg-light rounded-3">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-exclamation-triangle text-warning me-2"></i>Sua empresa enfrenta algum desses problemas?</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="fas fa-times text-danger me-2"></i>Falta de controle financeiro e fluxo de caixa desorganizado</li>
+                        <li class="mb-2"><i class="fas fa-times text-danger me-2"></i>Pagamentos em atraso e multas desnecessárias</li>
+                        <li class="mb-2"><i class="fas fa-times text-danger me-2"></i>Dificuldade em conciliar o banco com os registros</li>
+                        <li class="mb-2"><i class="fas fa-times text-danger me-2"></i>Decisões baseadas em "achismos" ao invés de dados</li>
+                        <li class="mb-0"><i class="fas fa-times text-danger me-2"></i>Alto custo para manter um setor financeiro interno</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Serviços incluídos -->
+<section class="bpo-services">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">O que está incluso no BPO Financeiro</h2>
+            <p class="text-muted" style="max-width:650px;margin:0 auto;">Uma gestão financeira completa e profissional, sem que você precise se preocupar com nada.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="bpo-svc-card">
+                    <div class="bpo-svc-num">1</div>
+                    <h3>Contas a Pagar</h3>
+                    <p>Controle e agendamento de pagamentos de fornecedores, impostos, folha e demais obrigações financeiras.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="bpo-svc-card">
+                    <div class="bpo-svc-num">2</div>
+                    <h3>Contas a Receber</h3>
+                    <p>Gestão de recebíveis, cobrança ativa e controle de inadimplência para manter seu caixa saudável.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="bpo-svc-card">
+                    <div class="bpo-svc-num">3</div>
+                    <h3>Conciliação Bancária</h3>
+                    <p>Confronto diário entre extratos bancários e registros financeiros, garantindo dados sempre atualizados.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="bpo-svc-card">
+                    <div class="bpo-svc-num">4</div>
+                    <h3>Fluxo de Caixa</h3>
+                    <p>Projeção e acompanhamento do fluxo de caixa para você saber exatamente quanto entra e quanto sai.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="bpo-svc-card">
+                    <div class="bpo-svc-num">5</div>
+                    <h3>Relatórios Financeiros</h3>
+                    <p>DRE gerencial, balanço financeiro e indicadores de performance entregues mensalmente.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="bpo-svc-card">
+                    <div class="bpo-svc-num">6</div>
+                    <h3>Emissão de Boletos e NF</h3>
+                    <p>Emissão de boletos bancários, notas fiscais e organização de documentos financeiros.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Para quem é o BPO -->
+<section class="bpo-target">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5">
+                <h2 class="display-6 fw-bold mb-3">Para quem é o BPO Financeiro?</h2>
+                <p class="text-muted">O serviço é ideal para empresas que desejam profissionalizar sua gestão financeira sem aumentar a equipe interna.</p>
+            </div>
+            <div class="col-lg-7">
+                <div class="target-item"><i class="fas fa-store"></i><span>Pequenas e médias empresas em crescimento</span></div>
+                <div class="target-item"><i class="fas fa-laptop-code"></i><span>Startups e empresas de tecnologia</span></div>
+                <div class="target-item"><i class="fas fa-stethoscope"></i><span>Clínicas, consultórios e profissionais da saúde</span></div>
+                <div class="target-item"><i class="fas fa-gavel"></i><span>Escritórios de advocacia e consultorias</span></div>
+                <div class="target-item"><i class="fas fa-shopping-cart"></i><span>E-commerces e varejistas</span></div>
+                <div class="target-item"><i class="fas fa-building"></i><span>Empresas que querem reduzir custos operacionais</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefícios em números -->
+<section class="bpo-benefits">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Resultados que nossos clientes alcançam</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="benefit-card">
+                    <div class="benefit-number">40%</div>
+                    <h4>Redução de custos</h4>
+                    <p>Comparado a manter um setor financeiro interno com CLT.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="benefit-card">
+                    <div class="benefit-number">99%</div>
+                    <h4>Precisão nos dados</h4>
+                    <p>Conciliação diária e processos automatizados eliminam erros.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="benefit-card">
+                    <div class="benefit-number">+20h</div>
+                    <h4>Horas liberadas/mês</h4>
+                    <p>Tempo que você ganha para focar na estratégia do negócio.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="benefit-card">
+                    <div class="benefit-number">100%</div>
+                    <h4>Online e seguro</h4>
+                    <p>Acesso a relatórios e dados financeiros de qualquer lugar.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="bpo-cta">
+    <div class="container">
+        <h2>Profissionalize a gestão financeira da sua empresa</h2>
+        <p>Com o BPO Financeiro da Vetorial, você tem uma equipe dedicada cuidando das suas finanças enquanto foca no que realmente importa.</p>
+        <a href="https://wa.me/551131642284?text=Olá! Quero saber mais sobre o BPO Financeiro da Vetorial." class="btn-cta-green">Solicitar proposta <i class="fas fa-arrow-right ms-2"></i></a>
+    </div>
+</section>
+{% endblock %}

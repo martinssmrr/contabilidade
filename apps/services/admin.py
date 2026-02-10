@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Service, Plan, Subscription, ProcessoAbertura, Socio, Plano, CategoriaCNAE, CNAE, SolicitacaoAberturaMEI, ServicoAvulso, ContratacaoServicoAvulso
+from .models import Service, Plan, Subscription, ProcessoAbertura, Socio, Plano, CategoriaCNAE, CNAE, SolicitacaoAberturaMEI, ServicoAvulso, ContratacaoServicoAvulso, SolicitacaoBaixaMEI, SolicitacaoDeclaracaoAnualMEI
 
 # Register your models here.
 
@@ -322,3 +322,23 @@ class ContratacaoServicoAvulsoAdmin(admin.ModelAdmin):
         updated = queryset.update(visualizado=True)
         self.message_user(request, f'{updated} contratação(ões) marcada(s) como visualizada(s).')
     marcar_visualizado.short_description = 'Marcar como Visualizado'
+
+
+@admin.register(SolicitacaoBaixaMEI)
+class SolicitacaoBaixaMEIAdmin(admin.ModelAdmin):
+    list_display = ['nome_completo', 'email', 'cnpj', 'cpf', 'motivo', 'status', 'pagamento', 'criado_em']
+    list_filter = ['status', 'motivo', 'criado_em']
+    search_fields = ['nome_completo', 'email', 'cnpj', 'cpf']
+    list_editable = ['status']
+    readonly_fields = ['criado_em', 'atualizado_em']
+    ordering = ['-criado_em']
+
+
+@admin.register(SolicitacaoDeclaracaoAnualMEI)
+class SolicitacaoDeclaracaoAnualMEIAdmin(admin.ModelAdmin):
+    list_display = ['nome_completo', 'email', 'cnpj', 'ano_referencia', 'faturamento', 'teve_funcionario', 'status', 'pagamento', 'criado_em']
+    list_filter = ['status', 'ano_referencia', 'teve_funcionario', 'criado_em']
+    search_fields = ['nome_completo', 'email', 'cnpj']
+    list_editable = ['status']
+    readonly_fields = ['criado_em', 'atualizado_em']
+    ordering = ['-criado_em']

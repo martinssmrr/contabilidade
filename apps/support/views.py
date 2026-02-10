@@ -433,6 +433,162 @@ def api_leads_delete(request, pk):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
+# ==================== SERVIÇOS MEI API ====================
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_servicos_mei_list(request):
+    """Lista serviços MEI (das novas tabelas de solicitação + leads antigos)"""
+    try:
+        data = []
+
+        # Buscar solicitações de Baixa MEI (novas)
+        try:
+            from apps.services.models import SolicitacaoBaixaMEI
+            for s in SolicitacaoBaixaMEI.objects.order_by('-criado_em'):
+                pag_status = ''
+                if s.pagamento:
+                    pag_status = s.pagamento.status
+                data.append({
+                    'id': f'baixa-{s.id}',
+                    'real_id': s.id,
+                    'model': 'SolicitacaoBaixaMEI',
+                    'nome_completo': s.nome_completo,
+                    'email': s.email,
+                    'telefone': s.telefone,
+                    'tipo_servico': 'Baixa do MEI',
+                    'origem': 'formulario_baixar_mei',
+                    'servico_interesse': f'CNPJ: {s.cnpj} | CPF: {s.cpf} | Motivo: {s.get_motivo_display() if s.motivo else "N/A"}',
+                    'observacoes': s.observacoes or '',
+                    'status': s.status,
+                    'pagamento_status': pag_status,
+                    'valor': str(s.VALOR_SERVICO),
+                    'criado_em': s.criado_em.strftime('%Y-%m-%d %H:%M:%S')
+                })
+        except Exception:
+            pass
+
+        # Buscar solicitações de Declaração Anual MEI (novas)
+        try:
+            from apps.services.models import SolicitacaoDeclaracaoAnualMEI
+            for s in SolicitacaoDeclaracaoAnualMEI.objects.order_by('-criado_em'):
+                pag_status = ''
+                if s.pagamento:
+                    pag_status = s.pagamento.status
+                data.append({
+                    'id': f'dasn-{s.id}',
+                    'real_id': s.id,
+                    'model': 'SolicitacaoDeclaracaoAnualMEI',
+                    'nome_completo': s.nome_completo,
+                    'email': s.email,
+                    'telefone': s.telefone,
+                    'tipo_servico': 'Declaração Anual (DASN)',
+                    'origem': 'formulario_declaracao_anual_mei',
+                    'servico_interesse': f'CNPJ: {s.cnpj} | Ano: {s.ano_referencia} | Faturamento: R$ {s.faturamento}',
+                    'observacoes': s.observacoes or '',
+                    'status': s.status,
+                    'pagamento_status': pag_status,
+                    'valor': str(s.VALOR_SERVICO),
+                    'criado_em': s.criado_em.strftime('%Y-%m-%d %H:%M:%S')
+                })
+        except Exception:
+            pass
+
+        # Buscar leads antigos (dos formulários anteriores)
+        leads = Lead.objects.filter(
+            origem__in=['formulario_baixar_mei', 'formulario_declaracao_anual_mei']
+        ).order_by('-criado_em')
+
+        for lead in leads:
+            if lead.origem == 'formulario_baixar_mei':
+                tipo_servico = 'Baixa do MEI'
+            else:
+                tipo_servico = 'Declaração Anual (DASN)'
+
+            data.append({
+                'id': f'lead-{lead.id}',
+                'real_id': lead.id,
+                'model': 'Lead',
+                'nome_completo': lead.nome_completo,
+                'email': lead.email,
+                'telefone': lead.telefone,
+                'tipo_servico': tipo_servico,
+                'origem': lead.origem,
+                'servico_interesse': lead.servico_interesse or '',
+                'observacoes': lead.observacoes or '',
+                'status': getattr(lead, 'status', 'pendente'),
+                'pagamento_status': '',
+                'valor': '',
+                'criado_em': lead.criado_em.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        # Ordenar tudo por data decrescente
+        data.sort(key=lambda x: x['criado_em'], reverse=True)
+
+        return JsonResponse({'success': True, 'data': data})
+    except Exception as e:
+        logger.error(f"Erro ao listar serviços MEI: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@login_required
+@user_passes_test(is_staff_user)
+def api_servicos_mei_contagem(request):
+    """Retorna contagem de serviços MEI pendentes"""
+    try:
+        pendentes = 0
+
+        # Contar das novas tabelas
+        try:
+            from apps.services.models import SolicitacaoBaixaMEI
+            pendentes += SolicitacaoBaixaMEI.objects.filter(status='pendente').count()
+        except Exception:
+            pass
+
+        try:
+            from apps.services.models import SolicitacaoDeclaracaoAnualMEI
+            pendentes += SolicitacaoDeclaracaoAnualMEI.objects.filter(status='pendente').count()
+        except Exception:
+            pass
+
+        # Contar leads antigos
+        pendentes += Lead.objects.filter(
+            origem__in=['formulario_baixar_mei', 'formulario_declaracao_anual_mei'],
+            status='pendente'
+        ).count()
+
+        return JsonResponse({'success': True, 'pendentes': pendentes})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@login_required
+@user_passes_test(is_staff_user)
+@require_http_methods(["POST"])
+def api_servico_mei_update(request, pk):
+    """Atualiza o status de um serviço MEI (nova ou lead antigo)"""
+    try:
+        data = json.loads(request.body)
+        new_status = data.get('status')
+        model_type = data.get('model', 'Lead')
+        real_id = data.get('real_id', pk)
+
+        if model_type == 'SolicitacaoBaixaMEI':
+            from apps.services.models import SolicitacaoBaixaMEI
+            obj = get_object_or_404(SolicitacaoBaixaMEI, pk=real_id)
+        elif model_type == 'SolicitacaoDeclaracaoAnualMEI':
+            from apps.services.models import SolicitacaoDeclaracaoAnualMEI
+            obj = get_object_or_404(SolicitacaoDeclaracaoAnualMEI, pk=real_id)
+        else:
+            obj = get_object_or_404(Lead, pk=real_id)
+
+        if new_status:
+            obj.status = new_status
+            obj.save()
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
 @login_required
 @user_passes_test(is_staff_user)
 @require_http_methods(["POST"])

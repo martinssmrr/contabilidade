@@ -1276,6 +1276,13 @@
                     </svg>
                     <span class="menu-item-text">Dados da Empresa</span>
                 </a>
+                <a href="#" class="menu-item" data-model="servicos-mei">
+                    <svg class="menu-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                    </svg>
+                    <span class="menu-item-text">Serviços MEI</span>
+                    <span class="menu-badge" id="badge-servicos-mei" style="display: none; background: #EF4444; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; margin-left: auto;">0</span>
+                </a>
             </div>
 
             <div class="menu-section">
@@ -2861,6 +2868,13 @@
             btnText: null,
             headers: ['Cliente', 'Serviço', 'Valor', 'Status', 'Data', 'Ações']
         },
+        'servicos-mei': {
+            title: 'Serviços MEI',
+            subtitle: 'Solicitações de Baixa do MEI e Declaração Anual MEI (DASN-SIMEI)',
+            endpoint: `${API_BASE}/servicos-mei/`,
+            btnText: null,
+            headers: ['Nome', 'Email', 'Telefone', 'Tipo Serviço', 'Valor', 'Pagamento', 'Detalhes', 'Status', 'Data', 'Ações']
+        },
 
         testimonials: {
             title: 'Depoimentos',
@@ -2996,6 +3010,8 @@
             
             // Carregar contagem de serviços avulsos pendentes
             loadServicosAvulsosCount();
+            // Carregar contagem de serviços MEI pendentes
+            loadServicosMeiCount();
         } catch(e) { console.error(e); }
     }
 
@@ -3041,6 +3057,91 @@
         } catch(e) {
             showNotification('Erro de conexão', 'error');
         }
+    }
+
+    // ========== Serviços MEI ==========
+    async function loadServicosMeiCount() {
+        try {
+            const res = await fetch('/support/api/servicos-mei/contagem/');
+            const result = await res.json();
+            if (result.success) {
+                const badge = document.getElementById('badge-servicos-mei');
+                if (badge) {
+                    if (result.pendentes > 0) {
+                        badge.textContent = result.pendentes;
+                        badge.style.display = 'inline';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+                // Também atualiza via updateMenuBadge
+                updateMenuBadge('servicos-mei', result.pendentes || 0);
+            }
+        } catch(e) { console.error('Erro ao carregar contagem MEI:', e); }
+    }
+
+    async function updateServicoMeiStatus(compositeId, newStatus, modelType, realId) {
+        try {
+            // Extrair o real_id numérico do composite id (ex: 'baixa-5' -> 5, 'lead-3' -> 3)
+            let updateId = realId || compositeId;
+            if (typeof compositeId === 'string' && compositeId.includes('-')) {
+                updateId = compositeId.split('-').pop();
+            }
+
+            const res = await fetch(`${API_BASE}/servicos-mei/${updateId}/update/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify({ status: newStatus, model: modelType || 'Lead', real_id: realId || updateId })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showNotification('Status do serviço MEI atualizado!', 'success');
+                loadModelData('servicos-mei');
+                loadServicosMeiCount();
+            } else {
+                showNotification(data.error || 'Erro ao atualizar', 'error');
+            }
+        } catch(e) {
+            showNotification('Erro de conexão', 'error');
+        }
+    }
+
+    function viewServicoMeiDetails(id) {
+        const item = currentData.find(d => d.id === id);
+        if (!item) return;
+        
+        const detalhes = item.servico_interesse || 'Sem detalhes adicionais';
+        const obs = item.observacoes || 'Nenhuma observação';
+        
+        // Modal simples com detalhes
+        const modal = document.createElement('div');
+        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;';
+        modal.innerHTML = `
+            <div style="background:white;border-radius:12px;padding:32px;max-width:550px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                    <h3 style="margin:0;font-size:1.25rem;color:#1a237e;">Detalhes do Serviço MEI</h3>
+                    <button onclick="this.closest('div[style*=fixed]').remove()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:#6b7280;">&times;</button>
+                </div>
+                <div style="display:grid;gap:12px;">
+                    <div><strong>Nome:</strong> ${item.nome_completo}</div>
+                    <div><strong>Email:</strong> ${item.email}</div>
+                    <div><strong>Telefone:</strong> ${item.telefone}</div>
+                    <div><strong>Tipo:</strong> <span style="padding:3px 10px;border-radius:8px;font-size:0.85rem;font-weight:600;background:${item.tipo_servico === 'Baixa do MEI' ? '#fce7f3' : '#d1fae5'};color:${item.tipo_servico === 'Baixa do MEI' ? '#9d174d' : '#065f46'};">${item.tipo_servico}</span></div>
+                    <div><strong>Detalhes do Formulário:</strong><br><div style="background:#f9fafb;padding:12px;border-radius:8px;margin-top:6px;font-size:0.9rem;white-space:pre-wrap;">${detalhes}</div></div>
+                    <div><strong>Observações:</strong><br><div style="background:#f9fafb;padding:12px;border-radius:8px;margin-top:6px;font-size:0.9rem;white-space:pre-wrap;">${obs}</div></div>
+                    <div><strong>Data:</strong> ${new Date(item.criado_em).toLocaleString('pt-BR')}</div>
+                    <div><strong>Status:</strong> ${item.status === 'pendente' ? 'Pendente' : item.status === 'em_atendimento' ? 'Em Atendimento' : 'Finalizado'}</div>
+                </div>
+                <div style="margin-top:20px;text-align:right;">
+                    <button onclick="this.closest('div[style*=fixed]').remove()" style="padding:8px 20px;background:#0c63d1;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Fechar</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
     }
 
     function filterByRegime(regime, card) {
@@ -4704,6 +4805,93 @@
                                 <option value="concluido" ${item.status === 'concluido' ? 'selected' : ''}>Concluído</option>
                                 <option value="cancelado" ${item.status === 'cancelado' ? 'selected' : ''}>Cancelado</option>
                             </select>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            }).join('');
+        } else if (currentModel === 'servicos-mei') {
+            // Serviços MEI: Baixa do MEI e Declaração Anual
+            const statusColors = {
+                'pendente': { bg: '#fef3c7', text: '#92400e' },
+                'pago': { bg: '#d1fae5', text: '#065f46' },
+                'em_andamento': { bg: '#dbeafe', text: '#1e40af' },
+                'concluido': { bg: '#d1fae5', text: '#065f46' },
+                'cancelado': { bg: '#fee2e2', text: '#991b1b' },
+                'em_atendimento': { bg: '#dbeafe', text: '#1e40af' },
+                'finalizado': { bg: '#d1fae5', text: '#065f46' }
+            };
+            const pagColors = {
+                'aprovado': { bg: '#d1fae5', text: '#065f46', label: '✅ Pago' },
+                'pendente': { bg: '#fef3c7', text: '#92400e', label: '⏳ Pendente' },
+                'rejeitado': { bg: '#fee2e2', text: '#991b1b', label: '❌ Rejeitado' },
+                '': { bg: '#f3f4f6', text: '#6b7280', label: '—' }
+            };
+            const tipoColors = {
+                'Baixa do MEI': { bg: '#fce7f3', text: '#9d174d' },
+                'Declaração Anual (DASN)': { bg: '#d1fae5', text: '#065f46' }
+            };
+            
+            tbody.innerHTML = currentData.map(item => {
+                const sc = statusColors[item.status] || { bg: '#f3f4f6', text: '#374151' };
+                const tc = tipoColors[item.tipo_servico] || { bg: '#f3f4f6', text: '#374151' };
+                const pc = pagColors[item.pagamento_status] || pagColors[''];
+                
+                // Parse detalhes
+                let detalhes = item.servico_interesse || item.observacoes || '-';
+                if (detalhes.length > 60) detalhes = detalhes.substring(0, 60) + '...';
+                
+                // Status options dependem do model
+                const isNewModel = item.model !== 'Lead';
+                const statusOptions = isNewModel ? `
+                    <option value="pendente" ${item.status === 'pendente' ? 'selected' : ''}>Pendente</option>
+                    <option value="pago" ${item.status === 'pago' ? 'selected' : ''}>Pago</option>
+                    <option value="em_andamento" ${item.status === 'em_andamento' ? 'selected' : ''}>Em Andamento</option>
+                    <option value="concluido" ${item.status === 'concluido' ? 'selected' : ''}>Concluído</option>
+                    <option value="cancelado" ${item.status === 'cancelado' ? 'selected' : ''}>Cancelado</option>
+                ` : `
+                    <option value="pendente" ${item.status === 'pendente' ? 'selected' : ''}>Pendente</option>
+                    <option value="em_atendimento" ${item.status === 'em_atendimento' ? 'selected' : ''}>Em Atendimento</option>
+                    <option value="finalizado" ${item.status === 'finalizado' ? 'selected' : ''}>Finalizado</option>
+                `;
+                
+                return `
+                <tr>
+                    <td>
+                        <div style="font-weight: 600;">${item.nome_completo}</div>
+                    </td>
+                    <td style="font-size: 0.85rem;">${item.email}</td>
+                    <td>${item.telefone}</td>
+                    <td>
+                        <span style="display: inline-flex; padding: 4px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600; background: ${tc.bg}; color: ${tc.text};">
+                            ${item.tipo_servico}
+                        </span>
+                    </td>
+                    <td style="font-size: 0.85rem; font-weight: 600;">
+                        ${item.valor ? 'R$ ' + parseFloat(item.valor).toFixed(2).replace('.', ',') : '—'}
+                    </td>
+                    <td>
+                        <span style="display: inline-flex; padding: 4px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600; background: ${pc.bg}; color: ${pc.text};">
+                            ${pc.label}
+                        </span>
+                    </td>
+                    <td style="font-size: 0.82rem; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${(item.servico_interesse || '').replace(/"/g, '&quot;')}">${detalhes}</td>
+                    <td>
+                        <select onchange="updateServicoMeiStatus('${item.id}', this.value, '${item.model || 'Lead'}', ${item.real_id || 0})" style="font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; border: 1px solid #d1d5db; background: ${sc.bg}; color: ${sc.text};">
+                            ${statusOptions}
+                        </select>
+                    </td>
+                    <td>${new Date(item.criado_em).toLocaleDateString('pt-BR')}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-whatsapp" onclick="sendWhatsApp('${item.nome_completo}', '${item.telefone}', '${item.tipo_servico}')" title="Abrir WhatsApp">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                </svg>
+                            </button>
+                            <button class="btn-action btn-view" onclick="viewServicoMeiDetails('${item.id}')" title="Ver Detalhes">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
                         </div>
                     </td>
                 </tr>

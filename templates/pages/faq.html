@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dúvidas Frequentes (FAQ) - Vetorial Contabilidade{% endblock %}
+{% block description %}Respostas para as perguntas mais frequentes sobre contabilidade, abertura de empresa, troca de contador, planos e serviços da Vetorial Contabilidade.{% endblock %}
+{% block canonical %}/faq/{% endblock %}
+
+{% block extra_css %}
+<style>
+    .faq-hero {
+        background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
+        padding: 100px 0 60px; text-align: center;
+    }
+    .faq-hero h1 { color: #fff; font-size: 2.8rem; font-weight: 800; margin-bottom: 1rem; }
+    .faq-hero p  { color: rgba(255,255,255,.85); font-size: 1.15rem; max-width: 600px; margin: 0 auto; }
+
+    /* Busca */
+    .faq-search { padding: 0; margin-top: -30px; position: relative; z-index: 10; }
+    .faq-search-box {
+        max-width: 600px; margin: 0 auto; background: #fff;
+        border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.1);
+        padding: 6px;
+    }
+    .faq-search-box .form-control {
+        border: none; font-size: 1.05rem; padding: 14px 20px;
+    }
+    .faq-search-box .form-control:focus { box-shadow: none; }
+
+    /* Categorias */
+    .faq-cats { padding: 60px 0 20px; background: #fff; }
+    .cat-btn {
+        display: inline-block; padding: 8px 20px; border-radius: 20px;
+        border: 2px solid #e7e7e7; background: #fff; color: #4b5563;
+        font-weight: 600; font-size: .9rem; cursor: pointer;
+        transition: all .3s ease; margin: 4px; text-decoration: none;
+    }
+    .cat-btn:hover, .cat-btn.active { background: #0c63d1; color: #fff; border-color: #0c63d1; }
+
+    /* FAQ List */
+    .faq-list { padding: 20px 0 80px; background: #fff; }
+    .faq-item {
+        border: 1px solid #e7e7e7; border-radius: 12px;
+        margin-bottom: 12px; overflow: hidden;
+        transition: all .3s ease;
+    }
+    .faq-item:hover { border-color: #0c63d1; }
+    .faq-item.open { border-color: #0c63d1; box-shadow: 0 4px 12px rgba(12,99,209,.1); }
+    .faq-question {
+        background: transparent; border: 0; width: 100%; text-align: left;
+        padding: 18px 20px; display: flex; justify-content: space-between;
+        align-items: center; cursor: pointer; font-weight: 600;
+        color: #1f2937; font-size: 1rem;
+    }
+    .faq-question:hover { color: #0c63d1; }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+    .faq-answer-content { padding: 0 20px 18px; color: #6b7280; line-height: 1.7; }
+    .faq-icon {
+        display: inline-flex; align-items: center;
+        transition: transform .25s ease; color: #0c63d1;
+    }
+    .faq-item.open .faq-icon { transform: rotate(180deg); }
+
+    /* Não encontrou */
+    .faq-contact { padding: 80px 0; background: #ebeef1; }
+    .faq-contact-card {
+        background: #fff; border-radius: 16px; padding: 48px;
+        text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.06);
+        max-width: 600px; margin: 0 auto;
+    }
+    .faq-contact-card h2 { font-weight: 700; margin-bottom: .5rem; }
+    .faq-contact-card p  { color: #6b7280; margin-bottom: 2rem; }
+
+    /* CTA */
+    .faq-cta {
+        background: linear-gradient(135deg, #0c63d1,#0a4fa3);
+        padding: 80px 0; text-align: center;
+    }
+    .faq-cta h2 { color: #fff; font-size: 2.2rem; font-weight: 700; margin-bottom: 1rem; }
+    .faq-cta p  { color: rgba(255,255,255,.85); max-width: 600px; margin: 0 auto 2rem; font-size: 1.1rem; }
+    .btn-cta-green {
+        background: #3ef47c; color: #1f2937; border: none;
+        padding: 14px 40px; border-radius: 10px; font-weight: 700;
+        font-size: 1.05rem; text-decoration: none; display: inline-block;
+        transition: all .3s ease;
+    }
+    .btn-cta-green:hover { background: #2ed66b; transform: translateY(-2px); color: #1f2937; }
+    .btn-cta-outline {
+        border: 2px solid #fff; color: #fff; background: transparent;
+        padding: 12px 40px; border-radius: 10px; font-weight: 600;
+        text-decoration: none; display: inline-block; transition: all .3s ease;
+    }
+    .btn-cta-outline:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+    @media (max-width: 768px) { .faq-hero h1 { font-size: 2rem; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="faq-hero">
+    <div class="container">
+        <h1>Dúvidas Frequentes</h1>
+        <p>Encontre respostas rápidas para as perguntas mais comuns sobre nossos serviços de contabilidade.</p>
+    </div>
+</section>
+
+<!-- Busca -->
+<section class="faq-search">
+    <div class="container">
+        <div class="faq-search-box">
+            <input type="text" class="form-control" id="faqSearchInput" placeholder="Buscar pergunta..." oninput="filtrarFAQ()">
+        </div>
+    </div>
+</section>
+
+<!-- FAQ dinâmico do banco de dados -->
+{% if duvidas %}
+<section class="faq-list">
+    <div class="container">
+        <div style="max-width:850px;margin:0 auto;">
+            {% for duvida in duvidas %}
+            <div class="faq-item" data-question="{{ duvida.titulo|lower }}">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>{{ duvida.titulo }}</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">{{ duvida.descricao|linebreaks }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- FAQ estático (complementar) -->
+<section class="faq-list" style="padding-top:0;">
+    <div class="container">
+        <div style="max-width:850px;margin:0 auto;">
+            {% if not duvidas %}
+            <div class="text-center mb-4">
+                <h2 class="display-6 fw-bold">Perguntas Frequentes</h2>
+            </div>
+            {% endif %}
+
+            <div class="faq-item" data-question="como abrir uma empresa com a vetorial">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Como faço para abrir minha empresa com a Vetorial?</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer"><div class="faq-answer-content">O processo é simples e 100% online. Basta entrar em contato conosco pelo WhatsApp ou formulário, enviar os documentos necessários (RG, CPF, comprovante de endereço) e nós cuidamos de toda a burocracia. Em poucos dias, seu CNPJ estará ativo.</div></div>
+            </div>
+
+            <div class="faq-item" data-question="quanto tempo para abrir empresa cnpj">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Quanto tempo leva para abrir minha empresa?</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer"><div class="faq-answer-content">O prazo médio é de 7 a 15 dias úteis, dependendo do tipo de empresa e da cidade. Em alguns casos, conseguimos finalizar em menos de uma semana.</div></div>
+            </div>
+
+            <div class="faq-item" data-question="trocar de contador migrar contabilidade">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Como funciona a troca de contador?</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer"><div class="faq-answer-content">A migração é totalmente gerenciada por nós. Fazemos o diagnóstico da sua situação atual, solicitamos os documentos ao escritório anterior e realizamos a transferência completa sem interrupção dos serviços contábeis. Você não precisa se preocupar com nada.</div></div>
+            </div>
+
+            <div class="faq-item" data-question="contabilidade online é segura confiável">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Contabilidade online é segura?</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer"><div class="faq-answer-content">Sim! A Vetorial utiliza criptografia de dados, servidores seguros e segue todas as normas regulatórias do CRC (Conselho Regional de Contabilidade). Seus documentos e informações financeiras são tratados com o máximo sigilo.</div></div>
+            </div>
+
+            <div class="faq-item" data-question="preciso ir ao escritório presencial">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Preciso ir presencialmente ao escritório?</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer"><div class="faq-answer-content">Não! Todos os nossos processos são 100% online. Documentos são enviados digitalmente, reuniões são feitas por videoconferência e o suporte é via WhatsApp, e-mail ou telefone.</div></div>
+            </div>
+
+            <div class="faq-item" data-question="mei precisa de contador contabilidade">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>MEI precisa de contador?</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer"><div class="faq-answer-content">Legalmente, o MEI não é obrigado a ter um contador. No entanto, contar com suporte contábil ajuda a evitar erros na declaração anual (DASN-SIMEI), manter as obrigações em dia e saber quando é hora de migrar para ME, aproveitando benefícios fiscais.</div></div>
+            </div>
+
+            <div class="faq-item" data-question="cancelar plano contrato fidelidade">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Posso cancelar meu plano a qualquer momento?</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer"><div class="faq-answer-content">Sim! Não trabalhamos com fidelidade nem cobramos multa de cancelamento. Acreditamos que a qualidade do nosso serviço é o que mantém nossos clientes conosco.</div></div>
+            </div>
+
+            <div class="faq-item" data-question="qual regime tributário simples nacional lucro presumido">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Qual o melhor regime tributário para minha empresa?</span>
+                    <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer"><div class="faq-answer-content">Depende do faturamento, tipo de atividade e número de funcionários. Na Vetorial, fazemos uma análise detalhada do seu caso e recomendamos o regime mais vantajoso — seja Simples Nacional, Lucro Presumido ou Lucro Real — para que você pague menos impostos legalmente.</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Não encontrou sua dúvida? -->
+<section class="faq-contact">
+    <div class="container">
+        <div class="faq-contact-card">
+            <div style="font-size:3rem;margin-bottom:1rem;">💬</div>
+            <h2>Não encontrou sua resposta?</h2>
+            <p>Nossa equipe de especialistas está pronta para esclarecer qualquer dúvida sobre contabilidade e nossos serviços.</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="https://wa.me/551131642284?text=Olá! Tenho uma dúvida sobre os serviços da Vetorial." class="btn-cta-green" style="border:none;">
+                    <i class="fab fa-whatsapp me-2"></i>Perguntar no WhatsApp
+                </a>
+                <a href="/contato/" class="btn-cta-outline" style="border-color:#0c63d1;color:#0c63d1;">
+                    Ir para Contato
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="faq-cta">
+    <div class="container">
+        <h2>Pronto para simplificar sua contabilidade?</h2>
+        <p>Mais de 7.000 empresas já confiam na Vetorial. Junte-se a elas e descubra como é fácil ter uma contabilidade de verdade.</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="/quanto-custa/" class="btn-cta-green">Ver planos e preços <i class="fas fa-arrow-right ms-2"></i></a>
+            <a href="https://wa.me/551131642284" target="_blank" class="btn-cta-outline">Falar com especialista</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// FAQ Toggle
+function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const answer = item.querySelector('.faq-answer');
+    const isOpen = item.classList.contains('open');
+    // Fechar todos
+    document.querySelectorAll('.faq-item.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.faq-answer').style.maxHeight = null;
+    });
+    if (!isOpen) {
+        item.classList.add('open');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+}
+
+// Filtro de busca
+function filtrarFAQ() {
+    const query = document.getElementById('faqSearchInput').value.toLowerCase().trim();
+    document.querySelectorAll('.faq-item').forEach(item => {
+        const question = item.querySelector('.faq-question span:first-child').textContent.toLowerCase();
+        const dataQ = item.getAttribute('data-question') || '';
+        if (question.includes(query) || dataQ.includes(query)) {
+            item.style.display = '';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %}

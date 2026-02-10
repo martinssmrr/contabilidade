@@ -4,6 +4,9 @@ Allow: /
 # Sitemap
 Sitemap: https://vetorialcontabilidade.com.br/sitemap.xml
 
+# RSS Feed
+Allow: /blog/feed/
+
 # Diretórios permitidos
 Allow: /blog/
 Allow: /services/
@@ -15,6 +18,7 @@ Disallow: /admin/
 Disallow: /dashboard/
 Disallow: /ckeditor5/
 Disallow: /media/uploads/
+Disallow: /blog/load-more/
 
 # Arquivos bloqueados
 Disallow: /*.json$

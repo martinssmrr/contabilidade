@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gestão Contábil Completa - Vetorial Contabilidade{% endblock %}
+{% block description %}Gestão contábil completa para sua empresa: fiscal, trabalhista, tributária e financeira. Conte com um gerente de conta dedicado e tecnologia de ponta.{% endblock %}
+{% block canonical %}/gestao-contabil/{% endblock %}
+
+{% block extra_css %}
+<style>
+    .gc-hero {
+        background: linear-gradient(135deg, rgba(12,99,209,.85) 0%, rgba(10,79,163,.70) 100%), url('{% static "img/abrirherosection.webp" %}');
+        background-size: cover; background-position: center;
+        padding: 100px 0 70px;
+    }
+    .gc-hero h1 { color: #fff; font-size: 2.8rem; font-weight: 800; margin-bottom: 1rem; }
+    .gc-hero p  { color: rgba(255,255,255,.85); font-size: 1.15rem; max-width: 600px; }
+    .gc-hero .btn-hero {
+        background: #3ef47c; color: #1f2937; border: none;
+        padding: 14px 36px; border-radius: 10px; font-weight: 700;
+        text-decoration: none; display: inline-block; transition: all .3s ease;
+    }
+    .gc-hero .btn-hero:hover { background: #2ed66b; transform: translateY(-2px); color: #1f2937; }
+    .gc-hero .btn-hero-outline {
+        border: 2px solid #fff; color: #fff; background: transparent;
+        padding: 12px 36px; border-radius: 10px; font-weight: 600;
+        text-decoration: none; display: inline-block; transition: all .3s ease;
+    }
+    .gc-hero .btn-hero-outline:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+    /* O que inclui */
+    .gc-includes { padding: 80px 0; background: #fff; }
+    .gc-inc-card {
+        text-align: center; padding: 36px 24px;
+        border-radius: 14px; border: 1px solid #e7e7e7;
+        height: 100%; transition: all .3s ease;
+    }
+    .gc-inc-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,.08); border-color: transparent; }
+    .gc-inc-icon {
+        width: 64px; height: 64px; border-radius: 14px;
+        background: linear-gradient(135deg,#3ef47c,#0c63d1);
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 18px;
+    }
+    .gc-inc-icon i { font-size: 1.4rem; color: #fff; }
+    .gc-inc-card h3 { font-size: 1.1rem; font-weight: 700; color: #1f2937; margin-bottom: .4rem; }
+    .gc-inc-card p  { color: #6b7280; font-size: .9rem; line-height: 1.6; }
+
+    /* Como funciona */
+    .gc-steps { padding: 80px 0; background: #ebeef1; }
+    .step-num {
+        width: 48px; height: 48px; border-radius: 50%;
+        background: #0c63d1; color: #fff; font-weight: 800; font-size: 1.2rem;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 16px;
+    }
+
+    /* Diferenciais */
+    .gc-diff { padding: 80px 0; background: #fff; }
+    .diff-item {
+        display: flex; align-items: flex-start; gap: 16px;
+        padding: 20px; background: #f9fafb; border-radius: 12px;
+        margin-bottom: 16px; transition: transform .3s ease;
+    }
+    .diff-item:hover { transform: translateX(5px); }
+    .diff-icon {
+        min-width: 44px; height: 44px; border-radius: 10px;
+        background: linear-gradient(135deg,#3ef47c,#0c63d1);
+        display: flex; align-items: center; justify-content: center;
+    }
+    .diff-icon i { color: #fff; font-size: 1rem; }
+
+    /* CTA */
+    .gc-cta {
+        background: linear-gradient(135deg, #0c63d1,#0a4fa3);
+        padding: 80px 0; text-align: center;
+    }
+    .gc-cta h2 { color: #fff; font-size: 2.2rem; font-weight: 700; margin-bottom: 1rem; }
+    .gc-cta p  { color: rgba(255,255,255,.85); max-width: 600px; margin: 0 auto 2rem; font-size: 1.1rem; }
+    .btn-cta-green {
+        background: #3ef47c; color: #1f2937; border: none;
+        padding: 14px 40px; border-radius: 10px; font-weight: 700;
+        font-size: 1.05rem; text-decoration: none; display: inline-block;
+        transition: all .3s ease;
+    }
+    .btn-cta-green:hover { background: #2ed66b; transform: translateY(-2px); color: #1f2937; }
+
+    @media (max-width: 768px) {
+        .gc-hero h1 { font-size: 2rem; }
+        .gc-hero { padding: 80px 0 50px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="gc-hero">
+    <div class="container">
+        <div class="row align-items-center" style="min-height: 60vh;">
+            <div class="col-lg-7">
+                <h1>Gestão Contábil Completa para sua empresa</h1>
+                <p class="mb-4">Tenha toda a contabilidade da sua empresa em dia: fiscal, trabalhista, tributária e societária — com um gerente de conta dedicado e tecnologia que simplifica tudo.</p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="https://wa.me/551131642284?text=Olá! Gostaria de saber mais sobre a Gestão Contábil Completa." class="btn-hero">Quero conhecer <i class="fas fa-arrow-right ms-2"></i></a>
+                    <a href="/quanto-custa/" class="btn-hero-outline">Ver planos e preços</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- O que está incluso -->
+<section class="gc-includes">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Tudo o que sua empresa precisa em um só lugar</h2>
+            <p class="text-muted" style="max-width:650px;margin:0 auto;">Nossa gestão contábil cobre todas as áreas essenciais para manter seu negócio regularizado e em crescimento.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="gc-inc-card">
+                    <div class="gc-inc-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                    <h3>Contabilidade Fiscal</h3>
+                    <p>Apuração de impostos (Simples, Lucro Presumido e Real), escrituração fiscal e entrega de todas as obrigações acessórias.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="gc-inc-card">
+                    <div class="gc-inc-icon"><i class="fas fa-users-cog"></i></div>
+                    <h3>Departamento Pessoal</h3>
+                    <p>Folha de pagamento, admissões, rescisões, férias, 13º, eSocial e todas as rotinas trabalhistas.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="gc-inc-card">
+                    <div class="gc-inc-icon"><i class="fas fa-balance-scale"></i></div>
+                    <h3>Planejamento Tributário</h3>
+                    <p>Análise do melhor regime tributário, simulações e estratégias para reduzir legalmente a carga de impostos.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="gc-inc-card">
+                    <div class="gc-inc-icon"><i class="fas fa-chart-pie"></i></div>
+                    <h3>Relatórios Gerenciais</h3>
+                    <p>Balanço patrimonial, DRE, fluxo de caixa e indicadores financeiros para tomada de decisão estratégica.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="gc-inc-card">
+                    <div class="gc-inc-icon"><i class="fas fa-file-alt"></i></div>
+                    <h3>Emissão de Notas Fiscais</h3>
+                    <p>Sistema integrado para emissão de NF-e, NFS-e e NFC-e de forma rápida e descomplicada.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="gc-inc-card">
+                    <div class="gc-inc-icon"><i class="fas fa-handshake"></i></div>
+                    <h3>Gerente de Conta Dedicado</h3>
+                    <p>Profissional exclusivo que acompanha sua empresa mês a mês e oferece consultoria personalizada.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="gc-inc-card">
+                    <div class="gc-inc-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Compliance & Regularização</h3>
+                    <p>Monitoramento constante para garantir que sua empresa esteja sempre em conformidade com a legislação.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="gc-inc-card">
+                    <div class="gc-inc-icon"><i class="fas fa-laptop"></i></div>
+                    <h3>Plataforma Online</h3>
+                    <p>Acesso 24h a documentos, relatórios, guias e indicadores financeiros pelo painel do cliente.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Como funciona -->
+<section class="gc-steps">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Como funciona na prática?</h2>
+            <p class="text-muted">Um processo simples e organizado para você ter tranquilidade contábil.</p>
+        </div>
+        <div class="row g-4 text-center">
+            <div class="col-md-3">
+                <div class="step-num">1</div>
+                <h5 class="fw-bold mb-2">Diagnóstico</h5>
+                <p class="text-muted small">Analisamos a situação atual da sua empresa e identificamos oportunidades de melhoria.</p>
+            </div>
+            <div class="col-md-3">
+                <div class="step-num">2</div>
+                <h5 class="fw-bold mb-2">Onboarding</h5>
+                <p class="text-muted small">Configuramos tudo na plataforma e integramos seus documentos ao nosso sistema.</p>
+            </div>
+            <div class="col-md-3">
+                <div class="step-num">3</div>
+                <h5 class="fw-bold mb-2">Gestão Mensal</h5>
+                <p class="text-muted small">Cuidamos de toda a rotina contábil, fiscal e trabalhista mês a mês.</p>
+            </div>
+            <div class="col-md-3">
+                <div class="step-num">4</div>
+                <h5 class="fw-bold mb-2">Consultoria</h5>
+                <p class="text-muted small">Seu gerente de conta entrega relatórios e orientações para o crescimento do negócio.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Diferenciais -->
+<section class="gc-diff">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5">
+                <h2 class="display-6 fw-bold mb-3">Por que a Vetorial é diferente?</h2>
+                <p class="text-muted">Combinamos expertise contábil com tecnologia e atendimento humanizado para entregar resultados reais.</p>
+            </div>
+            <div class="col-lg-7">
+                <div class="diff-item">
+                    <div class="diff-icon"><i class="fas fa-headset"></i></div>
+                    <div>
+                        <h5 class="fw-bold mb-1">Suporte Humanizado</h5>
+                        <p class="text-muted mb-0 small">Nada de robôs! Você fala diretamente com contadores qualificados que entendem o seu negócio.</p>
+                    </div>
+                </div>
+                <div class="diff-item">
+                    <div class="diff-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <div>
+                        <h5 class="fw-bold mb-1">Atendimento Nacional</h5>
+                        <p class="text-muted mb-0 small">Presente em mais de 5.000 cidades brasileiras. 100% online, de qualquer lugar.</p>
+                    </div>
+                </div>
+                <div class="diff-item">
+                    <div class="diff-icon"><i class="fas fa-piggy-bank"></i></div>
+                    <div>
+                        <h5 class="fw-bold mb-1">Economia Real</h5>
+                        <p class="text-muted mb-0 small">Planejamento tributário inteligente que reduz impostos e aumenta seus lucros.</p>
+                    </div>
+                </div>
+                <div class="diff-item">
+                    <div class="diff-icon"><i class="fas fa-clock"></i></div>
+                    <div>
+                        <h5 class="fw-bold mb-1">Agilidade</h5>
+                        <p class="text-muted mb-0 small">Processos automatizados que eliminam burocracia e entregam resultados mais rápido.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="gc-cta">
+    <div class="container">
+        <h2>Simplifique sua contabilidade agora</h2>
+        <p>Chega de preocupações com impostos, prazos e obrigações. A Vetorial cuida de tudo para que você foque no que realmente importa: o seu negócio.</p>
+        <a href="https://wa.me/551131642284?text=Olá! Quero saber mais sobre a Gestão Contábil Completa da Vetorial." class="btn-cta-green">Falar com um especialista <i class="fas fa-arrow-right ms-2"></i></a>
+    </div>
+</section>
+{% endblock %}

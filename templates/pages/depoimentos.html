@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Depoimentos dos Clientes - Vetorial Contabilidade{% endblock %}
+{% block description %}Veja o que nossos clientes dizem sobre a Vetorial Contabilidade. Depoimentos reais de empreendedores satisfeitos com nosso atendimento e serviços contábeis.{% endblock %}
+{% block canonical %}/depoimentos/{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero */
+    .dep-hero {
+        background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
+        padding: 100px 0 60px;
+        text-align: center;
+    }
+    .dep-hero h1 { color: #fff; font-size: 2.8rem; font-weight: 800; margin-bottom: 1rem; }
+    .dep-hero p  { color: rgba(255,255,255,.85); font-size: 1.2rem; max-width: 650px; margin: 0 auto; }
+
+    /* Stats */
+    .stats-bar { background: #ebeef1; padding: 40px 0; }
+    .stat-item { text-align: center; }
+    .stat-number { font-size: 2.5rem; font-weight: 800; color: #0c63d1; }
+    .stat-label  { color: #6b7280; font-size: .95rem; }
+
+    /* Grid de Depoimentos */
+    .dep-grid { padding: 80px 0; background: #fff; }
+    .dep-card {
+        background: #fff;
+        border: 1px solid #e7e7e7;
+        border-radius: 16px;
+        padding: 32px;
+        height: 100%;
+        position: relative;
+        transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .dep-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0,0,0,.08);
+    }
+    .dep-card::before {
+        content: '\201C';
+        font-size: 5rem;
+        color: rgba(12,99,209,.1);
+        position: absolute;
+        top: 10px; left: 20px;
+        font-family: Georgia, serif;
+        line-height: 1;
+    }
+    .dep-text {
+        font-style: italic;
+        color: #4b5563;
+        line-height: 1.7;
+        margin-bottom: 24px;
+        position: relative;
+        z-index: 1;
+    }
+    .dep-author {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .dep-avatar {
+        width: 56px; height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: linear-gradient(135deg,#3ef47c,#0c63d1);
+        display: flex; align-items: center; justify-content: center;
+    }
+    .dep-avatar i { color: #fff; font-size: 1.4rem; }
+    .dep-avatar img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
+    .dep-name { font-weight: 700; color: #1f2937; }
+    .dep-role { font-size: .85rem; color: #6b7280; }
+
+    /* Stars */
+    .dep-stars { color: #f59e0b; margin-bottom: 16px; position: relative; z-index: 1; }
+
+    /* CTA */
+    .dep-cta {
+        background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
+        padding: 80px 0;
+        text-align: center;
+    }
+    .dep-cta h2 { color: #fff; font-size: 2.2rem; font-weight: 700; margin-bottom: 1rem; }
+    .dep-cta p  { color: rgba(255,255,255,.85); max-width: 600px; margin: 0 auto 2rem; font-size: 1.1rem; }
+    .btn-cta-green {
+        background: #3ef47c; color: #1f2937; border: none;
+        padding: 14px 40px; border-radius: 10px; font-weight: 700;
+        font-size: 1.05rem; text-decoration: none; display: inline-block;
+        transition: all .3s ease;
+    }
+    .btn-cta-green:hover { background: #2ed66b; transform: translateY(-2px); color: #1f2937; }
+
+    @media (max-width: 768px) {
+        .dep-hero h1 { font-size: 2rem; }
+        .stat-number { font-size: 2rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="dep-hero">
+    <div class="container">
+        <h1>O que nossos clientes dizem</h1>
+        <p>Histórias reais de empreendedores que transformaram sua contabilidade com a Vetorial. Sua empresa pode ser a próxima!</p>
+    </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="stats-bar">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">7.000+</div>
+                    <div class="stat-label">Empresas atendidas</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">97,7%</div>
+                    <div class="stat-label">Satisfação dos clientes</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">8+</div>
+                    <div class="stat-label">Anos de experiência</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">5.000+</div>
+                    <div class="stat-label">Cidades atendidas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Grid de Depoimentos -->
+<section class="dep-grid">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Depoimentos Reais</h2>
+            <p class="text-muted" style="max-width:600px;margin:0 auto;">Cada história é uma prova do nosso compromisso com a excelência e o sucesso dos nossos clientes.</p>
+        </div>
+        <div class="row g-4">
+            {% for dep in testimonials %}
+            <div class="col-lg-4 col-md-6">
+                <article class="dep-card">
+                    <div class="dep-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="dep-text">{{ dep.content }}</p>
+                    <div class="dep-author">
+                        <div class="dep-avatar">
+                            {% if dep.photo %}
+                                <img src="{{ dep.photo.url }}" alt="{{ dep.name }}">
+                            {% else %}
+                                <i class="fas fa-user"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div class="dep-name">{{ dep.name }}</div>
+                            <div class="dep-role">{{ dep.position }}</div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            {% empty %}
+            <!-- Depoimentos estáticos de fallback -->
+            <div class="col-lg-4 col-md-6">
+                <article class="dep-card">
+                    <div class="dep-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="dep-text">"A Vetorial simplificou toda a minha contabilidade. Atendimento rápido, plataforma intuitiva e zero burocracia. Recomendo para qualquer empreendedor!"</p>
+                    <div class="dep-author">
+                        <div class="dep-avatar"><i class="fas fa-user"></i></div>
+                        <div><div class="dep-name">Carlos Teodoro</div><div class="dep-role">Empresário - São Paulo/SP</div></div>
+                    </div>
+                </article>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <article class="dep-card">
+                    <div class="dep-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="dep-text">"Troquei de contador e foi a melhor decisão. A equipe da Vetorial é extremamente profissional e proativa. Meus impostos reduziram significativamente."</p>
+                    <div class="dep-author">
+                        <div class="dep-avatar"><i class="fas fa-user"></i></div>
+                        <div><div class="dep-name">Rafael Antunes</div><div class="dep-role">Desenvolvedor - Belo Horizonte/MG</div></div>
+                    </div>
+                </article>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <article class="dep-card">
+                    <div class="dep-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="dep-text">"Abri minha empresa com a Vetorial em tempo recorde. Todo o processo foi online e transparente. Profissionais de primeiro nível!"</p>
+                    <div class="dep-author">
+                        <div class="dep-avatar"><i class="fas fa-user"></i></div>
+                        <div><div class="dep-name">Juliana Gonçalves</div><div class="dep-role">Médica - Rio de Janeiro/RJ</div></div>
+                    </div>
+                </article>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <article class="dep-card">
+                    <div class="dep-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="dep-text">"Ter um gerente de conta dedicado faz toda a diferença. Sempre que preciso de algo, a resposta é rápida e assertiva. Contabilidade como deveria ser."</p>
+                    <div class="dep-author">
+                        <div class="dep-avatar"><i class="fas fa-user"></i></div>
+                        <div><div class="dep-name">Maria Júlia Paes</div><div class="dep-role">Arquiteta - Curitiba/PR</div></div>
+                    </div>
+                </article>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <article class="dep-card">
+                    <div class="dep-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="dep-text">"Deixei de ser MEI com a ajuda da Vetorial e o processo foi muito mais simples do que eu imaginava. Suporte incrível do início ao fim!"</p>
+                    <div class="dep-author">
+                        <div class="dep-avatar"><i class="fas fa-user"></i></div>
+                        <div><div class="dep-name">Thiago Furlan</div><div class="dep-role">Consultor de TI - Florianópolis/SC</div></div>
+                    </div>
+                </article>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <article class="dep-card">
+                    <div class="dep-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="dep-text">"A plataforma online é fantástica! Consigo acompanhar tudo em tempo real, emitir notas fiscais e ter acesso a relatórios completos sem sair de casa."</p>
+                    <div class="dep-author">
+                        <div class="dep-avatar"><i class="fas fa-user"></i></div>
+                        <div><div class="dep-name">Fernanda Costa</div><div class="dep-role">E-commerce - Porto Alegre/RS</div></div>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="dep-cta">
+    <div class="container">
+        <h2>Faça parte dos nossos casos de sucesso</h2>
+        <p>Mais de 7.000 empresas já confiam na Vetorial. Venha descobrir por que somos referência em contabilidade online no Brasil.</p>
+        <a href="https://wa.me/551131642284?text=Olá! Vi os depoimentos no site e gostaria de saber mais sobre os serviços da Vetorial." class="btn-cta-green">Quero ser Vetorial <i class="fas fa-arrow-right ms-2"></i></a>
+    </div>
+</section>
+{% endblock %}

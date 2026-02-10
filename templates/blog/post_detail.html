@@ -1,18 +1,46 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load blog_tags %}
 
-{% block title %}{{ post.title }} - Vetorial Contabilidade{% endblock %}
+{% block title %}{{ post.seo_title }} - Vetorial Contabilidade{% endblock %}
 
-{% block description %}{{ post.excerpt|default:post.content|striptags|truncatewords:30 }}{% endblock %}
+{% block description %}{{ post.seo_description }}{% endblock %}
+
+{% block keywords %}{{ post.seo_keywords }}{% endblock %}
+
+{% block canonical %}{{ post.get_absolute_url }}{% endblock %}
+
+{% block og_url %}{{ post.get_absolute_url }}{% endblock %}
+{% block og_title %}{{ post.seo_title }}{% endblock %}
+{% block og_description %}{{ post.seo_description }}{% endblock %}
+{% block og_image %}{% if post.featured_image %}{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.webp' %}{% endif %}{% endblock %}
+
+{% block twitter_url %}{{ post.get_absolute_url }}{% endblock %}
+{% block twitter_title %}{{ post.seo_title }}{% endblock %}
+{% block twitter_description %}{{ post.seo_description }}{% endblock %}
+{% block twitter_image %}{% if post.featured_image %}{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.webp' %}{% endif %}{% endblock %}
 
 {% block extra_head %}
 {% load static %}
+<!-- Open Graph article-specific meta -->
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="{{ post.created_at|date:'c' }}">
+<meta property="article:modified_time" content="{{ post.updated_at|date:'c' }}">
+<meta property="article:author" content="{{ post.author.get_full_name|default:'Vetorial Contabilidade' }}">
+<meta property="article:section" content="{{ post.category.name|default:'Contabilidade' }}">
+{% if post.seo_keywords %}<meta property="article:tag" content="{{ post.seo_keywords }}">{% endif %}
+
+{% if post.canonical_url %}<link rel="canonical" href="{{ post.canonical_url }}">{% endif %}
+
+<link rel="alternate" type="application/rss+xml" title="Blog Vetorial Contabilidade - RSS Feed" href="{% url 'blog:rss_feed' %}">
+
 <!-- Schema.org JSON-LD para BlogPosting -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "{{ post.title|escapejs }}",
+  "headline": "{{ post.seo_title|escapejs }}",
+  "name": "{{ post.seo_title|escapejs }}",
   "image": "{% if post.featured_image %}{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.webp' %}{% endif %}",
   "datePublished": "{{ post.created_at|date:'c' }}",
   "dateModified": "{{ post.updated_at|date:'c' }}",
@@ -23,38 +51,62 @@
   "publisher": {
     "@type": "Organization",
     "name": "Vetorial Contabilidade",
+    "url": "https://vetorialcontabilidade.com.br",
     "logo": {
       "@type": "ImageObject",
       "url": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.webp' %}"
     }
   },
-  "description": "{{ post.excerpt|default:post.content|striptags|truncatewords:30|escapejs }}",
-  "articleBody": {{ post.content|striptags|escapejs|safe }},
+  "description": "{{ post.seo_description|escapejs }}",
   "articleSection": "{{ post.category.name|default:'Contabilidade' }}",
-  "keywords": "contabilidade, {{ post.category.name|default:'gestão empresarial' }}{% if post.title %}, {{ post.title }}{% endif %}",
+  "keywords": "{{ post.seo_keywords|escapejs }}",
+  "wordCount": "{{ post.content|strip_html|wordcount }}",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "{{ request.scheme }}://{{ request.get_host }}{{ request.path }}"
-  }
+    "@id": "{{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}"
+  },
+  "inLanguage": "pt-BR"
 }
 </script>
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="article">
-<meta property="og:title" content="{{ post.title }}">
-<meta property="og:description" content="{{ post.excerpt|default:post.content|striptags|truncatewords:30 }}">
-{% if post.featured_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}">{% endif %}
-<meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
-<meta property="article:published_time" content="{{ post.created_at|date:'c' }}">
-<meta property="article:modified_time" content="{{ post.updated_at|date:'c' }}">
-<meta property="article:author" content="{{ post.author.get_full_name|default:'Vetorial Contabilidade' }}">
-<meta property="article:section" content="{{ post.category.name|default:'Contabilidade' }}">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ post.title }}">
-<meta name="twitter:description" content="{{ post.excerpt|default:post.content|striptags|truncatewords:30 }}">
-{% if post.featured_image %}<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}">{% endif %}
+<!-- Schema.org BreadcrumbList -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Início",
+      "item": "{{ request.scheme }}://{{ request.get_host }}/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "{{ request.scheme }}://{{ request.get_host }}/blog/"
+    },
+    {% if post.category %}{
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ post.category.name }}",
+      "item": "{{ request.scheme }}://{{ request.get_host }}/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "{{ post.seo_title|escapejs }}",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}"
+    }{% else %}{
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ post.seo_title|escapejs }}",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}"
+    }{% endif %}
+  ]
+}
+</script>
 {% endblock %}
 
 {% block extra_css %}
@@ -77,9 +129,8 @@
     /* Header */
     .post-header {
         background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
-        padding: 140px 0 60px;
+        padding: 60px 0;
         margin-bottom: 60px;
-        margin-top: 76px;
     }
     
     .post-header h1 {
@@ -110,10 +161,43 @@
         box-shadow: 0 4px 16px rgba(62, 244, 124, 0.15);
     }
     
+    /* Layout two-column */
+    .post-layout {
+        display: grid;
+        grid-template-columns: 1fr 220px;
+        gap: 2.5rem;
+        align-items: start;
+    }
+
+    .post-sidebar {
+        position: sticky;
+        top: 100px;
+    }
+
+    .cta-sidebar-img {
+        width: 100%;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .cta-sidebar-img:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    }
+
+    @media (max-width: 991px) {
+        .post-layout {
+            grid-template-columns: 1fr;
+        }
+        .post-sidebar {
+            position: relative;
+            top: 0;
+        }
+    }
+
     /* Content */
     .post-content {
-        max-width: 800px;
-        margin: 0 auto;
         font-size: 1.125rem;
         line-height: 1.8;
         color: var(--text-primary);
@@ -250,10 +334,13 @@
 
 {% block content %}
 <!-- Post Header -->
-<header class="post-header">
+<header class="post-header" style="margin-top: 76px;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">
+                {% if post.category %}
+                <span style="display: inline-block; background: rgba(62,244,124,0.2); color: #3ef47c; padding: 4px 16px; border-radius: 20px; font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem;">{{ post.category.name }}</span>
+                {% endif %}
                 <h1>{{ post.title }}</h1>
                 <div class="post-meta">
                     <span>
@@ -269,6 +356,13 @@
                         </svg>
                         {{ post.created_at|date:"d/m/Y" }}
                     </span>
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16" style="vertical-align: text-top;">
+                            <path d="M8 3.5a.5.5 0 0 0-1 0V8a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 7.71V3.5z"/>
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                        </svg>
+                        {{ post.reading_time }} min de leitura
+                    </span>
                 </div>
             </div>
         </div>
@@ -278,31 +372,63 @@
 <!-- Post Content -->
 <article class="pb-5">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <a href="{% url 'blog:post_list' %}" class="back-to-blog">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-                    </svg>
-                    Voltar para o Blog
-                </a>
-                
+        <a href="{% url 'blog:post_list' %}" class="back-to-blog">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+            </svg>
+            Voltar para o Blog
+        </a>
+
+        <div class="post-layout">
+            <!-- Coluna Esquerda: Conteúdo -->
+            <div class="post-main">
                 {% if post.featured_image %}
                 <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="post-featured-image">
                 {% endif %}
-                
+
                 <div class="post-content">
                     {{ post.content|safe }}
                 </div>
-                
+
                 <div class="post-divider"></div>
-                
-                <div class="text-center">
+
+                <!-- Related Posts -->
+                {% if related_posts %}
+                <section class="related-posts" style="margin-top: 2rem;">
+                    <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Artigos Relacionados</h2>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        {% for rpost in related_posts %}
+                        <a href="{{ rpost.get_absolute_url }}" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; background: var(--background-light); border-radius: 10px; padding: 10px; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateX(4px)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
+                            {% if rpost.featured_image %}
+                            <img src="{{ rpost.featured_image.url }}" alt="{{ rpost.title }}" style="width: 72px; height: 72px; object-fit: cover; border-radius: 8px; flex-shrink: 0;">
+                            {% else %}
+                            <div style="width: 72px; height: 72px; background: #e9ecef; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#adb5bd" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/><path d="M10.648 7.646a.5.5 0 0 1 .577-.093L15.002 9.5V14a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-1l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-4.71z"/></svg>
+                            </div>
+                            {% endif %}
+                            <div style="flex: 1; min-width: 0;">
+                                <h3 style="font-size: 0.875rem; font-weight: 600; line-height: 1.35; margin: 0 0 4px 0; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">{{ rpost.title }}</h3>
+                                <span style="font-size: 0.75rem; color: var(--text-secondary);">{{ rpost.created_at|date:"d/m/Y" }} · {{ rpost.reading_time }} min de leitura</span>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </section>
+                {% endif %}
+
+                <div style="text-align: center; margin-top: 2.5rem;">
                     <a href="{% url 'blog:post_list' %}" class="btn btn-primary btn-lg" style="background: var(--primary-color); border: none; border-radius: 10px; padding: 12px 32px; font-weight: 600;">
                         Ver Todos os Posts
                     </a>
                 </div>
             </div>
+
+            <!-- Coluna Direita: CTA Fixo -->
+            <aside class="post-sidebar">
+                <a href="https://wa.me/551131642284?text=Ol%C3%A1!%20Vim%20pelo%20blog%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20servi%C3%A7os%20da%20Vetorial." target="_blank">
+                    <img src="{% static 'img/cta_blog.png' %}" alt="Fale com a Vetorial Contabilidade" class="cta-sidebar-img">
+                </a>
+            </aside>
         </div>
     </div>
 </article>

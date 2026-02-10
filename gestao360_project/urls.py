@@ -23,6 +23,8 @@ from django.views.generic import TemplateView
 from django.contrib.sitemaps.views import sitemap
 from django.http import JsonResponse
 from apps.testimonials.models import Testimonial
+from apps.support.models import Duvida
+from apps.services.models import Plano
 from apps.services.views import calculadora_clt_pj, servicos_view, contabilidade_mei_view
 from apps.blog.sitemaps import StaticViewSitemap, BlogPostSitemap, ServicesSitemap
 
@@ -183,6 +185,35 @@ def render_segmento(request, template_name):
         'planos_comercio': planos_comercio,
     })
 
+# ── Views das novas páginas institucionais ──
+def depoimentos_view(request):
+    from django.shortcuts import render
+    testimonials = Testimonial.objects.filter(is_active=True).order_by('order')
+    return render(request, 'pages/depoimentos.html', {'testimonials': testimonials})
+
+def faq_view(request):
+    from django.shortcuts import render
+    duvidas = Duvida.objects.filter(ativo=True).order_by('ordem')
+    return render(request, 'pages/faq.html', {'duvidas': duvidas})
+
+def quanto_custa_view(request):
+    from django.shortcuts import render
+    planos_servicos = Plano.objects.filter(ativo=True, categoria='servicos').order_by('ordem', 'preco')
+    planos_comercio = Plano.objects.filter(ativo=True, categoria='comercio').order_by('ordem', 'preco')
+    return render(request, 'pages/quanto_custa.html', {
+        'planos_servicos': planos_servicos,
+        'planos_comercio': planos_comercio,
+    })
+
+def contato_view(request):
+    from django.shortcuts import render
+    return render(request, 'pages/contato.html')
+
+def abrir_mei_view(request):
+    from django.shortcuts import render
+    planos_mei = Plano.objects.filter(ativo=True, categoria='mei').order_by('ordem', 'preco')
+    return render(request, 'services/abrir_mei.html', {'planos_mei': planos_mei})
+
 # Configuração dos Sitemaps
 sitemaps = {
     'static': StaticViewSitemap,
@@ -205,7 +236,9 @@ urlpatterns = [
     path("endereco-virtual/", TemplateView.as_view(template_name='services/endereco_virtual.html'), name='endereco_virtual'),
     path("certificado-digital/", TemplateView.as_view(template_name='services/certificado_digital.html'), name='certificado_digital'),
     path("emissor-nota-fiscal/", TemplateView.as_view(template_name='services/emissor_nota_fiscal.html'), name='emissor_nota_fiscal'),
-    path("abrir-mei/", TemplateView.as_view(template_name='services/abrir_mei.html'), name='abrir_mei'),
+    path("abrir-mei/", abrir_mei_view, name='abrir_mei'),
+    path("baixar-mei/", TemplateView.as_view(template_name='services/baixar_mei_form.html'), name='baixar_mei'),
+    path("declaracao-anual-mei/", TemplateView.as_view(template_name='services/declaracao_anual_mei_form.html'), name='declaracao_anual_mei'),
     path("contabilidade-online/", TemplateView.as_view(template_name='services/contabilidade_online.html'), name='contabilidade_online'),
 
     # Segmentos
@@ -218,6 +251,16 @@ urlpatterns = [
     path("segmentos/turismo/", render_segmento, {'template_name': 'segments/turismo.html'}, name='segmentos_turismo'),
     path("segmentos/tecnologia/", render_segmento, {'template_name': 'segments/tecnologia.html'}, name='segmentos_tecnologia'),
     path("segmentos/outros/", TemplateView.as_view(template_name='segments/outros.html'), name='segmentos_outros'),
+
+    # Novas páginas institucionais
+    path('depoimentos/', depoimentos_view, name='depoimentos'),
+    path('trabalhe-conosco/', TemplateView.as_view(template_name='pages/trabalhe_conosco.html'), name='trabalhe_conosco'),
+    path('gestao-contabil/', TemplateView.as_view(template_name='pages/gestao_contabil.html'), name='gestao_contabil'),
+    path('bpo-financeiro/', TemplateView.as_view(template_name='pages/bpo_financeiro.html'), name='bpo_financeiro'),
+    path('regularizacao-empresarial/', TemplateView.as_view(template_name='pages/regularizacao_empresarial.html'), name='regularizacao_empresarial'),
+    path('contato/', contato_view, name='contato'),
+    path('quanto-custa/', quanto_custa_view, name='quanto_custa'),
+    path('faq/', faq_view, name='faq'),
 
     path("obrigado/", TemplateView.as_view(template_name='obrigado.html'), name='obrigado'),
     # Páginas institucionais estáticas

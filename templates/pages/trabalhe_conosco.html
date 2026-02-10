@@ -1,0 +1,350 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Trabalhe Conosco - Vetorial Contabilidade{% endblock %}
+{% block description %}Faça parte da equipe Vetorial Contabilidade. Confira nossas vagas abertas e construa sua carreira em uma das maiores contabilidades online do Brasil.{% endblock %}
+{% block canonical %}/trabalhe-conosco/{% endblock %}
+
+{% block extra_css %}
+<style>
+    .tc-hero {
+        background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
+        padding: 100px 0 60px;
+        text-align: center;
+    }
+    .tc-hero h1 { color: #fff; font-size: 2.8rem; font-weight: 800; margin-bottom: 1rem; }
+    .tc-hero p  { color: rgba(255,255,255,.85); font-size: 1.2rem; max-width: 650px; margin: 0 auto; }
+
+    /* Cultura */
+    .tc-culture { padding: 80px 0; background: #fff; }
+    .culture-card {
+        text-align: center; padding: 40px 24px;
+        border-radius: 14px; border: 1px solid #e7e7e7;
+        height: 100%; transition: all .3s ease;
+    }
+    .culture-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,.08); border-color: transparent; }
+    .culture-icon {
+        width: 72px; height: 72px; border-radius: 50%;
+        background: linear-gradient(135deg,#3ef47c,#0c63d1);
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 20px;
+    }
+    .culture-icon i { font-size: 1.6rem; color: #fff; }
+    .culture-card h3 { font-size: 1.2rem; font-weight: 700; color: #1f2937; margin-bottom: .5rem; }
+    .culture-card p  { color: #6b7280; font-size: .95rem; line-height: 1.6; }
+
+    /* Benefícios */
+    .tc-benefits { padding: 80px 0; background: #ebeef1; }
+    .benefit-item {
+        display: flex; align-items: flex-start; gap: 16px;
+        padding: 20px; background: #fff; border-radius: 12px;
+        margin-bottom: 16px; transition: transform .3s ease;
+    }
+    .benefit-item:hover { transform: translateX(5px); }
+    .benefit-check {
+        min-width: 36px; height: 36px; border-radius: 50%;
+        background: #3ef47c; display: flex; align-items: center; justify-content: center;
+    }
+    .benefit-check i { color: #1f2937; font-size: .9rem; }
+    .benefit-item h4 { font-size: 1rem; font-weight: 700; color: #1f2937; margin-bottom: 2px; }
+    .benefit-item p  { color: #6b7280; font-size: .9rem; margin: 0; }
+
+    /* Vagas */
+    .tc-jobs { padding: 80px 0; background: #fff; }
+    .job-card {
+        border: 1px solid #e7e7e7; border-radius: 14px;
+        padding: 28px; transition: all .3s ease; height: 100%;
+    }
+    .job-card:hover { border-color: #0c63d1; box-shadow: 0 8px 20px rgba(12,99,209,.1); }
+    .job-badge {
+        display: inline-block; background: rgba(62,244,124,.15);
+        color: #059669; font-size: .8rem; font-weight: 600;
+        padding: 4px 12px; border-radius: 20px; margin-bottom: 12px;
+    }
+    .job-card h3 { font-size: 1.15rem; font-weight: 700; color: #1f2937; margin-bottom: .5rem; }
+    .job-card p  { color: #6b7280; font-size: .9rem; line-height: 1.6; margin-bottom: 16px; }
+    .job-tags span {
+        display: inline-block; background: #f3f4f6; color: #4b5563;
+        padding: 4px 10px; border-radius: 6px; font-size: .8rem; margin: 2px;
+    }
+    .btn-apply {
+        background: #0c63d1; color: #fff; border: none;
+        padding: 10px 24px; border-radius: 8px; font-weight: 600;
+        font-size: .9rem; text-decoration: none; display: inline-block;
+        transition: all .3s ease; margin-top: 16px;
+    }
+    .btn-apply:hover { background: #0a4fa3; color: #fff; transform: translateY(-2px); }
+
+    /* Formulário */
+    .tc-form { padding: 80px 0; background: #ebeef1; }
+    .tc-form-card {
+        background: #fff; border-radius: 16px; padding: 48px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.06); max-width: 700px; margin: 0 auto;
+    }
+
+    /* CTA */
+    .tc-cta {
+        background: linear-gradient(135deg, #0c63d1 0%, #0a4fa3 100%);
+        padding: 80px 0; text-align: center;
+    }
+    .tc-cta h2 { color: #fff; font-size: 2.2rem; font-weight: 700; margin-bottom: 1rem; }
+    .tc-cta p  { color: rgba(255,255,255,.85); max-width: 600px; margin: 0 auto 2rem; font-size: 1.1rem; }
+    .btn-cta-green {
+        background: #3ef47c; color: #1f2937; border: none;
+        padding: 14px 40px; border-radius: 10px; font-weight: 700;
+        font-size: 1.05rem; text-decoration: none; display: inline-block;
+        transition: all .3s ease;
+    }
+    .btn-cta-green:hover { background: #2ed66b; transform: translateY(-2px); color: #1f2937; }
+
+    @media (max-width: 768px) {
+        .tc-hero h1 { font-size: 2rem; }
+        .tc-form-card { padding: 28px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="tc-hero">
+    <div class="container">
+        <h1>Trabalhe Conosco</h1>
+        <p>Junte-se a uma equipe apaixonada por simplificar a contabilidade no Brasil. Na Vetorial, seu talento faz a diferença!</p>
+    </div>
+</section>
+
+<!-- Cultura / Valores -->
+<section class="tc-culture">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Nossos Valores</h2>
+            <p class="text-muted" style="max-width:600px;margin:0 auto;">Muito mais que uma empresa de contabilidade — somos um time movido por propósito.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="culture-card">
+                    <div class="culture-icon"><i class="fas fa-rocket"></i></div>
+                    <h3>Inovação</h3>
+                    <p>Usamos tecnologia de ponta para transformar processos contábeis tradicionais em experiências simples e eficientes.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="culture-card">
+                    <div class="culture-icon"><i class="fas fa-users"></i></div>
+                    <h3>Colaboração</h3>
+                    <p>Acreditamos no poder do trabalho em equipe. Cada membro é essencial para entregarmos o nosso melhor.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="culture-card">
+                    <div class="culture-icon"><i class="fas fa-heart"></i></div>
+                    <h3>Humanização</h3>
+                    <p>Por trás de cada CNPJ existe uma pessoa. Tratamos cada cliente e colega com empatia e respeito.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="culture-card">
+                    <div class="culture-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Crescimento</h3>
+                    <p>Investimos no seu desenvolvimento profissional. Sua evolução é o combustível do nosso crescimento.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefícios -->
+<section class="tc-benefits">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5">
+                <h2 class="display-6 fw-bold mb-3">Por que trabalhar na Vetorial?</h2>
+                <p class="text-muted">Oferecemos um ambiente que valoriza o equilíbrio entre vida pessoal e profissional, com benefícios reais para o seu dia a dia.</p>
+            </div>
+            <div class="col-lg-7">
+                <div class="benefit-item">
+                    <div class="benefit-check"><i class="fas fa-check"></i></div>
+                    <div>
+                        <h4>Trabalho 100% Remoto</h4>
+                        <p>Trabalhe de qualquer lugar do Brasil com flexibilidade total de horário.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-check"><i class="fas fa-check"></i></div>
+                    <div>
+                        <h4>Plano de Carreira</h4>
+                        <p>Trilhas de desenvolvimento claras com avaliações semestrais e oportunidades de crescimento.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-check"><i class="fas fa-check"></i></div>
+                    <div>
+                        <h4>Capacitação Contínua</h4>
+                        <p>Acesso a cursos, treinamentos e certificações para expandir suas habilidades.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-check"><i class="fas fa-check"></i></div>
+                    <div>
+                        <h4>Ambiente Colaborativo</h4>
+                        <p>Cultura horizontal, feedback constante e um time acolhedor que celebra conquistas juntos.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-check"><i class="fas fa-check"></i></div>
+                    <div>
+                        <h4>Remuneração Competitiva</h4>
+                        <p>Salários compatíveis com o mercado, bônus por performance e benefícios flexíveis.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Vagas Abertas -->
+<section class="tc-jobs">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Vagas Abertas</h2>
+            <p class="text-muted" style="max-width:600px;margin:0 auto;">Confira as oportunidades disponíveis na Vetorial e encontre a vaga ideal para o seu perfil.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="job-card">
+                    <span class="job-badge">Remoto</span>
+                    <h3>Analista Contábil Pleno</h3>
+                    <p>Atendimento a clientes, fechamento de balanços, conciliação e entrega de obrigações acessórias.</p>
+                    <div class="job-tags">
+                        <span>Contabilidade</span>
+                        <span>CRC Ativo</span>
+                        <span>CLT</span>
+                    </div>
+                    <a href="https://wa.me/551131642284?text=Olá! Tenho interesse na vaga de Analista Contábil Pleno." class="btn-apply">Candidatar-se</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="job-card">
+                    <span class="job-badge">Remoto</span>
+                    <h3>Analista Fiscal Júnior</h3>
+                    <p>Apuração de impostos, escrituração fiscal, emissão de guias e suporte em rotinas tributárias.</p>
+                    <div class="job-tags">
+                        <span>Fiscal</span>
+                        <span>Simples Nacional</span>
+                        <span>CLT</span>
+                    </div>
+                    <a href="https://wa.me/551131642284?text=Olá! Tenho interesse na vaga de Analista Fiscal Júnior." class="btn-apply">Candidatar-se</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="job-card">
+                    <span class="job-badge">Remoto</span>
+                    <h3>Assistente de Departamento Pessoal</h3>
+                    <p>Processos de admissão, folha de pagamento, férias e rescisões. Conhecimento em eSocial é diferencial.</p>
+                    <div class="job-tags">
+                        <span>DP</span>
+                        <span>eSocial</span>
+                        <span>CLT</span>
+                    </div>
+                    <a href="https://wa.me/551131642284?text=Olá! Tenho interesse na vaga de Assistente de DP." class="btn-apply">Candidatar-se</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Formulário de Envio de Currículo -->
+<section class="tc-form" id="enviar-curriculo">
+    <div class="container">
+        <div class="tc-form-card">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Não encontrou sua vaga?</h2>
+                <p class="text-muted">Envie seu currículo para nosso banco de talentos. Entraremos em contato quando surgir uma oportunidade compatível.</p>
+            </div>
+            <form id="curriculoForm">
+                <div class="mb-3">
+                    <label for="tcNome" class="form-label fw-semibold">Nome Completo *</label>
+                    <input type="text" class="form-control" id="tcNome" required>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="tcEmail" class="form-label fw-semibold">E-mail *</label>
+                        <input type="email" class="form-control" id="tcEmail" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="tcTelefone" class="form-label fw-semibold">Telefone *</label>
+                        <input type="tel" class="form-control" id="tcTelefone" placeholder="(00) 00000-0000" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="tcArea" class="form-label fw-semibold">Área de Interesse *</label>
+                    <select class="form-select" id="tcArea" required>
+                        <option value="">Selecione...</option>
+                        <option value="contabil">Contábil</option>
+                        <option value="fiscal">Fiscal / Tributário</option>
+                        <option value="dp">Departamento Pessoal</option>
+                        <option value="financeiro">Financeiro</option>
+                        <option value="tecnologia">Tecnologia</option>
+                        <option value="comercial">Comercial</option>
+                        <option value="atendimento">Atendimento ao Cliente</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="tcMensagem" class="form-label fw-semibold">Mensagem / Link do LinkedIn</label>
+                    <textarea class="form-control" id="tcMensagem" rows="3" placeholder="Conte um pouco sobre você ou cole o link do seu LinkedIn..."></textarea>
+                </div>
+                <div class="d-grid">
+                    <button type="button" class="btn-cta-green" onclick="enviarCurriculo()" style="border:none;cursor:pointer;">
+                        <i class="fas fa-paper-plane me-2"></i>Enviar Candidatura
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Final -->
+<section class="tc-cta">
+    <div class="container">
+        <h2>Venha construir o futuro da contabilidade</h2>
+        <p>Na Vetorial, cada profissional tem voz. Junte-se a nós e contribua para uma contabilidade mais humana e tecnológica.</p>
+        <a href="#enviar-curriculo" class="btn-cta-green">Enviar meu currículo <i class="fas fa-arrow-right ms-2"></i></a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function enviarCurriculo() {
+    const nome = document.getElementById('tcNome').value.trim();
+    const email = document.getElementById('tcEmail').value.trim();
+    const telefone = document.getElementById('tcTelefone').value.trim();
+    const area = document.getElementById('tcArea').value;
+    const mensagem = document.getElementById('tcMensagem').value.trim();
+
+    if (!nome || !email || !telefone || !area) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+
+    const msg = `Olá! Gostaria de me candidatar a uma vaga na Vetorial.\n\nNome: ${nome}\nEmail: ${email}\nTelefone: ${telefone}\nÁrea: ${area}\n${mensagem ? 'Mensagem: ' + mensagem : ''}`;
+    const url = `https://wa.me/551131642284?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+}
+
+// Máscara de telefone
+document.addEventListener('DOMContentLoaded', function() {
+    const tel = document.getElementById('tcTelefone');
+    if (tel) {
+        tel.addEventListener('input', function(e) {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length <= 11) {
+                v = v.replace(/^(\d{2})(\d)/g, '($1) $2');
+                v = v.replace(/(\d)(\d{4})$/, '$1-$2');
+            }
+            e.target.value = v;
+        });
+    }
+});
+</script>
+{% endblock %}

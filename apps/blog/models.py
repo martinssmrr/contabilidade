@@ -81,6 +81,39 @@ class Post(models.Model):
         choices=STATUS_CHOICES,
         default='draft'
     )
+    
+    # SEO Fields
+    meta_title = models.CharField(
+        'Meta Title (SEO)',
+        max_length=70,
+        blank=True,
+        help_text='Título para SEO (máx. 70 caracteres). Se vazio, usa o título do post.'
+    )
+    meta_description = models.CharField(
+        'Meta Description (SEO)',
+        max_length=160,
+        blank=True,
+        help_text='Descrição para SEO (máx. 160 caracteres). Se vazio, usa o resumo do post.'
+    )
+    meta_keywords = models.CharField(
+        'Meta Keywords (SEO)',
+        max_length=255,
+        blank=True,
+        help_text='Palavras-chave separadas por vírgula. Ex: contabilidade, MEI, impostos'
+    )
+    focus_keyword = models.CharField(
+        'Palavra-chave Principal (SEO)',
+        max_length=100,
+        blank=True,
+        help_text='Palavra-chave principal para otimização SEO do post.'
+    )
+    canonical_url = models.URLField(
+        'URL Canônica (SEO)',
+        max_length=500,
+        blank=True,
+        help_text='URL canônica personalizada. Se vazio, usa a URL padrão do post.'
+    )
+    
     created_at = models.DateTimeField('Criado em', auto_now_add=True)
     updated_at = models.DateTimeField('Atualizado em', auto_now=True)
     
@@ -115,4 +148,45 @@ class Post(models.Model):
     def get_absolute_url(self):
         """Retorna a URL do post"""
         return reverse('blog:post_detail', kwargs={'slug': self.slug})
+    
+    @property
+    def seo_title(self):
+        """Retorna o meta_title se definido, senão o título do post"""
+        return self.meta_title if self.meta_title else self.title
+    
+    @property
+    def seo_description(self):
+        """Retorna meta_description se definido, senão o excerpt"""
+        if self.meta_description:
+            return self.meta_description
+        if self.excerpt:
+            return self.excerpt[:160]
+        if self.content:
+            import re
+            clean = re.sub('<[^<]+?>', '', self.content)
+            return clean[:160]
+        return ''
+    
+    @property
+    def seo_keywords(self):
+        """Retorna meta_keywords ou gera a partir da categoria"""
+        if self.meta_keywords:
+            return self.meta_keywords
+        keywords = ['contabilidade', 'vetorial contabilidade']
+        if self.category:
+            keywords.append(self.category.name.lower())
+        if self.focus_keyword:
+            keywords.insert(0, self.focus_keyword.lower())
+        return ', '.join(keywords)
+    
+    @property
+    def reading_time(self):
+        """Calcula o tempo estimado de leitura em minutos"""
+        import re
+        if not self.content:
+            return 1
+        clean_content = re.sub('<[^<]+?>', '', self.content)
+        word_count = len(clean_content.split())
+        minutes = max(1, round(word_count / 200))
+        return minutes
 

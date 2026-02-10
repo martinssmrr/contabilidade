@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 from django.http import JsonResponse, FileResponse
+from django.views.decorators.csrf import csrf_exempt
 from .models import ProcessoAbertura, Socio
 from .forms import (
     Etapa1DadosPessoaisForm, Etapa2EnderecoForm, Etapa3DadosEmpresaForm,
@@ -832,3 +833,351 @@ def mei_sucesso_view(request, solicitacao_id):
     }
     
     return render(request, 'services/mei_sucesso.html', context)
+
+
+# ==============================================================
+# BAIXA DO MEI - Fluxo completo (formulário → checkout → sucesso)
+# ==============================================================
+
+@csrf_exempt
+def solicitar_baixa_mei_view(request):
+    """
+    View do formulário de Baixa do MEI.
+    Recebe JSON via fetch, salva a solicitação e retorna URL do checkout.
+    """
+    from .models import SolicitacaoBaixaMEI
+
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Método não permitido'}, status=405)
+
+    try:
+        import json
+        data = json.loads(request.body)
+
+        solicitacao = SolicitacaoBaixaMEI.objects.create(
+            nome_completo=data.get('nome_completo', ''),
+            email=data.get('email', ''),
+            telefone=data.get('telefone', ''),
+            cnpj=data.get('cnpj', ''),
+            cpf=data.get('cpf', ''),
+            motivo=data.get('motivo', ''),
+            observacoes=data.get('observacoes', ''),
+            status='pendente',
+        )
+
+        request.session['solicitacao_baixa_mei_id'] = solicitacao.id
+
+        return JsonResponse({
+            'success': True,
+            'redirect_url': f'/services/baixar-mei/checkout/{solicitacao.id}/'
+        })
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': str(e)}, status=400)
+
+
+def checkout_baixa_mei_view(request, solicitacao_id):
+    """
+    Página de checkout/pagamento para Baixa do MEI.
+    Valor fixo: R$ 129,90
+    """
+    from .models import SolicitacaoBaixaMEI
+    from apps.payments.models import Pagamento
+    import mercadopago
+    from django.conf import settings as django_settings
+
+    solicitacao = get_object_or_404(SolicitacaoBaixaMEI, id=solicitacao_id)
+
+    session_id = request.session.get('solicitacao_baixa_mei_id')
+    if not request.user.is_staff and session_id != solicitacao.id:
+        messages.warning(request, 'Você precisa preencher o formulário para acessar o pagamento.')
+        return redirect('baixar_mei')
+
+    if solicitacao.status == 'pago':
+        messages.info(request, 'Esta solicitação já foi paga.')
+        return redirect('services:baixa_mei_sucesso', solicitacao_id=solicitacao.id)
+
+    # Criar ou recuperar Pagamento
+    if not solicitacao.pagamento:
+        pagamento = Pagamento.objects.create(
+            valor=solicitacao.VALOR_SERVICO,
+            status='pendente',
+            cliente=request.user if request.user.is_authenticated else None,
+            cliente_nome=solicitacao.nome_completo,
+            cliente_email=solicitacao.email,
+            cliente_cpf=solicitacao.cpf,
+        )
+        solicitacao.pagamento = pagamento
+        solicitacao.save()
+    else:
+        pagamento = solicitacao.pagamento
+
+    # Mercado Pago
+    sdk = mercadopago.SDK(django_settings.MERCADO_PAGO_ACCESS_TOKEN)
+    site_url = django_settings.SITE_URL.rstrip('/')
+    notification_url = f"{site_url}/payments/webhook/mercadopago/"
+
+    preference_data = {
+        "items": [{
+            "id": f"BAIXA-MEI-{solicitacao.id}",
+            "title": f"Baixa do MEI - {solicitacao.nome_completo}",
+            "description": f"Serviço de Baixa (Cancelamento) do MEI - CNPJ: {solicitacao.cnpj}",
+            "category_id": "services",
+            "quantity": 1,
+            "currency_id": "BRL",
+            "unit_price": float(solicitacao.VALOR_SERVICO)
+        }],
+        "external_reference": str(pagamento.external_reference),
+        "statement_descriptor": "VETORIAL MEI",
+        "notification_url": notification_url,
+        "payer": {
+            "name": solicitacao.nome_completo,
+            "email": solicitacao.email,
+            "identification": {
+                "type": "CPF",
+                "number": ''.join(filter(str.isdigit, solicitacao.cpf))
+            }
+        },
+        "back_urls": {
+            "success": f"{site_url}/services/baixar-mei/sucesso/{solicitacao.id}/",
+            "failure": f"{site_url}/services/baixar-mei/checkout/{solicitacao.id}/",
+            "pending": f"{site_url}/services/baixar-mei/checkout/{solicitacao.id}/"
+        },
+        "auto_return": "approved",
+    }
+
+    preference_id = None
+    try:
+        preference_response = sdk.preference().create(preference_data)
+        preference = preference_response.get("response", {})
+        preference_id = preference.get("id")
+        if preference_id:
+            pagamento.mp_preference_id = preference_id
+            pagamento.save()
+    except Exception as e:
+        print(f"Exception MP Baixa MEI: {e}")
+
+    context = {
+        'solicitacao': solicitacao,
+        'valor_servico': solicitacao.VALOR_SERVICO,
+        'pagamento': pagamento,
+        'preference_id': preference_id,
+        'mp_public_key': django_settings.MERCADO_PAGO_PUBLIC_KEY,
+        'site_url': site_url,
+        'tipo_servico': 'baixa_mei',
+        'titulo_servico': 'Baixa do MEI',
+        'descricao_servico': 'Cancelamento do CNPJ MEI',
+        'icone_servico': 'bi-x-circle',
+        'cor_tema': '#db2777',
+        'url_voltar': '/baixar-mei/',
+        'url_sucesso': f'/services/baixar-mei/sucesso/{solicitacao.id}/',
+        'itens_incluidos': [
+            'Cancelamento do CNPJ MEI',
+            'Baixa na Junta Comercial',
+            'Cancelamento na Prefeitura',
+            'Emissão do certificado de baixa',
+            'Orientação sobre obrigações pendentes',
+            'Suporte por WhatsApp',
+        ],
+    }
+
+    return render(request, 'services/checkout_servico_mei.html', context)
+
+
+def baixa_mei_sucesso_view(request, solicitacao_id):
+    """Página de sucesso após pagamento da Baixa do MEI."""
+    from .models import SolicitacaoBaixaMEI
+
+    solicitacao = get_object_or_404(SolicitacaoBaixaMEI, id=solicitacao_id)
+
+    if solicitacao.pagamento:
+        if solicitacao.pagamento.status == 'aprovado' and solicitacao.status == 'pendente':
+            solicitacao.status = 'pago'
+            solicitacao.save()
+
+    if 'solicitacao_baixa_mei_id' in request.session:
+        del request.session['solicitacao_baixa_mei_id']
+
+    context = {
+        'solicitacao': solicitacao,
+        'titulo_servico': 'Baixa do MEI',
+        'descricao_sucesso': 'Sua solicitação de cancelamento do MEI foi recebida com sucesso!',
+        'cor_tema': '#db2777',
+    }
+
+    return render(request, 'services/sucesso_servico_mei.html', context)
+
+
+# ==============================================================
+# DECLARAÇÃO ANUAL MEI (DASN) - Fluxo completo
+# ==============================================================
+
+@csrf_exempt
+def solicitar_declaracao_anual_mei_view(request):
+    """
+    View do formulário de Declaração Anual MEI.
+    Recebe JSON via fetch, salva a solicitação e retorna URL do checkout.
+    """
+    from .models import SolicitacaoDeclaracaoAnualMEI
+
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Método não permitido'}, status=405)
+
+    try:
+        import json
+        from decimal import Decimal
+        data = json.loads(request.body)
+
+        faturamento_str = data.get('faturamento', '0')
+        if isinstance(faturamento_str, str):
+            faturamento_str = faturamento_str.replace('.', '').replace(',', '.')
+        faturamento = Decimal(faturamento_str) if faturamento_str else Decimal('0')
+
+        solicitacao = SolicitacaoDeclaracaoAnualMEI.objects.create(
+            nome_completo=data.get('nome_completo', ''),
+            email=data.get('email', ''),
+            telefone=data.get('telefone', ''),
+            cnpj=data.get('cnpj', ''),
+            ano_referencia=data.get('ano_referencia', ''),
+            faturamento=faturamento,
+            teve_funcionario=data.get('teve_funcionario', False),
+            observacoes=data.get('observacoes', ''),
+            status='pendente',
+        )
+
+        request.session['solicitacao_dasn_mei_id'] = solicitacao.id
+
+        return JsonResponse({
+            'success': True,
+            'redirect_url': f'/services/declaracao-anual-mei/checkout/{solicitacao.id}/'
+        })
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': str(e)}, status=400)
+
+
+def checkout_declaracao_anual_mei_view(request, solicitacao_id):
+    """
+    Página de checkout/pagamento para Declaração Anual MEI (DASN-SIMEI).
+    Valor fixo: R$ 89,90
+    """
+    from .models import SolicitacaoDeclaracaoAnualMEI
+    from apps.payments.models import Pagamento
+    import mercadopago
+    from django.conf import settings as django_settings
+
+    solicitacao = get_object_or_404(SolicitacaoDeclaracaoAnualMEI, id=solicitacao_id)
+
+    session_id = request.session.get('solicitacao_dasn_mei_id')
+    if not request.user.is_staff and session_id != solicitacao.id:
+        messages.warning(request, 'Você precisa preencher o formulário para acessar o pagamento.')
+        return redirect('declaracao_anual_mei')
+
+    if solicitacao.status == 'pago':
+        messages.info(request, 'Esta solicitação já foi paga.')
+        return redirect('services:dasn_mei_sucesso', solicitacao_id=solicitacao.id)
+
+    # Criar ou recuperar Pagamento
+    if not solicitacao.pagamento:
+        pagamento = Pagamento.objects.create(
+            valor=solicitacao.VALOR_SERVICO,
+            status='pendente',
+            cliente=request.user if request.user.is_authenticated else None,
+            cliente_nome=solicitacao.nome_completo,
+            cliente_email=solicitacao.email,
+        )
+        solicitacao.pagamento = pagamento
+        solicitacao.save()
+    else:
+        pagamento = solicitacao.pagamento
+
+    # Mercado Pago
+    sdk = mercadopago.SDK(django_settings.MERCADO_PAGO_ACCESS_TOKEN)
+    site_url = django_settings.SITE_URL.rstrip('/')
+    notification_url = f"{site_url}/payments/webhook/mercadopago/"
+
+    preference_data = {
+        "items": [{
+            "id": f"DASN-MEI-{solicitacao.id}",
+            "title": f"Declaração Anual MEI (DASN) - {solicitacao.nome_completo}",
+            "description": f"Declaração Anual MEI - CNPJ: {solicitacao.cnpj} - Ano: {solicitacao.ano_referencia}",
+            "category_id": "services",
+            "quantity": 1,
+            "currency_id": "BRL",
+            "unit_price": float(solicitacao.VALOR_SERVICO)
+        }],
+        "external_reference": str(pagamento.external_reference),
+        "statement_descriptor": "VETORIAL DASN",
+        "notification_url": notification_url,
+        "payer": {
+            "name": solicitacao.nome_completo,
+            "email": solicitacao.email,
+        },
+        "back_urls": {
+            "success": f"{site_url}/services/declaracao-anual-mei/sucesso/{solicitacao.id}/",
+            "failure": f"{site_url}/services/declaracao-anual-mei/checkout/{solicitacao.id}/",
+            "pending": f"{site_url}/services/declaracao-anual-mei/checkout/{solicitacao.id}/"
+        },
+        "auto_return": "approved",
+    }
+
+    preference_id = None
+    try:
+        preference_response = sdk.preference().create(preference_data)
+        preference = preference_response.get("response", {})
+        preference_id = preference.get("id")
+        if preference_id:
+            pagamento.mp_preference_id = preference_id
+            pagamento.save()
+    except Exception as e:
+        print(f"Exception MP DASN MEI: {e}")
+
+    context = {
+        'solicitacao': solicitacao,
+        'valor_servico': solicitacao.VALOR_SERVICO,
+        'pagamento': pagamento,
+        'preference_id': preference_id,
+        'mp_public_key': django_settings.MERCADO_PAGO_PUBLIC_KEY,
+        'site_url': site_url,
+        'tipo_servico': 'dasn_mei',
+        'titulo_servico': 'Declaração Anual MEI (DASN-SIMEI)',
+        'descricao_servico': 'Declaração Anual do Simples Nacional',
+        'icone_servico': 'bi-file-earmark-text',
+        'cor_tema': '#059669',
+        'url_voltar': '/declaracao-anual-mei/',
+        'url_sucesso': f'/services/declaracao-anual-mei/sucesso/{solicitacao.id}/',
+        'itens_incluidos': [
+            'Preenchimento da DASN-SIMEI',
+            'Cálculo do faturamento anual',
+            'Transmissão à Receita Federal',
+            'Emissão do recibo de entrega',
+            'Verificação de pendências',
+            'Suporte por WhatsApp',
+        ],
+    }
+
+    return render(request, 'services/checkout_servico_mei.html', context)
+
+
+def dasn_mei_sucesso_view(request, solicitacao_id):
+    """Página de sucesso após pagamento da Declaração Anual MEI."""
+    from .models import SolicitacaoDeclaracaoAnualMEI
+
+    solicitacao = get_object_or_404(SolicitacaoDeclaracaoAnualMEI, id=solicitacao_id)
+
+    if solicitacao.pagamento:
+        if solicitacao.pagamento.status == 'aprovado' and solicitacao.status == 'pendente':
+            solicitacao.status = 'pago'
+            solicitacao.save()
+
+    if 'solicitacao_dasn_mei_id' in request.session:
+        del request.session['solicitacao_dasn_mei_id']
+
+    context = {
+        'solicitacao': solicitacao,
+        'titulo_servico': 'Declaração Anual MEI (DASN-SIMEI)',
+        'descricao_sucesso': 'Sua solicitação de Declaração Anual MEI foi recebida com sucesso!',
+        'cor_tema': '#059669',
+    }
+
+    return render(request, 'services/sucesso_servico_mei.html', context)

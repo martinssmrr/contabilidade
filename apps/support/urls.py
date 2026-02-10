@@ -94,6 +94,11 @@ urlpatterns = [
     path('api/servicos-avulsos/<int:pk>/update/', views.api_servico_avulso_update, name='api_servico_avulso_update'),
     path('api/servicos-avulsos/contagem/', views.api_servicos_avulsos_contagem, name='api_servicos_avulsos_contagem'),
 
+    # API Endpoints - Serviços MEI
+    path('api/servicos-mei/', views.api_servicos_mei_list, name='api_servicos_mei_list'),
+    path('api/servicos-mei/contagem/', views.api_servicos_mei_contagem, name='api_servicos_mei_contagem'),
+    path('api/servicos-mei/<int:pk>/update/', views.api_servico_mei_update, name='api_servico_mei_update'),
+
     # API Endpoints - Agenda
     path('api/agenda/', views.api_agenda_list, name='api_agenda_list'),
     path('api/agenda/sync/', views.api_agenda_sync_google, name='api_agenda_sync_google'),

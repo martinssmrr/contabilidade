@@ -84,3 +84,7 @@ docker-compose -f docker-compose.prod.yml up -d --build --force-recreate
 docker-compose -f docker-compose.prod.yml up -d
 
 
+docker cp ab45c8cf4c49_vetorial_web:/app/staticfiles/. /root/contabilidade/staticfiles/
+docker cp ab45c8cf4c49_vetorial_web:/app/media/. /root/contabilidade/media/
+chmod -R 755 /root/contabilidade/staticfiles/
+chmod -R 755 /root/contabilidade/media/

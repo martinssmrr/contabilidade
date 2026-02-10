@@ -12,15 +12,17 @@ class Lead(models.Model):
         ('popup', 'Popup da Home'),
         ('contato', 'Seção de Contato'),
         ('chatbot', 'Chatbot'),
+        ('formulario_baixar_mei', 'Formulário Baixar MEI'),
+        ('formulario_declaracao_anual_mei', 'Formulário Declaração Anual MEI'),
     ]
     
     nome_completo = models.CharField(max_length=200, verbose_name='Nome Completo')
     email = models.EmailField(verbose_name='E-mail')
     telefone = models.CharField(max_length=20, verbose_name='Telefone')
-    estado = models.CharField(max_length=2, verbose_name='Estado')
+    estado = models.CharField(max_length=2, verbose_name='Estado', blank=True, null=True)
     cidade = models.CharField(max_length=100, verbose_name='Cidade', blank=True, null=True)
-    servico_interesse = models.CharField(max_length=100, verbose_name='Serviço de Interesse', blank=True, null=True)
-    origem = models.CharField(max_length=20, choices=ORIGEM_CHOICES, verbose_name='Origem')
+    servico_interesse = models.TextField(verbose_name='Serviço de Interesse', blank=True, null=True)
+    origem = models.CharField(max_length=50, choices=ORIGEM_CHOICES, verbose_name='Origem')
     criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Data de Cadastro', db_index=True)
     contatado = models.BooleanField(default=False, verbose_name='Foi Contatado?', db_index=True)
     observacoes = models.TextField(blank=True, null=True, verbose_name='Observações')
