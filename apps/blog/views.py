@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from .models import Post, Category
+from .models import Post, Category, Tag
 
 
 class PostListView(ListView):
@@ -45,6 +45,9 @@ class PostListView(ListView):
         # Categorias
         context['categories'] = Category.objects.all()
         
+        # Tags
+        context['tags'] = Tag.objects.all()
+        
         return context
 
 
@@ -56,7 +59,7 @@ class PostDetailView(DetailView):
     
     def get_queryset(self):
         """Retorna apenas posts publicados com otimização"""
-        return Post.objects.filter(status='published').select_related('category', 'author')
+        return Post.objects.filter(status='published').select_related('category', 'author').prefetch_related('tags')
     
     def get_context_data(self, **kwargs):
         """Adiciona posts relacionados ao contexto"""
@@ -68,6 +71,43 @@ class PostDetailView(DetailView):
             category=post.category,
             status='published'
         ).exclude(id=post.id).select_related('category')[:3]
+        
+        return context
+
+
+class PostsByTagView(ListView):
+    """View para listagem de posts filtrados por tag"""
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+    paginate_by = 8
+    
+    def get_queryset(self):
+        from django.shortcuts import get_object_or_404
+        self.tag = get_object_or_404(Tag, slug=self.kwargs['slug'])
+        return Post.objects.filter(
+            status='published',
+            tags=self.tag
+        ).select_related('category', 'author').order_by('-created_at')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_tag'] = self.tag
+        context['categories'] = Category.objects.all()
+        context['tags'] = Tag.objects.all()
+        
+        # Posts em destaque
+        context['featured_posts'] = Post.objects.filter(
+            status='published',
+            is_featured=True
+        ).order_by('-created_at')[:3]
+        
+        # Posts mais recentes
+        recent_posts = Post.objects.filter(
+            status='published'
+        ).order_by('-created_at')[:3]
+        context['latest_post'] = recent_posts[0] if recent_posts else None
+        context['other_recent'] = recent_posts[1:3] if len(recent_posts) > 1 else []
         
         return context
 

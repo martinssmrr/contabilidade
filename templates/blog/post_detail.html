@@ -329,6 +329,121 @@
             font-size: 1.25rem;
         }
     }
+
+    /* Blog FAQ Accordion - integrado ao post */
+    .blog-faq-section {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .blog-faq-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+    }
+
+    .blog-faq-section .faq-accordion {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .blog-faq-section .faq-item {
+        background: transparent;
+        border-bottom: 1px solid #e9ecef;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .blog-faq-section .faq-item:first-child {
+        border-top: 1px solid #e9ecef;
+    }
+
+    .blog-faq-section .faq-item:hover {
+        background: rgba(62,244,124,0.03);
+    }
+
+    .blog-faq-section .faq-question {
+        width: 100%;
+        background: transparent;
+        border: none;
+        padding: 1.25rem 0;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .blog-faq-section .faq-question-text {
+        flex: 1;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        padding-right: 1rem;
+        line-height: 1.5;
+    }
+
+    .blog-faq-section .faq-item.active .faq-question-text {
+        color: var(--secondary-color);
+    }
+
+    .blog-faq-section .faq-icon {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+        color: var(--secondary-color);
+    }
+
+    .blog-faq-section .faq-item.active .faq-icon {
+        transform: rotate(180deg);
+    }
+
+    .blog-faq-section .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .blog-faq-section .faq-answer-content {
+        padding: 0 0 1.25rem 0;
+        color: var(--text-secondary);
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+
+    .blog-faq-section .faq-answer-content p {
+        margin-bottom: 0.75rem;
+    }
+
+    .blog-faq-section .faq-answer-content p:last-child {
+        margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+        .blog-faq-title {
+            font-size: 1.5rem;
+        }
+
+        .blog-faq-section .faq-question {
+            padding: 1rem 0;
+        }
+
+        .blog-faq-section .faq-question-text {
+            font-size: 1rem;
+        }
+
+        .blog-faq-section .faq-answer-content {
+            font-size: 0.95rem;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -364,6 +479,15 @@
                         {{ post.reading_time }} min de leitura
                     </span>
                 </div>
+                {% if post.tags.all %}
+                <div class="post-tags" style="margin-top: 1rem;">
+                    {% for tag in post.tags.all %}
+                    <a href="{% url 'blog:tag' tag.slug %}" style="display: inline-block; background: rgba(255,255,255,0.15); color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; margin-right: 6px; margin-bottom: 6px; text-decoration: none; border: 1px solid rgba(255,255,255,0.3); transition: background 0.2s;">
+                        #{{ tag.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -389,6 +513,24 @@
                 <div class="post-content">
                     {{ post.content|safe }}
                 </div>
+
+                {% if post.tags.all %}
+                <div style="margin-top: 2rem; margin-bottom: 1rem;">
+                    <span style="font-weight: 600; color: var(--text-secondary); font-size: 0.9rem; margin-right: 8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: text-top; margin-right: 4px;">
+                            <path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z"/>
+                            <path d="M4.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1z"/>
+                        </svg>
+                        Tags:
+                    </span>
+                    {% for tag in post.tags.all %}
+                    <a href="{% url 'blog:tag' tag.slug %}" style="display: inline-block; background: #f0f2f5; color: #495057; padding: 4px 12px; border-radius: 16px; font-size: 0.8rem; font-weight: 500; margin-right: 4px; margin-bottom: 4px; text-decoration: none; transition: all 0.2s;"
+                       onmouseover="this.style.background='#0c63d1'; this.style.color='#fff';" onmouseout="this.style.background='#f0f2f5'; this.style.color='#495057';">
+                        #{{ tag.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
 
                 <div class="post-divider"></div>
 
@@ -432,4 +574,178 @@
         </div>
     </div>
 </article>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const postContent = document.querySelector('.post-content');
+    if (!postContent) return;
+
+    // Procura pelo heading de "Perguntas Frequentes" (h2 ou h3 ou h4)
+    const headings = postContent.querySelectorAll('h2, h3, h4');
+    let faqHeading = null;
+
+    for (const h of headings) {
+        const text = h.textContent.toLowerCase().trim();
+        if (text.includes('perguntas frequentes') || text.includes('faq') || text.includes('dúvidas frequentes') || text.includes('perguntas e respostas')) {
+            faqHeading = h;
+            break;
+        }
+    }
+
+    if (!faqHeading) return;
+
+    const faqHeadingTag = faqHeading.tagName; // H2, H3 ou H4
+
+    // Coleta TODOS os elementos após o heading de FAQ até o final do conteúdo
+    const elementsToRemove = [];
+    let sibling = faqHeading.nextElementSibling;
+    const rawElements = [];
+
+    while (sibling) {
+        const tag = sibling.tagName;
+        // Se encontrou heading de nível superior, parou (ex: H2 se FAQ é H3)
+        if (tag === 'H1' || (faqHeadingTag === 'H3' && tag === 'H2') || (faqHeadingTag === 'H4' && (tag === 'H2' || tag === 'H3'))) {
+            break;
+        }
+        rawElements.push(sibling);
+        elementsToRemove.push(sibling);
+        sibling = sibling.nextElementSibling;
+    }
+
+    // Função para detectar se um texto parece ser uma pergunta
+    function isQuestion(text) {
+        text = text.trim();
+        if (text.endsWith('?')) return true;
+        // Detecta padrão "1.Texto?" ou "1. Texto?"
+        if (/^\d+[\.\)]\s*/.test(text) && text.includes('?')) return true;
+        return false;
+    }
+
+    // Função para limpar número da pergunta (ex: "1.Pergunta?" -> "Pergunta?")
+    function cleanQuestion(text) {
+        return text.trim().replace(/^\d+[\.\)]\s*/, '');
+    }
+
+    // Extrai perguntas e respostas dos elementos coletados
+    const faqItems = [];
+    let currentQuestion = null;
+    let currentAnswerParts = [];
+
+    for (const el of rawElements) {
+        const tag = el.tagName;
+        const text = el.textContent.trim();
+
+        // Ignora elementos vazios ou só com espaços
+        if (!text || text === '\u00a0' || text === '&nbsp;') continue;
+
+        // Caso 1: É um heading (H2, H3, H4) e parece ser pergunta
+        if (['H2', 'H3', 'H4', 'H5'].includes(tag)) {
+            // Verifica se o heading contém MÚLTIPLAS perguntas grudadas
+            // (ex: "3.Pergunta?4.Pergunta?5.Pergunta?")
+            const multiMatch = text.match(/\d+[\.\)]\s*[^?]+\?/g);
+            if (multiMatch && multiMatch.length > 1) {
+                // Múltiplas perguntas num só heading - separa cada uma
+                for (const q of multiMatch) {
+                    if (currentQuestion) {
+                        faqItems.push({ question: currentQuestion, answer: currentAnswerParts.join('') });
+                    }
+                    currentQuestion = cleanQuestion(q.trim());
+                    currentAnswerParts = [];
+                }
+            } else if (isQuestion(text)) {
+                // Pergunta simples
+                if (currentQuestion) {
+                    faqItems.push({ question: currentQuestion, answer: currentAnswerParts.join('') });
+                }
+                currentQuestion = cleanQuestion(text);
+                currentAnswerParts = [];
+            } else {
+                // Heading sem interrogação - pode ser subtítulo, ignora ou trata como resposta
+                if (currentQuestion) {
+                    currentAnswerParts.push(el.outerHTML);
+                }
+            }
+        }
+        // Caso 2: Parágrafo que começa com strong e termina com "?"
+        else if (tag === 'P' && el.querySelector('strong') && isQuestion(el.textContent)) {
+            if (currentQuestion) {
+                faqItems.push({ question: currentQuestion, answer: currentAnswerParts.join('') });
+            }
+            currentQuestion = cleanQuestion(el.textContent.trim());
+            currentAnswerParts = [];
+        }
+        // Caso 3: É resposta (pertence à pergunta atual)
+        else if (currentQuestion) {
+            currentAnswerParts.push(el.outerHTML);
+        }
+    }
+
+    // Salva a última pergunta
+    if (currentQuestion) {
+        faqItems.push({ question: currentQuestion, answer: currentAnswerParts.join('') });
+    }
+
+    if (faqItems.length === 0) return;
+
+    // Para perguntas sem resposta (vindas de headings grudados), adiciona texto padrão
+    faqItems.forEach(item => {
+        if (!item.answer.trim()) {
+            item.answer = '<p>Consulte nossos especialistas para mais informações sobre essa questão.</p>';
+        }
+    });
+
+    // Cria a seção FAQ accordion
+    const faqSection = document.createElement('section');
+    faqSection.className = 'blog-faq-section';
+    faqSection.innerHTML = `
+        <h2 class="blog-faq-title">Perguntas Frequentes</h2>
+        <div class="faq-accordion">
+            ${faqItems.map(item => `
+                <div class="faq-item">
+                    <button class="faq-question" type="button" onclick="toggleBlogFaq(this)">
+                        <span class="faq-question-text">${item.question}</span>
+                        <span class="faq-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">${item.answer}</div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    // Remove os elementos originais e insere o accordion
+    elementsToRemove.forEach(el => el.remove());
+    faqHeading.replaceWith(faqSection);
+});
+
+function toggleBlogFaq(button) {
+    const faqItem = button.parentElement;
+    const answer = faqItem.querySelector('.faq-answer');
+    const isOpen = faqItem.classList.contains('active');
+    
+    // Fecha todos os outros
+    document.querySelectorAll('.blog-faq-section .faq-item.active').forEach(item => {
+        if (item !== faqItem) {
+            item.classList.remove('active');
+            item.querySelector('.faq-answer').style.maxHeight = null;
+        }
+    });
+    
+    // Toggle do atual
+    if (isOpen) {
+        faqItem.classList.remove('active');
+        answer.style.maxHeight = null;
+    } else {
+        faqItem.classList.add('active');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+}
+</script>
+{% endblock %}
 {% endblock %}

@@ -1,7 +1,15 @@
 from django.contrib import admin
 from django.db import models
 from django.forms import Textarea
-from .models import Post, Category
+from .models import Post, Category, Tag
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug')
+    search_fields = ('name',)
+    prepopulated_fields = {'slug': ('name',)}
+    ordering = ('name',)
 
 
 @admin.register(Category)
@@ -15,8 +23,9 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'author', 'is_featured', 'status', 'focus_keyword', 'created_at', 'updated_at')
-    list_filter = ('status', 'is_featured', 'category', 'created_at', 'author')
+    list_filter = ('status', 'is_featured', 'category', 'tags', 'created_at', 'author')
     search_fields = ('title', 'content', 'meta_title', 'meta_description', 'focus_keyword')
+    filter_horizontal = ('tags',)
     prepopulated_fields = {'slug': ('title',)}
     date_hierarchy = 'created_at'
     ordering = ('-created_at',)
@@ -24,7 +33,7 @@ class PostAdmin(admin.ModelAdmin):
     
     fieldsets = (
         ('Informações Básicas', {
-            'fields': ('title', 'slug', 'category', 'author', 'status', 'is_featured')
+            'fields': ('title', 'slug', 'category', 'tags', 'author', 'status', 'is_featured')
         }),
         ('Conteúdo', {
             'fields': ('excerpt', 'content', 'featured_image')

@@ -167,7 +167,37 @@
     <!-- Listagem Principal de Artigos -->
     <section class="posts-section">
         <div class="container">
+            {% if current_tag %}
+            <h2 class="section-title">Artigos com a tag: <span style="color: #0c63d1;">#{{ current_tag.name }}</span></h2>
+            <a href="{% url 'blog:post_list' %}" style="display: inline-block; margin-bottom: 30px; color: #0c63d1; text-decoration: none; font-weight: 600;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: text-top; margin-right: 4px;">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                </svg>
+                Ver todos os artigos
+            </a>
+            {% else %}
             <h2 class="section-title">Todos os Artigos</h2>
+            {% endif %}
+
+            {% if tags %}
+            <div class="tags-filter" style="margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                <span style="font-weight: 600; color: #6C757D; font-size: 0.9rem; margin-right: 4px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: text-top; margin-right: 2px;">
+                        <path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z"/>
+                        <path d="M4.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1z"/>
+                    </svg>
+                    Tags:
+                </span>
+                {% for tag in tags %}
+                <a href="{% url 'blog:tag' tag.slug %}" 
+                   style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; text-decoration: none; transition: all 0.2s; {% if current_tag and current_tag.slug == tag.slug %}background: #0c63d1; color: #fff; border: 1px solid #0c63d1;{% else %}background: #fff; color: #495057; border: 1px solid #dee2e6;{% endif %}"
+                   onmouseover="{% if not current_tag or current_tag.slug != tag.slug %}this.style.background='#0c63d1'; this.style.color='#fff'; this.style.borderColor='#0c63d1';{% endif %}" 
+                   onmouseout="{% if not current_tag or current_tag.slug != tag.slug %}this.style.background='#fff'; this.style.color='#495057'; this.style.borderColor='#dee2e6';{% endif %}">
+                    #{{ tag.name }}
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
             
             <div class="posts-grid" id="posts-grid">
                 {% include 'blog/partials/post_cards.html' %}

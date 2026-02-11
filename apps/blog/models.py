@@ -15,6 +15,29 @@ except ImportError:
 User = get_user_model()
 
 
+class Tag(models.Model):
+    """Modelo para tags do blog"""
+    
+    name = models.CharField('Nome', max_length=50, unique=True)
+    slug = models.SlugField('Slug', max_length=50, unique=True, blank=True)
+    
+    class Meta:
+        verbose_name = 'Tag'
+        verbose_name_plural = 'Tags'
+        ordering = ['name']
+    
+    def __str__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    
+    def get_absolute_url(self):
+        return reverse('blog:tag', kwargs={'slug': self.slug})
+
+
 class Category(models.Model):
     """Modelo para categorias do blog"""
     
@@ -59,6 +82,12 @@ class Post(models.Model):
         blank=True,
         related_name='posts',
         verbose_name='Categoria'
+    )
+    tags = models.ManyToManyField(
+        Tag,
+        blank=True,
+        related_name='posts',
+        verbose_name='Tags'
     )
     author = models.ForeignKey(
         User, 
