@@ -581,7 +581,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const postContent = document.querySelector('.post-content');
     if (!postContent) return;
 
-    // Procura pelo heading de "Perguntas Frequentes" (h2 ou h3 ou h4)
+    // Procura pelo heading de "Perguntas Frequentes"
     const headings = postContent.querySelectorAll('h2, h3, h4');
     let faqHeading = null;
 
@@ -595,87 +595,126 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (!faqHeading) return;
 
-    const faqHeadingTag = faqHeading.tagName; // H2, H3 ou H4
+    const faqHeadingTag = faqHeading.tagName;
 
-    // Coleta TODOS os elementos após o heading de FAQ até o final do conteúdo
+    // Coleta elementos após o heading de FAQ
     const elementsToRemove = [];
     let sibling = faqHeading.nextElementSibling;
-    const rawElements = [];
 
     while (sibling) {
         const tag = sibling.tagName;
-        // Se encontrou heading de nível superior, parou (ex: H2 se FAQ é H3)
         if (tag === 'H1' || (faqHeadingTag === 'H3' && tag === 'H2') || (faqHeadingTag === 'H4' && (tag === 'H2' || tag === 'H3'))) {
             break;
         }
-        rawElements.push(sibling);
         elementsToRemove.push(sibling);
         sibling = sibling.nextElementSibling;
     }
 
-    // Função para detectar se um texto parece ser uma pergunta
+    // FLATTEN: extrai elementos de dentro de OL/UL > LI
+    function flattenElements(elements) {
+        const flat = [];
+        for (const el of elements) {
+            const tag = el.tagName;
+            if (tag === 'OL' || tag === 'UL') {
+                const lis = el.querySelectorAll(':scope > li');
+                for (const li of lis) {
+                    if (li.children.length > 0) {
+                        for (const child of li.children) {
+                            flat.push(child.cloneNode(true));
+                        }
+                    } else if (li.textContent.trim()) {
+                        const p = document.createElement('p');
+                        p.innerHTML = li.innerHTML;
+                        flat.push(p);
+                    }
+                }
+            } else {
+                flat.push(el);
+            }
+        }
+        return flat;
+    }
+
+    const rawElements = flattenElements(elementsToRemove);
+
+    // Detecta se texto é uma pergunta
     function isQuestion(text) {
         text = text.trim();
         if (text.endsWith('?')) return true;
-        // Detecta padrão "1.Texto?" ou "1. Texto?"
         if (/^\d+[\.\)]\s*/.test(text) && text.includes('?')) return true;
         return false;
     }
 
-    // Função para limpar número da pergunta (ex: "1.Pergunta?" -> "Pergunta?")
+    // Limpa número da pergunta
     function cleanQuestion(text) {
         return text.trim().replace(/^\d+[\.\)]\s*/, '');
     }
 
-    // Extrai perguntas e respostas dos elementos coletados
+    // Detecta se é um elemento tipo heading ou pergunta em negrito
+    function isQuestionElement(el) {
+        const tag = el.tagName;
+        const text = el.textContent.trim();
+        if (!text || text === '\u00a0') return false;
+
+        // Headings (h2-h5) são perguntas se terminam com ? OU se estão após o FAQ heading
+        if (['H2', 'H3', 'H4', 'H5'].includes(tag)) {
+            return true; // Após o FAQ heading, qualquer heading é uma pergunta
+        }
+
+        // Parágrafo com strong/b que parece pergunta
+        if (tag === 'P') {
+            const bold = el.querySelector('strong, b');
+            if (bold && bold.textContent.trim().length > 10) {
+                const boldText = bold.textContent.trim();
+                // Se o bold ocupa a maior parte do parágrafo, é uma pergunta
+                if (boldText.length >= text.length * 0.7 && isQuestion(text)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    // Extrai perguntas e respostas
     const faqItems = [];
     let currentQuestion = null;
     let currentAnswerParts = [];
 
     for (const el of rawElements) {
-        const tag = el.tagName;
         const text = el.textContent.trim();
 
-        // Ignora elementos vazios ou só com espaços
-        if (!text || text === '\u00a0' || text === '&nbsp;') continue;
+        // Ignora elementos vazios
+        if (!text || text === '\u00a0' || text === '&nbsp;' || text === '') continue;
 
-        // Caso 1: É um heading (H2, H3, H4) e parece ser pergunta
-        if (['H2', 'H3', 'H4', 'H5'].includes(tag)) {
-            // Verifica se o heading contém MÚLTIPLAS perguntas grudadas
-            // (ex: "3.Pergunta?4.Pergunta?5.Pergunta?")
-            const multiMatch = text.match(/\d+[\.\)]\s*[^?]+\?/g);
-            if (multiMatch && multiMatch.length > 1) {
-                // Múltiplas perguntas num só heading - separa cada uma
-                for (const q of multiMatch) {
-                    if (currentQuestion) {
-                        faqItems.push({ question: currentQuestion, answer: currentAnswerParts.join('') });
-                    }
-                    currentQuestion = cleanQuestion(q.trim());
-                    currentAnswerParts = [];
-                }
-            } else if (isQuestion(text)) {
-                // Pergunta simples
-                if (currentQuestion) {
-                    faqItems.push({ question: currentQuestion, answer: currentAnswerParts.join('') });
-                }
-                currentQuestion = cleanQuestion(text);
-                currentAnswerParts = [];
-            } else {
-                // Heading sem interrogação - pode ser subtítulo, ignora ou trata como resposta
-                if (currentQuestion) {
-                    currentAnswerParts.push(el.outerHTML);
-                }
-            }
-        }
-        // Caso 2: Parágrafo que começa com strong e termina com "?"
-        else if (tag === 'P' && el.querySelector('strong') && isQuestion(el.textContent)) {
+        if (isQuestionElement(el)) {
+            // Salva pergunta anterior
             if (currentQuestion) {
                 faqItems.push({ question: currentQuestion, answer: currentAnswerParts.join('') });
             }
-            currentQuestion = cleanQuestion(el.textContent.trim());
-            currentAnswerParts = [];
+
+            // Verifica se o heading contém múltiplas perguntas grudadas
+            const tag = el.tagName;
+            if (['H2', 'H3', 'H4', 'H5'].includes(tag)) {
+                const multiMatch = text.match(/\d+[\.\)]\s*[^?]+\?/g);
+                if (multiMatch && multiMatch.length > 1) {
+                    for (let i = 0; i < multiMatch.length; i++) {
+                        if (i > 0 && currentQuestion) {
+                            faqItems.push({ question: currentQuestion, answer: currentAnswerParts.join('') });
+                        }
+                        currentQuestion = cleanQuestion(multiMatch[i].trim());
+                        currentAnswerParts = [];
+                    }
+                } else {
+                    currentQuestion = cleanQuestion(text);
+                    currentAnswerParts = [];
+                }
+            } else {
+                currentQuestion = cleanQuestion(text);
+                currentAnswerParts = [];
+            }
         }
-        // Caso 3: É resposta (pertence à pergunta atual)
+        // É resposta (pertence à pergunta atual)
         else if (currentQuestion) {
             currentAnswerParts.push(el.outerHTML);
         }
@@ -688,14 +727,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (faqItems.length === 0) return;
 
-    // Para perguntas sem resposta (vindas de headings grudados), adiciona texto padrão
+    // Default para perguntas sem resposta
     faqItems.forEach(item => {
         if (!item.answer.trim()) {
             item.answer = '<p>Consulte nossos especialistas para mais informações sobre essa questão.</p>';
         }
     });
 
-    // Cria a seção FAQ accordion
+    // Cria seção FAQ accordion
     const faqSection = document.createElement('section');
     faqSection.className = 'blog-faq-section';
     faqSection.innerHTML = `
